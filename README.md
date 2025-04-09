@@ -1,5 +1,7 @@
 # README
 
+[![codecov](https://codecov.io/github/tasfya/almaktabah/graph/badge.svg?token=1MY904CQMP)](https://codecov.io/github/tasfya/almaktabah)
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
