@@ -64,6 +64,8 @@ group :development, :test do
   gem "rubocop-factory_bot"
   gem "rubocop-rspec"
   gem "rubocop-rspec_rails"
+  gem "rspec-instafail", require: false
+  gem "fuubar", require: false
 end
 
 group :development do
