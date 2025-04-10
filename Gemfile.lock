@@ -204,8 +204,11 @@ GEM
     parser (3.3.7.4)
       ast (~> 2.4.1)
       racc
+    pluginator (1.5.0)
     pp (0.6.2)
       prettyprint
+    pre-commit (0.40.0)
+      pluginator (~> 1.5)
     prettyprint (0.2.0)
     prism (1.4.0)
     propshaft (1.1.0)
@@ -443,6 +446,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  pre-commit
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.2)
