@@ -61,6 +61,9 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "simplecov"
   gem "simplecov-cobertura"
+  gem "rubocop-factory_bot"
+  gem "rubocop-rspec"
+  gem "rubocop-rspec_rails"
 end
 
 group :development do
