@@ -75,3 +75,5 @@ group :development do
   gem "standard"
   gem "overcommit", require: false
 end
+
+gem "nokogiri", "~> 1.18"

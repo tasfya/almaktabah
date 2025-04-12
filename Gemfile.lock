@@ -470,6 +470,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  nokogiri (~> 1.18)
   overcommit
   propshaft
   puma (>= 5.0)
