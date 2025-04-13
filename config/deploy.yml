@@ -7,7 +7,7 @@ image: mohamedrez/almaktabah
 # Deploy to these servers.
 servers:
   web:
-    - 188.245.151.220
+    - 188.245.209.159
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -75,7 +75,7 @@ asset_path: /rails/public/assets
 
 # Configure the image builder.
 builder:
-  arch: arm64
+  arch: amd64
 
   # # Build image via remote server (useful for faster amd64 builds on arm64 computers)
   # remote: ssh://docker@docker-builder-server
