@@ -4,8 +4,7 @@ name: Deployment
 env:
   DOCKER_BUILDKIT: 1
   COMPOSE_DOCKER_CLI_BUILD: 1
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+
 on:
   push:
     branches:
@@ -23,11 +22,6 @@ jobs:
   # This job runs only when a pull request is merged
   deployment:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
     env:
       DOCKER_BUILDKIT: 1
       RAILS_ENV: production
@@ -42,13 +36,6 @@ jobs:
 
       - name: Expose GitHub Runtime for cache
         uses: crazy-max/ghaction-github-runtime@v3
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
 
       # KAMAL
       - name: Set up Ruby
@@ -79,4 +66,4 @@ jobs:
           DOCKER_BUILDKIT: 1
           RAILS_ENV: production
           KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
-          KAMAL_REGISTRY_USERNAME: ${{ secrets.KAMAL_REGISTRY_USERNAME }}
+          KAMAL_REGISTRY_USERNAME: mohamedrez
