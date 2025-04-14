@@ -74,3 +74,5 @@ group :development do
   gem "web-console"
   gem "overcommit", require: false
 end
+
+gem "motor-admin", "~> 0.4.36"
