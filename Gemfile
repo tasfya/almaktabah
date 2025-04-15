@@ -76,3 +76,4 @@ group :development do
   gem "web-console"
   gem "overcommit", require: false
 end
+gem "avo", ">= 3.2"
