@@ -40,6 +40,8 @@ module Almaktabah
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-    config.middleware.insert_before 0, TenantMiddleware
+    config.session_store :cookie_store, key: 'maktabah_session'
+    config.middleware.insert_after ActionDispatch::Session::CookieStore, TenantMiddleware
+
   end
 end

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html data-theme="maktabah" dir="rtl">
   <head>
-    <title><%= content_for(:title) || "Almaktabah" %></title>
+    
+    <title><%= content_for(:title) || "#{Current.tenant.subdomain}" || "Almaktabah" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">

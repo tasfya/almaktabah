@@ -6,19 +6,20 @@ class TenantMiddleware
   def call(env)
     request = ActionDispatch::Request.new(env)
     subdomain = extract_subdomain(request)
+    Rails.logger.debug "Extracted subdomain: #{subdomain}"
     tenant = Tenant.find_by!(subdomain: subdomain)
-    Current.tenant = tenant
-
+    request.session[:tenant_id] = tenant.id
     @app.call(env)
-  ensure
-    raise "Tenant not found" if Current.tenant.nil?
   end
 
   private
 
   def extract_subdomain(request)
+    # TODO: improve this to handle different environments and subdomain formats
     host = request.host
-    return nil if host.split(".").length <= 2
-    host.split(".").first # Notice: improve extaction of the subdomain
+    return nil if host.blank?
+
+    parts = host.split(".")
+    parts.first 
   end
 end
