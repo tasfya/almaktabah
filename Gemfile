@@ -42,7 +42,6 @@ gem "image_processing", "~> 1.2"
 gem "devise"
 gem "database_validations"
 gem "database_consistency"
-gem "tailwindcss-rails"
 gem "aws-sdk-s3", require: false
 gem "sentry-ruby"
 gem "sentry-rails"
@@ -74,6 +73,6 @@ group :development do
   gem "web-console"
   gem "overcommit", require: false
 end
-gem "avo", ">= 3.2"
 
+gem "avo", ">= 3.2"
 gem "vite_rails", "~> 3.0"
