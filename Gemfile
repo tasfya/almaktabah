@@ -8,8 +8,6 @@ gem "propshaft"
 gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
-# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
 # Hotwire"s SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 # Hotwire"s modest JavaScript framework [https://stimulus.hotwired.dev]
@@ -77,3 +75,5 @@ group :development do
   gem "overcommit", require: false
 end
 gem "avo", ">= 3.2"
+
+gem "vite_rails", "~> 3.0"
