@@ -8,8 +8,6 @@ gem "propshaft"
 gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
-# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
 # Hotwire"s SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 # Hotwire"s modest JavaScript framework [https://stimulus.hotwired.dev]
@@ -44,7 +42,6 @@ gem "image_processing", "~> 1.2"
 gem "devise"
 gem "database_validations"
 gem "database_consistency"
-gem "tailwindcss-rails"
 gem "aws-sdk-s3", require: false
 gem "sentry-ruby"
 gem "sentry-rails"
@@ -76,4 +73,6 @@ group :development do
   gem "web-console"
   gem "overcommit", require: false
 end
+
 gem "avo", ">= 3.2"
+gem "vite_rails", "~> 3.0"
