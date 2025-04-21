@@ -7,6 +7,7 @@
     "preview": "bin/vite preview"
   },
   "devDependencies": {
+    "daisyui": "^5.0.27",
     "vite": "^5.4.18",
     "vite-plugin-ruby": "^5.1.1"
   },
@@ -19,6 +20,7 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/vite": "^4.1.4",
     "autoprefixer": "^10.4.21",
     "lightningcss": "^1.29.3",
     "stimulus-vite-helpers": "^3.1.0",
