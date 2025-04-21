@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="maktabah">
+<html data-theme="maktabah" dir="rtl">
   <head>
     <title><%= content_for(:title) || "Almaktabah" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -34,9 +34,9 @@
 
   </head>
 
-  <body>
-  <%= render partial: "components/navbar" %>
-  <main class="container mx-auto mt-28 px-5 flex">
+  <body class="">
+    <%= render partial: "components/navbar" %>
+    <main class="container mx-auto mt-28 px-5 flex">
       <%= yield %>
     </main>
   </body>

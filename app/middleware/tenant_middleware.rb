@@ -18,7 +18,7 @@ class TenantMiddleware
 
   def extract_subdomain(request)
     host = request.host
-    return nil if host.split('.').length <= 2
-    host.split('.').first # Notice: improve extaction of the subdomain
+    return nil if host.split(".").length <= 2
+    host.split(".").first # Notice: improve extaction of the subdomain
   end
 end
