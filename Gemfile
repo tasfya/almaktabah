@@ -66,6 +66,7 @@ group :development, :test do
   gem "rubocop-rspec_rails"
   gem "rspec-instafail", require: false
   gem "fuubar", require: false
+  gem "faker"
 end
 
 group :development do
