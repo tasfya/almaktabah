@@ -240,10 +240,10 @@ class InstallMotorAdmin < ActiveRecord::Migration[8.0]
 
     model.table_name = 'motor_configs'
 
-    model.create!(key: 'header.links', value: [ {
+    model.create!(key: 'header.links', value: [{
       name: '⭐ Star on GitHub',
       path: 'https://github.com/motor-admin/motor-admin-rails'
-    } ].to_json)
+    }].to_json)
 
     model.table_name = 'motor_api_configs'
 

@@ -7,8 +7,8 @@ class TenantMiddleware
     request = ActionDispatch::Request.new(env)
     subdomain = extract_subdomain(request)
     Rails.logger.debug "Extracted subdomain: #{subdomain}"
-    tenant = Tenant.find_by!(subdomain: subdomain)
-    request.session[:tenant_id] = tenant.id
+    tenant = Tenant.find_by(subdomain: subdomain)
+    request.session[:tenant_id] = tenant&.id
     @app.call(env)
   end
 
@@ -20,6 +20,6 @@ class TenantMiddleware
     return nil if host.blank?
 
     parts = host.split(".")
-    parts.first 
+    parts.first
   end
 end

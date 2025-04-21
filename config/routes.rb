@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Motor::Admin => '/admin'
   constraints subdomain: /.+/ do
     # Routes for subdomains
     get "home/index"
