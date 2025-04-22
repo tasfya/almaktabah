@@ -9,7 +9,7 @@ class Avo::Resources::Tenant < Avo::BaseResource
     field :id, as: :id
     field :subdomain, as: :text
     field :name, as: :text
-    field :logo_light, as: :text
-    field :logo_dark, as: :text
+    field :logo_light, as: :file
+    field :logo_dark, as: :file
   end
 end
