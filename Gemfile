@@ -81,3 +81,7 @@ gem "vite_rails", "~> 3.0"
 gem "nice_partials", "~> 0.10.1"
 
 gem "motor-admin", "~> 0.4.36"
+gem "tailwindcss-rails"
+
+
+gem "tailwindcss-ruby", "~> 4.1"

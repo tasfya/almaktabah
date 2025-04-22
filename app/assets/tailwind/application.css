@@ -1,36 +1,90 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
 @plugin "daisyui/theme" {
-    name: "maktabah";
-    default: true;
-    prefersdark: false;
-    color-scheme: "light";
-    --color-base-100: oklch(97% 0.012 255);
-    --color-base-200: oklch(90% 0.018 255);
-    --color-base-300: oklch(82% 0.025 255);
-    --color-base-content: oklch(18% 0.015 255);
-    --color-primary: oklch(85% 0.22 72);
-    --color-primary-content: oklch(22% 0.06 75);
-    --color-secondary: oklch(72% 0.15 68);
-    --color-secondary-content: oklch(96% 0.015 68);
-    --color-accent: oklch(68% 0.18 250);
-    --color-accent-content: oklch(98% 0.01 250);
-    --color-neutral: oklch(28% 0.03 255);
-    --color-neutral-content: oklch(92% 0.012 255);
-    --color-info: oklch(73% 0.17 225);
-    --color-info-content: oklch(23% 0.07 225);
-    --color-success: oklch(78% 0.19 145);
-    --color-success-content: oklch(28% 0.08 145);
-    --color-warning: oklch(88% 0.24 65);
-    --color-warning-content: oklch(25% 0.12 65);
-    --color-error: oklch(72% 0.21 15);
-    --color-error-content: oklch(96% 0.015 15);
-    --radius-selector: 1rem;
-    --radius-field: 0.6rem;
-    --radius-box: 1rem;
-    --size-selector: 0.35rem;
-    --size-field: 0.35rem;
-    --border: 1px;
-    --depth: 1;
-    --noise: 0.08;
+  name: "maktabah";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(97% 0.012 255);
+  --color-base-200: oklch(90% 0.018 255);
+  --color-base-300: oklch(82% 0.025 255);
+  --color-base-content: oklch(18% 0.015 255);
+  --color-primary: oklch(85% 0.22 72);
+  --color-primary-content: oklch(22% 0.06 75);
+  --color-secondary: oklch(72% 0.15 68);
+  --color-secondary-content: oklch(96% 0.015 68);
+  --color-accent: oklch(68% 0.18 250);
+  --color-accent-content: oklch(98% 0.01 250);
+  --color-neutral: oklch(28% 0.03 255);
+  --color-neutral-content: oklch(92% 0.012 255);
+  --color-info: oklch(73% 0.17 225);
+  --color-info-content: oklch(23% 0.07 225);
+  --color-success: oklch(78% 0.19 145);
+  --color-success-content: oklch(28% 0.08 145);
+  --color-warning: oklch(88% 0.24 65);
+  --color-warning-content: oklch(25% 0.12 65);
+  --color-error: oklch(72% 0.21 15);
+  --color-error-content: oklch(96% 0.015 15);
+  --radius-selector: 1rem;
+  --radius-field: 0.6rem;
+  --radius-box: 1rem;
+  --size-selector: 0.35rem;
+  --size-field: 0.35rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0.08;
+}
+
+
+@layer utilities {
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out forwards;
+  }
+
+  .animate-slide-out {
+    animation: slideOut 0.3s ease-in forwards;
+  }
+  .news-ticker {
+    animation: ticker 20s linear infinite;
+  }
+
+  .hover\:pause:hover .news-ticker {
+    animation-play-state: paused;
+  }
+
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
 }
