@@ -5,8 +5,7 @@ class ApplicationController < ActionController::Base
 
 
   def set_tenant
-    Current.tenant = Tenant.find(session["tenant_id"])
-    @title = 
-    "#{Current.tenant.name} - #{Current.tenant.subdomain}"
+    @current_tenant = Tenant.find(session["tenant_id"])
+    @title = "#{@current_tenant.name} - #{@current_tenant.subdomain}"
   end
 end
