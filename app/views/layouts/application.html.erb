@@ -2,7 +2,7 @@
 <html data-theme="maktabah" dir="rtl">
   <head>
     
-    <title><%= content_for(:title) || "#{@current_tenant.subdomain}" || "Almaktabah" %></title>
+    <title><%= content_for(:title) || "Almaktabah" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -37,8 +37,8 @@
   </head>
 
   <body data-controller="hotkey" dir="ltr" lang="ar" class="min-h-screen text-right w-full">
-    <%= render partial: "components/navbar" %>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <%= render partial: "components/navbar" if @current_tenant.present? %>
+    <main class="container mx-auto mt-28 px-5 flex flex-col">
       <%= yield %>
     </main>
   </body>
