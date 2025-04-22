@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
-  
   constraints subdomain: /.+/ do
     get "home/index"
   end
-  
+
   authenticate :user do
     mount Avo::Engine => "/avo"
   end
