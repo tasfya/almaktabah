@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :article do
-    title { "MyString" }
-    author { nil }
+    title { Faker::Book.title }
+    author { association(:scholar) }
   end
 end

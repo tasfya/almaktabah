@@ -1,5 +1,5 @@
 class ArticleSerializer < ActiveModel::Serializer
-  attributes :id, :title, :content, :created_at, :updated_at
+  attributes :id, :title, :created_at, :updated_at
 
-  belongs_to :scholar
+  belongs_to :author, serializer: ScholarSerializer
 end

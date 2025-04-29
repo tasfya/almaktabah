@@ -3,7 +3,7 @@ module Api
     class ApiController < ActionController::Base
       include Api::ErrorHandling
 
-      before_action :authenticate_request
+      # before_action :authenticate_request
 
       private
 

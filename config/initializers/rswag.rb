@@ -3,5 +3,5 @@ Rswag::Api.configure do |c|
 end
 
 Rswag::Ui.configure do |c|
-  c.swagger_endpoint "/api-docs/v1/swagger.json", "API V1 Docs"
+  c.openapi_endpoint "/api-docs/v1/swagger.json", "API V1 Docs"
 end

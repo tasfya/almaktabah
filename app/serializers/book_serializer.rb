@@ -1,5 +1,5 @@
 class BookSerializer < ActiveModel::Serializer
-  attributes :id, :title, :description, :created_at, :updated_at
+  attributes :id, :created_at, :updated_at
 
-  belongs_to :scholar, serializer: ScholarSerializer
+  belongs_to :author, serializer: ScholarSerializer
 end
