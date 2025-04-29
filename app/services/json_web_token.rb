@@ -1,5 +1,6 @@
 class JsonWebToken
-  SECRET_KEY = Rails.application.credentials.secret_key_base
+  SECRET_KEY = Rails.application.credentials.secret_key_base if Rails.env.production?
+  SECRET_KEY = "PLACEHOLDER" if Rails.env.test? || Rails.env.development?
 
   def self.encode(payload, exp = 24.hours.from_now)
     payload[:exp] = exp.to_i
