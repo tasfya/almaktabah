@@ -1,1 +1,2 @@
-web: bin/rails server
+api: bin/rails server
+web: cd frontend && pnpm dev -p 4000
