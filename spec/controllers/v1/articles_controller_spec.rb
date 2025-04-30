@@ -10,9 +10,8 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
       get '/api/articles'
 
       expect(response).to have_http_status(:ok)
-      expect(json_response).to have_key('data')
-      expect(json_response['data']).to be_an(Array)
-      expect(json_response['data'].size).to eq(3)
+      expect(json_response).to be_an(Array)
+      expect(json_response.size).to eq(3)
     end
   end
 
@@ -24,9 +23,9 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
         get "/api/articles/#{article.id}"
 
         expect(response).to have_http_status(:ok)
-        expect(json_response).to have_key('data')
-        expect(json_response['data']['id']).to eq(article.id.to_s)
-        expect(json_response['data']['attributes']['title']).to eq(article.title)
+        expect(json_response).to have_key('id')
+        expect(json_response['id']).to eq(article.id)
+        expect(json_response['title']).to eq(article.title)
       end
     end
 

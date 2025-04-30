@@ -9,9 +9,8 @@ RSpec.describe Api::V1::BooksController, type: :request do
         it 'returns a list of books' do
             get '/api/books'
             expect(response).to have_http_status(:ok)
-            expect(json_response).to have_key('data')
-            expect(json_response['data']).to be_an(Array)
-            expect(json_response['data'].size).to eq(3)
+            expect(json_response).to be_an(Array)
+            expect(json_response.size).to eq(3)
         end
     end
 
@@ -23,8 +22,7 @@ RSpec.describe Api::V1::BooksController, type: :request do
                 get "/api/books/#{book.id}"
 
                 expect(response).to have_http_status(:ok)
-                expect(json_response).to have_key('data')
-                expect(json_response['data']['id']).to eq(book.id.to_s)
+                expect(json_response['id']).to eq(book.id)
             end
         end
 

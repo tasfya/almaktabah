@@ -24,7 +24,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
 
         expect(response).to have_http_status(:created)
         expect(json_response).to include('token', 'user')
-        expect(json_response['user']['data']['attributes']['email']).to eq('test@example.com')
+        expect(json_response['user']['email']).to eq('test@example.com')
       end
     end
 
