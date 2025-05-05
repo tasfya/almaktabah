@@ -1,0 +1,19 @@
+service: almaktabah-api
+image: mohamedrez/almaktabah-api
+servers:
+  web:
+    - 188.245.209.159
+registry:
+  username: mohamedrez
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+env:
+  secret:
+    - RAILS_MASTER_KEY
+  clear:
+    RAILS_ENV: production
+    SOLID_QUEUE_IN_PUMA: true
+proxy:
+  ssl: true
+  host: ilm.hachimy.com
+  path: /api

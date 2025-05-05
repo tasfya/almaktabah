@@ -53,18 +53,24 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
 
-      - name: Kamal Deploy
+      - name: 🚀 Kamal Deploy
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "Deploying to production"
-            kamal deploy
+            echo "🔧 Deploying API (Rails)"
+            kamal --config config/kamal/api.yml deploy
+
+            echo "🌐 Deploying Frontend (Next.js)"
+            kamal --config config/kamal/frontend.yml deploy
           elif [ "${{ github.ref }}" == "refs/heads/staging" ]; then
-            echo "Deploying to staging"
-            kamal deploy -c kamal_config/deploy.staging.yml
+            echo "🔧 Deploying API (Rails - staging)"
+            kamal --config config/kamal/api.staging.yml deploy
+
+            echo "🌐 Deploying Frontend (Next.js - staging)"
+            kamal --config config/kamal/frontend.staging.yml deploy
           fi
         env:
           DOCKER_BUILDKIT: 1
           RAILS_ENV: production
+          KAMAL_REGISTRY_USERNAME: mohamedrez
           KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          KAMAL_REGISTRY_USERNAME: mohamedrez
