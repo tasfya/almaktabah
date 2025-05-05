@@ -13,7 +13,7 @@ builder:
     image: app-build-cache
 asset_path: /rails/public/assets
 servers:
-  web:
+  api:
     - 188.245.209.159
 registry:
   username: mohamedrez
