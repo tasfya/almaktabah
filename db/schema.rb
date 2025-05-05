@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_24_105936) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_05_085157) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -57,84 +57,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_105936) do
     t.index ["author_id"], name: "index_articles_on_author_id"
   end
 
-  create_table "benefits", force: :cascade do |t|
-    t.string "title"
-    t.text "content"
-    t.integer "tenant_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "index_benefits_on_tenant_id"
-  end
-
   create_table "books", force: :cascade do |t|
     t.integer "author_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "title"
-    t.text "description"
-    t.integer "tenant_id"
-    t.datetime "published_at"
-    t.integer "download_count"
-    t.integer "visit_count"
     t.index ["author_id"], name: "index_books_on_author_id"
-    t.index ["tenant_id"], name: "index_books_on_tenant_id"
-  end
-
-  create_table "categories", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "categorizations", force: :cascade do |t|
-    t.integer "category_id", null: false
-    t.string "categorizable_type", null: false
-    t.integer "categorizable_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["categorizable_type", "categorizable_id"], name: "index_categorizations_on_categorizable"
-    t.index ["category_id"], name: "index_categorizations_on_category_id"
-  end
-
-  create_table "contacts", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "email", null: false
-    t.text "message", null: false
-    t.integer "tenant_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "index_contacts_on_tenant_id"
-  end
-
-  create_table "fatwas", force: :cascade do |t|
-    t.text "question"
-    t.text "answer"
-    t.string "source"
-    t.integer "tenant_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "index_fatwas_on_tenant_id"
-  end
-
-  create_table "lectures", force: :cascade do |t|
-    t.string "title", null: false
-    t.text "description", null: false
-    t.text "content", null: false
-    t.integer "tenant_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "index_lectures_on_tenant_id"
   end
 
   create_table "lessons", force: :cascade do |t|
     t.string "title"
+    t.date "published_date"
+    t.string "category"
+    t.integer "duration"
     t.text "description"
-    t.text "content"
-    t.integer "tenant_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "index_lessons_on_tenant_id"
   end
 
   create_table "motor_resources", force: :cascade do |t|
@@ -168,26 +105,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_105936) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "speeches", force: :cascade do |t|
-    t.string "title"
-    t.string "speaker"
-    t.string "event"
-    t.date "date"
-    t.text "content"
-    t.integer "tenant_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "index_speeches_on_tenant_id"
-  end
-
-  create_table "tenants", force: :cascade do |t|
-    t.string "subdomain"
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["subdomain"], name: "index_tenants_on_subdomain", unique: true
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -203,14 +120,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_105936) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "scholars", column: "author_id"
-  add_foreign_key "benefits", "tenants"
   add_foreign_key "books", "scholars", column: "author_id"
-  add_foreign_key "books", "tenants"
-  add_foreign_key "categorizations", "categories"
-  add_foreign_key "contacts", "tenants"
-  add_foreign_key "fatwas", "tenants"
-  add_foreign_key "lectures", "tenants"
-  add_foreign_key "lessons", "tenants"
   add_foreign_key "motor_taggable_tags", "motor_tags", column: "tag_id"
-  add_foreign_key "speeches", "tenants"
 end
