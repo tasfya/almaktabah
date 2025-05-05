@@ -13,3 +13,9 @@ env:
 proxy:
   ssl: true
   host: ilm.hachimy.com
+builder:
+  arch: amd64
+  cache:
+    type: gha
+    options: mode=max
+    image: app-build-cache

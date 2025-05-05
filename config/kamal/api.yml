@@ -1,5 +1,17 @@
 service: almaktabah-api
 image: mohamedrez/almaktabah-api
+aliases:
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  dbc: app exec --interactive --reuse "bin/rails dbconsole"
+builder:
+  arch: amd64
+  cache:
+    type: gha
+    options: mode=max
+    image: app-build-cache
+asset_path: /rails/public/assets
 servers:
   web:
     - 188.245.209.159
