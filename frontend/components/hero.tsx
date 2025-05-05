@@ -1,15 +1,30 @@
+"use client"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "./ui/badge"
 import { formatDate } from "@/lib/utils"
+import { Lesson } from "@/lib/services/lessons-service"
+import { useAudioPlayer } from "@/context/AudioPlayerContext"
+import { AudioTrack } from "@/types"
+import Link from "next/link"
 
-export default function Hero() {
+export default function Hero({ lesson }: { lesson: Lesson }) {
+  const { setTrack } = useAudioPlayer()
+  const track: AudioTrack = {
+    id: Number(lesson.id),
+    title: lesson.title,
+    artist: "الشيخ عبد الله",
+    audioUrl: ("http://localhost:3000/" + lesson.audio_url),
+    duration: lesson.duration || 300,
+    thumbnailUrl: ("http://localhost:3000" + lesson.thumbnail_url) || "/placeholder.svg",
+    type: "lesson"
+  }
   return (
     <section className="relative w-full h-[500px] overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
-          src="/speech.jpg?height=500&width=1200"
+          src={"http://localhost:3000/" + lesson.thumbnail_url}
           alt="Hero background"
           fill
           className="object-cover"
@@ -22,18 +37,16 @@ export default function Hero() {
       <div className="relative container mx-auto h-full flex flex-col justify-center p-6 md:p-12">
         <div className="max-w-3xl">
           <div className="flex items-center text-sm mb-3 gap-2">
-            <Badge className="text-slate-50">خطب</Badge>
-            <span className="text-white">{formatDate(new Date("2018/01/01"))}</span>
+            <Badge className="text-slate-50">{lesson.category}</Badge>
+            <span className="text-white">{formatDate(lesson.published_date)}</span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold mb-6 text-white">الدنيا وزينتها</h1>
-          <p className="text-sm md:text-base mb-8 leading-relaxed text-white">
-            الحمد لله الذي له ما في السموات وما في الأرض، وله الحمد في الآخرة وهو الحكيم الخبير، أحمده سبحانه وأشكره
-            وأشهد أن لا إله إلا الله وحده لا شريك له ولا ولد ولا وزير وأشهد أن سيدنا ونبينا محمد عبده ورسوله، صلى الله
-            عليه وعلى آله وصحبه وسلم تسليماً كثيراً.
-          </p>
+          <h1 className="text-3xl md:text-5xl font-bold mb-6 text-white"> {lesson.title}</h1>
+          <p className="text-sm md:text-base mb-8 leading-relaxed text-white">{lesson.description}</p>
           <div className="flex flex-wrap gap-4">
-            <Button>قراءة المزيد</Button>
-            <Button variant="outline">
+            <Link href={`/lessons/${lesson.id}`}>
+              <Button>قراءة المزيد</Button>
+            </Link>
+            <Button variant="outline" onClick={() => setTrack(track)}>
               استماع للخطبة
             </Button>
           </div>

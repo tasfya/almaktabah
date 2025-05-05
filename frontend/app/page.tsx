@@ -12,7 +12,7 @@ export default async function Home() {
 
   return (
     <div className="bg-gray-50" dir="rtl">
-      <Hero />
+      {lessons.length > 0 && <Hero lesson={lessons[0]} />}
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">

@@ -15,8 +15,6 @@ import { useAudioPlayer } from "@/context/AudioPlayerContext"
 export function RecentLessons({ lessons }: { lessons: Lesson[] }) {
   const { setTrack } = useAudioPlayer()
   
-
-
   const audioTracks: { [key: string]: AudioTrack } = lessons.reduce(
     (acc, lesson) => ({
       ...acc,
@@ -76,10 +74,6 @@ export function RecentLessons({ lessons }: { lessons: Lesson[] }) {
                   >
                     <Play className="h-4 w-4 ml-1" />
                     <span>استماع</span>
-                  </Button>
-                  <Button variant="outline" size="sm" className="rounded-md">
-                    <Download className="h-4 w-4 ml-1" />
-                    <span>تحميل</span>
                   </Button>
                   <Link href={`/lessons/${lesson.id}`}>
                     <Button size="sm">
