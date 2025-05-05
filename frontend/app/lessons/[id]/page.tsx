@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Play, Calendar, Clock } from "lucide-react";
-import { formatDuration, formatDate } from "@/lib/utils";
+import { formatDuration, formatDate, resourceUrl } from "@/lib/utils";
 import Image from "next/image";
 import { AudioTrack, } from "@/types";
 import FeaturedSheikh from "@/components/featured-sheikh";
@@ -24,9 +24,9 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
     id: Number(lesson.id),
     title: lesson.title,
     artist: "الشيخ عبد الله",
-    audioUrl: ("http://localhost:3000/" + lesson.audio_url),
+    audioUrl: resourceUrl(lesson.audio_url),
     duration: lesson.duration || 300,
-    thumbnailUrl: ("http://localhost:3000" + lesson.thumbnail_url) || "/placeholder.svg",
+    thumbnailUrl: resourceUrl(lesson.thumbnail_url),
     type: "lesson"
   };
   return (
@@ -54,7 +54,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           <Card className="overflow-hidden border-0 shadow-md">
             <div className="relative h-48 md:h-64 bg-gray-900">
               <Image
-                src={"http://localhost:3000/" + lesson.thumbnail_url}
+                src={resourceUrl(lesson.thumbnail_url)}
                 alt={lesson.title}
                 fill
                 className="object-cover opacity-70"

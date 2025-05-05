@@ -43,7 +43,7 @@ env:
     - RAILS_MASTER_KEY
   clear:
     SOLID_QUEUE_IN_PUMA: true
-    NEXT_PUBLIC_API_URL: "https://ilm.hachimy.com/api"
+    NEXT_PUBLIC_API_URL: "https://ilm.hachimy.com/"
 
 volumes:
   - "almaktabah_storage:/rails/storage"

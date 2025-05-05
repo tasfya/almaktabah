@@ -17,6 +17,11 @@ export function formatTime(seconds: number): string {
   return `${formattedMinutes}:${formattedSeconds}`
 }
 
+export function resourceUrl(path: string): string {
+  const base_url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/"
+  return `${base_url}${path}`
+}
+
 export function formatDuration(minutes: number): string {
   if (isNaN(minutes) || minutes < 0) return "0 دقيقة"
 

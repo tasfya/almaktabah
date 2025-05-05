@@ -2,7 +2,7 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "./ui/badge"
-import { formatDate } from "@/lib/utils"
+import { formatDate, resourceUrl } from "@/lib/utils"
 import { Lesson } from "@/lib/services/lessons-service"
 import { useAudioPlayer } from "@/context/AudioPlayerContext"
 import { AudioTrack } from "@/types"
@@ -14,9 +14,9 @@ export default function Hero({ lesson }: { lesson: Lesson }) {
     id: Number(lesson.id),
     title: lesson.title,
     artist: "الشيخ عبد الله",
-    audioUrl: ("http://localhost:3000/" + lesson.audio_url),
+    audioUrl: resourceUrl(lesson.audio_url),
     duration: lesson.duration || 300,
-    thumbnailUrl: ("http://localhost:3000" + lesson.thumbnail_url) || "/placeholder.svg",
+    thumbnailUrl: resourceUrl(lesson.thumbnail_url),
     type: "lesson"
   }
   return (
@@ -24,7 +24,7 @@ export default function Hero({ lesson }: { lesson: Lesson }) {
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
-          src={"http://localhost:3000/" + lesson.thumbnail_url}
+          src={resourceUrl(lesson.thumbnail_url)}
           alt="Hero background"
           fill
           className="object-cover"

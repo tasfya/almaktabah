@@ -15,11 +15,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import SearchModal from "./search-modal"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const pathname = usePathname()
 
 
@@ -57,6 +59,10 @@ export default function Header() {
     return name.split(" ").map((n: string) => n[0]).join("").toUpperCase()
   }
 
+  const handleOpenSearchModal = () => {
+    setIsSearchModalOpen(true)
+  }
+
   return (
     <header className="bg-white border-b sticky top-0 z-50">
       <div className="container mx-auto py-3 px-4">
@@ -71,12 +77,17 @@ export default function Header() {
             />
           </Link>
 
-          {/* Search */}
+          {/* Search Button - Replace the search input with a button */}
           <div className="hidden md:flex items-center gap-2 mx-4 flex-1 max-w-md">
-            <div className="relative w-full">
-              <Input type="search" placeholder="كلمة البحث" className="pl-10 pr-4 py-1 h-9 text-sm w-full" />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-            </div>
+            <Button 
+              variant="outline" 
+              className="w-full flex justify-between" 
+              onClick={handleOpenSearchModal}
+              dir="rtl"
+            >
+              <span className="text-gray-500">ابحث في المكتبة...</span>
+              <Search className="h-4 w-4 text-gray-400" />
+            </Button>
           </div>
 
           {/* Social Links */}
@@ -158,12 +169,17 @@ export default function Header() {
           </Button>
         </div>
 
-        {/* Mobile Search */}
+        {/* Mobile Search Button */}
         <div className="mt-3 md:hidden">
-          <div className="relative w-full">
-            <Input type="search" placeholder="كلمة البحث" className="pl-10 pr-4 py-1 h-9 text-sm w-full" />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-          </div>
+          <Button 
+            variant="outline" 
+            className="w-full flex justify-between" 
+            onClick={handleOpenSearchModal}
+            dir="rtl"
+          >
+            <span className="text-gray-500">ابحث في المكتبة...</span>
+            <Search className="h-4 w-4 text-gray-400" />
+          </Button>
         </div>
       </div>
 
@@ -307,6 +323,12 @@ export default function Header() {
           </div>
         </div>
       )}
+      
+      {/* Search Modal */}
+      <SearchModal 
+        open={isSearchModalOpen} 
+        onOpenChange={setIsSearchModalOpen} 
+      />
     </header>
   )
 }

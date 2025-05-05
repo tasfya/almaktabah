@@ -5,7 +5,7 @@ import { ArrowLeft, Play, FileText, Eye } from "lucide-react"
 import Link from "next/link"
 import type { AudioTrack } from "@/types"
 import { Lesson } from "@/lib/services/lessons-service"
-import { formatDate } from "@/lib/utils"
+import { formatDate, resourceUrl } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { useAudioPlayer } from "@/context/AudioPlayerContext"
 
@@ -16,9 +16,9 @@ function LessonCard({ lesson }: { lesson: Lesson }) {
       id: Number(lessonId),
       title: lesson.title,
       artist: "الشيخ عبد الله",
-      audioUrl: ("http://localhost:3000/" + lesson.audio_url),
+      audioUrl: resourceUrl(lesson.audio_url),
       duration: lesson.duration || 300,
-      thumbnailUrl: ("http://localhost:3000" + lesson.thumbnail_url) || "/placeholder.svg",
+      thumbnailUrl: resourceUrl(lesson.thumbnail_url),
       type: "lesson"
     }
     setTrack(audioTrack)
