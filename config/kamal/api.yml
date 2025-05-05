@@ -28,4 +28,3 @@ env:
 proxy:
   ssl: true
   host: ilm.hachimy.com
-  path: /api
