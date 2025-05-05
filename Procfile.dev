@@ -1,2 +1,2 @@
-web: bin/rails server
-vite: bin/vite dev
+api: bin/rails server
+web: cd frontend && pnpm dev -p 4000

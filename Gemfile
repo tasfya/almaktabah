@@ -8,13 +8,19 @@ gem "propshaft"
 gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
-# Hotwire"s SPA-like page accelerator [https://turbo.hotwired.dev]
-gem "turbo-rails"
-# Hotwire"s modest JavaScript framework [https://stimulus.hotwired.dev]
-gem "stimulus-rails"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+
+# JSON API serialization
+gem "active_model_serializers", "~> 0.10.13"
+
+# JWT for API authentication
+gem "jwt"
+
+# API documentation
+gem "rswag-api"
+gem "rswag-ui"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
@@ -59,6 +65,7 @@ group :development, :test do
   gem "rspec-rails"
   gem "shoulda-matchers"
   gem "factory_bot_rails"
+  gem "faker"
   gem "simplecov"
   gem "simplecov-cobertura"
   gem "rubocop-factory_bot"
@@ -75,4 +82,3 @@ group :development do
 end
 
 gem "avo", ">= 3.2"
-gem "vite_rails", "~> 3.0"
