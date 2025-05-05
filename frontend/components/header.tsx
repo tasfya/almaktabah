@@ -38,15 +38,15 @@ export default function Header() {
   const getNavLinkClass = (path: string) => {
     const active = path === "/" ? isActive(path) : isActiveStartsWith(path)
     return active
-      ? "px-4 py-3 text-sm font-medium text-emerald-700 border-b-2 border-emerald-600 whitespace-nowrap"
-      : "px-4 py-3 text-sm font-medium text-gray-600 hover:text-emerald-600 whitespace-nowrap"
+      ? "px-4 py-3 text-sm font-medium text-primary border-b-2 border-primary whitespace-nowrap"
+      : "px-4 py-3 text-sm font-medium text-gray-600 hover:text-primary whitespace-nowrap"
   }
   
   // Function for mobile nav link styles
   const getMobileNavLinkClass = (path: string) => {
     const active = path === "/" ? isActive(path) : isActiveStartsWith(path)
     return active
-      ? "p-2 text-sm font-medium text-emerald-700 bg-emerald-50 rounded"
+      ? "p-2 text-sm font-medium text-primary rounded"
       : "p-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded"
   }
 
@@ -62,13 +62,12 @@ export default function Header() {
       <div className="container mx-auto py-3 px-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center flex-1 w-full">
             <Image
-              src="/logo.svg?height=50&width=200"
+              src="/logo.png"
               alt="الموقع الرسمي للشيخ"
               width={200}
               height={50}
-              className="h-10 w-auto"
             />
           </Link>
 

@@ -36,7 +36,6 @@ export type User = {
 }
 
 
-export type Lesson = {}
 export type Fatwa = {}
 export type Sermon = {}
 export type Lecture = {}

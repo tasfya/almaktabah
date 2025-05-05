@@ -47,7 +47,7 @@ export default function RecentFatwas() {
     <section>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">أحدث الفتاوى</h2>
-        <Button variant="ghost" className="text-emerald-600 hover:text-emerald-700">
+        <Button variant="link">
           عرض الكل <ArrowLeft className="h-4 w-4 mr-1" />
         </Button>
       </div>
@@ -60,7 +60,7 @@ export default function RecentFatwas() {
           >
             <CardContent className="p-4">
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 mt-1">
+                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full text-primary mt-1">
                   <MessageCircle className="h-5 w-5" />
                 </div>
                 <div className="flex-1">
@@ -70,7 +70,7 @@ export default function RecentFatwas() {
                   </div>
                   <h3 className="text-lg font-medium mb-2">{fatwa.title}</h3>
                   <Link href={`/fatwa/${fatwa.id}`}>
-                    <Button variant="link" className="p-0 h-auto text-emerald-600">
+                    <Button variant="link">
                       قراءة الفتوى
                     </Button>
                   </Link>

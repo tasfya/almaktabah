@@ -1,19 +1,15 @@
 import Hero from "@/components/hero"
 import ContentCategories from "@/components/content-categories"
-import RecentLessons from "@/components/recent-lessons"
 import RecentFatwas from "@/components/recent-fatwas"
-import AskSheikhSection from "@/components/ask-sheikh-section"
 import BooksSection from "@/components/books-section"
 import PopularTopics from "@/components/popular-topics"
-import UpcomingEvents from "@/components/upcoming-events"
-import FeaturedSheikh from "@/components/featured-sheikh"
-import { getAllBooks } from "@/lib/services/books-service"
+import {RecentLessons} from "@/components/lessons-list"
+import PageSidebar from "@/components/page-sidebar"
+import { getRecentLessons } from "@/lib/services/lessons-service"
 
 export default async function Home() {
-  // Example of how to use the getAllBooks function
-  const books = await getAllBooks()
-  console.log(books)
-  
+  const lessons = await getRecentLessons()
+
   return (
     <div className="bg-gray-50" dir="rtl">
       <Hero />
@@ -35,23 +31,13 @@ export default async function Home() {
 
             {/* Rest of the components remain the same */}
             <div className="mb-12">
-              <RecentLessons />
+              <RecentLessons lessons={lessons} />
             </div>
           </div>
 
           {/* Sidebar remains the same */}
           <div className="lg:col-span-1">
-            <div className="mb-8 bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
-              <FeaturedSheikh />
-            </div>
-
-            <div className="mb-8 bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
-              <AskSheikhSection />
-            </div>
-
-            <div className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
-              <UpcomingEvents />
-            </div>
+            <PageSidebar />
           </div>
         </div>
 

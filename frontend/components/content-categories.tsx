@@ -45,7 +45,7 @@ export default function ContentCategories() {
             href={category.href}
             className="flex flex-col items-center p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow bg-white border border-gray-100"
           >
-            <div className="p-3 rounded-full bg-emerald-50 text-emerald-600 mb-3">{category.icon}</div>
+            <div className="p-3 rounded-full  text-primary mb-3 border">{category.icon}</div>
             <span className="font-medium text-gray-800 text-center">{category.title}</span>
           </Link>
         ))}

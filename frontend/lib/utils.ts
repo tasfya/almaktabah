@@ -30,15 +30,25 @@ export function formatDuration(minutes: number): string {
   return `${remainingMinutes} دقيقة`
 }
 
-export function formatDate(date: Date): string {
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
+export function formatDate(date: Date | string | number | null | undefined): string {
+  try {
+    const validDate = date ? new Date(date) : new Date()
+    
+    if (isNaN(validDate.getTime())) {
+      return "تاريخ غير صالح"
+    }
+    
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }
+    return new Intl.DateTimeFormat("ar-EG", options).format(validDate)
+  } catch (error) {
+    return "تاريخ غير صالح"
   }
-  return new Intl.DateTimeFormat("ar-EG", options).format(date)
 }
 
 export function truncateText(text: string, maxLength: number): string {

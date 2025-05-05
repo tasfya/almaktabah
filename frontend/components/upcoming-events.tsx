@@ -40,22 +40,22 @@ export default function UpcomingEvents() {
         <CardTitle className="text-xl">الفعاليات القادمة</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="flex flex-col gap-3">
           {events.map((event) => (
             <Link key={event.id} href={`/event/${event.id}`}>
-              <div className="p-3 rounded-md border border-gray-100 hover:bg-emerald-50 transition-colors">
+              <div className="p-3 rounded-md border border-gray-100 hover:bg-gray-50 transition-colors">
                 <h3 className="font-medium mb-2">{event.title}</h3>
                 <div className="flex flex-wrap text-sm text-gray-600 gap-x-4 gap-y-1">
-                  <div className="flex items-center">
-                    <Calendar className="h-4 w-4 ml-1 text-emerald-600" />
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4 ml-1 text-primary" />
                     <span>{event.date}</span>
                   </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 ml-1 text-emerald-600" />
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4 ml-1 text-primary" />
                     <span>{event.time}</span>
                   </div>
-                  <div className="flex items-center">
-                    <MapPin className="h-4 w-4 ml-1 text-emerald-600" />
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4 ml-1 text-primary" />
                     <span>{event.location}</span>
                   </div>
                 </div>

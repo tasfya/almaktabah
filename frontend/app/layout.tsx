@@ -4,13 +4,13 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import { AudioPlayerProvider } from "@/context/AudioPlayerContext"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "الموقع الرسمي للشيخ",
   description: "الموقع الرسمي للشيخ - دروس علمية، خطب، محاضرات، فتاوى",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -21,9 +21,11 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={inter.className}>
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+        <AudioPlayerProvider>
+          <Header />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </AudioPlayerProvider>
       </body>
     </html>
   )

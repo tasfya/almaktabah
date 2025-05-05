@@ -113,7 +113,7 @@ export default function AudioPlayer({
         if (!audio) return
         
         const progress = Math.round((audio.currentTime / audio.duration) * 100)
-        throw new Error(`Lesson progress: ${progress}%`)
+        // TODO: Update lesson progress in the database
       }, 1000)
     }
     
@@ -170,7 +170,8 @@ export default function AudioPlayer({
     setIsBookmarked(!isBookmarked)
     
     if (track?.type === "lesson") {
-      throw new Error(`Bookmark toggled for lesson: ${track.title}`)
+      // throw new Error(`Bookmark toggled for lesson: ${track.title}`)
+      // TODO: Handle bookmarking logic
     }
   }
   
@@ -259,7 +260,7 @@ export default function AudioPlayer({
             <span className="text-[10px] text-gray-500 w-6 text-right">{formatTime(currentTime)}</span>
             <div className="relative flex-1 h-1 bg-gray-200 rounded-full">
               <div 
-                className="absolute h-full bg-emerald-600 rounded-full" 
+                className="absolute h-full  rounded-full" 
                 style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
               />
             </div>
@@ -290,12 +291,11 @@ export default function AudioPlayer({
               <p className="text-xs text-gray-500 truncate">{track.artist}</p>
             </div>
             <Button
-              variant="ghost"
+              variant="outline"
               size="icon"
-              className="h-8 w-8 text-gray-500 hover:text-emerald-600"
               onClick={toggleBookmark}
             >
-              {isBookmarked ? <BookmarkCheck className="h-5 w-5 text-emerald-600" /> : <Bookmark className="h-5 w-5" />}
+              {isBookmarked ? <BookmarkCheck className="h-5 w-5 text-primary" /> : <Bookmark className="h-5 w-5" />}
             </Button>
           </div>
 
@@ -303,9 +303,8 @@ export default function AudioPlayer({
           <div className="flex flex-col w-full md:w-2/4 px-0 md:px-4">
             <div className="flex items-center justify-center space-x-4 mb-2">
               <Button
-                variant="default"
+                variant="ghost"
                 size="icon"
-                className="h-10 w-10 rounded-full bg-emerald-600 hover:bg-emerald-700"
                 onClick={togglePlay}
               >
                 {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
@@ -314,7 +313,7 @@ export default function AudioPlayer({
               <Button
                 variant="ghost"
                 size="icon"
-                className={`h-8 w-8 ${isRepeat ? "text-emerald-600" : "text-gray-500"}`}
+                className={`h-8 w-8 ${isRepeat ? "text-primary" : "text-gray-500"}`}
                 onClick={toggleRepeat}
               >
                 <Repeat className="h-4 w-4" />
