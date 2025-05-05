@@ -4,9 +4,9 @@ module Api
         def index
             page = params[:page]&.to_i || 1
             per_page = params[:per_page]&.to_i || 10
-            
+
             lessons = Lesson.all
-            
+
             if params[:title].present?
                 lessons = lessons.where("LOWER(title) LIKE LOWER(?)", "%#{params[:title]}%")
             end
@@ -14,13 +14,13 @@ module Api
             if params[:category].present?
                 lessons = lessons.where("LOWER(category) LIKE LOWER(?)", "%#{params[:category]}%")
             end
-            
+
             total_items = lessons.count
             total_pages = (total_items.to_f / per_page).ceil
-            
+
             offset = (page - 1) * per_page
             paginated_lessons = lessons.offset(offset).limit(per_page)
-            
+
             render json: {
                 lessons: ActiveModel::Serializer::CollectionSerializer.new(
                     paginated_lessons,
@@ -34,8 +34,8 @@ module Api
                     categories: categories
                 }
             }
-        end        
-  
+        end
+
         def show
           lesson = Lesson.find(params[:id])
           render json: lesson
@@ -54,4 +54,4 @@ module Api
         end
       end
     end
-  end
+end

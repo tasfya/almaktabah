@@ -10,7 +10,7 @@ class LessonSerializer < ActiveModel::Serializer
             :updated_at,
             :thumbnail_url,
             :audio_url
-        
+
     def thumbnail_url
         if object.respond_to?(:thumbnail) && object.thumbnail.present?
             begin
@@ -21,7 +21,7 @@ class LessonSerializer < ActiveModel::Serializer
             end
         end
     end
-        
+
     def audio_url
         if object.respond_to?(:audio) && object.audio.present?
             begin

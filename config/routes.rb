@@ -13,7 +13,7 @@ Rails.application.routes.draw do
       resources :books, only: [ :index, :show ]
       resources :scholars, only: [ :index, :show ]
       resources :articles, only: [ :index, :show ]
-      resources :lessons, only: [ :index, :show ] do 
+      resources :lessons, only: [ :index, :show ] do
         collection do
           get "recent", to: "lessons#recent"
         end

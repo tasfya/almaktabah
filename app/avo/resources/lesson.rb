@@ -14,7 +14,7 @@ class Avo::Resources::Lesson < Avo::BaseResource
     field :published_date, as: :date
     field :duration, as: :number
     field :category, as: :text
-    field :thumbnail, as: :file, accept: 'image/*', max_size: 5.megabytes
-    field :audio, as: :file, accept: 'audio/*', max_size: 10.megabytes
+    field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
+    field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
   end
 end
