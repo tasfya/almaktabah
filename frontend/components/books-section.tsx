@@ -67,7 +67,7 @@ export default function BooksSection() {
           >
             <CardContent className="p-0">
               <div className="flex flex-col">
-                <div className="relative h-48 bg-gradient-to-b from-emerald-50 to-white flex items-center justify-center">
+                <div className="relative h-48 flex items-center justify-center">
                   <Image
                     src={book.image || "/placeholder.svg"}
                     alt={book.title}
@@ -78,7 +78,7 @@ export default function BooksSection() {
                 </div>
                 <div className="p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-50 text-emerald-600">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full border text-primary">
                       <Book className="h-4 w-4" />
                     </div>
                     <span className="text-xs text-gray-500">{book.year} هـ</span>
@@ -101,7 +101,7 @@ export default function BooksSection() {
                     </p>
                   </div>
                   <Link href={`/book/${book.id}`}>
-                    <Button className="w-full bg-emerald-600 hover:bg-emerald-700">قراءة الكتاب</Button>
+                    <Button className="w-full">قراءة الكتاب</Button>
                   </Link>
                 </div>
               </div>
@@ -111,7 +111,7 @@ export default function BooksSection() {
       </div>
 
       <div className="flex justify-center mt-8">
-        <Button variant="outline" className="bg-emerald-600 text-white hover:bg-emerald-700">
+        <Button variant="outline">
           عرض المزيد من الكتب
         </Button>
       </div>

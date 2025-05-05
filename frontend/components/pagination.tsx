@@ -29,10 +29,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
                     const page = index + 1;
                     return (
                         <Link href={createPageURL(page)} key={page} scroll={false}>
-                            <Button
-                                variant={currentPage === page ? 'default' : 'outline'}
-                                className={cn({ 'bg-emerald-600 text-white hover:bg-emerald-700': currentPage === page })}
-                            >
+                            <Button variant={currentPage === page ? 'default' : 'outline'}>
                                 {page}
                             </Button>
                         </Link>

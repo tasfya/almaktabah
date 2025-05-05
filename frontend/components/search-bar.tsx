@@ -101,7 +101,6 @@ export function SearchBar({
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="relative text-emerald-600 border-emerald-200 hover:bg-emerald-50"
             >
               <ArrowUpDown className="h-4 w-4 ml-2" />
               ترتيب
@@ -126,7 +125,7 @@ export function SearchBar({
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="relative text-emerald-600 border-emerald-200 hover:bg-emerald-50"
+              className="relative"
             >
               <Filter className="h-4 w-4 ml-2" />
               تصفية

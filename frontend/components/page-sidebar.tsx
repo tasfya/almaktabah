@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Mail, Book, BookOpen, Download } from "lucide-react"
+import { ExternalLink, Mail, BookOpen, Download } from "lucide-react"
 import Link from "next/link"
 import SocialLinks from "./social-links"
 
@@ -21,10 +21,7 @@ export default function PageSidebar() {
                 className="rounded-full"
               />
             </div>
-            <p className="text-sm text-gray-600 mb-4">
-              عالم وداعية إسلامي، له العديد من المؤلفات والدروس العلمية في مختلف العلوم الشرعية.
-            </p>
-            <div className="flex gap-2 w-full">
+            <div className="flex gap-2 w-full justify-center">
               <Button asChild>
                 <Link href="/about">
                   <span className="flex items-center justify-center gap-1">
