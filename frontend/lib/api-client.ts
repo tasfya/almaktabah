@@ -2,7 +2,7 @@
  * API client for interacting with the Rails backend
  */
 
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL + "/api") || 'http://localhost:3000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? (process.env.NEXT_PUBLIC_API_URL + "/api") : 'http://localhost:3000/api';
 
 export type RequestOptions = {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';

@@ -27,12 +27,12 @@ export default async function LessonsPage(props: {
   return (
     <div className="bg-gray-50 min-h-screen py-8">
       <div className="container mx-auto px-4">
-        <Breadcrumb className="mb-4">
+        <Breadcrumb className="mb-4" dir="rtl">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/">الرئيسية</BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
+            <BreadcrumbSeparator/>
             <BreadcrumbItem>
               <BreadcrumbLink href="/lessons">الدروس العلمية</BreadcrumbLink>
             </BreadcrumbItem>
