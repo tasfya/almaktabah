@@ -11,9 +11,9 @@ module Api
         fatwas = fatwas.where("LOWER(title) LIKE LOWER(?)", "%#{params[:title]}%")
       end
 
-      # if params[:category].present?
-      #   fatwas = fatwas.where("LOWER(category) LIKE LOWER(?)", "%#{params[:category]}%")
-      # end
+      if params[:category].present?
+        fatwas = fatwas.where("LOWER(category) LIKE LOWER(?)", "%#{params[:category]}%")
+      end
 
       total_items = fatwas.count
       total_pages = (total_items.to_f / per_page).ceil
@@ -30,8 +30,8 @@ module Api
           current_page: page,
           per_page: per_page,
           total_items: total_items,
-          total_pages: total_pages
-          # categories: categories
+          total_pages: total_pages,
+          categories: categories
         }
       }
     end

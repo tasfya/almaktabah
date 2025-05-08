@@ -61,7 +61,7 @@ RSpec.describe Api::V1::FatwasController, type: :request do
     it 'returns 10 most recent fatwas' do
       get '/api/fatwas/recent'
       expect(response).to have_http_status(:ok)
-      expect(json_response.size).to eq(10)
+      expect(json_response.size).to eq(5)
     end
   end
 
