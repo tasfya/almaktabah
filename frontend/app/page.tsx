@@ -6,9 +6,13 @@ import PopularTopics from "@/components/popular-topics"
 import {RecentLessons} from "@/components/lessons-list"
 import PageSidebar from "@/components/page-sidebar"
 import { getRecentLessons } from "@/lib/services/lessons-service"
+import { getRecentFatwas } from "@/lib/services/fatwas-service"
 
 export default async function Home() {
-  const lessons = await getRecentLessons()
+  const [lessons, fatwas] = await Promise.all([
+    getRecentLessons(),
+    getRecentFatwas()
+  ])
 
   return (
     <div className="bg-gray-50" dir="rtl">
@@ -25,7 +29,7 @@ export default async function Home() {
                 <PopularTopics />
               </div>
               <div className="md:col-span-2">
-                <RecentFatwas />
+                <RecentFatwas fatwas={fatwas} />
               </div>
             </div>
 

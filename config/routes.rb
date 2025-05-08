@@ -18,6 +18,12 @@ Rails.application.routes.draw do
           get "recent", to: "lessons#recent"
         end
       end
+
+      resources :fatwas, only: [ :index, :show ] do
+        collection do
+          get "recent", to: "fatwas#recent"
+        end
+      end
     end
   end
 
