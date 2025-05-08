@@ -18,7 +18,7 @@ export function formatTime(seconds: number): string {
 }
 
 export function resourceUrl(path: string): string {
-  const base_url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/"
+  const base_url = process.env.NEXT_PUBLIC_API_URL ? (process.env.NEXT_PUBLIC_API_URL ) : "http://localhost:3000/"
   return `${base_url}${path}`
 }
 
