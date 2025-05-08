@@ -28,7 +28,7 @@ export default async function FatwasPage(props: {
     <div className="bg-gray-50 min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <Breadcrumb className="mb-4"  dir="rtl">
+        <Breadcrumb className="mb-4" dir="rtl">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/">الرئيسية</BreadcrumbLink>
@@ -53,7 +53,7 @@ export default async function FatwasPage(props: {
                 </div>
 
               </div>
-              <SearchBar categories={[]} />
+              <SearchBar categories={meta.categories} />
               <Card className="border-gray-100 shadow-sm h-full">
                 <CardContent className="p-4">
                   <div className="flex flex-col items-center text-center">
