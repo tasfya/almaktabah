@@ -19,7 +19,7 @@ export default function LecturesPage() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink>المحاضرات والكلمات</BreadcrumbLink>
+              <BreadcrumbLink href="/lectures">المحاضرات والكلمات</BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

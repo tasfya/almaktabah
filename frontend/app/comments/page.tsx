@@ -19,7 +19,7 @@ export default function CommentsPage() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink>التعليقات</BreadcrumbLink>
+              <BreadcrumbLink href="/comments">التعليقات</BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

@@ -19,7 +19,7 @@ export default function SermonsPage() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink>الخطب</BreadcrumbLink>
+              <BreadcrumbLink href="/sermons">الخطب</BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
