@@ -19,7 +19,7 @@ export default function BenefitsPage() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink>الفوائد</BreadcrumbLink>
+              <BreadcrumbLink href="/benifits">الفوائد</BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

@@ -18,7 +18,7 @@ export default function AboutPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink>مع الشيخ</BreadcrumbLink>
+            <BreadcrumbLink href="/about">مع الشيخ</BreadcrumbLink>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

@@ -18,7 +18,7 @@ export default function BooksPage() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink>الكتب</BreadcrumbLink>
+              <BreadcrumbLink href="/books">الكتب</BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
