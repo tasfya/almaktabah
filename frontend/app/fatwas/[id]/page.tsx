@@ -10,6 +10,7 @@ export default async function FatwaPage({ params }: { params: Promise<{ id: stri
   const { id } = await params;
 
   const fatwa = await getFatwaById(id);
+  
 
   if (!fatwa) {
     return <div className="container mx-auto px-4 py-8">الفتوى غير موجودة</div>;

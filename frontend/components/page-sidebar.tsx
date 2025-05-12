@@ -4,8 +4,16 @@ import { Button } from "@/components/ui/button"
 import { ExternalLink, Mail, BookOpen, Download } from "lucide-react"
 import Link from "next/link"
 import SocialLinks from "./social-links"
+import { getMostDownloadedBooks, getMostViewedBooks } from "@/lib/services/books-service"
+import { resourceUrl } from "@/lib/utils"
+import { books } from "@/lib/data"
 
-export default function PageSidebar() {
+
+export default async function PageSidebar() {
+  const [mostVisitedBooks, mostDownloadedBooks] = await Promise.all([
+    getMostViewedBooks(),
+    getMostDownloadedBooks()
+  ]);
   return (
     <div className="space-y-6">
       {/* Sheikh Info Card */}
@@ -53,27 +61,22 @@ export default function PageSidebar() {
         </CardHeader>
         <CardContent className="pt-4">
           <div className="space-y-3">
-            {[1, 2, 3].map((item) => (
-              <div key={`download-${item}`} className="flex items-center gap-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0">
-                <div className="relative w-14 h-20 flex-shrink-0">
-                  <Image
-                    src="/placeholder.svg?height=80&width=56"
-                    alt={`كتاب ${item}`}
-                    width={56}
-                    height={80}
-                    className="object-cover"
-                  />
-                </div>
+            {mostDownloadedBooks.map((book) => (
+              <div key={book.id} className="flex items-center gap-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0">
                 <div className="flex-1">
-                  <h4 className="font-medium text-sm mb-1 line-clamp-1">شرح كتاب التوحيد - الجزء {item}</h4>
+                  <h4 className="font-medium text-sm mb-1 line-clamp-1">
+                    {book.title}
+                  </h4>
                   <div className="flex items-center text-xs text-gray-500 mb-2 gap-1">
-                    <Download className="h-3 w-3 ml-1" />
-                    <span>4.{item}K تحميل</span>
+                    <Download className="h-3 w-3" />
+                    <span>{book.downloads} تحميل</span>
                   </div>
-                  <Button variant='outline' size="sm">
-                    <Download className="h-3 w-3 ml-1" />
-                    تحميل
-                  </Button>
+                  <Link href={resourceUrl(book.file_url)} download target="_blank">
+                    <Button variant="outline">
+                      <Download className="h-3 w-3" />
+                      تحميل
+                    </Button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -88,27 +91,22 @@ export default function PageSidebar() {
         </CardHeader>
         <CardContent className="pt-4">
           <div className="space-y-3">
-            {[1, 2, 3].map((item) => (
-              <div key={`visit-${item}`} className="flex gap-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0">
+            {mostVisitedBooks.map((book, index) => (
+              <Link key={book.id} href={`/books/${book.id}`} className="flex gap-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0">
                 <div className="bg-primary text-white h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0 font-medium text-sm">
-                  {item}
+                  {index + 1}
                 </div>
                 <div className="flex-1">
                   <h4 className="font-medium text-sm mb-1 line-clamp-2">
-                    {item === 1 ? "شرح حديث إنما الأعمال بالنيات" : 
-                     item === 2 ? "فضل العلم الشرعي وطلبه" : 
-                     "أحكام الصيام في رمضان"}
+                    {book.title}
                   </h4>
                   <div className="flex items-center text-xs text-gray-500 gap-1">
                     <BookOpen className="h-3 w-3 ml-1" />
-                    <span>{item + 6}K مشاهدة</span>
+                    <span>{book.views} مشاهدة</span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
-            <Button className="mx-auto">
-              عرض المزيد
-            </Button>
           </div>
         </CardContent>
       </Card>

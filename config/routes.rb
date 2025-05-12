@@ -10,7 +10,13 @@ Rails.application.routes.draw do
       post "login", to: "authentication#login"
       post "signup", to: "users#create"
 
-      resources :books, only: [ :index, :show ]
+      resources :books, only: [ :index, :show ] do
+        collection do
+          get "recent", to: "books#recent"
+          get "most_downloaded", to: "books#most_downloaded"
+          get "most_viewed", to: "books#most_viewed"
+        end
+      end
       resources :scholars, only: [ :index, :show ]
       resources :articles, only: [ :index, :show ]
       resources :lessons, only: [ :index, :show ] do

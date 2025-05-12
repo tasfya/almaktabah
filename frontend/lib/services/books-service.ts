@@ -1,24 +1,69 @@
 'use server';
 
-import { api } from '@/lib/api-client';
+import { api, RequestOptions } from '@/lib/api-client';
 
-type Author = {
+export type Author = {
   id: string;
   first_name: string;
   last_name: string;
   created_at: Date;
   updated_at: Date;
 }
-type Book = {
+export type Book = {
     id: string;
-    created_at: Date;
-    updated_at: Date;
+    title: string;
+    description: string;
+    year: number;
+    downloads: number;
+    views: number;
+    pages: number;
+    volumes: number;
+    category: string;
+    cover_image_url: string;
+    file_url: string
+    published_date: Date;
     author: Author   
 }
 
 
-export async function getAllBooks(): Promise<Book[]> {
-  const response = await api.get<Book[]>('books');
+type Response = {
+  books: Book[];
+  meta: {
+    current_page: number,
+    per_page: number,
+    total_items: number,
+    total_pages: number,
+    offset: number,
+    categories: string[],
+  }
+}
+
+
+export async function getAllBooks(page: number = 1, query: string = '', category= ''): Promise<Response> {
+  const options: Omit<RequestOptions, 'method' | 'body'> = {
+    params: {
+      page,
+      title: query,
+      category
+    },
+  };
+  const response = await api.get<Response>('books', options);
+  return response;
+}
+
+
+export async function getRecentBooks(): Promise<Book[]> {
+  const response = await api.get<Book[]>('books/recent/');    
+  return response;
+}
+
+export async function getMostDownloadedBooks(): Promise<Book[]> {
+  const response = await api.get<Book[]>('books/most_downloaded');
+  return response;
+}
+
+export async function getMostViewedBooks(): Promise<Book[]> {
+  const response = await api.get<Book[]>('books/most_viewed');
   return response;
 }
 

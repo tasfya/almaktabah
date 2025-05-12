@@ -38,6 +38,7 @@ module Api
 
     def show
       fatwa = Fatwa.find(params[:id])
+      fatwa.increment!(:views)
       render json: fatwa
     rescue ActiveRecord::RecordNotFound
       render json: { error: "Fatwa not found" }, status: :not_found

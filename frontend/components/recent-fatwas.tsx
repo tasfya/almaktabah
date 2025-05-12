@@ -11,8 +11,8 @@ export default function RecentFatwas({ fatwas }: { fatwas: Fatwa[] }) {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">أحدث الفتاوى</h2>
         <Button variant="link">
-          <Link href="/fatwas">
-            عرض الكل <ArrowLeft className="h-4 w-4 mr-1" />
+          <Link href="/fatwas" className="flex items-center gap-1">
+            عرض الكل <ArrowLeft />
           </Link>
         </Button>
       </div>

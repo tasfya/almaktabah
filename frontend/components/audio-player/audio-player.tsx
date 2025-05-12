@@ -256,7 +256,7 @@ export default function AudioPlayer({
           </div>
           
           {/* Progress bar for minimized view */}
-          <div className="flex items-center space-x-2 px-1">
+          <div className="flex items-center space-x-2 gap-1 px-1">
             <span className="text-[10px] text-gray-500 w-6 text-right">{formatTime(currentTime)}</span>
             <div className="relative flex-1 h-1 bg-gray-200 rounded-full">
               <div 
