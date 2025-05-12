@@ -51,7 +51,7 @@ export const FatwaCard = ({ fatwa }: { fatwa: Fatwa }) => {
               <Badge>
                 {fatwa.category}
               </Badge>
-              <div className="flex items-center text-xs text-gray-500">
+              <div className="flex items-center text-xs text-gray-500 gap-1">
                 <Calendar className="h-3.5 w-3.5 ml-1" />
                 <span>{formatDate(fatwa.published_date)}</span>
               </div>
@@ -71,7 +71,7 @@ export const FatwaCard = ({ fatwa }: { fatwa: Fatwa }) => {
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4 space-x-reverse">
-                <div className="flex items-center text-xs text-gray-500">
+                <div className="flex items-center text-xs text-gray-500 gap-1">
                   <Eye className="h-3.5 w-3.5 ml-1" />
                   <span>{fatwa.views} مشاهدة</span>
                 </div>

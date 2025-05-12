@@ -45,7 +45,6 @@ async function apiRequest<T>(endpoint: string, options: RequestOptions = {}): Pr
     headers = {},
     body,
     cache = 'default',
-    requiresAuth = true,
     params,
   } = options;
 
