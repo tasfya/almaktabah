@@ -7,6 +7,7 @@ class ChangeBooks < ActiveRecord::Migration[8.0]
       t.date :published_date
       t.integer :views, default: 0
       t.integer :downloads, default: 0
+      t.integer :pages
       t.index :title
       t.index :category
     end

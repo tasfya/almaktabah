@@ -5,6 +5,7 @@ FactoryBot.define do
     category { Faker::Book.genre }
     published_date { Faker::Date.between(from: 2.years.ago, to: Date.today) }
     views { rand(1..1000) }
+    pages { rand(1..1000) }
     downloads { rand(1..1000) }
 
     author { association(:scholar) }

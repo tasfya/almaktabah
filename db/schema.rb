@@ -65,6 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_12_100058) do
     t.date "published_date"
     t.integer "views", default: 0
     t.integer "downloads", default: 0
+    t.integer "pages"
     t.index ["author_id"], name: "index_books_on_author_id"
     t.index ["category"], name: "index_books_on_category"
     t.index ["title"], name: "index_books_on_title"
