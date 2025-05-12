@@ -3,5 +3,5 @@ class Book < ApplicationRecord
   has_one_attached :file, service: Rails.application.config.public_storage
   has_one_attached :cover_image, service: Rails.application.config.public_storage
 
-  # validates :author, presence: true
+  validates :author, presence: true
 end
