@@ -48,7 +48,7 @@ module Api
       end
 
       def recent
-        books = Book.order(published_date: :desc).limit(20)
+        books = Book.order(published_date: :desc).limit(5)
         render json: books
       end
 
