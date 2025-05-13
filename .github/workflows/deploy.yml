@@ -32,12 +32,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-          submodules: false #TODO: enable this back when we need to deploy frontend
-      - name: Remove submodule config (fully disable submodules)
-        run: |
-          rm -f .gitmodules
-          git config --remove-section submodule.frontend || true
-
+          submodules: false #TODO: enable this back when we need to deploy frontend          
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
