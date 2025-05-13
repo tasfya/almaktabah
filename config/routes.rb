@@ -25,6 +25,13 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :benefits, only: [ :index, :show ] do
+        collection do
+          get "recent", to: "benefits#recent"
+          get "most_viewed", to: "benefits#most_viewed"
+        end
+      end
+
       resources :scholars, only: [ :index, :show ]
       resources :articles, only: [ :index, :show ]
       resources :lessons, only: [ :index, :show ] do
