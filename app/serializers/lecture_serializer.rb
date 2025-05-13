@@ -6,9 +6,10 @@ class LectureSerializer < ActiveModel::Serializer
               :published_date,
               :duration,
               :views,
+              :content,
               :thumbnail_url,
               :audio_url,
-  
+
     def thumbnail_url
         if object.respond_to?(:thumbnail) && object.thumbnail.present?
             begin
@@ -27,5 +28,4 @@ class LectureSerializer < ActiveModel::Serializer
             end
         end
     end
-  end
-  
+end

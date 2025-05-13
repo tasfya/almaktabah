@@ -4,7 +4,7 @@ class Avo::Resources::Lecture < Avo::BaseResource
   # self.search = {
   #   query: -> { query.ransack(id_eq: params[:q], m: "or").result(distinct: false) }
   # }
-  
+
   def fields
     field :id, as: :id
     field :title, as: :text
@@ -12,7 +12,7 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :duration, as: :number
     field :category, as: :text
     field :views, as: :number
-    field :thumbnail, as: :file, accept: 'image/*', max_size: 5.megabytes
+    field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
     field :published_date, as: :date
   end
 end

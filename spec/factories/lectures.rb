@@ -6,6 +6,7 @@ FactoryBot.define do
     category { Faker::Lorem.word }
     views { Faker::Number.between(from: 0, to: 1000) }
     published_date { Faker::Date.backward(days: 14) }
+    content { Faker::Lorem.paragraphs(number: 3).join("\n\n") }
     audio { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
     thumbnail { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'thumbnail.jpg'), 'image/jpeg') }
   end
