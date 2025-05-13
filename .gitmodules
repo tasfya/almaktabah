@@ -1,3 +1,4 @@
 [submodule "frontend"]
 	path = frontend
-	url = git@github.com:abdokin/tasfya.git
+	url = https://github.com/abdokin/tasfya.git
+
