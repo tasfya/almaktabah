@@ -28,9 +28,15 @@ jobs:
 
     environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
     steps:
+      - name: Remove submodule config (fully disable submodules)
+        run: |
+          rm -f .gitmodules
+          git config --remove-section submodule.frontend || true
+          
       - name: Checkout Code Repository
         uses: actions/checkout@v4
         with:
+          fetch-depth: 1
           submodules: false #TODO: enable this back when we need to deploy frontend
 
       - name: Set up Docker Buildx
