@@ -1,4 +1,4 @@
-class Avo::Resources::Lecture < Avo::BaseResource
+class Avo::Resources::Benefit < Avo::BaseResource
   # self.includes = []
   # self.attachments = []
   # self.search = {
@@ -9,12 +9,12 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :id, as: :id
     field :title, as: :text
     field :description, as: :textarea
-    field :duration, as: :number
+    field :content, as: :trix
+    field :audio, as: :file, accept: "audio/*"
+    field :thumbnail, as: :file, accept: "image/*"
     field :category, as: :text
     field :views, as: :number
-    field :content, as: :trix
-    field :audio, as: :file
-    field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
+    field :duration, as: :number
     field :published_date, as: :date
   end
 end
