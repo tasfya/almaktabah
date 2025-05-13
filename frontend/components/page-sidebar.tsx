@@ -6,7 +6,6 @@ import Link from "next/link"
 import SocialLinks from "./social-links"
 import { getMostDownloadedBooks, getMostViewedBooks } from "@/lib/services/books-service"
 import { resourceUrl } from "@/lib/utils"
-import { books } from "@/lib/data"
 
 
 export default async function PageSidebar() {

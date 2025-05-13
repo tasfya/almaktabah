@@ -37,5 +37,4 @@ export type User = {
 
 
 export type Sermon = {}
-export type Lecture = {}
 export type Scholar = {}
