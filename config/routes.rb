@@ -17,6 +17,14 @@ Rails.application.routes.draw do
           get "most_viewed", to: "books#most_viewed"
         end
       end
+
+      resources :lectures, only: [ :index, :show ] do
+        collection do
+          get "recent", to: "lectures#recent"
+          get "most_viewed", to: "lectures#most_viewed"
+        end
+      end
+
       resources :scholars, only: [ :index, :show ]
       resources :articles, only: [ :index, :show ]
       resources :lessons, only: [ :index, :show ] do
