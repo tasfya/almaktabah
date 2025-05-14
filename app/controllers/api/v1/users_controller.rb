@@ -1,8 +1,8 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      skip_before_action :verify_authenticity_token, only: [:create]
-    
+      skip_before_action :verify_authenticity_token, only: [ :create ]
+
       # POST /api/v1/signup
       def create
         user = User.new(user_params)
@@ -24,7 +24,7 @@ module Api
             user: ActiveModelSerializers::SerializableResource.new(current_user)
           }, status: :ok
         else
-          render json: { error: 'Unauthorized' }, status: :unauthorized
+          render json: { error: "Unauthorized" }, status: :unauthorized
         end
       end
 
