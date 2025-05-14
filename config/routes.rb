@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     scope module: :v1, constraints: Api::ApiConstraints.new(version: 1, default: true) do
       post "login", to: "authentication#login"
       post "signup", to: "users#create"
+      get "current_user", to: "users#me"
 
       resources :books, only: [ :index, :show ] do
         collection do

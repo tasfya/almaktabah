@@ -18,8 +18,8 @@ RSpec.describe Api::V1::AuthenticationController, type: :request do
         post '/api/login', params: valid_params
 
         expect(response).to have_http_status(:ok)
-        expect(json_response).to include('token', 'user_id', 'email')
-        expect(json_response['email']).to eq(user.email)
+        expect(json_response).to include('token', 'user')
+        expect(json_response['user']['email']).to eq(user.email)
       end
     end
 
