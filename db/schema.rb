@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_13_102851) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_19_111342) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -70,7 +70,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_102851) do
 
   create_table "books", force: :cascade do |t|
     t.integer "author_id", null: false
-    t.string "title", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "title"
     t.text "description"
     t.string "category"
     t.date "published_date"
@@ -103,42 +105,31 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_102851) do
   end
 
   create_table "lessons", force: :cascade do |t|
-    t.string "title"
+    t.string "title", null: false
     t.date "published_date"
     t.string "category"
     t.integer "duration"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "motor_resources", force: :cascade do |t|
-    t.string "name", null: false
-    t.text "preferences", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_motor_resources_on_name", unique: true
-    t.index ["updated_at"], name: "index_motor_resources_on_updated_at"
-  end
-
-  create_table "motor_taggable_tags", force: :cascade do |t|
-    t.integer "tag_id", null: false
-    t.bigint "taggable_id", null: false
-    t.string "taggable_type", null: false
-    t.index ["tag_id"], name: "index_motor_taggable_tags_on_tag_id"
-    t.index ["taggable_id", "taggable_type", "tag_id"], name: "motor_polymorphic_association_tag_index", unique: true
-  end
-
-  create_table "motor_tags", force: :cascade do |t|
-    t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["name"], name: "motor_tags_name_unique_index", unique: true
+    t.integer "series_id", null: false
+    t.string "content_type", default: "audio"
+    t.integer "view_count", default: 0
+    t.index ["series_id"], name: "index_lessons_on_series_id"
   end
 
   create_table "scholars", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "series", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.date "published_date"
+    t.string "category"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -159,5 +150,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_102851) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "scholars", column: "author_id"
   add_foreign_key "books", "scholars", column: "author_id"
-  add_foreign_key "motor_taggable_tags", "motor_tags", column: "tag_id"
+  add_foreign_key "lessons", "series"
 end

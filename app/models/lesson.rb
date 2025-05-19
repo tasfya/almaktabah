@@ -1,4 +1,5 @@
 class Lesson < ApplicationRecord
+    belongs_to :series, optional: true
     validates :title, presence: true
     validates :published_date, presence: true
     validates :category, presence: true
@@ -10,4 +11,9 @@ class Lesson < ApplicationRecord
 
     validates :audio, presence: true
     validates :thumbnail, presence: true
+
+    # Returns the series title if the lesson belongs to a series
+    def series_title
+      series&.title
+    end
 end
