@@ -2,8 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::LessonsController, type: :request do
   describe 'GET /api/lessons' do
+    let(:series) { create(:series) }
+
     before do
-      create_list(:lesson, 3)
+      create_list(:lesson, 3, series: series)
     end
 
     it 'returns a list of lessons with metadata' do

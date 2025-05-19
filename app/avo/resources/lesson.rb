@@ -16,5 +16,6 @@ class Avo::Resources::Lesson < Avo::BaseResource
     field :category, as: :text
     field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
+    field :series, as: :belongs_to, resource: "Series", searchable: true
   end
 end
