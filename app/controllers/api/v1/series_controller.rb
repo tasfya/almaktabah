@@ -43,6 +43,44 @@ module Api
         render json: { error: "Series not found" }, status: :not_found
       end
 
+      def lessons
+        series = Series.find(params[:id])
+        render json: {
+          lessons: ActiveModel::Serializer::CollectionSerializer.new(
+            series.lessons,
+            serializer: LessonSerializer
+          )
+        }
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: "Series not found" }, status: :not_found
+      end
+
+      def recent
+        page = params[:page]&.to_i || 1
+        per_page = params[:per_page]&.to_i || 5
+
+        series = Series.order(created_at: :desc)
+
+        total_items = series.count
+        total_pages = (total_items.to_f / per_page).ceil
+
+        offset = (page - 1) * per_page
+        paginated_series = series.offset(offset).limit(per_page)
+
+        render json: {
+          series: ActiveModel::Serializer::CollectionSerializer.new(
+            paginated_series,
+            serializer: SeriesSerializer
+          ),
+          meta: {
+            current_page: page,
+            per_page: per_page,
+            total_items: total_items,
+            total_pages: total_pages
+          }
+        }
+      end
+
       private
 
       def categories

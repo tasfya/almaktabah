@@ -34,11 +34,11 @@ class LessonSerializer < ActiveModel::Serializer
             end
         end
     end
-    
+
     def series_id
         object.series&.id
     end
-    
+
     def series_title
         object.series&.title
     end
