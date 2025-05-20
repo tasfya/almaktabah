@@ -4,4 +4,5 @@ class Book < ApplicationRecord
   has_one_attached :cover_image, service: Rails.application.config.public_storage
 
   validates :author, presence: true
+  validates :title, presence: true, uniqueness: true
 end

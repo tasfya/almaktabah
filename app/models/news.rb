@@ -9,6 +9,7 @@ class News < ApplicationRecord
   scope :recent, -> { order(published_at: :desc) }
 
   before_validation :generate_slug, if: -> { slug.blank? && title.present? }
+  has_rich_text :content
 
   private
 

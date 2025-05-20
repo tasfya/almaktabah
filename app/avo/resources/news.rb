@@ -8,9 +8,9 @@ class Avo::Resources::News < Avo::BaseResource
   def fields
     field :id, as: :id
     field :title, as: :text
-    field :content, as: :textarea
+    field :content, as: :trix
     field :description, as: :textarea
     field :published_at, as: :date_time
-    field :thumbnail, at: :file
+    field :thumbnail, as: :file
   end
 end

@@ -1,16 +1,13 @@
 class Lesson < ApplicationRecord
-    belongs_to :series, optional: true
+    belongs_to :series
     validates :title, presence: true
     validates :published_date, presence: true
     validates :category, presence: true
-    validates :duration, presence: true, numericality: { only_integer: true, greater_than: 0 }
+    validates :duration, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
 
-    has_one_attached :audio
-    has_one_attached :thumbnail
+    has_one_attached :audio, service: Rails.application.config.public_storage
+    has_one_attached :thumbnail, service: Rails.application.config.public_storage
     has_rich_text :content
-
-    validates :audio, presence: true
-    validates :thumbnail, presence: true
 
     # Returns the series title if the lesson belongs to a series
     def series_title

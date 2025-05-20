@@ -1,0 +1,31 @@
+[
+{"type":"header","version":"5.2.1","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"mohamkoa_ar"},
+{"type":"table","name":"play","database":"mohamkoa_ar","data":
+[
+{"id":"25","name":"ثمار الصيام لشيخنا محمد بن رمزان الهاجري","ctid":"9","image":"upload/upload1666718087313.png","url":"upload/upload1666718087508.pdf","counter":"281","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"26","name":" أسباب احتواء الخوارج لبعض أبناءنا","ctid":"9","image":"upload/upload1666718177414.png","url":"upload/upload1666718177751.pdf","counter":"273","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"27","name":"شرح ثلاثة الأصول ","ctid":"9","image":"upload/upload1666718318987.png","url":"upload/upload1666718318255.pdf","counter":"503","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"28","name":"هدي السلف الصالح في تربية الأبناء","ctid":"9","image":"upload/upload1666718339537.png","url":"upload/upload1666718339648.pdf","counter":"411","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"29","name":"الأحداث والمظاهرات","ctid":"9","image":"upload/upload1666718385666.png","url":"upload/upload1666718385183.pdf","counter":"265","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"30","name":"وضوح المنهج وأثره في الدعوة إلى الله","ctid":"9","image":"upload/upload1666718455974.png","url":"upload/upload1666718455382.pdf","counter":"326","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"31","name":"هدي السلف الصالح في تربية الأبناء ويليه أسباب جنوح الحدث","ctid":"9","image":"upload/upload1666718574134.png","url":"upload/upload1666718574847.pdf","counter":"389","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"32","name":"مجالس في العلم","ctid":"9","image":"upload/upload1666718621177.png","url":"upload/upload1666718621572.pdf","counter":"346","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"33","name":"الكواشف الجلية للفروق بين السلفية و الدعوات الحزبية البدعية","ctid":"9","image":"upload/upload1666718726548.png","url":"upload/upload1666718726769.pdf","counter":"1402","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"425","name":"تفريغ_محاضرة_بعنوان_وجوب_لزوم_الجماعة","ctid":"9","image":"upload/upload1680767378893.png","url":"upload/upload1680767378289.docx","counter":"285","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"426","name":"أسباب احتواء الخوارج لبعض أبناءنا","ctid":"9","image":"upload/upload1680767491137.png","url":"upload/upload1680767491668.pdf","counter":"341","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"427","name":"خطر جماعة التبليغ والتحذير منها-","ctid":"9","image":"upload/upload1680767568184.png","url":"upload/upload1680767568643.pdf","counter":"521","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"428","name":"فوائد منهجية من نصح عائشة لمعاذة","ctid":"9","image":"upload/upload1680767667570.png","url":"upload/upload1680767667263.pdf","counter":"433","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"610","name":"اسباب تحصيل الهداية.","ctid":"9","image":"upload/upload1681209881202.png","url":"upload/upload1681209881748.pdf","counter":"366","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"611","name":"وضوح المنهج وأثره في الدعوة إلى الله","ctid":"9","image":"upload/upload1681209969556.png","url":"upload/upload1681209969878.pdf","counter":"865","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"612","name":"ثمار الصيام","ctid":"9","image":"upload/upload1682917243317.png","url":"upload/upload1681250503703.png","counter":"353","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"2521","name":"بحث عن أسباب ومصادر الإنحراف","ctid":"9","image":"upload/upload1715365685839.png","url":"upload/upload1715365685763.pdf","counter":"679","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"2522","name":"مبحث عن أهمية العقيدة","ctid":"9","image":"upload/upload1715365811585.png","url":"upload/upload1715365811523.pdf","counter":"665","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"1767","name":"شرح فضائل القرآن","ctid":"9","image":"upload/upload1692917906556.png","url":"upload/upload1692917906821.pdf","counter":"537","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"1789","name":"الوسائل المفيدة - الشيخ محمد بن رمزان الهاجري","ctid":"9","image":"upload/upload1699479851386.png","url":"upload/upload1699479851623.pdf","counter":"643","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"2481","name":"رمضان حكم وأحكام","ctid":"9","image":"upload/upload1710455341130.png","url":"upload/upload1710455341433.pdf","counter":"268","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"2540","name":"شرح كتاب الصيام من عمدة الفقه","ctid":"9","image":"upload/upload1744230271712.png","url":"upload/upload1744230271444.pdf","counter":"116","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "},
+{"id":"2541","name":"التعليق على مختصر قيام رمضان","ctid":"9","image":"upload/upload1744230455428.png","url":"upload/upload1744230455420.pdf","counter":"121","vote":"0","ctid2":"9","category_name":"الكتـب ","parent_category_name":"الكتـب "}
+]
+}
+]
