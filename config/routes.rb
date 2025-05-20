@@ -55,6 +55,8 @@ Rails.application.routes.draw do
           get "recent", to: "news#recent"
         end
       end
+
+      resources :contacts, only: [:create]
     end
   end
 
