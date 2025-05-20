@@ -26,7 +26,7 @@ module Api
                     current_page: page,
                     per_page: per_page,
                     total_items: total_items,
-                    total_pages: total_pages,
+                    total_pages: total_pages
                 }
             }
         end
@@ -36,7 +36,7 @@ module Api
           render json: news
         rescue ActiveRecord::RecordNotFound
           render json: { error: "News not found" }, status: :not_found
-        end 
+        end
         def recent
             news = News.order(published_at: :desc).limit(10)
           render json: news

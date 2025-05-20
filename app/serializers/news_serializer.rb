@@ -12,7 +12,7 @@ class NewsSerializer < ActiveModel::Serializer
   def description
     object.description.present? ? object.description : object.content.to_s.truncate(150)
   end
-             
+
   def thumbnail_url
     if object.respond_to?(:thumbnail) && object.thumbnail.present?
       begin
