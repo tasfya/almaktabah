@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_19_111342) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_20_095231) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -112,10 +112,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_19_111342) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "series_id", null: false
     t.string "content_type", default: "audio"
     t.integer "view_count", default: 0
+    t.integer "series_id", null: false
     t.index ["series_id"], name: "index_lessons_on_series_id"
+  end
+
+  create_table "news", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.text "description"
+    t.datetime "published_at"
+    t.string "slug", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_news_on_slug", unique: true
   end
 
   create_table "scholars", force: :cascade do |t|

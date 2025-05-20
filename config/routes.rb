@@ -49,6 +49,12 @@ Rails.application.routes.draw do
           get "recent", to: "fatwas#recent"
         end
       end
+
+      resources :news, only: [ :index, :show ] do
+        collection do
+          get "recent", to: "news#recent"
+        end
+      end
     end
   end
 
