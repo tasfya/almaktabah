@@ -544,6 +544,7 @@ DEPENDENCIES
   rubocop-rails-omakase
   rubocop-rspec
   rubocop-rspec_rails
+  ruby-progressbar
   sentry-rails
   sentry-ruby
   shoulda-matchers

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_20_145650) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_21_093610) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -124,6 +124,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_145650) do
     t.string "content_type", default: "audio"
     t.integer "view_count", default: 0
     t.integer "series_id"
+    t.string "video_url"
     t.index ["series_id"], name: "index_lessons_on_series_id"
   end
 
