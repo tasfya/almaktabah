@@ -10,8 +10,14 @@ class LessonSerializer < ActiveModel::Serializer
             :updated_at,
             :thumbnail_url,
             :audio_url,
+            :video_url,
             :series_id,
-            :series_title
+            :series_title,
+            :media_type
+
+    def media_type
+        object.video? ? "video" : "audio"
+    end
 
     def thumbnail_url
         if object.respond_to?(:thumbnail) && object.thumbnail.present?
