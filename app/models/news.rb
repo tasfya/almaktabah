@@ -1,5 +1,5 @@
 class News < ApplicationRecord
-  has_one_attached :thumbnail
+  has_one_attached :thumbnail, service: Rails.application.config.public_storage
 
   validates :title, presence: true
   validates :content, presence: true

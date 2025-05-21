@@ -175,7 +175,7 @@ lessons_array.each do |lesson_data|
     l.category = lesson_category
     l.content_type = content_type
     l.published_date = Date.today
-    l.duration = 0
+    l.duration = 15*60
     l.description = lesson_data['name']
     l.view_count = lesson_data['counter'].to_i if lesson_data['counter'].present?
   end
