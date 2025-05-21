@@ -7,7 +7,7 @@ require 'fileutils'
 puts "Starting seed data process..."
 
 # Create base upload directories
-['books', 'covers', 'audio'].each do |dir|
+[ 'books', 'covers', 'audio' ].each do |dir|
   FileUtils.mkdir_p(Rails.root.join('storage', dir))
 end
 
@@ -65,10 +65,10 @@ def download_file(url, destination_path, base_url = "https://mohammed-ramzan.com
     end
 
     puts "Downloaded: #{url} to #{destination_path}"
-    return destination_path
+    destination_path
   rescue StandardError => e
     puts "Error downloading #{url}: #{e.message}"
-    return nil
+    nil
   end
 end
 
@@ -175,7 +175,7 @@ lessons_array.each do |lesson_data|
     l.category = lesson_category
     l.content_type = content_type
     l.published_date = Date.today
-    l.duration = 0
+    l.duration = 15*60
     l.description = lesson_data['name']
     l.view_count = lesson_data['counter'].to_i if lesson_data['counter'].present?
   end

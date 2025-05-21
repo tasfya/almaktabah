@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :book do
-    title { Faker::Book.title }
+    title { "#{Faker::Book.title} #{SecureRandom.hex(4)}" }
+
     description { Faker::Lorem.paragraph }
     category { Faker::Book.genre }
     published_date { Faker::Date.between(from: 2.years.ago, to: Date.today) }
