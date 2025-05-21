@@ -41,9 +41,6 @@ category_data.select { |cat| cat["parent_id"] == "41" }.each do |cat|
   series_hash[cat["child_id"]] = series
 end
 
-# Default audio series fallback
-default_audio_series = series_hash["39"] || audio_series
-
 # Function to download real files
 def download_file(url, destination_path, base_url = "https://mohammed-ramzan.com")
   begin
@@ -153,29 +150,24 @@ lessons_array.each do |lesson_data|
   lesson_category = lesson_data['category_name'] || "المكتبة الصوتية"
   content_type = lesson_category.include?("مرئية") ? "video" : "audio"
 
+  # Always create or find a series based on the lesson category name
   series =
     if lesson_data['category_id'] && category_map[lesson_data['category_id']]
       category_map[lesson_data['category_id']]
-    elsif lesson_category.include?("الدروس")
-      Series.find_by(category: "الدروس")
     else
-      audio_series
+      Series.find_or_create_by(title: lesson_category) do |s|
+        s.description = "مجموعة #{lesson_category} للشيخ محمد بن رمزان الهاجري"
+        s.category = lesson_category
+        s.published_date = Date.today
+      end
     end
-
-  if series.nil?
-    series = Series.find_or_create_by(title: lesson_category) do |s|
-      s.description = "مجموعة #{lesson_category}"
-      s.category = lesson_category
-      s.published_date = Date.today
-    end
-  end
 
   lesson = Lesson.find_or_initialize_by(title: lesson_data['name']) do |l|
     l.series = series
     l.category = lesson_category
     l.content_type = content_type
     l.published_date = Date.today
-    l.duration = 15*60
+    l.duration = 15 * 60
     l.description = lesson_data['name']
     l.view_count = lesson_data['counter'].to_i if lesson_data['counter'].present?
   end
