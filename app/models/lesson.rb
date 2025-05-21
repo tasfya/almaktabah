@@ -9,7 +9,14 @@ class Lesson < ApplicationRecord
     has_one_attached :thumbnail, service: Rails.application.config.public_storage
     has_rich_text :content
 
-    # Returns the series title if the lesson belongs to a series
+    def video?
+      video_url.present?
+    end
+
+    def audio?
+      audio.attached?
+    end
+
     def series_title
       series&.title
     end

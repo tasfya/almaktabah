@@ -81,4 +81,5 @@ group :development do
   gem "overcommit", require: false
 end
 
+gem "ruby-progressbar"
 gem "avo", ">= 3.2"
