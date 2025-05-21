@@ -56,7 +56,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :contacts, only: [:create]
+      resources :contacts, only: [ :create ]
     end
   end
 
