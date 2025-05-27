@@ -9,7 +9,7 @@ module AdminAuthorization
 
   def authenticate_admin!
     authenticate_user!
-    
+
     # Make sure there's a current user and they're an admin
     unless current_user && current_user.admin?
       respond_to do |format|

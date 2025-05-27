@@ -17,27 +17,27 @@ RSpec.describe "User rake tasks", type: :task do
 
     it "promotes a user to admin" do
       expect(user.admin?).to be false
-      
+
       # Capture output for verification
       output = capture_stdout do
         task.invoke("test@example.com")
       end
-      
+
       # Reload user to get fresh data
       user.reload
-      
+
       expect(user.admin?).to be true
       expect(output).to include("User test@example.com has been promoted to admin")
     end
 
     it "reports when user is already an admin" do
       user.update(admin: true)
-      
+
       output = capture_stdout do
         task.reenable
         task.invoke("test@example.com")
       end
-      
+
       expect(output).to include("User test@example.com is already an admin")
     end
 
@@ -46,7 +46,7 @@ RSpec.describe "User rake tasks", type: :task do
         task.reenable
         task.invoke("nonexistent@example.com")
       end
-      
+
       expect(output).to include("User with email nonexistent@example.com not found")
     end
   end
@@ -65,7 +65,7 @@ RSpec.describe "User rake tasks", type: :task do
       output = capture_stdout do
         task.invoke
       end
-      
+
       expect(output).to include("admin1@example.com")
       expect(output).to include("admin2@example.com")
       expect(output).not_to include("regular@example.com")
@@ -73,12 +73,12 @@ RSpec.describe "User rake tasks", type: :task do
 
     it "reports when no admin users exist" do
       User.update_all(admin: false)
-      
+
       output = capture_stdout do
         task.reenable
         task.invoke
       end
-      
+
       expect(output).to include("No admin users found")
     end
   end

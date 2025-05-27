@@ -2,12 +2,12 @@ require 'rails_helper'
 
 class TestController < ActionController::Base
   include AdminAuthorization
-  
+
   # Define our own root_path method since we don't have access to Rails routes in the test
   def root_path
     "/"
   end
-  
+
   def index
     render plain: 'Admin area accessed', status: :ok
   end
@@ -15,7 +15,7 @@ end
 
 RSpec.describe TestController, type: :controller do
   include Devise::Test::ControllerHelpers
-  
+
   describe '#authenticate_admin!' do
     before do
       Rails.application.routes.draw do
@@ -32,7 +32,7 @@ RSpec.describe TestController, type: :controller do
         # Need to stub authenticate_user! since we're not actually using Devise in the test
         allow(controller).to receive(:authenticate_user!).and_return(true)
         allow(controller).to receive(:current_user).and_return(nil)
-        
+
         get :index
         expect(response).to have_http_status(:forbidden)
         expect(flash[:alert]).to match(/must be an admin user/)
