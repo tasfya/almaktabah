@@ -64,7 +64,7 @@ Rails.application.routes.draw do
 
   devise_for :users
   authenticate :user do
-    mount Avo::Engine => "/avo"
+    mount Avo::Engine => '/avo'
   end
 
   root "home#index"

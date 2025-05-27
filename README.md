@@ -1,24 +1,24 @@
-# README
+# Almaktabah
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is the README for Almaktabah application.
 
-Things you may want to cover:
+## Admin Dashboard
 
-* Ruby version
+The application includes an admin dashboard powered by [Avo](https://avohq.io/). The dashboard is protected and only accessible to admin users.
 
-* System dependencies
+### Managing Admin Users
 
-* Configuration
+To create or promote a user to admin, use the following rake task:
 
-* Database creation
+```bash
+# Create a new user with admin privileges
+rails runner "User.create!(email: 'admin@example.com', password: 'password123', password_confirmation: 'password123', admin: true)"
 
-* Database initialization
+# Promote an existing user to admin
+bin/rake users:make_admin[user@example.com]
 
-* How to run the test suite
+# List all admin users
+bin/rake users:list_admins
+```
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+The admin dashboard is available at `/avo` and requires admin user credentials to access.

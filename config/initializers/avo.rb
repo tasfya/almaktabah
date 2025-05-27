@@ -20,10 +20,14 @@ Avo.configure do |config|
   ## == Authentication ==
   config.current_user_method = :current_user
   config.authenticate_with do
+    authenticate_user!
+    unless current_user&.admin?
+      redirect_to main_app.root_path, alert: "You are not authorized to access this page."
+    end
   end
 
   ## == Authorization ==
-  # config.is_admin_method = :is_admin
+  config.is_admin_method = :admin?
   # config.is_developer_method = :is_developer
   # config.authorization_methods = {
   #   index: 'index?',
@@ -37,7 +41,7 @@ Avo.configure do |config|
   # }
   # config.raise_error_on_missing_policy = false
   config.authorization_client = nil
-  config.explicit_authorization = true
+  config.explicit_authorization = false
 
   ## == Localization ==
   # config.locale = 'en-US'
