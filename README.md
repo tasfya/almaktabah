@@ -70,9 +70,6 @@ bin/rake api:revoke_token[token_id]
 # For ZSH users:
 bin/rake api:revoke_token token_id=123
 
-# For ZSH users:
-bin/rake api:update_rate_limit token_id=123 rate_limit=500
-
 ```
 
 ### Using API Tokens in the Frontend
