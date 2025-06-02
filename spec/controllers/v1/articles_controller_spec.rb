@@ -1,13 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::ArticlesController, type: :request do
+  let(:token) { create(:api_token) }
   describe 'GET /api/articles' do
     before do
       create_list(:article, 3)
     end
 
     it 'returns a list of articles' do
-      get '/api/articles'
+      get '/api/articles?api_token=' + token.token
 
       expect(response).to have_http_status(:ok)
       expect(json_response).to be_an(Array)
@@ -20,7 +21,7 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
 
     context 'when the article exists' do
       it 'returns the requested article' do
-        get "/api/articles/#{article.id}"
+        get "/api/articles/#{article.id}?api_token=#{token.token}"
 
         expect(response).to have_http_status(:ok)
         expect(json_response).to have_key('id')
@@ -31,7 +32,7 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
 
     context 'when the article does not exist' do
       it 'returns a not found error' do
-        get '/api/articles/999'
+        get "/api/articles/999?api_token=#{token.token}"
 
         expect(response).to have_http_status(:not_found)
         expect(json_response).to include('error')

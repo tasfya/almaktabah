@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::LessonsController, type: :request do
+  let(:token) { create(:api_token) }
   describe 'GET /api/lessons' do
     let(:series) { create(:series) }
 
@@ -9,7 +10,7 @@ RSpec.describe Api::V1::LessonsController, type: :request do
     end
 
     it 'returns a list of lessons with metadata' do
-      get '/api/lessons'
+      get '/api/lessons', params: { api_token: token.token }
       expect(response).to have_http_status(:ok)
 
       expect(json_response).to be_a(Hash)
@@ -24,7 +25,7 @@ RSpec.describe Api::V1::LessonsController, type: :request do
 
     context 'when the lesson exists' do
       it 'returns the requested lesson' do
-        get "/api/lessons/#{lesson.id}"
+        get "/api/lessons/#{lesson.id}", params: { api_token: token.token }
 
         expect(response).to have_http_status(:ok)
         expect(json_response['id']).to eq(lesson.id)
@@ -33,7 +34,7 @@ RSpec.describe Api::V1::LessonsController, type: :request do
 
     context 'when the lesson does not exist' do
       it 'returns a not found error' do
-        get '/api/lessons/999999'
+        get '/api/lessons/999999', params: { api_token: token.token }
         expect(response).to have_http_status(:not_found)
         expect(json_response).to include('error')
       end
@@ -47,7 +48,7 @@ RSpec.describe Api::V1::LessonsController, type: :request do
     end
 
     it 'filters lessons by title' do
-      get '/api/lessons', params: { title: 'ruby' }
+      get '/api/lessons', params: { title: 'ruby', api_token: token.token }
 
       expect(response).to have_http_status(:ok)
       expect(json_response['lessons'].size).to eq(1)
@@ -61,7 +62,7 @@ RSpec.describe Api::V1::LessonsController, type: :request do
     end
 
     it 'returns 10 most recent lessons' do
-      get '/api/lessons/recent'
+      get '/api/lessons/recent', params: { api_token: token.token }
       expect(response).to have_http_status(:ok)
       expect(json_response.size).to eq(10)
     end

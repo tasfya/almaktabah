@@ -1,19 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::BenefitsController, type: :request do
+    let(:token) { create(:api_token) }
     describe 'GET /api/benefits' do
         before do
             create_list(:benefit, 3)
         end
 
-        include_examples "API authentication required" do
-            def yield(headers = {})
-                get '/api/benefits', headers: headers
-            end
-        end
-
         it 'returns a list of benefits with metadata' do
-            get '/api/benefits', headers: with_api_token
+            get "/api/benefits?api_token=#{token.token}"
             expect(response).to have_http_status(:ok)
 
             expect(json_response).to be_a(Hash)
@@ -27,15 +22,8 @@ RSpec.describe Api::V1::BenefitsController, type: :request do
         let(:benefit) { create(:benefit) }
 
         context 'when the benefit exists' do
-            include_examples "API authentication required" do
-                def yield(headers = {})
-                    get "/api/benefits/#{benefit.id}", headers: headers
-                end
-            end
-
             it 'returns the requested benefit' do
-                get "/api/benefits/#{benefit.id}", headers: with_api_token
-
+                get "/api/benefits/#{benefit.id}?api_token=#{token.token}"
                 expect(response).to have_http_status(:ok)
                 expect(json_response['id']).to eq(benefit.id)
             end
@@ -43,7 +31,7 @@ RSpec.describe Api::V1::BenefitsController, type: :request do
 
         context 'when the benefit does not exist' do
             it 'returns a not found error' do
-                get '/api/benefits/999999', headers: with_api_token
+                get "/api/benefits/999999?api_token=#{token.token}"
                 expect(response).to have_http_status(:not_found)
                 expect(json_response).to include('error')
             end
@@ -56,14 +44,8 @@ RSpec.describe Api::V1::BenefitsController, type: :request do
             create(:benefit, title: "JavaScript Essentials")
         end
 
-        include_examples "API authentication required" do
-            def yield(headers = {})
-                get '/api/benefits', params: { title: 'ruby' }, headers: headers
-            end
-        end
-
         it 'filters benefits by title' do
-            get '/api/benefits', params: { title: 'ruby' }, headers: with_api_token
+            get "/api/benefits?api_token=#{token.token}", params: { title: 'ruby' }
 
             expect(response).to have_http_status(:ok)
             expect(json_response['benefits'].size).to eq(1)
@@ -76,14 +58,8 @@ RSpec.describe Api::V1::BenefitsController, type: :request do
             create_list(:benefit, 5)
         end
 
-        include_examples "API authentication required" do
-            def yield(headers = {})
-                get '/api/benefits/recent', headers: headers
-            end
-        end
-
         it 'returns most recent benefits' do
-            get '/api/benefits/recent', headers: with_api_token
+            get "/api/benefits/recent?api_token=#{token.token}"
             expect(response).to have_http_status(:ok)
             expect(json_response.size).to eq(5)
         end
@@ -93,15 +69,9 @@ RSpec.describe Api::V1::BenefitsController, type: :request do
         before do
             create_list(:benefit, 5)
         end
-
-        include_examples "API authentication required" do
-            def yield(headers = {})
-                get '/api/benefits/most_viewed', headers: headers
-            end
-        end
-
+        
         it 'returns most viewed benefits' do
-            get '/api/benefits/most_viewed', headers: with_api_token
+            get "/api/benefits/most_viewed?api_token=#{token.token}"
             expect(response).to have_http_status(:ok)
             expect(json_response.size).to eq(5)
         end
