@@ -5,7 +5,7 @@ RSpec.describe Api::V1::FatwasController, type: :request do
     before do
       create_list(:fatwa, 3)
     end
-    
+
     include_examples "API authentication required" do
       def yield(headers = {})
         get '/api/fatwas', headers: headers
@@ -15,7 +15,7 @@ RSpec.describe Api::V1::FatwasController, type: :request do
     context "with valid API token" do
       it 'returns a list of fatwas with metadata' do
         get '/api/fatwas', headers: with_api_token
-        
+
         expect(response).to have_http_status(:ok)
         expect(json_response).to be_a(Hash)
         expect(json_response['fatwas']).to be_an(Array)
@@ -87,7 +87,7 @@ RSpec.describe Api::V1::FatwasController, type: :request do
 
     it 'returns 5 most recent fatwas' do
       get '/api/fatwas/recent', headers: with_api_token
-      
+
       expect(response).to have_http_status(:ok)
       expect(json_response).to be_an(Array)
       expect(json_response.size).to eq(5)

@@ -7,7 +7,7 @@ RSpec.describe "API Token Authentication", type: :request do
 
     it "rejects expired tokens" do
       get '/api/fatwas', headers: { 'X-API-Token' => expired_token.token }
-      
+
       expect(response).to have_http_status(:unauthorized)
       expect(json_response).to include('error')
       expect(json_response['error']).to eq('Unauthorized')
@@ -20,7 +20,7 @@ RSpec.describe "API Token Authentication", type: :request do
 
     it "rejects inactive tokens" do
       get '/api/fatwas', headers: { 'X-API-Token' => inactive_token.token }
-      
+
       expect(response).to have_http_status(:unauthorized)
       expect(json_response).to include('error')
       expect(json_response['error']).to eq('Unauthorized')
@@ -33,7 +33,7 @@ RSpec.describe "API Token Authentication", type: :request do
 
     it "accepts valid token in query parameter" do
       get "/api/fatwas?api_token=#{token.token}"
-      
+
       expect(response).to have_http_status(:ok)
     end
   end

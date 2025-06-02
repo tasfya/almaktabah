@@ -6,11 +6,11 @@ FactoryBot.define do
     last_used_at { nil }
     expires_at { 1.year.from_now }
     active { true }
-    
+
     trait :expired do
       expires_at { 1.day.ago }
     end
-    
+
     trait :inactive do
       active { false }
     end

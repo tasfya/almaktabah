@@ -16,12 +16,12 @@ module Avo
       def handle(**args)
         purpose = args[:purpose]
         expires_at = args[:expires_at]
-        
+
         @record.create_api_token(
-          purpose: purpose, 
+          purpose: purpose,
           expires_at: expires_at
         )
-        
+
         succeed "API token generated successfully"
       end
     end

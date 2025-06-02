@@ -1,7 +1,7 @@
 class Avo::Resources::ApiToken < Avo::BaseResource
   self.title = :display_name
-  self.includes = [:user]
-  
+  self.includes = [ :user ]
+
   def fields
     field :id, as: :id
     field :token, as: :text, help: "The API token used for authentication"

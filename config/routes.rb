@@ -64,8 +64,8 @@ Rails.application.routes.draw do
 
   devise_for :users
   authenticate :user do
-    mount Avo::Engine => '/avo'
-    
+    mount Avo::Engine => "/avo"
+
     # Custom routes for Avo
     namespace :avo do
       resources :users do
