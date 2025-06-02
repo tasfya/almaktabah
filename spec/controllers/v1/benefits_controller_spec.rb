@@ -69,7 +69,7 @@ RSpec.describe Api::V1::BenefitsController, type: :request do
         before do
             create_list(:benefit, 5)
         end
-        
+
         it 'returns most viewed benefits' do
             get "/api/benefits/most_viewed?api_token=#{token.token}"
             expect(response).to have_http_status(:ok)
