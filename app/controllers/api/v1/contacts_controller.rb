@@ -1,6 +1,7 @@
 module Api
   module V1
-    class ContactsController < ApplicationController
+    class ContactsController < ApiController
+      skip_before_action :authenticate_request, only: [ :create ]
       skip_before_action :verify_authenticity_token, only: [ :create ]
       # POST /api/contacts
       def create

@@ -1,6 +1,7 @@
 module Api
   module V1
     class AuthenticationController < ApiController
+      skip_before_action :authenticate_request
       skip_before_action :verify_authenticity_token
       # POST /api/v1/login
       def login

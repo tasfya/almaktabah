@@ -1,13 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::SeriesController, type: :request do
+  let(:token) { create(:api_token) }
   describe 'GET /api/series' do
     before do
       create_list(:series, 3)
     end
 
     it 'returns a list of series with metadata' do
-      get '/api/series'
+      get '/api/series', params: { api_token: token.token }
       expect(response).to have_http_status(:ok)
 
       expect(json_response).to be_a(Hash)
@@ -22,7 +23,7 @@ RSpec.describe Api::V1::SeriesController, type: :request do
 
     context 'when the series exists' do
       it 'returns the requested series' do
-        get "/api/series/#{series.id}"
+        get "/api/series/#{series.id}", params: { api_token: token.token }
 
         expect(response).to have_http_status(:ok)
         expect(json_response['id']).to eq(series.id)
@@ -31,7 +32,7 @@ RSpec.describe Api::V1::SeriesController, type: :request do
 
     context 'when the series does not exist' do
       it 'returns a not found error' do
-        get '/api/series/999999'
+        get '/api/series/999999', params: { api_token: token.token }
         expect(response).to have_http_status(:not_found)
         expect(json_response).to include('error')
       end
@@ -45,7 +46,7 @@ RSpec.describe Api::V1::SeriesController, type: :request do
     end
 
     it 'filters series by title' do
-      get '/api/series', params: { title: 'fiqh' }
+      get '/api/series', params: { title: 'fiqh', api_token: token.token }
 
       expect(response).to have_http_status(:ok)
       expect(json_response['series'].size).to eq(1)
@@ -60,7 +61,7 @@ RSpec.describe Api::V1::SeriesController, type: :request do
     end
 
     it 'filters series by category' do
-      get '/api/series', params: { category: 'fiqh' }
+      get '/api/series', params: { category: 'fiqh', api_token: token.token }
 
       expect(response).to have_http_status(:ok)
       expect(json_response['series'].size).to eq(1)

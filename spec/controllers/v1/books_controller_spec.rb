@@ -1,13 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::BooksController, type: :request do
+    let(:token) { create(:api_token) }
     describe 'GET /api/books' do
         before do
             create_list(:book, 3)
         end
 
         it 'returns a list of books with metadata' do
-            get '/api/books'
+            get "/api/books?api_token=#{token.token}"
             expect(response).to have_http_status(:ok)
 
             expect(json_response).to be_a(Hash)
@@ -22,7 +23,7 @@ RSpec.describe Api::V1::BooksController, type: :request do
 
         context 'when the book exists' do
             it 'returns the requested book' do
-                get "/api/books/#{book.id}"
+                get "/api/books/#{book.id}?api_token=#{token.token}"
 
                 expect(response).to have_http_status(:ok)
                 expect(json_response['id']).to eq(book.id)
@@ -31,7 +32,7 @@ RSpec.describe Api::V1::BooksController, type: :request do
 
         context 'when the book does not exist' do
             it 'returns a not found error' do
-                get '/api/books/999999'
+                get "/api/books/999999?api_token=#{token.token}"
                 expect(response).to have_http_status(:not_found)
                 expect(json_response).to include('error')
             end
@@ -45,7 +46,7 @@ RSpec.describe Api::V1::BooksController, type: :request do
         end
 
         it 'filters books by title' do
-            get '/api/books', params: { title: 'ruby' }
+            get '/api/books', params: { title: 'ruby', api_token: token.token }
 
             expect(response).to have_http_status(:ok)
             expect(json_response['books'].size).to eq(1)
@@ -59,7 +60,7 @@ RSpec.describe Api::V1::BooksController, type: :request do
         end
 
         it 'returns 10 most recent books' do
-            get '/api/books/recent'
+            get '/api/books/recent', params: { api_token: token.token }
             expect(response).to have_http_status(:ok)
             expect(json_response.size).to eq(5)
         end
@@ -71,7 +72,7 @@ RSpec.describe Api::V1::BooksController, type: :request do
         end
 
         it 'returns 10 most recent books' do
-            get '/api/books/recent'
+            get '/api/books/recent', params: { api_token: token.token }
             expect(response).to have_http_status(:ok)
             expect(json_response.size).to eq(5)
         end
@@ -83,7 +84,7 @@ RSpec.describe Api::V1::BooksController, type: :request do
         end
 
         it 'returns 10 most recent books' do
-            get '/api/books/recent'
+            get '/api/books/recent', params: { api_token: token.token }
             expect(response).to have_http_status(:ok)
             expect(json_response.size).to eq(5)
         end
