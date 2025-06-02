@@ -1,7 +1,8 @@
 module Api
   module V1
-    class UsersController < ApplicationController
+    class UsersController < ApiController
       skip_before_action :verify_authenticity_token, only: [ :create ]
+      skip_before_action :authenticate_request, only: [ :create ]
 
       # POST /api/v1/signup
       def create
