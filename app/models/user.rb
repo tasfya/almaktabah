@@ -16,7 +16,7 @@ class User < ApplicationRecord
     api_tokens.active
   end
 
-  def create_api_token(purpose: "API Access", expires_at: nil, rate_limit: 100)
+  def create_api_token(purpose: "API Access", expires_at: nil)
     api_tokens.create!(
       purpose: purpose,
       expires_at: expires_at,

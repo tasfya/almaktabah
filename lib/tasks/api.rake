@@ -1,14 +1,14 @@
 namespace :api do
   desc "Generate an API token for a user"
-  task :generate_token, [ :email, :purpose, :rate_limit ] => :environment do |t, args|
+  task :generate_token, [ :email, :purpose ] => :environment do |t, args|
     # Support both traditional args[:email] and ENV['email'] styles
     # This makes it work with ZSH that has issues with square brackets
     email = args[:email] || ENV["email"]
     purpose = args[:purpose] || ENV["purpose"] || "API Access"
 
     if email.blank?
-      puts "Email is required. Usage: rake api:generate_token[user@example.com,\"Frontend API\",100]"
-      puts "For ZSH users: rake api:generate_token email=user@example.com purpose=\"Frontend API\" rate_limit=100"
+      puts "Email is required. Usage: rake api:generate_token[user@example.com,\"Frontend API\"]"
+      puts "For ZSH users: rake api:generate_token email=user@example.com purpose=\"Frontend API\""
       next
     end
 
@@ -19,7 +19,7 @@ namespace :api do
       next
     end
 
-    token = user.create_api_token(purpose: purpose, rate_limit: rate_limit.to_i)
+    token = user.create_api_token(purpose: purpose)
 
     puts "API token for #{email} (#{purpose}): #{token.token}"
     puts "This token will expire on: #{token.expires_at}"
