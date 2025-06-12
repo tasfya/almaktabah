@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_27_161145) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_10_154611) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -58,6 +58,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_161145) do
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "rate_limit", default: 100
+    t.integer "requests_count", default: 0
+    t.datetime "reset_at"
     t.index ["token"], name: "index_api_tokens_on_token", unique: true
     t.index ["user_id"], name: "index_api_tokens_on_user_id"
   end
@@ -97,6 +100,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_161145) do
     t.index ["title"], name: "index_books_on_title"
   end
 
+  create_table "comments", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.text "content"
+    t.string "commentable_type", null: false
+    t.integer "commentable_id", null: false
+    t.integer "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
   create_table "contacts", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -124,6 +139,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_161145) do
     t.date "published_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "video_url"
   end
 
   create_table "lessons", force: :cascade do |t|
@@ -176,6 +192,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_161145) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "admin", default: false
+    t.string "name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -185,5 +202,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_161145) do
   add_foreign_key "api_tokens", "users"
   add_foreign_key "articles", "scholars", column: "author_id"
   add_foreign_key "books", "scholars", column: "author_id"
+  add_foreign_key "comments", "users"
   add_foreign_key "lessons", "series"
 end

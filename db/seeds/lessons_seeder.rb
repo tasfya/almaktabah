@@ -22,42 +22,35 @@ module Seeds
 
         next if data['name'].blank? || data['name'] =~ /^\d+$/
 
-        category = data['parent_catname']
-        series = Series.find_or_create_by(title: category) do |s|
-          s.description = "مجموعة #{data['category']} للشيخ محمد بن رمزان الهاجري"
-          s.category = data['category']
+        series = Series.find_or_create_by(title: data["series_name"]) do |s|
+          s.description = "مجموعة #{data['series_name']} للشيخ محمد بن رمزان الهاجري"
+          s.category = data["series_name"]
           s.published_date = Date.today
         end
 
         lesson = Lesson.find_or_initialize_by(title: data['name']) do |l|
           l.series = series
-          l.category = category
-          l.published_date = Date.today
-          l.duration = 15 * 60
+          l.category = data["series_name"]
           l.description = data['name']
-          l.video_url = data['url']
-          l.view_count = data['counter'].to_i if data['counter']
+          l.video_url = data['video_url'] if data['video_url'].present? && !data['video_url'].end_with?('mp4')
+          l.published_date = Date.today
+          l.duration = 0
+          l.view_count = 0
         end
 
-        lesson.video_url = data['url'] if data['url'].present?
-
-        if data['cover_image'].present? && !lesson.thumbnail.attached?
-          path = Rails.root.join('storage', 'audio', "lesson_#{data['id']}_thumbnail#{File.extname(data['cover_image'])}")
-          downloaded = download_file(data['cover_image'], path)
-          lesson.thumbnail.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
-        end
-
-        if data['file'].present? && !lesson.audio.attached?
-          path = Rails.root.join('storage', 'audio', "lesson_#{data['id']}#{File.extname(data['file'])}")
-          downloaded = download_file(data['file'], path)
+        if data['audio_url'].present? && !lesson.audio.attached?
+          path = Rails.root.join('storage', 'audio', "lessons", "lesson_#{data["id"]}.mp3")
+          downloaded = download_file(data['audio_url'], path)
           lesson.audio.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
         end
 
-        unless lesson.thumbnail.attached?
-          fallback_path = Rails.root.join('public', 'icon.png')
-          thumb_path = Rails.root.join('storage', 'audio', "lesson_#{data['id']}_thumbnail.png")
-          FileUtils.cp(fallback_path, thumb_path) if File.exist?(fallback_path)
-          lesson.thumbnail.attach(io: File.open(thumb_path), filename: File.basename(thumb_path)) if File.exist?(thumb_path)
+        
+        if data['video_url'].present? && !lecture.video.attached?
+            if data['video_url'].end_with?('mp4')
+                path = Rails.root.join('storage', 'video', "lessons", "lesson_#{data["id"]}.mp4")
+                downloaded = download_file(data['video_url'], path)
+                lecture.video.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded    
+            end
         end
 
         processed += 1 if lesson.save
