@@ -32,12 +32,12 @@ module Seeds
           l.series = series
           l.category = data["series_name"]
           l.description = data['name']
-          l.video_url = data['video_url'] if data['video_url'].present? && !data['video_url'].end_with?('mp4')
+          l.video_url = data['video_url'] 
           l.published_date = Date.today
-          l.duration = 0
+          l.duration = 100
           l.view_count = 0
         end
-
+        puts "Processing lesson: #{lesson.title} (ID: #{lesson.id})"
         if data['audio_url'].present? && !lesson.audio.attached?
           path = Rails.root.join('storage', 'audio', "lessons", "lesson_#{data["id"]}.mp3")
           downloaded = download_file(data['audio_url'], path)
@@ -53,7 +53,7 @@ module Seeds
             end
         end
 
-        processed += 1 if lesson.save
+        processed += 1 if lesson.save!
       end
 
       puts "\n✅ Successfully seeded #{processed} lessons out of #{total}"
