@@ -39,7 +39,7 @@ module Seeds
             if data['video_url'].end_with?('mp4')
                 path = Rails.root.join('storage', 'video', "lectures", "lecture_#{data["id"]}.mp4")
                 downloaded = download_file(data['video_url'], path)
-                lecture.video.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded    
+                lecture.video.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
             end
         end
 

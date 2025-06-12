@@ -32,7 +32,7 @@ module Seeds
           l.series = series
           l.category = data["series_name"]
           l.description = data['name']
-          l.video_url = data['video_url'] 
+          l.video_url = data['video_url']
           l.published_date = Date.today
           l.duration = 100
           l.view_count = 0
@@ -44,12 +44,12 @@ module Seeds
           lesson.audio.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
         end
 
-        
+
         if data['video_url'].present? && !lecture.video.attached?
             if data['video_url'].end_with?('mp4')
                 path = Rails.root.join('storage', 'video', "lessons", "lesson_#{data["id"]}.mp4")
                 downloaded = download_file(data['video_url'], path)
-                lecture.video.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded    
+                lecture.video.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
             end
         end
 
