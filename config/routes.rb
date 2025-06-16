@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
 
+  authenticate :user, ->(u) { u.admin? } do
+    mount MissionControl::Jobs::Engine => "/jobs"
+  end
+
   namespace :api, defaults: { format: :json } do
     scope module: :v1, constraints: Api::ApiConstraints.new(version: 1, default: true) do
       post "login", to: "authentication#login"

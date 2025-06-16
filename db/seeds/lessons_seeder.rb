@@ -28,28 +28,42 @@ module Seeds
           s.published_date = Date.today
         end
 
-        lesson = Lesson.find_or_initialize_by(title: data['name']) do |l|
+        lesson = Lesson.find_or_initialize_by(old_id: data['id']) do |l|
+          l.title = title
           l.series = series
           l.category = data["series_name"]
           l.description = data['name']
           l.video_url = data['video_url']
           l.published_date = Date.today
           l.duration = 100
+          l.old_id = data['id']
           l.view_count = 0
         end
         puts "Processing lesson: #{lesson.title} (ID: #{lesson.id})"
         if data['audio_url'].present? && !lesson.audio.attached?
           path = Rails.root.join('storage', 'audio', "lessons", "lesson_#{data["id"]}.mp3")
           downloaded = download_file(data['audio_url'], path)
-          lesson.audio.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
+          if downloaded_audio
+              lesson.audio.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
+              puts "🔄 Queuing audio optimization job for lesson: #{lesson.title} (ID: #{lesson.id})"
+              ProcessLessonMediaJob.perform_later(lesson.id, 'audio')
+          else
+              puts "❌ Failed to download audio for lesson: #{lesson.title}"
+          end
         end
 
 
-        if data['video_url'].present? && !lecture.video.attached?
+        if data['video_url'].present? && !lesson.video.attached?
             if data['video_url'].end_with?('mp4')
                 path = Rails.root.join('storage', 'video', "lessons", "lesson_#{data["id"]}.mp4")
                 downloaded = download_file(data['video_url'], path)
-                lecture.video.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
+              if downloaded_video
+                    lesson.video.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
+                puts "🔄 Queuing video processing job for lesson: #{lesson.title} (ID: #{lesson.id})"
+                ProcessLessonMediaJob.perform_later(lesson.id, 'video')
+              else
+                puts "❌ Failed to download video for lesson: #{lesson.title}"
+              end
             end
         end
 
