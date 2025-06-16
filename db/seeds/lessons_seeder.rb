@@ -28,8 +28,8 @@ module Seeds
           s.published_date = Date.today
         end
 
-        lesson = Lesson.find_or_initialize_by(old_id: data['id']) do |l|
-          l.title = title
+        lesson = Lesson.find_or_initialize_by(title: data['name']) do |l|
+          l.title = data['name']
           l.series = series
           l.category = data["series_name"]
           l.description = data['name']
@@ -42,23 +42,23 @@ module Seeds
         puts "Processing lesson: #{lesson.title} (ID: #{lesson.id})"
         if data['audio_url'].present? && !lesson.audio.attached?
           path = Rails.root.join('storage', 'audio', "lessons", "lesson_#{data["id"]}.mp3")
-          downloaded = download_file(data['audio_url'], path)
+          downloaded_audio = download_file(data['audio_url'], path)
           if downloaded_audio
-              lesson.audio.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
-              puts "🔄 Queuing audio optimization job for lesson: #{lesson.title} (ID: #{lesson.id})"
-              ProcessLessonMediaJob.perform_later(lesson.id, 'audio')
+            lesson.audio.attach(io: File.open(downloaded_audio), filename: File.basename(downloaded_audio)) if downloaded_audio
+            puts "🔄 Queuing audio optimization job for lesson: #{lesson.title} (ID: #{lesson.id})"
+            ProcessLessonMediaJob.perform_later(lesson.id, 'audio')
           else
-              puts "❌ Failed to download audio for lesson: #{lesson.title}"
+            puts "❌ Failed to download audio for lesson: #{lesson.title}"
           end
         end
 
 
         if data['video_url'].present? && !lesson.video.attached?
             if data['video_url'].end_with?('mp4')
-                path = Rails.root.join('storage', 'video', "lessons", "lesson_#{data["id"]}.mp4")
-                downloaded = download_file(data['video_url'], path)
-              if downloaded_video
-                    lesson.video.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
+              path = Rails.root.join('storage', 'video', "lessons", "lesson_#{data["id"]}.mp4")
+              downloaded = download_file(data['video_url'], path)
+              if downloaded
+                lesson.video.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
                 puts "🔄 Queuing video processing job for lesson: #{lesson.title} (ID: #{lesson.id})"
                 ProcessLessonMediaJob.perform_later(lesson.id, 'video')
               else

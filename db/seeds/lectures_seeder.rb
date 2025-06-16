@@ -25,16 +25,8 @@ module Seeds
 
         next if data['name'].blank? || data['name'] =~ /^\d+$/
 
-        # Handle potential duplicate titles by appending a number
-        title = data['name']
-        counter = 1
-        while Lecture.exists?(title: title)
-          title = "#{data['name']} (#{counter})"
-          counter += 1
-        end
-
-        lecture = Lecture.find_or_initialize_by(old_id: data['id']) do |l|
-          l.title = title
+        lecture = Lecture.find_or_initialize_by(title: data['name']) do |l|
+          l.title = data['name']
           l.category = data["series_name"]
           l.description = data['name']
           l.old_id = data['id']
