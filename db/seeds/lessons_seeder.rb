@@ -39,6 +39,10 @@ module Seeds
           l.old_id = data['id']
           l.view_count = 0
         end
+        # report validation errors if any
+        unless lesson.valid?
+          errors = lesson.errors.full_messages.join(', ')
+        end
         puts "Processing lesson: #{lesson.title} (ID: #{lesson.id})"
         if data['audio_url'].present? && !lesson.audio.attached?
           path = Rails.root.join('storage', 'audio', "lessons", "lesson_#{data["id"]}.mp3")
