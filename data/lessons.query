@@ -1,0 +1,30 @@
+SELECT play.id, play.name, TRIM(play.image) as audio_url, TRIM(cat.catname) as series_name, cat.catid as series_id
+FROM `play`
+join `cat` on cat.catid = play.catid
+join `cat` cat2 on cat2.catid = play.ctid2
+WHERE TRIM(cat.catname) NOT IN 
+('مقتطفات ومقاطع', 'الكتـب', 'المقالات','اعلانات المحاضرات والدروس', 'الأخبار','المحاضرات', 'الخطب','المكتبة الصوتية', 'المكتبة المرئية', 'المحاضرات والملتقيات') 
+and play.image is NOT null 
+and TRIM(play.image) LIKE '%.mp3';
+
+# video lessons 
+
+SELECT play.id, play.name,TRIM(play.url) as video_url, TRIM(play.image) as audio_url, TRIM(cat.catname) as series_name, cat.catid as series_id
+FROM `play`
+join `cat` on cat.catid = play.catid
+join `cat` cat2 on cat2.catid = play.ctid2
+WHERE TRIM(cat.catname) NOT IN 
+('مقتطفات ومقاطع', 'الكتـب', 'المقالات','اعلانات المحاضرات والدروس', 'الأخبار','المحاضرات', 'الخطب','المكتبة الصوتية', 'المكتبة المرئية', 'المحاضرات والملتقيات')
+and play.url is not null
+and play.image is null
+and TRIM(play.url) LIKE '%.mp4';
+
+
+
+SELECT play.id, play.name, TRIM(play.url) as video_url, TRIM(play.image) as audio_url, TRIM(cat.catname) as series_name, cat.catid as series_id
+FROM `play`
+JOIN `cat` ON cat.catid = play.catid
+JOIN `cat` cat2 ON cat2.catid = play.ctid2
+WHERE TRIM(cat.catname) IN 
+  ('مقتطفات ومقاطع','المحاضرات', 'الخطب','المكتبة الصوتية', 'المكتبة المرئية', 'المحاضرات والملتقيات')
+      and TRIM(play.url) NOT LIKE '%.mp4'
