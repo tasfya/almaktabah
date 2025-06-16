@@ -1,2 +1,3 @@
 api: bin/rails server
 web: cd frontend && pnpm dev -p 4000
+queue: bundle exec rake solid_queue:start

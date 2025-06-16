@@ -51,6 +51,8 @@ gem "database_consistency"
 gem "aws-sdk-s3", require: false
 gem "sentry-ruby"
 gem "sentry-rails"
+gem "streamio-ffmpeg"
+gem "mission_control-jobs"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

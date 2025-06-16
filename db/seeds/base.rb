@@ -5,8 +5,10 @@ require 'json'
 module Seeds
   class Base
     def self.create_storage_directories
-      %w[books covers audio].each do |dir|
+      %w[books covers audio video].each do |dir|
         FileUtils.mkdir_p(Rails.root.join('storage', dir))
+        FileUtils.mkdir_p(Rails.root.join('storage', dir, 'lectures'))
+        FileUtils.mkdir_p(Rails.root.join('storage', dir, 'lessons'))
       end
     end
 
