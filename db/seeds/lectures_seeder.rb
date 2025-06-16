@@ -24,9 +24,10 @@ module Seeds
         progress.increment
 
         next if data['name'].blank? || data['name'] =~ /^\d+$/
+        title = data['name'].strip
 
-        lecture = Lecture.find_or_initialize_by(title: data['name']) do |l|
-          l.title = data['name']
+        lecture = Lecture.find_or_initialize_by(title:) do |l|
+          l.title = title
           l.category = data["series_name"]
           l.description = data['name']
           l.old_id = data['id']
@@ -45,6 +46,7 @@ module Seeds
             downloaded_audio = download_file(data['audio_url'], audio_path)
 
             if downloaded_audio
+              lecture.audio.attach(io: File.open(downloaded_audio), filename: File.basename(downloaded_audio)) if downloaded_audio
               puts "🔄 Queuing audio optimization job for lecture: #{lecture.title} (ID: #{lecture.id})"
               ProcessLectureMediaJob.perform_later(lecture.id, 'audio')
             else
@@ -60,6 +62,7 @@ module Seeds
               downloaded_video = download_file(data['video_url'], video_path)
 
               if downloaded_video
+                lecture.video.attach(io: File.open(downloaded_video), filename: File.basename(downloaded_video)) if downloaded_video
                 puts "🔄 Queuing video processing job for lecture: #{lecture.title} (ID: #{lecture.id})"
                 ProcessLectureMediaJob.perform_later(lecture.id, 'video')
               else
