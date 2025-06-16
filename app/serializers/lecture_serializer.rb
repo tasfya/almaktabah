@@ -24,6 +24,7 @@ class LectureSerializer < ActiveModel::Serializer
             end
         end
     end
+
     def audio_url
         if object.respond_to?(:audio) && object.audio.present?
             begin
@@ -31,6 +32,18 @@ class LectureSerializer < ActiveModel::Serializer
             rescue ArgumentError => e
                 Rails.application.routes.url_helpers.rails_blob_path(object.audio, only_path: true) rescue nil
             end
+        end
+    end
+
+    def video_url
+        if object.respond_to?(:video) && object.video.present?
+            begin
+                object.video.url
+            rescue ArgumentError => e
+                Rails.application.routes.url_helpers.rails_blob_path(object.video, only_path: true) rescue nil
+            end
+        else
+            object.video_url if object.respond_to?(:video_url)
         end
     end
 end

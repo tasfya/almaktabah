@@ -41,6 +41,19 @@ class LessonSerializer < ActiveModel::Serializer
         end
     end
 
+    def video_url
+        if object.respond_to?(:video) && object.video.present?
+            begin
+                object.video.url
+            rescue ArgumentError => e
+                # Return a relative path instead when URL options aren't set
+                Rails.application.routes.url_helpers.rails_blob_path(object.video, only_path: true) rescue nil
+            end
+        else
+            object.video_url if object.respond_to?(:video_url)
+        end
+    end
+
     def series_id
         object.series&.id
     end
