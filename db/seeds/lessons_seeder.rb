@@ -22,11 +22,19 @@ module Seeds
 
         next if data['name'].blank? || data['name'] =~ /^\d+$/
 
-        series = Series.find_or_create_by(title: data["series_name"]) do |s|
-          s.description = "مجموعة #{data['series_name']} للشيخ محمد بن رمزان الهاجري"
-          s.category = data["series_name"]
-          s.published_date = Date.today
+        series = Series.find_or_initialize_by(title: data["series_name"])
+        if series.new_record?
+          series.description = "مجموعة #{data['series_name']} للشيخ محمد بن رمزان الهاجري"
+          series.category = data["series_name"]
+          series.published_date = Date.today
+
+          unless series.save
+            puts "❌ Failed to save series: #{series.title}"
+            puts "Errors: #{series.errors.full_messages.join(', ')}"
+            next
+          end
         end
+
 
         lesson = Lesson.find_or_initialize_by(title: data['name']) do |l|
           l.title = data['name']
