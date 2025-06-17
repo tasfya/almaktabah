@@ -79,7 +79,7 @@ module Seeds
             end
         end
 
-        processed += 1 if lesson.save!
+        processed += 1
       end
 
       puts "\n✅ Successfully seeded #{processed} lessons out of #{total}"
