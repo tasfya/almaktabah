@@ -48,10 +48,14 @@ module Seeds
           l.view_count = 0
         end
         # report validation errors if any
+        processed += 1 if lesson.save
         unless lesson.valid?
-          errors = lesson.errors.full_messages.join(', ')
+          puts "❌ Failed to save lesson: #{lesson.title}"
+          puts "Errors: #{lesson.errors.full_messages.join(', ')}"
+          raise "Validation failed for lesson: #{lesson.title}. Errors: #{lesson.errors.full_messages.join(', ')}"
         end
-        puts "Processing lesson: #{lesson.title} (ID: #{lesson.id})"
+        puts "📥 Processing lesson: #{lesson.title} (ID: #{lesson.id})"
+        
         if data['audio_url'].present? && !lesson.audio.attached?
           path = Rails.root.join('storage', 'audio', "lessons", "lesson_#{data["id"]}.mp3")
           downloaded_audio = download_file(data['audio_url'], path)
@@ -79,7 +83,6 @@ module Seeds
             end
         end
 
-        processed += 1
       end
 
       puts "\n✅ Successfully seeded #{processed} lessons out of #{total}"
