@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_16_141029) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_20_095559) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -141,6 +141,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_16_141029) do
     t.datetime "updated_at", null: false
     t.string "video_url"
     t.integer "old_id"
+    t.string "youtube_url"
     t.index ["old_id"], name: "index_lectures_on_old_id"
     t.index ["title"], name: "index_lectures_on_title", unique: true
   end
@@ -158,6 +159,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_16_141029) do
     t.integer "series_id"
     t.string "video_url"
     t.integer "old_id"
+    t.string "youtube_url"
     t.index ["old_id"], name: "index_lessons_on_old_id"
     t.index ["series_id"], name: "index_lessons_on_series_id"
     t.index ["title"], name: "index_lessons_on_title", unique: true

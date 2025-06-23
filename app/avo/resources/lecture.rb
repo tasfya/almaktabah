@@ -13,7 +13,8 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :category, as: :text
     field :views, as: :number
     field :content, as: :trix
-    field :video_url, as: :text, link_to: true
+    field :video_url, as: :text, help: "Direct video file URL (MP4, etc.)"
+    field :youtube_url, as: :text, help: "YouTube URL for video lectures - will be processed for download"
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes
     field :audio, as: :file
     field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
