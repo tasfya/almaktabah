@@ -11,6 +11,7 @@ class LessonSerializer < ActiveModel::Serializer
             :thumbnail_url,
             :audio_url,
             :video_url,
+            :youtube_url,
             :series_id,
             :series_title,
             :media_type
@@ -52,6 +53,10 @@ class LessonSerializer < ActiveModel::Serializer
         else
             object.video_url if object.respond_to?(:video_url)
         end
+    end
+
+    def youtube_url
+        object.youtube_url if object.respond_to?(:youtube_url)
     end
 
     def series_id
