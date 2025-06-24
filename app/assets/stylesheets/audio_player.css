@@ -1,0 +1,146 @@
+/* Enhanced Audio Player Styles */
+
+/* Ensure the global audio player is properly positioned and styled */
+#global-audio-player {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Range input styling for cross-browser compatibility */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Progress bar styling */
+input[type="range"]::-webkit-slider-track {
+  background: #d1d5db;
+  height: 8px;
+  border-radius: 4px;
+}
+
+input[type="range"]::-moz-range-track {
+  background: #d1d5db;
+  height: 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #374151;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #374151;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #f3f4f6;
+  transform: scale(1.1);
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  background: #f3f4f6;
+  transform: scale(1.1);
+}
+
+/* Volume slider specific styling */
+input[data-audio-player-target="volumeSlider"] {
+  height: 4px;
+}
+
+input[data-audio-player-target="volumeSlider"]::-webkit-slider-track {
+  height: 4px;
+  background: linear-gradient(to right, #374151 0%, #374151 var(--volume-percent, 100%), #d1d5db var(--volume-percent, 100%), #d1d5db 100%);
+}
+
+input[data-audio-player-target="volumeSlider"]::-moz-range-track {
+  height: 4px;
+  background: linear-gradient(to right, #374151 0%, #374151 var(--volume-percent, 100%), #d1d5db var(--volume-percent, 100%), #d1d5db 100%);
+}
+
+input[data-audio-player-target="volumeSlider"]::-webkit-slider-thumb {
+  height: 12px;
+  width: 12px;
+  border: 1px solid #374151;
+}
+
+input[data-audio-player-target="volumeSlider"]::-moz-range-thumb {
+  height: 12px;
+  width: 12px;
+  border: 1px solid #374151;
+}
+
+/* Button hover effects */
+button[data-audio-player-target="loopButton"].text-blue-600 {
+  background-color: rgba(37, 99, 235, 0.1);
+  border-radius: 0.375rem;
+}
+
+/* Bookmark dropdown styling */
+#bookmarks-dropdown {
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Skeleton loading animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  #global-audio-player .flex.items-center.space-x-2 {
+    gap: 0.25rem;
+  }
+  
+  #global-audio-player .max-w-md {
+    max-width: 200px;
+  }
+  
+  input[data-audio-player-target="volumeSlider"] {
+    width: 40px;
+  }
+  
+  #bookmarks-dropdown {
+    width: 280px;
+    right: 0.5rem;
+  }
+}
