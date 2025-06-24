@@ -1,3 +1,4 @@
-api: bin/rails server
-web: cd frontend && pnpm dev -p 4000
+app: bin/rails server
 queue: bundle exec rake solid_queue:start
+js: yarn watch:js
+css: yarn watch:css
