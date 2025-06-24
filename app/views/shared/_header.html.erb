@@ -1,0 +1,92 @@
+<header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 left-0 right-0 z-50" data-controller="navigation">
+  <!-- Top bar -->
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
+    <!-- Logo -->
+    <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto" do %>
+      <img src="<%= asset_path('logo.png') %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[50px] object-contain" />
+    <% end %>
+    <!-- Desktop Search Bar -->
+    <div class="hidden md:flex flex-row-reverse gap-2 items-center w-full flex-1 mr-auto">
+      <!-- Social links --->
+      <div class="flex items-center gap-3">
+        <%= link_to "#", class: "text-gray-500 hover:text-blue-500" do %>
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        <% end %>
+        <%= link_to "#", class: "text-gray-500 hover:text-red-600" do %>
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        <% end %>
+      </div>
+      <div class="relative max-w-sm w-full">
+        <%= text_field_tag :search, nil, 
+            class: "w-full border rounded-md px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rtl:placeholder-right",
+            placeholder: t('forms.search_placeholder', type: t('site.name')),
+            data: { action: "input->navigation#search" } %>
+        <svg class="absolute top-2.5 right-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+    </div>
+    <!-- Icons + Mobile Menu Button -->
+    <div class="flex items-center gap-3 flex-row-reverse">
+      <!-- Social Icons -->
+      <%= link_to "#", class: "text-gray-500 hover:text-blue-500" do %>
+        <i class="fa-brands fa-x-twitter text-xl"></i>
+      <% end %>
+      <%= link_to "#", class: "text-gray-500 hover:text-red-600" do %>
+        <i class="fa-brands fa-youtube text-xl"></i>
+      <% end %>
+      <!-- Mobile menu toggle -->
+      <button data-action="click->navigation#toggleMobileMenu" class="md:hidden text-gray-700 focus:outline-none">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <!-- Desktop Navigation -->
+  <nav class="hidden md:flex border-t border-gray-200 py-3">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-center gap-6 text-sm">
+      <%= link_to t('navigation.home'), root_path, class: "text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.scientific_series'), series_index_path, class: "text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.lectures'), lectures_path, class: "text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.books'), books_path, class: "text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.news'), news_index_path, class: "text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.fatwas'), fatwas_path, class: "text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.benefits'), benefits_path, class: "text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.about_sheikh'), about_path, class: "text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.contact'), contact_path, class: "text-gray-700 hover:text-blue-600" %>
+    </div>
+  </nav>
+  <!-- Mobile Navigation -->
+  <div data-navigation-target="menu" class="hidden md:hidden border-t bg-white">
+    <div class="px-4 py-2 space-y-2">
+      <!-- Search in mobile -->
+      <div class="relative">
+        <%= text_field_tag :search, nil, 
+            class: "w-full border rounded-md px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rtl:placeholder-right",
+            placeholder: t('forms.search_placeholder', type: t('site.name')),
+            data: { action: "input->navigation#search" } %>
+        <svg class="absolute top-2.5 right-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <!-- Links -->
+      <%= link_to t('navigation.home'), root_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.scientific_series'), series_index_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.lectures'), lectures_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.books'), books_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.news'), news_index_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.fatwas'), fatwas_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.benefits'), benefits_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.about_sheikh'), about_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.contact'), contact_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
+    </div>
+  </div>
+</header>
