@@ -9,7 +9,7 @@
     <div class="hidden md:flex flex-row-reverse gap-2 items-center w-full flex-1 mr-auto">
       <!-- Social links --->
       <div class="flex items-center gap-3">
-        <%= link_to "#", class: "text-gray-500 hover:text-blue-500" do %>
+        <%= link_to "#", class: "text-gray-500 hover:text-gray-500" do %>
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
           </svg>
@@ -22,7 +22,7 @@
       </div>
       <div class="relative max-w-sm w-full">
         <%= text_field_tag :search, nil, 
-            class: "w-full border rounded-md px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rtl:placeholder-right",
+            class: "w-full border rounded-md px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 rtl:placeholder-right",
             placeholder: t('forms.search_placeholder', type: t('site.name')),
             data: { action: "input->navigation#search" } %>
         <svg class="absolute top-2.5 right-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,7 +34,7 @@
     <!-- Icons + Mobile Menu Button -->
     <div class="flex items-center gap-3 flex-row-reverse">
       <!-- Social Icons -->
-      <%= link_to "#", class: "text-gray-500 hover:text-blue-500" do %>
+      <%= link_to "#", class: "text-gray-500 hover:text-gray-500" do %>
         <i class="fa-brands fa-x-twitter text-xl"></i>
       <% end %>
       <%= link_to "#", class: "text-gray-500 hover:text-red-600" do %>
@@ -52,15 +52,15 @@
   <!-- Desktop Navigation -->
   <nav class="hidden md:flex border-t border-gray-200 py-3">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-center gap-6 text-sm">
-      <%= link_to t('navigation.home'), root_path, class: "text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.scientific_series'), series_index_path, class: "text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.lectures'), lectures_path, class: "text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.books'), books_path, class: "text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.news'), news_index_path, class: "text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.fatwas'), fatwas_path, class: "text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.benefits'), benefits_path, class: "text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.about_sheikh'), about_path, class: "text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.contact'), contact_path, class: "text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.home'), root_path, class: "text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.scientific_series'), "#", class: "text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.lectures'), "#", class: "text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.books'), "#", class: "text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.news'), "#", class: "text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.fatwas'), "#", class: "text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.benefits'), "#", class: "text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.about_sheikh'), "#", class: "text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.contact'), "#", class: "text-gray-700 hover:text-gray-900" %>
     </div>
   </nav>
   <!-- Mobile Navigation -->
@@ -69,7 +69,7 @@
       <!-- Search in mobile -->
       <div class="relative">
         <%= text_field_tag :search, nil, 
-            class: "w-full border rounded-md px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rtl:placeholder-right",
+            class: "w-full border rounded-md px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 rtl:placeholder-right",
             placeholder: t('forms.search_placeholder', type: t('site.name')),
             data: { action: "input->navigation#search" } %>
         <svg class="absolute top-2.5 right-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,15 +78,15 @@
         </svg>
       </div>
       <!-- Links -->
-      <%= link_to t('navigation.home'), root_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.scientific_series'), series_index_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.lectures'), lectures_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.books'), books_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.news'), news_index_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.fatwas'), fatwas_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.benefits'), benefits_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.about_sheikh'), about_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
-      <%= link_to t('navigation.contact'), contact_path, class: "block py-2 text-gray-700 hover:text-blue-600" %>
+      <%= link_to t('navigation.home'), root_path, class: "block py-2 text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.scientific_series'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.lectures'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.books'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.news'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.fatwas'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.benefits'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.about_sheikh'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.contact'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
     </div>
   </div>
 </header>
