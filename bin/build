@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo "Building JavaScript assets with esbuild..."
+yarn build:js
+
+echo "Building CSS assets with Tailwind..."
+yarn build:css
+
+echo "Assets built successfully!"
