@@ -1,4 +1,19 @@
 ar:
+  buttons:
+    about: "عن الموقع"
+    contact: "تواصل معنا"
+    download: "تحميل"
+    view_series: "عرض السلسلة"
+    listen: "استمع"
+    read: "اقرأ"
+    play: "تشغيل"
+    read_more: "اقرأ المزيد"
+  news_bar:
+    latest_news: "آخر الأخبار"
+    more_news: "المزيد من الأخبار"
+  sidebar:
+    most_downloaded_books: "الكتب الأكثر تحميلاً"
+    most_viewed_books: "الكتب الأكثر مشاهدة"
   site:
     name: "مكتبة الشيخ محمد بن رمزان الهاجري"
     tagline: "موقع فضيلة الشيخ محمد بن رمزان الهاجري"
@@ -16,6 +31,8 @@ ar:
     contact: "تواصل معنا"
     lessons: "الدروس العلمية"
     series: "السلاسل"
+  common:
+    site_contents: "محتويات الموقع"
   forms:
     search_placeholder: "البحث في %{type}..."
     category_placeholder: "التصنيف..."
@@ -33,3 +50,10 @@ ar:
     abbr_day_names: ["أحد", "اثن", "ثلث", "أرب", "خمي", "جمع", "سبت"]
     month_names: [~, "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
     abbr_month_names: [~, "ينا", "فبر", "مار", "أبر", "ماي", "يون", "يول", "أغس", "سبت", "أكت", "نوف", "ديس"]
+  activerecord:
+    models:
+      lesson: "درس"
+      fatwa: "فتوى"
+      series: "سلسلة"
+      news: "خبر"
+      scholar: "عالم"

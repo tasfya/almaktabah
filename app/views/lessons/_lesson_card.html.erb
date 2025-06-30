@@ -1,0 +1,38 @@
+<div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+  <div class="flex items-start justify-between">
+    <div class="flex-1">
+      <% if lesson.series.present? %>
+        <p class="badge badge-primary mb-2">
+          <%= link_to lesson.series.title, series_path(lesson.series) %>
+        </p>
+      <% end %>
+      <h3 class="text-xl font-semibold text-gray-900 mb-2">
+        <%= link_to "#{lesson.title} - #{lesson.series.title}", lesson_path(lesson), class: "hover:text-gray-600" %>
+      </h3>
+      <p class="text-gray-600 text-sm mb-4"><%= truncate(lesson.description, length: 200) %></p>
+      <div class="flex items-center justify-between text-sm text-gray-500">
+        <% if false %>
+          <span class="bg-gray-100 px-2 py-1 rounded"><%= lesson.category %></span>
+        <% end %>
+        <div class="flex space-x-4 rtl:space-x-reverse">
+          <% if false && lesson.respond_to?(:duration) %>
+            <span><%= lesson.duration %> دقيقة</span>
+          <% end %>
+          <% if false && lesson.respond_to?(:view_count) %>
+            <span><%= lesson.view_count %> مشاهدة</span>
+          <% end %>
+          <% if false %>
+            <span><%= lesson.created_at.strftime("%Y/%m/%d") %></span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="mr-4 rtl:ml-4 rtl:mr-0 flex items-center gap-2">
+      <%= audio_play_button_with_text(lesson.audio_url, lesson.title, lesson.description, '', t('buttons.listen'), class: "btn btn-secondary w-fit") if lesson.audio?%>
+      <%= link_to lesson_path(lesson), class: "btn btn-primary gap-2" do %>
+        <%= icon "eye", class: "size-5" %>
+        <%= t('buttons.read') %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -30,6 +30,12 @@ gem "active_model_serializers", "~> 0.10.13"
 # JWT for API authentication
 gem "jwt"
 
+# Pagination
+gem "pagy", "~> 9.0"
+
+# Filtering and searching
+gem "ransack", "~> 4.0"
+
 # API documentation
 gem "rswag-api"
 gem "rswag-ui"
@@ -100,3 +106,5 @@ end
 
 gem "ruby-progressbar"
 gem "avo", ">= 3.2"
+
+gem "rails_icons", "~> 1.3"

@@ -15,7 +15,7 @@ module AudioPlayerHelper
         audio_author: author,
         audio_artwork: artwork
       },
-      title: "#{t('actions.play')} #{title}",
+      title: "#{t('buttons.play')} #{title}",
       **options.except(:class, :icon_class)
     ) do
       content_tag(:svg, class: icon_class, fill: "currentColor", viewBox: "0 0 20 20") do
@@ -30,9 +30,9 @@ module AudioPlayerHelper
 
     artwork ||= asset_path("background.jpg")
 
-    text ||= t("actions.listen")
+    text ||= t("buttons.listen")
     button_class = options[:class] || "flex items-center gap-2 bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg transition-colors"
-
+    svg_class = options[:svg_class] || "w-4 h-4"
     button_tag(
       class: "flex items-center gap-1 #{button_class}",
       data: {
@@ -42,11 +42,11 @@ module AudioPlayerHelper
         audio_author: author,
         audio_artwork: artwork
       },
-      title: "#{t('actions.play')} #{title}",
+      title: "#{t('buttons.play')} #{title}",
       **options.except(:class)
     ) do
       concat(
-        content_tag(:svg, "", class: "w-4 h-4", fill: "currentColor", viewBox: "0 0 20 20", xmlns: "http://www.w3.org/2000/svg") do
+        content_tag(:svg, "", class: svg_class, fill: "currentColor", viewBox: "0 0 20 20", xmlns: "http://www.w3.org/2000/svg") do
           tag.path(d: "M8 5v10l8-5-8-5z")
         end
       )

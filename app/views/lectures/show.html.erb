@@ -1,0 +1,78 @@
+<div class="bg-gray-50 min-h-screen py-8">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2">
+        <article class="bg-white rounded-lg shadow-md p-8">
+          <header class="mb-8">
+            <% if @lecture.video? || @lecture.audio? %>
+              <section class="mb-8">
+                <% if @lecture.video? %>
+                  <video controls class="w-full rounded">
+                    <source src="<%= @lecture.video_url %>" type="video/mp4">
+                    متصفحك لا يدعم تشغيل الفيديو.
+                  </video>
+                <% elsif @lecture.audio? %>
+                  <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
+                    <div class="aspect-video bg-gray-200 relative flex items-center justify-center">
+                      <%= image_tag "background.jpg", class: "absolute inset-0 w-full h-full object-cover" %>
+                      <%= audio_play_button_with_text(@lecture.audio_url, @lecture.title, @lecture.description, '', '', class: "btn btn-secondary w-fit z-10 bg-black/70 hover:bg-black/90 text-white", svg_class: "size-12") %>
+                    </div>
+                  </div>
+                <% end %>
+              </section>
+            <% end %>
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">
+              <%= @lecture.title %>
+            </h1>
+            <% if @lecture.respond_to?(:speaker) && @lecture.speaker.present? %>
+              <div class="mb-4">
+                <span class="text-sm text-gray-600">المحاضر:</span>
+                <span class="font-medium text-gray-900"><%= @lecture.speaker %></span>
+              </div>
+            <% end %>
+            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
+              <% if @lecture.category.present? %>
+                <span class="badge badge-primary">
+                  <%= @lecture.category %>
+                </span>
+              <% end %>
+              <% if false && @lecture.published_date %>
+                <time><%= @lecture.published_date.strftime("%Y/%m/%d") %></time>
+              <% end %>
+              <% if false && @lecture.respond_to?(:duration) && @lecture.duration %>
+                <span><%= @lecture.duration %> دقيقة</span>
+              <% end %>
+              <% if false && @lecture.respond_to?(:views) %>
+                <span><%= @lecture.views %> مشاهدة</span>
+              <% end %>
+            </div>
+          </header>
+          <% if @lecture.audio? || @lecture.video? %>
+            <section class="mb-8">
+              <div class="bg-gray-50 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">خيارات التحميل</h3>
+                <div class="flex flex-wrap gap-4">
+                  <% if @lecture.audio? %>
+                    <%= link_to @lecture.audio_url, download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
+                      <%= icon "arrow-down-tray", class: "size-5" %>
+                      تحميل الصوت
+                    <% end %>
+                  <% end %>
+                  <% if @lecture.video? %>
+                    <%= link_to @lecture.video_url, download: true, target: "_blank", class: "btn btn-secondary w-fit" do %>
+                      <%= icon "arrow-down-tray", class: "size-5" %>
+                      تحميل الفيديو
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </section>
+          <% end %>
+        </article>
+      </div>
+      <!-- Sidebar -->
+      <%= render partial: "shared/side_bar" %>
+    </div>
+  </div>
+</div>

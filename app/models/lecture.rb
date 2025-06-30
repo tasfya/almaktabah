@@ -7,8 +7,31 @@ class Lecture < ApplicationRecord
   has_one_attached :optimized_audio, service: Rails.application.config.public_storage
   has_rich_text :content
 
+    # Scopes
+    scope :recent, -> { order(published_date: :desc) }
+    scope :most_viewed, -> { order(views: :desc) }
+    scope :by_category, ->(category) { where(category: category) if category.present? }
+
+  # Ransack configuration
+  def self.ransackable_attributes(auth_object = nil)
+    [ "category", "created_at", "description", "duration", "id", "published_date", "speaker", "title", "updated_at", "views" ]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    [ "speaker" ]
+  end
+
+  # Ransack configuration
+  def self.ransackable_attributes(auth_object = nil)
+    [ "category", "created_at", "description", "duration", "id", "published_date", "speaker", "title", "updated_at", "views" ]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    [ "speaker" ]
+  end
+
   after_save :extract_media_duration
-  after_commit :process_media_files, on: [:create, :update]
+  after_commit :process_media_files, on: [ :create, :update ]
 
   attr_accessor :audio_blob_id_before_save, :video_blob_id_before_save
 
@@ -21,6 +44,11 @@ class Lecture < ApplicationRecord
   def audio?
     audio.attached?
   end
+
+    def audio_url
+      return nil unless audio.attached?
+      Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
+    end
 
   private
 

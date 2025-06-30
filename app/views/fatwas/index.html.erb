@@ -1,0 +1,108 @@
+<% content_for :title, t('navigation.fatwas') %>
+
+<div class="bg-gray-50 min-h-screen py-8">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h1 class="text-2xl font-bold text-gray-900 mb-6">الفتاوى</h1>
+          <p class="text-gray-600 mb-6">ابحث في مجموعة شاملة من الفتاوى والأحكام الشرعية</p>
+          
+          <!-- Filters -->
+          <%= render 'shared/filters' %>
+          
+          <!-- Fatwas Grid -->
+          <% if @fatwas.any? %>
+            <div class="grid grid-cols-1 gap-6">
+              <% @fatwas.each do |fatwa| %>
+                <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                    <%= link_to fatwa.title, fatwa_path(fatwa), class: "hover:text-indigo-600" %>
+                  </h3>
+                  
+                  <p class="text-gray-600 text-sm mb-4"><%= truncate(fatwa.content, length: 200) %></p>
+                  
+                  <div class="flex items-center justify-between text-sm text-gray-500">
+                    <span class="bg-gray-100 px-2 py-1 rounded"><%= fatwa.category %></span>
+                    <div class="flex space-x-4 rtl:space-x-reverse">
+                      <% if fatwa.respond_to?(:views) %>
+                        <span><%= fatwa.views %> مشاهدة</span>
+                      <% end %>
+                      <span><%= fatwa.created_at.strftime("%Y/%m/%d") %></span>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center text-gray-500 py-8">
+              <p>لا توجد فتاوى متاحة حالياً</p>
+            </div>
+          <% end %>
+          
+          <!-- Pagination -->
+          <%= render 'shared/pagination' %>
+        </div>
+      </div>
+      <%= render partial: "shared/side_bar" %>
+    </div>
+  </div>
+</div>
+          <div class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex flex-col space-y-1.5 p-6">
+              <h3 class="text-xl font-semibold leading-none tracking-tight group-hover:text-blue-600 transition-colors">
+                <%= fatwa.title || t('fatwa.title') %>
+              </h3>
+            </div>
+            
+            <div class="p-6 pt-0">
+              <% if fatwa.question.present? %>
+                <div class="text-gray-600 mb-4">
+                  <h4 class="font-medium text-gray-800 mb-2"><%= t('fatwa.question') %></h4>
+                  <div class="line-clamp-3 text-sm">
+                    <%= truncate(strip_tags(fatwa.question.to_s), length: 200) %>
+                  </div>
+                </div>
+              <% end %>
+              
+              <div class="flex items-center justify-between text-sm text-gray-500">
+                <div class="flex items-center gap-4">
+                  <% if fatwa.category.present? %>
+                    <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
+                      <%= fatwa.category %>
+                    </span>
+                  <% end %>
+                  <% if fatwa.respond_to?(:views) && fatwa.views %>
+                    <span><%= fatwa.views %> <%= t('common.views') %></span>
+                  <% end %>
+                </div>
+                <% if fatwa.respond_to?(:published_date) && fatwa.published_date %>
+                  <span><%= fatwa.published_date.strftime(t('common.date_format')) %></span>
+                <% elsif fatwa.created_at %>
+                  <span><%= fatwa.created_at.strftime(t('common.date_format')) %></span>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Pagination -->
+    <% if respond_to?(:paginate) %>
+      <div class="mt-8 flex justify-center">
+        <%= paginate @fatwas %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="text-center py-12">
+      <div class="text-gray-400 mb-4">
+        <svg class="h-16 w-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium text-gray-900 mb-2"><%= t('fatwa.no_fatwas') %></h3>
+      <p class="text-gray-600"><%= t('fatwa.no_fatwas_found') %></p>
+    </div>
+  <% end %>
+</div>
