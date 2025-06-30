@@ -8,7 +8,7 @@ class Lecture < ApplicationRecord
   has_rich_text :content
 
   after_save :extract_media_duration
-  after_commit :process_media_files, on: [:create, :update]
+  after_commit :process_media_files, on: [ :create, :update ]
 
   attr_accessor :audio_blob_id_before_save, :video_blob_id_before_save
 
