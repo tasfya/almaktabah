@@ -22,7 +22,6 @@
     "watch:js": "yarn build:js --watch",
     "watch:css": "yarn build:css --watch",
     "watch": "concurrently \"yarn watch:js\" \"yarn watch:css\"",
-    "dev": "yarn watch",
-    "postinstall": "yarn build"
+    "dev": "yarn watch"
   }
 }
