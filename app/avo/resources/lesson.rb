@@ -16,9 +16,9 @@ class Avo::Resources::Lesson < Avo::BaseResource
     field :category, as: :text
     field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
+    field :optimized_audio, as: :file, accept: "audio/*", max_size: 10.megabytes
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes
-    field :video_url, as: :text, help: "Direct video file URL (MP4, etc.)"
-    field :youtube_url, as: :text, help: "YouTube URL for video lessons - will be processed for download"
+    field :video_url, as: :text, help: "Video URL for video lessons"
     field :series, as: :belongs_to, resource: "Series", searchable: true
   end
 end

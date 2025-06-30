@@ -1,49 +1,52 @@
 class Lesson < ApplicationRecord
-    belongs_to :series
-    validates :title, presence: true, uniqueness: true
-    validates :old_id, uniqueness: true, allow_nil: true
-    validates :published_date, presence: true
-    validates :category, presence: true
-    validates :duration, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
+  belongs_to :series
 
-    has_one_attached :audio, service: Rails.application.config.public_storage
-    has_one_attached :thumbnail, service: Rails.application.config.public_storage
-    has_one_attached :video, service: Rails.application.config.public_storage
-    has_rich_text :content
+  validates :title, presence: true, uniqueness: true
 
-    def video?
-      video_url.present? || youtube_url.present?
+  has_one_attached :thumbnail, service: Rails.application.config.public_storage
+  has_one_attached :audio, service: Rails.application.config.public_storage
+  has_one_attached :video, service: Rails.application.config.public_storage
+  has_one_attached :optimized_audio, service: Rails.application.config.public_storage
+
+  has_rich_text :content
+
+  after_save :extract_media_duration
+  after_commit :process_media_files, on: [ :create, :update ]
+
+  def video?
+    video.attached?
+  end
+
+  def audio?
+    audio.attached?
+  end
+
+  def series_title
+    series&.title
+  end
+
+  private
+
+  def process_media_files
+    if video?
+      VideoProcessingJob.perform_later(self)
     end
 
-    def audio?
-      audio.attached?
+    if audio?
+      AudioOptimizationJob.perform_later(self)
     end
+  end
 
-    def youtube_video?
-      youtube_url.present?
+  def extract_media_duration
+    return unless audio.attached? || video.attached?
+
+    media_file = video.attached? ? video : audio
+
+    media_file.open do |file|
+      movie = FFMPEG::Movie.new(file.path)
+      update_column(:duration, movie.duration.to_i) if movie.duration
     end
-
-    def series_title
-      series&.title
-    end
-
-    # Queue YouTube download job
-    def download_youtube_video(download_type: "video")
-      return false unless youtube_url.present?
-
-      YoutubeDownloadJob.perform_now("Lesson", id, download_type)
-      true
-    end
-
-    def download_youtube_audio
-      return false unless youtube_url.present?
-      YoutubeDownloadJob.perform_now("Lesson", id, "audio")
-      true
-    end
-
-    # Helper method to check if YouTube URL is valid
-    def valid_youtube_url?
-      return false unless youtube_url.present?
-      youtube_url.include?("youtube.com") || youtube_url.include?("youtu.be")
-    end
+  rescue => e
+    Rails.logger.error "Failed to extract duration: #{e.message}"
+  end
 end
