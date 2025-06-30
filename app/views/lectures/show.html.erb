@@ -54,13 +54,13 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">خيارات التحميل</h3>
                 <div class="flex flex-wrap gap-4">
                   <% if @lecture.audio? %>
-                    <%= link_to @lecture.audio_url, download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
+                    <%= link_to rails_blob_url(@lecture.audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       تحميل الصوت
                     <% end %>
                   <% end %>
                   <% if @lecture.video? %>
-                    <%= link_to @lecture.video_url, download: true, target: "_blank", class: "btn btn-secondary w-fit" do %>
+                    <%= link_to rails_blob_url(@lecture.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       تحميل الفيديو
                     <% end %>
