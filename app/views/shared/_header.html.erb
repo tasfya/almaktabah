@@ -1,7 +1,7 @@
 <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 left-0 right-0 z-50" data-controller="navigation">
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-auto">
     <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto" do %>
-      <img src="<%= asset_path('logo.png') %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[50px] object-contain" />
+      <img src="<%= asset_path('logo.png') %>" alt="<%= t('site.name') %> Logo" width="300" height="300" class="w-[300px] h-[100px] object-contain" />
     <% end %>
     <div class="hidden md:flex flex-row-reverse gap-2 items-center w-full flex-1 mr-auto">
       <div class="hidden md:flex items-center gap-3">
@@ -32,19 +32,28 @@
       </button>
     </div>
   </div>
+
+  <% nav_links = [
+    { name: t('navigation.home'), path: root_path, controllers: ['home'] },
+    { name: t('navigation.scientific_series'), path: series_index_path, controllers: ['series'] },
+    { name: t('navigation.lectures'), path: lectures_path, controllers: ['lectures'] },
+    { name: t('navigation.books'), path: books_path, controllers: ['books'] },
+    { name: t('navigation.news'), path: news_index_path, controllers: ['news'] },
+    { name: t('navigation.fatwas'), path: fatwas_path, controllers: ['fatwas'] },
+    { name: t('navigation.benefits'), path: benefits_path, controllers: ['benefits'] },
+    { name: t('navigation.about_sheikh'), path: about_path, controllers: ['pages'] },  # if "about" is handled by pages controller
+    { name: t('navigation.contact'), path: contact_path, controllers: ['contacts', 'pages'] } # example
+  ] %>
+
   <nav class="hidden md:flex border-t border-gray-200 py-3">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-center gap-6 text-sm">
-      <%= link_to t('navigation.home'), root_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.scientific_series'), series_index_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.lectures'), lectures_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.books'), books_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.news'), news_index_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.fatwas'), fatwas_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.benefits'), benefits_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.about_sheikh'), about_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.contact'), contact_path, class: "text-gray-700 hover:text-gray-900" %>
+      <% nav_links.each do |link| %>
+        <% active = link[:controllers].include?(controller_name) %>
+        <%= link_to link[:name], link[:path], class: "hover:text-gray-900 #{'underline font-semibold' if active} text-gray-700" %>
+      <% end %>
     </div>
   </nav>
+
   <div data-navigation-target="menu" class="hidden md:hidden border-t bg-white">
     <div class="px-4 py-2 space-y-2">
       <div class="relative">
@@ -54,15 +63,10 @@
             data: { action: "input->navigation#search" } %>
         <%= icon "magnifying-glass", class: "size-5"%>
       </div>
-      <%= link_to t('navigation.home'), root_path, class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.scientific_series'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.lectures'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.books'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.news'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.fatwas'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.benefits'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.about_sheikh'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.contact'), "#", class: "block py-2 text-gray-700 hover:text-gray-900" %>
+      <% nav_links.each do |link| %>
+        <% active = link[:controllers].include?(controller_name) %>
+        <%= link_to link[:name], link[:path], class: "block py-2 #{'underline font-semibold' if active} text-gray-700 hover:text-gray-900" %>
+      <% end %>
     </div>
   </div>
 </header>

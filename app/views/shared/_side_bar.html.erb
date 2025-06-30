@@ -31,13 +31,15 @@
     </h3>
     <div class="space-y-4">
       <% @most_downloaded_books.each_with_index do |book, index| %>
-        <div class="">
-          <p class="text-sm text-gray-600 mb-3"><%= book.title %></p>
-          <%= link_to book_path(book), class: "btn btn-secondary btn-sm w-fit" do %>
-            <%= t('buttons.download') %>
-            <%= icon "arrow-down-tray", class:"size-5" %>
-          <% end %>
-        </div>
+        <%= link_to book_path(book), class: "block hover:bg-gray-50 p-2 rounded transition-colors" do %>
+          <div class="">
+            <p class="text-sm text-gray-600 mb-3"><%= book.title %></p>
+            <span class="btn btn-secondary btn-sm w-fit pointer-events-none">
+              <%= t('buttons.download') %>
+              <%= icon "arrow-down-tray", class:"size-5" %>
+            </span>
+          </div>
+        <% end %>
         <% unless index == @most_downloaded_books.size - 1 %>
           <hr class="my-4">
         <% end %>
@@ -51,14 +53,16 @@
     </h3>
     <div class="space-y-4">
       <% @most_viewed_books.each_with_index do |book, index| %>
-        <div class="flex items-start gap-2">
-          <span class="badge badge-primary badge-sm pt-1">
-            <%= index + 1 %>
-          </span>
-          <%= link_to book_path(book), class: "text-sm text-gray-600 mb-3" do %>
-            <%= book.title %>
-          <% end %>
-        </div>
+        <%= link_to book_path(book), class: "block hover:bg-gray-50 p-2 rounded transition-colors" do %>
+          <div class="flex items-start gap-2">
+            <span class="badge badge-primary badge-sm pt-1">
+              <%= index + 1 %>
+            </span>
+            <span class="text-sm text-gray-600 mb-3">
+              <%= book.title %>
+            </span>
+          </div>
+        <% end %>
         <% unless index == @most_viewed_books.size - 1 %>
           <hr class="my-4">
         <% end %>

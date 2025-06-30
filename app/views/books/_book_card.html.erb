@@ -14,10 +14,10 @@
     <div class="flex items-center justify-between text-sm text-gray-500">
         <span class="badge badge-primary"><%= book.category %></span>
         <div class="flex space-x-4 rtl:space-x-reverse">
-            <% if book.respond_to?(:views) %>
+            <% if false && book.respond_to?(:views) %>
                 <span><%= book.views %> مشاهدة</span>
             <% end %>
-            <% if book.respond_to?(:downloads) %>
+            <% if false && book.respond_to?(:downloads) %>
                 <span><%= book.downloads %> تحميل</span>
             <% end %>
         </div>

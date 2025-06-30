@@ -5,6 +5,10 @@ class Benefit < ApplicationRecord
 
     # Ransack configuration
     def self.ransackable_attributes(auth_object = nil)
-        [ "category", "created_at", "id", "title", "updated_at", "views" ]
+        [ "category", "created_at", "id", "title", "description", "updated_at", "views" ]
+    end
+
+    def self.ransackable_associations(auth_object = nil)
+        []
     end
 end
