@@ -1,0 +1,33 @@
+<nav class="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-4 breadcrumb-nav px-4 my-4" aria-label="breadcrumb" dir="rtl">
+  <ol class="flex items-center space-x-2 rtl:space-x-reverse text-xs md:text-sm">
+    <% current_breadcrumbs.each_with_index do |crumb, index| %>
+      <% is_last = index == current_breadcrumbs.length - 1 %>
+      <% is_current = crumb[:path].nil? %>
+      
+      <li class="flex items-center max-w-20 sm:max-w-32 md:max-w-none">
+        <% if is_current || is_last %>
+          <span class="text-gray-900 font-semibold truncate"><%= crumb[:name] %></span>
+        <% else %>
+          <%= link_to crumb[:name], crumb[:path], 
+              class: "text-gray-600 hover:text-gray-600 hover:underline font-medium transition-colors duration-200 truncate focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 rounded" %>
+        <% end %>
+        
+        <% unless is_last %>
+          <svg class="mx-2 md:mx-3 w-2 h-2 md:w-3 md:h-3 text-gray-400 rotate-180 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        <% end %>
+      </li>
+    <% end %>
+    
+    <!-- Current page if provided -->
+    <% if local_assigns[:current_page] %>
+      <li class="flex items-center max-w-20 sm:max-w-32 md:max-w-none">
+        <svg class="mx-2 md:mx-3 w-2 h-2 md:w-3 md:h-3 text-gray-400 rotate-180 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+        <span class="text-gray-900 font-semibold truncate"><%= current_page %></span>
+      </li>
+    <% end %>
+  </ol>
+</nav>

@@ -13,12 +13,36 @@ class Lesson < ApplicationRecord
   after_save :extract_media_duration
   after_commit :process_media_files, on: [ :create, :update ]
 
+  # Scopes
+  scope :recent, -> { order(published_date: :desc) }
+  scope :most_viewed, -> { order(view_count: :desc) }
+  scope :by_category, ->(category) { where(category: category) if category.present? }
+  scope :by_series, ->(series_id) { where(series_id: series_id) if series_id.present? }
+
+  # Ransack configuration
+  def self.ransackable_attributes(auth_object = nil)
+    [ "category", "created_at", "description", "duration", "id", "published_date", "series_id", "title", "updated_at", "view_count" ]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    [ "series" ]
+  end
+
   def video?
     video.attached?
   end
 
+  def media_type
+      video? ? "video" : "audio"
+  end
+
   def audio?
     audio.attached?
+  end
+
+  def audio_url
+    return nil unless audio.attached?
+    Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
   end
 
   def series_title

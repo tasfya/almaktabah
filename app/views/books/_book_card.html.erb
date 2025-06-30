@@ -1,0 +1,25 @@
+<%= link_to book_path(book), class: "block bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow hover:text-inherit" do %>
+    <% if book.cover_image.present? %>
+        <div class="mb-4">
+            <%= image_tag book.cover_image, class: "w-full h-48 object-cover rounded" %>
+        </div>
+    <% end %>
+    <h3 class="text-lg font-semibold text-gray-900 mb-2 break-words">
+        <%= book.title %>
+    </h3>
+    <% if book.author.present? %>
+        <p class="text-sm text-gray-600 mb-2">المؤلف: <%= book.author.name %></p>
+    <% end %>
+    <p class="text-gray-600 text-sm mb-4"><%= truncate(book.description, length: 100) %></p>
+    <div class="flex items-center justify-between text-sm text-gray-500">
+        <span class="badge badge-primary"><%= book.category %></span>
+        <div class="flex space-x-4 rtl:space-x-reverse">
+            <% if false && book.respond_to?(:views) %>
+                <span><%= book.views %> مشاهدة</span>
+            <% end %>
+            <% if false && book.respond_to?(:downloads) %>
+                <span><%= book.downloads %> تحميل</span>
+            <% end %>
+        </div>
+    </div>
+<% end %>

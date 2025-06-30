@@ -1,0 +1,74 @@
+<div class="bg-gray-50 min-h-screen py-8">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2">
+        <article class="bg-white rounded-lg shadow-md p-8">
+          <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">
+              <%= @series.title %>
+            </h1>
+            <div class="flex items-center gap-4 text-sm text-gray-600 mb-6">
+              <% if @series.category.present? %>
+                <span class="badge badge-primary rounded-full">
+                  <%= @series.category %>
+                </span>
+              <% end %>
+              <% if false && @series.published_date %>
+                <time><%= @series.published_date.strftime("%Y/%m/%d") %></time>
+              <% end %>
+              <span class="flex items-center gap-2">
+                <%= icon "book-open", class: "size-5"%>
+                <%= pluralize(@series.lessons.count, 'درس') %>
+                <%# TODO: fix pluralize for this %>
+              </span>
+            </div>
+          </header>
+          <% if @series.description.present? %>
+            <div class="prose prose-lg max-w-none mb-8">
+              <%= simple_format(@series.description) %>
+            </div>
+          <% end %>
+          <section class="mt-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">دروس السلسلة</h2>
+            <% if @lessons.any? %>
+              <div class="space-y-4">
+                <% @lessons.each_with_index do |lesson, index| %>
+                  <%= render partial: "lesson_card", locals: { lesson:, index: }%>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="text-center text-gray-500 py-8">
+                <p>لا توجد دروس في هذه السلسلة حالياً</p>
+              </div>
+            <% end %>
+          </section>
+          <!-- Related Series -->
+          <% if @related_series.any? %>
+            <section class="mt-12">
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">سلاسل ذات صلة</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <% @related_series.each do |related_series| %>
+                  <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                      <%= link_to related_series.title, series_path(related_series), class: "hover:text-indigo-600" %>
+                    </h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                      <%= truncate(related_series.description, length: 100) %>
+                    </p>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                      <span class="bg-gray-100 px-2 py-1 rounded"><%= related_series.category %></span>
+                      <span><%= pluralize(related_series.lessons.count, 'درس') %></span>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </section>
+          <% end %>
+        </article>
+      </div>
+      <!-- Sidebar -->
+      <%= render partial: "shared/side_bar" %>
+    </div>
+  </div>
+</div>

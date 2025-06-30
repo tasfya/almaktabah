@@ -1,5 +1,3 @@
-require "api/api_constraints"
-
 Rails.application.routes.draw do
   # API documentation
   mount Rswag::Ui::Engine => "/api-docs"
@@ -9,6 +7,7 @@ Rails.application.routes.draw do
     mount MissionControl::Jobs::Engine => "/jobs"
   end
 
+  # API routes (keep for backward compatibility if needed)
   namespace :api, defaults: { format: :json } do
     scope module: :v1, constraints: Api::ApiConstraints.new(version: 1, default: true) do
       post "login", to: "authentication#login"
@@ -63,6 +62,22 @@ Rails.application.routes.draw do
       resources :contacts, only: [ :create ]
     end
   end
+
+  # Main web routes (HTML)
+  resources :books, only: [ :index, :show ]
+  resources :lectures, only: [ :index, :show ]
+  resources :lessons, only: [ :index, :show ]
+  resources :series, only: [ :index, :show ]
+  resources :news, only: [ :index, :show ]
+  resources :benefits, only: [ :index, :show ]
+  resources :articles, only: [ :index, :show ]
+  resources :scholars, only: [ :index, :show ]
+  resources :fatwas, only: [ :index, :show ]
+
+  # Static pages
+  get "about", to: "pages#about"
+  get "contact", to: "pages#contact"
+  post "contact", to: "pages#create_contact"
 
   get "up" => "rails/health#show", as: :rails_health_check
 

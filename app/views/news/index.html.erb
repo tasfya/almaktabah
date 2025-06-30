@@ -1,0 +1,50 @@
+<div class="bg-gray-50 min-h-screen py-8">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h1 class="text-2xl font-bold text-gray-900 mb-6">الأخبار</h1>
+          <p class="text-gray-600 mb-6">اطلع على آخر الأخبار والمستجدات</p>
+          <!-- Filters -->
+          <%= render 'shared/filters' %>
+          <!-- News Grid -->
+          <% if @news.any? %>
+            <div class="grid grid-cols-1 gap-6">
+              <% @news.each do |news_item| %>
+                <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                  <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                      <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                        <%= link_to news_item.title, news_path(news_item), class: "hover:text-indigo-600" %>
+                      </h3>
+                      <% if news_item.description %>
+                        <p class="text-gray-600 text-sm mb-4"><%= truncate(news_item.description, length: 200) %></p>
+                      <% end %>
+                      <div class="flex items-center justify-between text-sm text-gray-500">
+                        <div class="flex space-x-4 rtl:space-x-reverse">
+                          <% if false && news_item.respond_to?(:views) %>
+                            <span><%= news_item.views %> مشاهدة</span>
+                          <% end %>
+                        </div>
+                        <%= link_to news_path(news_item), class: "text-indigo-600 hover:text-indigo-800" do %>
+                          اقرأ المزيد ←
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center text-gray-500 py-8">
+              <p>لا توجد أخبار متاحة حالياً</p>
+            </div>
+          <% end %>
+          <!-- Pagination -->
+          <%= render 'shared/pagination' %>
+        </div>
+      </div>
+      <%= render partial: "shared/side_bar" %>
+    </div>
+  </div>
+</div>

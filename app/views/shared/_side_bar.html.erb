@@ -1,0 +1,72 @@
+<div class="lg:col-span-1 max-w-md mx-auto p-6">
+  <div class="text-center mb-12 border shadow-sm rounded-sm  p-6 bg-white">
+    <div class="flex items-center justify-center mb-6">
+      <img src="<%= asset_path('logo.png') %>" alt="<%= t('site.name') %> Logo" width="500" height="150" class="rounded-full " />
+    </div>
+    <h1 class="text-2xl font-bold mb-4 sr-only">
+      <%= t('site.name') %>
+    </h1>
+    <div class="flex flex-wrap items-center justify-center gap-2">
+      <%= link_to about_path, class: "btn btn-primary w-fit" do %>
+        <%= t('buttons.about')%>
+        <%= icon "arrow-top-right-on-square", class: "size-5"%>
+      <% end %>
+      <%= link_to contact_path, class: "btn btn-secondary w-fit" do %>
+        <%= t('buttons.contact')%>
+        <%= icon "envelope", class: "size-5"%>
+      <% end %>
+    </div>
+    <div class="flex items-center justify-center mt-6">
+      <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm" do %>
+        <%= icon "youtube", library: "lucide", class: "size-5"%>
+      <% end %>
+      <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm" do %>
+        <%= icon "twitter", library: "lucide", class: "size-5"%>
+      <% end %>
+    </div>
+  </div>
+  <div class="bg-white shadow-md p-6 mb-6">
+    <h3 class="text-xl font-bold text-gray-900 mb-4">
+      <%= t('sidebar.most_downloaded_books') %>
+    </h3>
+    <div class="space-y-4">
+      <% @most_downloaded_books.each_with_index do |book, index| %>
+        <%= link_to book_path(book), class: "block hover:bg-gray-50 p-2 rounded transition-colors" do %>
+          <div class="">
+            <p class="text-sm text-gray-600 mb-3"><%= book.title %></p>
+            <span class="btn btn-secondary btn-sm w-fit pointer-events-none">
+              <%= t('buttons.download') %>
+              <%= icon "arrow-down-tray", class:"size-5" %>
+            </span>
+          </div>
+        <% end %>
+        <% unless index == @most_downloaded_books.size - 1 %>
+          <hr class="my-4">
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow-md p-6 mb-6">
+    <h3 class="text-xl font-bold text-gray-900 mb-4">
+      <%= t('sidebar.most_viewed_books') %>
+    </h3>
+    <div class="space-y-4">
+      <% @most_viewed_books.each_with_index do |book, index| %>
+        <%= link_to book_path(book), class: "block hover:bg-gray-50 p-2 rounded transition-colors" do %>
+          <div class="flex items-start gap-2">
+            <span class="badge badge-primary badge-sm pt-1">
+              <%= index + 1 %>
+            </span>
+            <span class="text-sm text-gray-600 mb-3">
+              <%= book.title %>
+            </span>
+          </div>
+        <% end %>
+        <% unless index == @most_viewed_books.size - 1 %>
+          <hr class="my-4">
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
