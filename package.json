@@ -16,7 +16,7 @@
     "tailwindcss": "^3.4.0"
   },
   "scripts": {
-    "build": "esbuild app/javascript/application.js --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets",
+    "build": "yarn build:css && yarn build:js",
     "build:js": "esbuild app/javascript/application.js --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets",
     "build:css": "tailwindcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/tailwind.css --config ./tailwind.config.js",
     "watch:js": "yarn build:js --watch",
