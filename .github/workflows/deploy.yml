@@ -59,7 +59,7 @@ jobs:
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
             echo "Deploying to production"
-            kamal deploy
+            kamal deploy --skip-push
           elif [ "${{ github.ref }}" == "refs/heads/staging" ]; then
             echo "Deploying to staging"
             kamal deploy -c kamal_config/deploy.staging.yml
