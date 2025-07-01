@@ -51,7 +51,6 @@ module Almaktabah
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.{rb,yml}")]
     config.i18n.default_locale = :ar
     config.i18n.available_locales = [ :ar, :en ]
-    config.i18n.raise_on_missing_translations = true
     # Configure generators for monolith
     config.generators do |g|
       g.template_engine :erb
