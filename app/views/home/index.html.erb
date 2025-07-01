@@ -1,33 +1,26 @@
 <% content_for :title, t('navigation.home') %>
-<%= render partial: "featured_lesson", locals: { lesson: @featured_lesson } %>
-<!-- Main Content Section -->
+<%= render partial: "featured_lesson", locals: { lesson: @featured_lesson } if @featured_lesson.present?%>
 <section class="py-16 bg-gray-50">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Main Content Area -->
       <div class="lg:col-span-2">
-        <div class="bg-white w-full rounded-lg shadow-md flex items-center gap-1 flex-wrap">
-          <!-- Recent Lessons Content -->
-          <div class="p-6">
-            <h3 class="text-xl font-bold text-gray-900 mb-6 text-right"><%= t('content.recent_lessons') %></h3>
-            <div class="space-y-4">
-              <!-- Recent Lessons List -->
-              <% @recent_lessons.each do |lesson| %>
-                <div class="flex items-center gap-4 justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <div class="text-left">
-                    <div class="bg-white p-2 rounded-lg border">
-                      <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                      </svg>
-                    </div>
+        <div class="bg-white w-full rounded-lg shadow-md flex items-center gap-1 flex-wrap p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-6 text-right"><%= t('navigation.recent_lessons') %></h3>
+          <div class="space-y-4 w-full">
+            <% @recent_lessons.each do |lesson| %>
+              <div class="flex items-center gap-4 justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors w-full">
+                <div class="text-left">
+                  <div class="bg-white p-2 rounded-lg border">
+                    <%= icon "book-open", class: "w-6 h-6 text-gray-700" %>
                   </div>
-                  <div class="text-right flex-1 ml-4">
-                    <h4 class="font-semibold text-gray-900 mb-1"><%= lesson.title %></h4>
-                    <p class="text-sm text-gray-600"><%= truncate(lesson.description, length: 200) %></p>
-                  </div>
-                  <div class="flex items-center gap-4 flex-row-reverse">
-                    <div class="flex items-center gap-2 flex-row-reverse">
-                      <%= audio_play_button_with_text(
+                </div>
+                <div class="text-right flex-1 ml-4 w-full">
+                  <h4 class="font-semibold text-gray-900 mb-1"><%= lesson.title %></h4>
+                  <p class="text-sm text-gray-600"><%= truncate(lesson.description, length: 200) %></p>
+                </div>
+                <div class="flex items-center gap-4 flex-row-reverse ml-auto">
+                  <div class="flex items-center gap-2 flex-row-reverse">
+                    <%= audio_play_button_with_text(
                         lesson.audio_url, 
                         lesson.title, 
                         lesson.description,
@@ -35,11 +28,10 @@
                         t('buttons.listen'),
                         class: "btn btn-primary w-fit"
                       ) if lesson.audio? %>
-                    </div>
                   </div>
                 </div>
-              <% end %>
-            </div>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
@@ -54,36 +46,28 @@
     <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">
       <%= t('common.site_contents') %>
     </h2>
-    <div class="flex justify-center items-center gap-12 text-center">
+    <div class="flex flex-wrap justify-center items-center gap-12 text-center">
       <%= link_to books_path, class: "group flex flex-col items-center" do %>
         <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-blue-200 transition-colors">
-          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-          </svg>
+          <%= icon("book-open", class: "w-8 h-8 text-blue-600") %>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors"><%= t('navigation.books') %></h3>
       <% end %>
       <%= link_to lectures_path, class: "group flex flex-col items-center" do %>
         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-green-200 transition-colors">
-          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
-          </svg>
+          <%= icon("microphone", class: "w-8 h-8 text-green-600") %>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors"><%= t('navigation.lectures') %></h3>
       <% end %>
       <%= link_to lessons_path, class: "group flex flex-col items-center" do %>
         <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-red-200 transition-colors">
-          <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-          </svg>
+          <%= icon("book-open", class: "w-8 h-8 text-red-600") %>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 group-hover:text-red-600 transition-colors"><%= t('navigation.lessons') %></h3>
       <% end %>
       <%= link_to series_index_path, class: "group flex flex-col items-center" do %>
         <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-purple-200 transition-colors">
-          <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-          </svg>
+          <%= icon("circle-stack", class: "w-8 h-8 text-purple-600") %>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors"><%= t('navigation.series') %></h3>
       <% end %>

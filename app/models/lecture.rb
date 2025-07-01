@@ -14,20 +14,11 @@ class Lecture < ApplicationRecord
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "category", "created_at", "description", "duration", "id", "published_date", "speaker", "title", "updated_at", "views" ]
+    [ "category", "created_at", "description", "duration", "id", "published_date", "title", "updated_at", "views" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    [ "speaker" ]
-  end
-
-  # Ransack configuration
-  def self.ransackable_attributes(auth_object = nil)
-    [ "category", "created_at", "description", "duration", "id", "published_date", "speaker", "title", "updated_at", "views" ]
-  end
-
-  def self.ransackable_associations(auth_object = nil)
-    [ "speaker" ]
+    []
   end
 
   after_save :extract_media_duration

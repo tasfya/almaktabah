@@ -1,3 +1,4 @@
+<% content_for :title, "#{@lesson.series_title}- #{@lesson.title}" %>
 <div class="bg-gray-50 min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -9,7 +10,7 @@
                 <% if @lesson.video? %>
                   <video controls class="w-full rounded">
                     <source src="<%= @lesson.video_url %>" type="video/mp4">
-                    متصفحك لا يدعم تشغيل الفيديو.
+                    <%= t('common.browser_no_support_video') %>
                   </video>
                 <% elsif @lesson.audio? %>
                   <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
@@ -35,24 +36,22 @@
                   <%= @lesson.category %>
                 </span>
               <% end %>
-              <% if false && @lesson.published_date %>
+              <% if  false %>
                 <time><%= @lesson.published_date.strftime("%Y/%m/%d") %></time>
-              <% end %>
-              <% if  false && @lesson.respond_to?(:view_count) %>
-                <span><%= @lesson.view_count %> مشاهدة</span>
+                <span><%= @lesson.view_count %> <%= t('common.view_count', count: @lesson.view_count) %></span>
               <% end %>
             </div>
           </header>
           <% if @lesson.respond_to?(:content) && @lesson.content.present? %>
             <section class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4">محتوى الدرس</h2>
+              <h2 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.lesson_content') %></h2>
               <div class="prose prose-lg max-w-none">
                 <%= @lesson.content %>
               </div>
             </section>
           <% elsif false && @lesson.description.present? %>
             <section class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4">وصف الدرس</h2>
+              <h2 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.lesson_description') %></h2>
               <div class="prose prose-lg max-w-none">
                 <%= simple_format(@lesson.description) %>
               </div>
@@ -61,18 +60,18 @@
           <% if @lesson.audio? || @lesson.video? %>
             <section class="mb-8">
               <div class="bg-gray-50 rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">خيارات التحميل</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4"><%= t('.download_options') %></h3>
                 <div class="flex flex-wrap gap-4">
                   <% if @lesson.audio? %>
                     <%= link_to rails_blob_url(@lesson.audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
-                       تحميل الصوت
+                       <%= t('buttons.download_audio') %>
                     <% end %>
                   <% end %>
                   <% if @lesson.video? %>
                     <%= link_to rails_blob_url(@lesson.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
-                      تحميل الفيديو
+                      <%= t('buttons.download_video') %>
                     <% end %>
                   <% end %>
                 </div>
@@ -82,11 +81,11 @@
           <% if @lesson.series.present? %>
             <section class="mb-8">
               <div class="flex items-center justify-between mb-4">
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">دروس أخرى من نفس السلسلة</h2>
+                <h2 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.other_series_lessons') %></h2>
                 <% if @lesson.series.lessons.count > 5 %>
                   <div class="mt-4">
                     <%= link_to series_path(@lesson.series), class: "btn btn-link" do %>
-                      عرض جميع دروس السلسلة                       
+                      <%= t('buttons.view_all_lessons') %>                       
                       <%= icon "arrow-left", class:"size-4" %>
                     <% end %>
                   </div>
@@ -99,16 +98,14 @@
                       <div class="flex-1">
                         <h3 class="font-medium <%= 'text-gray-900' if series_lesson == @lesson %>">
                           <% if series_lesson == @lesson %>
-                            <%= series_lesson.title %> (الدرس الحالي)
+                            <%= series_lesson.title %> (<%= t('.current_lesson') %>)
                           <% else %>
                             <%= link_to series_lesson.title, lesson_path(series_lesson), class: "hover:text-gray-600" %>
                           <% end %>
                         </h3>
                         <div class="flex items-center gap-3 text-sm text-gray-500 mt-1">
-                          <% if false && series_lesson.respond_to?(:duration) && series_lesson.duration %>
-                            <span><%= series_lesson.duration %> دقيقة</span>
-                          <% end %>
-                          <% if false && series_lesson.published_date %>
+                          <% if false  %>
+                            <span><%= series_lesson.duration %> <%= t('common.duration_minutes') %></span>
                             <span><%= series_lesson.published_date.strftime("%Y/%m/%d") %></span>
                           <% end %>
                         </div>

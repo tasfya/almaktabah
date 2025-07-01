@@ -1,18 +1,18 @@
 <% content_for :title, t('navigation.fatwas') %>
-
 <div class="bg-gray-50 min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      
       <!-- Main Content -->
       <div class="lg:col-span-2">
         <div class="bg-white rounded-lg shadow-md p-6">
-          <h1 class="text-2xl font-bold text-gray-900 mb-6">الفتاوى</h1>
-          <p class="text-gray-600 mb-6">ابحث في مجموعة شاملة من الفتاوى والأحكام الشرعية</p>
-
+          <h1 class="text-2xl font-bold text-gray-900 mb-6">
+            <%= t('.title') %>
+          </h1>
+          <p class="text-gray-600 mb-6">
+            <%= t('.description') %>
+          </p>
           <!-- Filters -->
           <%= render 'shared/filters' %>
-
           <!-- Fatwas Grid -->
           <% if @fatwas.any? %>
             <div class="grid grid-cols-1 gap-6">
@@ -40,18 +40,17 @@
             </div>
           <% else %>
             <div class="text-center text-gray-500 py-8">
-              <p>لا توجد فتاوى متاحة حالياً</p>
+              <p>
+                <%= t('.no_fatwas') %>
+              </p>
             </div>
           <% end %>
-
           <!-- Pagination -->
           <%= render 'shared/pagination' %>
         </div>
       </div>
-
       <!-- Sidebar -->
       <%= render partial: "shared/side_bar" %>
-
     </div>
   </div>
 </div>

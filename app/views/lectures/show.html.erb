@@ -10,7 +10,7 @@
                 <% if @lecture.video? %>
                   <video controls class="w-full rounded">
                     <source src="<%= @lecture.video_url %>" type="video/mp4">
-                    متصفحك لا يدعم تشغيل الفيديو.
+                    <%= t('common.browser_no_support_video') %>
                   </video>
                 <% elsif @lecture.audio? %>
                   <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
@@ -25,12 +25,6 @@
             <h1 class="text-3xl font-bold text-gray-900 mb-4">
               <%= @lecture.title %>
             </h1>
-            <% if @lecture.respond_to?(:speaker) && @lecture.speaker.present? %>
-              <div class="mb-4">
-                <span class="text-sm text-gray-600">المحاضر:</span>
-                <span class="font-medium text-gray-900"><%= @lecture.speaker %></span>
-              </div>
-            <% end %>
             <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
               <% if @lecture.category.present? %>
                 <span class="badge badge-primary">
@@ -41,28 +35,30 @@
                 <time><%= @lecture.published_date.strftime("%Y/%m/%d") %></time>
               <% end %>
               <% if false && @lecture.respond_to?(:duration) && @lecture.duration %>
-                <span><%= @lecture.duration %> دقيقة</span>
+                <span><%= @lecture.duration %> <%= t('common.duration_minutes') %></span>
               <% end %>
               <% if false && @lecture.respond_to?(:views) %>
-                <span><%= @lecture.views %> مشاهدة</span>
+                <span><%= @lecture.views %> <%= t('common.view_count', count: @lecture.views) %></span>
               <% end %>
             </div>
           </header>
           <% if @lecture.audio? || @lecture.video? %>
             <section class="mb-8">
               <div class="bg-gray-50 rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">خيارات التحميل</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                  <%= t(".download_options")%>
+                </h3>
                 <div class="flex flex-wrap gap-4">
                   <% if @lecture.audio? %>
                     <%= link_to rails_blob_url(@lecture.audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
-                      تحميل الصوت
+                      <%= t("buttons.download_audio")%>
                     <% end %>
                   <% end %>
                   <% if @lecture.video? %>
                     <%= link_to rails_blob_url(@lecture.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
-                      تحميل الفيديو
+                      <%= t("buttons.download_video")%>
                     <% end %>
                   <% end %>
                 </div>

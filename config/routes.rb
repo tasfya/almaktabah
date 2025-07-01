@@ -75,9 +75,9 @@ Rails.application.routes.draw do
   resources :fatwas, only: [ :index, :show ]
 
   # Static pages
-  get "about", to: "pages#about"
-  get "contact", to: "pages#contact"
-  post "contact", to: "pages#create_contact"
+  get "about", to: "about#index"
+  get "contact-us", to: "contacts#new", as: :contact
+  post "contact-us", to: "contacts#create"
 
   get "up" => "rails/health#show", as: :rails_health_check
 
