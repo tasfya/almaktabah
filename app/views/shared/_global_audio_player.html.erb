@@ -2,82 +2,100 @@
 <div id="global-audio-player" 
      class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 hidden"
      data-audio-player-target="playerContainer"
-     >
+>
   <!-- Audio Element -->
   <audio data-audio-player-target="audio" preload="metadata"></audio>
+  
   <!-- Loading Skeleton -->
-  <div data-audio-player-target="skeleton" class="mx-auto px-4 py-3 w-full">
-    <div class="flex items-center justify-between w-full">
+  <div data-audio-player-target="skeleton" class="mx-auto px-4 py-3 w-full max-w-7xl">
+    <div class="flex flex-col sm:flex-row items-center justify-between w-full space-y-4 sm:space-y-0 rtl:space-x-reverse sm:space-x-4">
+      
       <!-- Skeleton Track Info -->
-      <div class="flex items-center space-x-4 space-x-reverse min-w-0">
-        <div class="w-12 h-12 rounded-lg bg-gray-200 animate-pulse"></div>
+      <div class="flex items-center gap-2 w-full sm:w-auto min-w-0">
+        <!-- Artwork placeholder -->
+        <div class="flex-shrink-0">
+          <div class="w-12 h-12 rounded-lg bg-gray-200 animate-pulse"></div>
+        </div>
+        <!-- Track Details placeholder -->
         <div class="min-w-0 flex-1">
-          <div class="h-4 bg-gray-200 rounded animate-pulse mb-1 max-w-32"></div>
-          <div class="h-3 bg-gray-200 rounded animate-pulse max-w-24"></div>
+          <div class="h-6 bg-gray-200 rounded mb-1 max-w-[160px] animate-pulse"></div>
+          <div class="h-4 bg-gray-200 rounded max-w-[100px] animate-pulse sm:block hidden"></div>
         </div>
       </div>
-      <!-- Skeleton Controls -->
-      <div class="flex flex-col items-center space-x-6 space-x-reverse mx-auto w-full">
-        <div class="flex items-center pb-2 gap-2">
-          <div class="size-10 bg-gray-200 rounded-md animate-pulse mb-2"></div>
-          <div class="size-10 bg-gray-200 rounded-md animate-pulse mb-2"></div>
+
+      <!-- Skeleton Player Controls -->
+      <div class="flex flex-col items-center space-x-0 space-x-reverse sm:space-x-6 w-full max-w-md mx-auto">
+        <!-- Play/Pause and Loop buttons placeholders -->
+        <div class="flex items-center pb-2 gap-2 justify-center sm:justify-start">
+          <div class="w-10 h-10 bg-gray-200 rounded-md animate-pulse"></div>
+          <div class="w-10 h-10 bg-gray-200 rounded-md animate-pulse"></div>
+          <div class="w-10 h-10 bg-gray-200 rounded-md animate-pulse"></div>
         </div>
-        <div class="flex flex-row-reverse items-center space-x-3 min-w-0 flex-1 max-w-md w-full">
-          <div class="w-8 h-3 bg-gray-200 rounded animate-pulse"></div>
+        <!-- Progress Section placeholder -->
+        <div class="flex flex-row-reverse items-center gap-3 min-w-0 flex-1 w-full">
+          <div class="w-10 h-4 bg-gray-200 rounded animate-pulse"></div>
           <div class="w-full h-2 bg-gray-200 rounded-full animate-pulse"></div>
-          <div class="w-8 h-3 bg-gray-200 rounded animate-pulse"></div>
+          <div class="w-10 h-4 bg-gray-200 rounded animate-pulse"></div>
         </div>
       </div>
+
       <!-- Skeleton Additional Controls -->
-      <div class="flex items-center space-x-2 space-x-reverse mx-auto">
-        <div class="w-12 h-6 bg-gray-200 rounded animate-pulse"></div>
-        <div class="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>
-        <div class="w-16 h-4 bg-gray-200 rounded animate-pulse"></div>
-        <div class="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>
+      <div class="flex flex-wrap sm:flex-nowrap items-center space-x-0 space-x-reverse sm:space-x-2 mx-auto w-full sm:w-auto justify-center sm:justify-start gap-2 mt-2 sm:mt-0">
+        <!-- Speed Control placeholder -->
+        <div class="w-20 h-6 bg-gray-200 rounded animate-pulse"></div>
+        <!-- Volume Control placeholders -->
+        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+          <div class="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+          <div class="w-16 h-4 bg-gray-200 rounded animate-pulse"></div>
+          <div class="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+        </div>
+        <!-- Close Button placeholder -->
+        <div class="w-10 h-10 bg-gray-200 rounded-md animate-pulse"></div>
       </div>
+      
     </div>
   </div>
+
   <!-- Actual Player Container -->
-  <div data-audio-player-target="player" class="hidden mx-auto px-4 py-3 w-full">
-    <div class="flex items-center justify-between w-full">
+  <div data-audio-player-target="player" class="hidden mx-auto px-4 py-3 w-full max-w-7xl">
+    <div class="flex flex-col sm:flex-row items-center justify-between w-full space-y-4 sm:space-y-0 rtl:space-x-reverse sm:space-x-4">
+      
       <!-- Track Info -->
-      <div class="flex items-center gap-2 w-fit">
+      <div class="flex items-center gap-2 w-full sm:w-auto min-w-0">
         <!-- Artwork -->
         <div class="flex-shrink-0">
-          <img data-audio-player-target="artwork" src="/icon.png" alt="Track artwork" class="w-12 h-12 rounded-lg object-cover bg-gray-100">
+          <img data-audio-player-target="artwork" src="/icon.png" alt="<%= t('audio_player.track_artwork_alt') %>" class="w-12 h-12 rounded-lg object-cover bg-gray-100">
         </div>
         <!-- Track Details -->
         <div class="min-w-0 flex-1">
-          <h4 data-audio-player-target="title" class="text-lg font-semibold text-gray-900">
-            اختر مقطع صوتي
+          <h4 data-audio-player-target="title" class="text-lg font-semibold text-gray-900 truncate">
+            <%= t('audio_player.select_audio_clip', default: 'اختر مقطع صوتي') %>
           </h4>
-          <p data-audio-player-target="author" class="hidden text-xs text-gray-600 truncate">
-            المكتبة
+          <p data-audio-player-target="author" class="hidden text-xs text-gray-600 truncate sm:block">
+            <%= t('audio_player.library', default: 'المكتبة') %>
           </p>
         </div>
       </div>
+
       <!-- Player Controls -->
-      <div class="flex flex-col items-center space-x-6 space-x-reverse mx-auto w-full">
-        <!-- Play/Pause Button -->
-        <div class="flex items-center pb-2 gap-2">
-          <button data-audio-player-target="playButton" data-action="click->audio-player#play" class="btn btn-secondary">
+      <div class="flex flex-col items-center space-x-0 space-x-reverse sm:space-x-6 w-full max-w-md mx-auto">
+        <!-- Play/Pause and Loop -->
+        <div class="flex items-center pb-2 gap-2 justify-center sm:justify-start">
+          <button data-audio-player-target="playButton" data-action="click->audio-player#play" class="btn btn-secondary" aria-label="<%= t('audio_player.play') %>">
             <%= icon "play", class:"size-5" %>
           </button>
-          <button data-audio-player-target="pauseButton" data-action="click->audio-player#pause" class="hidden btn btn-secondary">
+          <button data-audio-player-target="pauseButton" data-action="click->audio-player#pause" class="hidden btn btn-secondary" aria-label="<%= t('audio_player.pause') %>">
             <%= icon "pause", class:"size-5" %>
           </button>
-          <!-- Loop Button -->
-          <button data-audio-player-target="loopButton" data-action="click->audio-player#toggleLoop" class="btn btn-secondary" title="Toggle Loop">
+          <button data-audio-player-target="loopButton" data-action="click->audio-player#toggleLoop" class="btn btn-secondary" title="<%= t('audio_player.toggle_loop') %>">
             <%= icon "repeat", library:"lucide", class:"size-5" %>
           </button>
         </div>
-        <!-- Progress Section with range input -->
-        <div class="flex flex-row-reverse items-center space-x-3 min-w-0 flex-1 max-w-md w-full">
-          <!-- Current Time -->
-          <span data-audio-player-target="time" class="text-xs text-gray-500 font-mono">
+        <!-- Progress Section -->
+        <div class="flex flex-row-reverse items-center gap-3 min-w-0 flex-1 w-full">
+          <span data-audio-player-target="time" class="text-xs text-gray-500 font-mono min-w-max">
             0:00
           </span>
-          <!-- Native Progress Bar -->
           <input
             type="range"
             min="0"
@@ -107,68 +125,66 @@
             [&::-webkit-slider-thumb]:rounded-full
             "
             />
-            <!-- Duration -->
-            <span data-audio-player-target="duration" class="text-xs text-gray-500 font-mono">
-              0:00
-            </span>
-          </div>
-        </div>
-        <!-- Additional Controls -->
-        <div class="flex items-center space-x-2 space-x-reverse mx-auto">
-          <!-- Speed Control -->
-          <div class="flex items-center gap-1">
-            <span class="text-xs text-gray-600">السرعة</span>
-            <select data-audio-player-target="speedSelect"
-                    data-action="change->audio-player#setSpeed"
-              class="text-xs border border-gray-300 rounded px-1 py-0.5 bg-white">
-              <option value="0.5">0.5x</option>
-              <option value="0.75">0.75x</option>
-              <option value="1" selected>1x</option>
-              <option value="1.25">1.25x</option>
-              <option value="1.5">1.5x</option>
-              <option value="1.75">1.75x</option>
-              <option value="2">2x</option>
-            </select>
-          </div>
-          <!-- Volume Control -->
-          <div class="flex items-center space-x-2">
-            <!-- Volume/Mute Button -->
-            <button data-audio-player-target="volumeButton"
-                    data-action="click->audio-player#toggleMute"
-              class="p-1 text-gray-600 hover:text-gray-900 transition-colors"
-              title="Mute/Unmute">
-              <!-- Volume On Icon -->
-              <%= icon "speaker-wave", class:"size-5", data: { audio_player_target: "volumeOnIcon"}%>
-              <!-- Volume Off/Mute Icon -->
-              <%= icon "speaker-x-mark", class:"size-5 hidden", data: { audio_player_target: "volumeOffIcon"} %>
-            </button>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value="100"
-              step="1"
-              dir="ltr"
-              data-audio-player-target="volumeSlider"
-              data-action="input->audio-player#setVolume"
-              class="w-16 h-1 rounded-full appearance-none cursor-pointer bg-gray-200
-              [&::-webkit-slider-thumb]:appearance-none 
-              [&::-webkit-slider-thumb]:cursor-grab
-              [&::-webkit-slider-thumb]:w-3 
-              [&::-webkit-slider-thumb]:h-3
-              [&::-webkit-slider-thumb]:bg-gray-600
-              [&::-webkit-slider-thumb]:rounded-full
-              [&::-webkit-slider-thumb]:transition-colors
-              [&::-webkit-slider-thumb]:hover:bg-gray-800"
-              />
-            </div>
-            <!-- Close Button -->
-            <button data-action="click->audio-player#stop"
-              class="btn">
-              <%= icon "x-mark", class:"size-5" %>
-            </button>
-          </div>
+          <span data-audio-player-target="duration" class="text-xs text-gray-500 font-mono min-w-max">
+            0:00
+          </span>
         </div>
       </div>
+
+      <!-- Additional Controls -->
+      <div class="flex flex-wrap sm:flex-nowrap items-center space-x-0 space-x-reverse sm:space-x-2 mx-auto w-full sm:w-auto justify-center sm:justify-start gap-2 mt-2 sm:mt-0">
+        <!-- Speed Control -->
+        <div class="flex items-center gap-1">
+          <span class="text-xs text-gray-600 whitespace-nowrap"><%= t('audio_player.speed') %></span>
+          <select data-audio-player-target="speedSelect"
+                data-action="change->audio-player#setSpeed"
+            class="text-xs border border-gray-300 rounded px-1 py-0.5 bg-white">
+            <option value="0.5">0.5x</option>
+            <option value="0.75">0.75x</option>
+            <option value="1" selected>1x</option>
+            <option value="1.25">1.25x</option>
+            <option value="1.5">1.5x</option>
+            <option value="1.75">1.75x</option>
+            <option value="2">2x</option>
+          </select>
+        </div>
+
+        <!-- Volume Control -->
+        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+          <button data-audio-player-target="volumeButton"
+                data-action="click->audio-player#toggleMute"
+            class="p-1 text-gray-600 hover:text-gray-900 transition-colors"
+            title="<%= t('audio_player.mute_unmute') %>">
+            <%= icon "speaker-wave", class:"size-5", data: { audio_player_target: "volumeOnIcon"}%>
+            <%= icon "speaker-x-mark", class:"size-5 hidden", data: { audio_player_target: "volumeOffIcon"} %>
+          </button>
+          <input
+          type="range"
+          min="0"
+          max="100"
+          value="100"
+          step="1"
+          dir="ltr"
+          data-audio-player-target="volumeSlider"
+          data-action="input->audio-player#setVolume"
+            class="w-16 h-1 rounded-full appearance-none cursor-pointer bg-gray-200
+            [&::-webkit-slider-thumb]:appearance-none 
+            [&::-webkit-slider-thumb]:cursor-grab
+            [&::-webkit-slider-thumb]:w-3 
+            [&::-webkit-slider-thumb]:h-3
+            [&::-webkit-slider-thumb]:bg-gray-600
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-webkit-slider-thumb]:transition-colors
+            [&::-webkit-slider-thumb]:hover:bg-gray-800"
+            />
+        </div>
+
+        <!-- Close Button -->
+        <button data-action="click->audio-player#stop" class="btn" aria-label="<%= t('audio_player.close') %>">
+          <%= icon "x-mark", class:"size-5" %>
+        </button>
+      </div>
+      
     </div>
   </div>
+</div>

@@ -1,4 +1,14 @@
 ar:
+  audio_player:
+    select_audio_clip: "اختر مقطع صوتي"
+    library: "المكتبة"
+    track_artwork_alt: "صورة المقطع الصوتي"
+    play: "تشغيل"
+    pause: "إيقاف مؤقت"
+    toggle_loop: "تبديل التكرار"
+    speed: "السرعة"
+    mute_unmute: "كتم/إلغاء كتم"
+    close: "إغلاق"
   buttons:
     about: "عن الموقع"
     contact: "تواصل معنا"
