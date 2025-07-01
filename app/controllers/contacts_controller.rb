@@ -8,7 +8,7 @@ class ContactsController < ApplicationController
   def create
     @contact = Contact.new(contact_params)
     if @contact.save
-      redirect_to contact_path, notice: "تم إرسال رسالتك بنجاح. سنقوم بالرد عليك في أقرب وقت ممكن."
+      redirect_to contact_path, notice: t("messages.contact_success")
     else
       render :new
     end
@@ -21,6 +21,6 @@ class ContactsController < ApplicationController
   end
 
   def setup_breadcrumbs
-      breadcrumb_for("اتصل بنا", contact_path)
+      breadcrumb_for(t("breadcrumbs.contact"), contact_path)
   end
 end

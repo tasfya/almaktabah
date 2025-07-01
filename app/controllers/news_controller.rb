@@ -21,9 +21,9 @@ class NewsController < ApplicationController
   def setup_news_breadcrumbs
     case action_name
     when "index"
-      breadcrumb_for("الأخبار", news_index_path)
+      breadcrumb_for(t("breadcrumbs.news"), news_index_path)
     when "show"
-      breadcrumb_for("الأخبار", news_index_path)
+      breadcrumb_for(t("breadcrumbs.news"), news_index_path)
       breadcrumb_for(@news.title, news_path(@news))
     end
   end
