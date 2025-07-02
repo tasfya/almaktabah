@@ -20,10 +20,10 @@
           <!-- Question Section -->
           <% if @fatwa.question.present? %>
             <section class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4 text-red-800">
+              <h2 class="text-2xl font-bold text-gray-900 mb-4 text-gray-800">
                 <%= t('.question') %>
               </h2>
-              <div class="prose prose-lg max-w-none bg-red-50 p-6 rounded-lg border-r-4 border-red-500">
+              <div class="prose prose-lg max-w-none p-6 rounded-lg border-r-4">
                 <%= @fatwa.question %>
               </div>
             </section>
@@ -31,10 +31,10 @@
           <!-- Answer or Content Section -->
           <% if @fatwa.answer.present? %>
             <section class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4 text-green-800">
+              <h2 class="text-2xl font-bold text-gray-900 mb-4 text-gray-800">
                 <%= t('.answer') %>
               </h2>
-              <div class="prose prose-lg max-w-none bg-green-50 p-6 rounded-lg border-r-4 border-green-500">
+              <div class="prose prose-lg max-w-none  p-6 rounded-lg border-r-4">
                 <%= @fatwa.answer %>
               </div>
             </section>
