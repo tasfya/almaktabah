@@ -60,7 +60,11 @@
                   <%= icon "facebook", library: "lucide", class: "size-4"%>
                   <%= t("buttons.share_on_facebook")%>
                 </a>
-                <button onclick="copyToClipboard('<%= request.original_url %>')" 
+                <button data-controller="clipboard" 
+                        data-clipboard-text-value="<%= request.original_url %>"
+                        data-clipboard-success-message-value="<%= t('common.copy_success') %>"
+                        data-clipboard-error-message-value="<%= t('common.copy_error') %>"
+                        data-action="click->clipboard#copy"
                         class="btn btn-secondary">
                   <%= icon "clipboard", class: "size-4" %>
                   <%= t("buttons.copy_link")%>
@@ -114,13 +118,4 @@
     </div>
   </div>
 </div>
-<script>
-  function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(function() {
-      // You can add a toast notification here
-      alert('<%= t('common.copy_success') %>');
-    }, function(err) {
-      console.error('<%= t('common.copy_error') %>', err);
-    });
-  }
-</script>
+
