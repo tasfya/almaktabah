@@ -2,10 +2,6 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 
-# Require Rails boot before environment to prevent frozen array issues
-require_relative '../config/boot'
-require 'rails/all'
-Bundler.require(*Rails.groups)
 
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
