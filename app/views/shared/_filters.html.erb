@@ -47,7 +47,6 @@
               [t('forms.options.oldest'), "created_at asc"],
               [t('forms.options.name_asc'), "title asc"],
               [t('forms.options.name_desc'), "title desc"],
-              [t('forms.options.most_viewed'), "views desc"],
               [t('forms.options.most_downloaded'), "downloads desc"]
             ].select { |option| 
               option[1] != "downloads desc" || controller_name == "books"

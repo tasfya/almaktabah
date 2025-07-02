@@ -34,12 +34,6 @@
               <% if false && @lecture.published_date %>
                 <time><%= @lecture.published_date.strftime("%Y/%m/%d") %></time>
               <% end %>
-              <% if false && @lecture.respond_to?(:duration) && @lecture.duration %>
-                <span><%= @lecture.duration %> <%= t('common.duration_minutes') %></span>
-              <% end %>
-              <% if false && @lecture.respond_to?(:views) %>
-                <span><%= @lecture.views %> <%= t('common.view_count', count: @lecture.views) %></span>
-              <% end %>
             </div>
           </header>
           <% if @lecture.audio? || @lecture.video? %>

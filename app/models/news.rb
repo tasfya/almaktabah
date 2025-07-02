@@ -16,7 +16,7 @@ class News < ApplicationRecord
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "created_at", "id", "published_at", "slug", "title", "description", "updated_at", "views" ]
+    [ "created_at", "id", "published_at", "slug", "title", "description", "updated_at" ]
   end
 
   def self.ransackable_associations(auth_object = nil)

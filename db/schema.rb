@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_02_081740) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_02_123343) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -61,7 +61,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_081740) do
     t.string "title"
     t.text "description"
     t.string "category"
-    t.integer "views", default: 0
     t.integer "duration", default: 0
     t.date "published_date"
     t.datetime "created_at", null: false
@@ -76,7 +75,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_081740) do
     t.text "description"
     t.string "category"
     t.date "published_date"
-    t.integer "views", default: 0
     t.integer "downloads", default: 0
     t.integer "pages"
     t.index ["author_id"], name: "index_books_on_author_id"
@@ -96,7 +94,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_081740) do
   create_table "fatwas", force: :cascade do |t|
     t.string "title"
     t.string "category"
-    t.integer "views", default: 0
     t.date "published_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -107,7 +104,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_081740) do
     t.text "description"
     t.integer "duration"
     t.string "category"
-    t.integer "views"
     t.date "published_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -127,7 +123,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_081740) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "content_type", default: "audio"
-    t.integer "view_count", default: 0
     t.integer "series_id"
     t.string "video_url"
     t.integer "old_id"

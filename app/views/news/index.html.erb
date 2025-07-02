@@ -26,9 +26,6 @@
                       <% end %>
                       <div class="flex items-center justify-between text-sm text-gray-500">
                         <div class="flex space-x-4 rtl:space-x-reverse">
-                          <% if false %>
-                            <span><%= news_item.views %> <%= t('common.view_count', count: news_item.views) %></span>
-                          <% end %>
                         </div>
                         <%= link_to news_path(news_item), class: "btn btn-link" do %>
                           <%= t('common.read_more_arrow') %>

@@ -15,7 +15,6 @@ class BooksController < ApplicationController
   end
 
   def show
-    @book.increment!(:views) if @book.respond_to?(:views)
     @related_books = Book.by_category(@book.category)
                         .where.not(id: @book.id)
                         .recent

@@ -16,7 +16,6 @@ class LessonsController < ApplicationController
   end
 
   def show
-    @lesson.increment!(:view_count) if @lesson.respond_to?(:view_count)
     @related_lessons = Lesson.by_series(@lesson.series_id)
                             .where.not(id: @lesson.id)
                             .recent

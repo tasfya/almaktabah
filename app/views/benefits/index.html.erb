@@ -19,13 +19,10 @@
                   <h3 class="text-lg font-semibold text-gray-900 mb-3">
                     <%= link_to benefit.title, benefit_path(benefit), class: "hover:text-indigo-600" %>
                   </h3>
-                  <p class="text-gray-600 text-sm mb-4"><%= truncate(benefit.content, length: 150) %></p>
+                  <p class="text-gray-600 text-sm mb-4"><%= truncate(benefit.description, length: 150) %></p>
                   <div class="flex items-center justify-between text-sm text-gray-500">
                     <span class="bg-gray-100 px-2 py-1 rounded"><%= benefit.category %></span>
                     <div class="flex space-x-4 rtl:space-x-reverse">
-                      <% if false && benefit.respond_to?(:views) %>
-                        <span><%= benefit.views %> <%= t('common.view_count', count: benefit.views) %></span>
-                      <% end %>
                       <% if false %>
                         <span><%= benefit.created_at.strftime("%Y/%m/%d") %></span>
                       <% end %>

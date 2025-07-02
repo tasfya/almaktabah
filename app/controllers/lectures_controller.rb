@@ -15,7 +15,6 @@ class LecturesController < ApplicationController
   end
 
   def show
-    @lecture.increment!(:views) if @lecture.respond_to?(:views)
     @related_lectures = Lecture.by_category(@lecture.category)
                               .where.not(id: @lecture.id)
                               .recent

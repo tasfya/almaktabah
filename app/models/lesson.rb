@@ -14,7 +14,6 @@ class Lesson < ApplicationRecord
 
   # Scopes
   scope :recent, -> { order(published_date: :desc) }
-  scope :most_viewed, -> { order(view_count: :desc) }
   scope :by_category, ->(category) { where(category: category) if category.present? }
   scope :by_series, ->(series_id) { where(series_id: series_id) if series_id.present? }
 
@@ -26,7 +25,7 @@ class Lesson < ApplicationRecord
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "category", "created_at", "description", "duration", "id", "published_date", "series_id", "title", "updated_at", "view_count" ]
+    [ "category", "created_at", "description", "duration", "id", "published_date", "series_id", "title", "updated_at" ]
   end
 
   def self.ransackable_associations(auth_object = nil)

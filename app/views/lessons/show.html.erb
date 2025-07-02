@@ -36,10 +36,6 @@
                   <%= @lesson.category %>
                 </span>
               <% end %>
-              <% if  false %>
-                <time><%= @lesson.published_date.strftime("%Y/%m/%d") %></time>
-                <span><%= @lesson.view_count %> <%= t('common.view_count', count: @lesson.view_count) %></span>
-              <% end %>
             </div>
           </header>
           <% if @lesson.respond_to?(:content) && @lesson.content.present? %>

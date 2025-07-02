@@ -22,6 +22,7 @@ ar:
       description: "اكتشف فوائد ونصائح علمية مفيدة ومختصرة"
       no_benefits: "لا توجد فوائد متاحة حالياً"
     show:
+      related_benefits: "فوائد ذات صلة"
       will_be_available: "محتوى الفائدة سيكون متاحاً قريباً."
       no_related_benefits: "لا توجد فوائد أخرى في نفس التصنيف حالياً"
   books:
@@ -39,6 +40,7 @@ ar:
       description: "ابحث في مجموعة شاملة من الفتاوى والأحكام الشرعية"
       no_fatwas: "لا توجد فتاوى متاحة حالياً"
     show:
+      no_related_fatwas: "لا توجد فتاوى أخرى في نفس التصنيف حالياً"
       share_fatwa: "شارك الفتوى"
       related_fatwas: "فتاوى ذات صلة"
       have_question: "لديك سؤال؟"
