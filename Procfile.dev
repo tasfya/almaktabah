@@ -1,4 +1,4 @@
 app: bin/rails server
 queue: bundle exec rake solid_queue:start
 js: yarn watch:js
-css: yarn watch:css
+css: bin/rails tailwindcss:watch

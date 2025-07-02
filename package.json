@@ -13,16 +13,10 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "nodemon": "^3.0.2",
-    "tailwindcss": "^3.4.0"
+    "tailwindcss": "^4.1.11"
   },
   "scripts": {
     "build": "esbuild app/javascript/application.js --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets",
-    "build:js": "esbuild app/javascript/application.js --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets",
-    "build:css": "tailwindcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/tailwind.css --config ./tailwind.config.js",
-    "watch:js": "yarn build:js --watch",
-    "watch:css": "yarn build:css --watch",
-    "watch": "concurrently \"yarn watch:js\" \"yarn watch:css\"",
-    "dev": "yarn watch",
-    "postinstall": "yarn build"
+    "watch:js": "yarn build --watch"
   }
 }

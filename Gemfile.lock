@@ -608,6 +608,7 @@ DEPENDENCIES
   stimulus-rails
   streamio-ffmpeg
   tailwindcss-rails
+  tailwindcss-ruby (~> 4.1)
   thruster
   turbo-rails
   tzinfo-data
