@@ -16,15 +16,30 @@ class Lecture < ApplicationRecord
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "category", "created_at", "description", "duration", "id", "published_date", "speaker", "title", "updated_at", "views" ]
+    [ "category", "created_at", "description", "duration", "id", "published_date", "title", "updated_at", "views" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    [ "speaker" ]
+    []
   end
 
-    def audio_url
-      return nil unless audio.attached?
-      Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
-    end
+  after_save :extract_media_duration
+  after_commit :process_media_files, on: [ :create, :update ]
+
+  attr_accessor :audio_blob_id_before_save, :video_blob_id_before_save
+
+  before_save :cache_blob_ids
+
+  def video?
+    video.attached?
+  end
+
+  def audio?
+    audio.attached?
+  end
+
+  def audio_url
+    return nil unless audio.attached?
+    Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
+  end
 end

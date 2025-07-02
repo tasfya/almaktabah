@@ -1,3 +1,4 @@
+<% content_for :title, @book.title %>
 <div class="bg-gray-50 min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -25,7 +26,7 @@
                 </h1>
                 <% if @book.author.present? %>
                   <p class="text-xl text-gray-700 mb-4">
-                    المؤلف: <%= @book.author.name %>
+                    <%= @book.author.name %>
                   </p>
                 <% end %>
                 <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
@@ -34,19 +35,15 @@
                       <%= @book.category %>
                     </span>
                   <% end %>
-                  <% if false && @book.published_date %>
+                  <% if false  %>
                     <time><%= @book.published_date.strftime("%Y/%m/%d") %></time>
-                  <% end %>
-                  <% if false && @book.respond_to?(:views) %>
-                    <span><%= @book.views %> مشاهدة</span>
-                  <% end %>
-                  <% if false && @book.respond_to?(:downloads) %>
-                    <span><%= @book.downloads %> تحميل</span>
+                    <span><%= @book.views %> <%= t('common.view_count', count: @book.views) %></span>
+                    <span><%= @book.downloads %> <%= t('common.download_count', count: @book.downloads) %></span>
                   <% end %>
                 </div>
                 <% if @book.description.present? %>
                   <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">وصف الكتاب</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.book_description') %></h2>
                     <div class="prose prose-lg max-w-none">
                       <%= simple_format(@book.description) %>
                     </div>
@@ -58,7 +55,7 @@
                     <%= link_to @book.file, target: "_blank", 
                         class: "btn btn-primary" do %>
                       <%= icon "arrow-down-tray", class:"size-5" %>
-                      تحميل الكتاب
+                      <%= t("buttons.download_book")%>
                     <% end %>
                   </div>
                 <% end %>
@@ -69,7 +66,9 @@
           <!-- Author Bio -->
           <% if @book.author.respond_to?(:bio) && @book.author.bio.present? %>
             <section class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4">عن المؤلف</h2>
+              <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                <%= t(".about_author")%>
+              </h2>
               <div class="prose prose-lg max-w-none">
                 <%= @book.author.bio %>
               </div>
@@ -78,7 +77,9 @@
           <!-- Related Books -->
           <% if @related_books.any? %>
             <section class="mt-12">
-              <h2 class="text-2xl font-bold text-gray-900 mb-6">كتب ذات صلة</h2>
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                <%= t(".related_books")%>
+              </h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% @related_books.each do |related_book| %>
                   <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">

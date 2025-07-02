@@ -23,10 +23,10 @@ class FatwasController < ApplicationController
   def setup_fatwas_breadcrumbs
     case action_name
     when "index"
-      breadcrumb_for("الفتاوى", fatwas_path)
+      breadcrumb_for(t("breadcrumbs.fatwas"), fatwas_path)
     when "show"
-      breadcrumb_for("الفتاوى", fatwas_path)
-      # Current fatwa will be added in the view
+      breadcrumb_for(t("breadcrumbs.fatwas"), fatwas_path)
+      breadcrumb_for(@fatwa.title, fatwa_path(@fatwa))
     end
   end
 end
