@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles */
+@layer base {
+  html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  body {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .container {
+    @apply mx-auto px-4;
+  }
+}
+
+/* Custom component styles */
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-sm w-full font-medium transition-colors duration-200 flex items-center justify-center gap-1;
+  }
+
+  .btn-primary {
+    @apply bg-gray-800 text-white hover:bg-gray-700 cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-gray-900 hover:bg-gray-100 border border-gray-300 cursor-pointer;
+  }
+
+  .btn-link {
+    @apply w-fit hover:underline cursor-pointer;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply bg-gray-900 text-white;
+  }
+  .badge-secondary {
+    @apply bg-gray-200 text-gray-800;
+  }
+
+  .badge-sm {
+    @apply px-2 py-1 text-xs;
+  }
+
+  .card {
+    @apply bg-white rounded-sm shadow-md border;
+  }
+
+  .card-header {
+    @apply p-6 border-b border-gray-200;
+  }
+
+  .card-body {
+    @apply p-6;
+  }
+
+  .card-footer {
+    @apply p-6 border-t border-gray-200;
+  }
+
+  .audio-player {
+    @apply bg-white border-t border-gray-200 shadow-lg;
+  }
+
+  .audio-progress {
+    @apply h-1 bg-blue-600 transition-all duration-100;
+  }
+
+  .search-modal {
+    backdrop-filter: blur(4px);
+  }
+
+  .flash-message {
+    animation: slideInDown 0.3s ease-out;
+  }
+}
+
+/* Custom utility styles */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .rtl-space-x-reverse> :not([hidden])~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+    margin-right: calc(var(--tw-space-x) * var(--tw-space-x-reverse));
+    margin-left: calc(var(--tw-space-x) * calc(1 - var(--tw-space-x-reverse)));
+  }
+}
+
+/* Custom keyframes */
+@layer utilities {
+  @keyframes slideInDown {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
