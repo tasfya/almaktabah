@@ -11,16 +11,6 @@ ar:
     close: "إغلاق"
   pagination:
     results_info: "عرض %{from}-%{to} من %{count} نتيجة"
-  audio_player:
-    artwork_alt: "صورة المقطع"
-    select_audio: "اختر مقطع صوتي"
-    library: "المكتبة"
-    play: "تشغيل"
-    pause: "إيقاف مؤقت"
-    loop: "تشغيل متكرر"
-    speed: "السرعة"
-    mute_unmute: "كتم/تشغيل الصوت"
-    close: "إغلاق المشغل"
   footer:
     contact_title: "تواصل معنا"
     contact_description: "للاستفسارات والتواصل"

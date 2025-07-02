@@ -10,7 +10,7 @@ class SeriesController < ApplicationController
   end
 
   def show
-    @lessons = @series.lessons.recent
+    @lessons = @series.lessons.ordered_by_lesson_number
     @related_series = Series.by_category(@series.category)
                            .where.not(id: @series.id)
                            .recent

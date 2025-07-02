@@ -18,6 +18,12 @@ class Lesson < ApplicationRecord
   scope :by_category, ->(category) { where(category: category) if category.present? }
   scope :by_series, ->(series_id) { where(series_id: series_id) if series_id.present? }
 
+  scope :ordered_by_lesson_number, -> {
+    all.sort_by do |lesson|
+      lesson.extract_lesson_number || Float::INFINITY
+    end
+  }
+
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
     [ "category", "created_at", "description", "duration", "id", "published_date", "series_id", "title", "updated_at", "view_count" ]
@@ -31,6 +37,10 @@ class Lesson < ApplicationRecord
       video? ? "video" : "audio"
   end
 
+  def full_title
+    "#{series_title} #{title}"
+  end
+
   def audio_url
     return nil unless audio.attached?
     Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
@@ -38,5 +48,10 @@ class Lesson < ApplicationRecord
 
   def series_title
     series&.title
+  end
+
+  def extract_lesson_number
+    match = title.match(/(\d+)/)
+    match ? match[1].to_i : Float::INFINITY
   end
 end
