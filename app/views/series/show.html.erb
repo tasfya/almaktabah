@@ -1,3 +1,4 @@
+<% content_for :title, @series.title %>
 <div class="bg-gray-50 min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -14,7 +15,7 @@
                   <%= @series.category %>
                 </span>
               <% end %>
-              <% if false && @series.published_date %>
+              <% if false %>
                 <time><%= @series.published_date.strftime("%Y/%m/%d") %></time>
               <% end %>
               <span class="flex items-center gap-2">
@@ -30,7 +31,9 @@
             </div>
           <% end %>
           <section class="mt-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">دروس السلسلة</h2>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">
+              <%= t('.lessons_in_series') %>
+            </h2>
             <% if @lessons.any? %>
               <div class="space-y-4">
                 <% @lessons.each_with_index do |lesson, index| %>
@@ -39,14 +42,18 @@
               </div>
             <% else %>
               <div class="text-center text-gray-500 py-8">
-                <p>لا توجد دروس في هذه السلسلة حالياً</p>
+                <p>
+                  <%= t('.no_lessons_in_series') %>
+                </p>
               </div>
             <% end %>
           </section>
           <!-- Related Series -->
           <% if @related_series.any? %>
             <section class="mt-12">
-              <h2 class="text-2xl font-bold text-gray-900 mb-6">سلاسل ذات صلة</h2>
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">
+              <%= t('.related_series') %>
+              </h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% @related_series.each do |related_series| %>
                   <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
@@ -59,6 +66,7 @@
                     <div class="flex items-center justify-between text-sm text-gray-500">
                       <span class="bg-gray-100 px-2 py-1 rounded"><%= related_series.category %></span>
                       <span><%= pluralize(related_series.lessons.count, 'درس') %></span>
+                      <%# TODO fix pluralize %>
                     </div>
                   </div>
                 <% end %>

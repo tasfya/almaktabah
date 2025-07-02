@@ -18,10 +18,10 @@ class BenefitsController < ApplicationController
   def setup_benefits_breadcrumbs
     case action_name
     when "index"
-      breadcrumb_for("الفوائد", benefits_path)
+      breadcrumb_for(t("breadcrumbs.benefits"), benefits_path)
     when "show"
-      breadcrumb_for("الفوائد", benefits_path)
-      # Current benefit will be added in the view
+      breadcrumb_for(t("breadcrumbs.benefits"), benefits_path)
+      breadcrumb_for(@benefit.title, benefit_path(@benefit))
     end
   end
 end

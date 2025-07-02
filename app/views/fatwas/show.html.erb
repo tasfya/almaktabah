@@ -8,26 +8,24 @@
             <h1 class="text-3xl font-bold text-gray-900 mb-4">
               <%= @fatwa.title %>
             </h1>
-            
             <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
               <% if @fatwa.category.present? %>
                 <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
                   <%= @fatwa.category %>
                 </span>
               <% end %>
-              <% if @fatwa.respond_to?(:published_date) && @fatwa.published_date %>
+              <% if false %>
                 <time><%= @fatwa.published_date.strftime("%Y/%m/%d") %></time>
               <% elsif @fatwa.created_at %>
                 <time><%= @fatwa.created_at.strftime("%Y/%m/%d") %></time>
               <% end %>
-              <% if @fatwa.respond_to?(:views) && @fatwa.views %>
-                <span><%= @fatwa.views %> مشاهدة</span>
+              <% if false %>
+                <span><%= t("common.views_count", @fatwa.views) %></span>
               <% end %>
             </div>
           </header>
-
           <!-- Question Section -->
-          <% if @fatwa.respond_to?(:question) && @fatwa.question.present? %>
+          <% if @fatwa.question.present? %>
             <section class="mb-8">
               <h2 class="text-2xl font-bold text-gray-900 mb-4 text-red-800">السؤال</h2>
               <div class="prose prose-lg max-w-none bg-red-50 p-6 rounded-lg border-r-4 border-red-500">
@@ -35,52 +33,51 @@
               </div>
             </section>
           <% end %>
-
           <!-- Answer Section -->
-          <% if @fatwa.respond_to?(:answer) && @fatwa.answer.present? %>
+          <% if @fatwa.answer.present? %>
             <section class="mb-8">
               <h2 class="text-2xl font-bold text-gray-900 mb-4 text-green-800">الإجابة</h2>
               <div class="prose prose-lg max-w-none bg-green-50 p-6 rounded-lg border-r-4 border-green-500">
                 <%= @fatwa.answer %>
               </div>
             </section>
-          <% elsif @fatwa.respond_to?(:content) && @fatwa.content.present? %>
+          <% elsif  @fatwa.content.present? %>
             <section class="mb-8">
               <div class="prose prose-lg max-w-none">
                 <%= @fatwa.content %>
               </div>
             </section>
           <% end %>
-
           <!-- Share Section -->
           <section class="mb-8">
             <div class="border-t border-gray-200 pt-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">شارك الفتوى</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                <%= t('.share_fatwa') %>
+              </h3>
               <div class="flex items-center gap-4">
                 <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape(@fatwa.title) %>&url=<%= CGI.escape(request.original_url) %>" 
                    target="_blank" rel="noopener"
-                   class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                   class="btn btn-primary">
                   <svg class="w-4 h-4 ml-2 rtl:mr-2 rtl:ml-0" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"></path>
                   </svg>
-                  تويتر
+                  <%= t('buttons.share_on_twitter') %>
                 </a>
-                
                 <button onclick="copyToClipboard('<%= request.original_url %>')" 
-                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        class="btn btn-primary">
                   <svg class="w-4 h-4 ml-2 rtl:mr-2 rtl:ml-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                   </svg>
-                  نسخ الرابط
+                  <%= t('buttons.copy_link') %>
                 </button>
               </div>
             </div>
           </section>
-
           <!-- Related Fatwas -->
           <section class="mt-12">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">فتاوى ذات صلة</h2>
-            
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">
+              <%= t('.related_fatwas') %>
+            </h2>
             <% 
               # Get related fatwas from same category
               related_fatwas = Fatwa.where(category: @fatwa.category)
@@ -88,7 +85,6 @@
                                    .order(created_at: :desc)
                                    .limit(4)
             %>
-            
             <% if related_fatwas.any? %>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% related_fatwas.each do |related_fatwa| %>
@@ -96,109 +92,103 @@
                     <h3 class="text-lg font-semibold text-gray-900 mb-3">
                       <%= link_to related_fatwa.title, fatwa_path(related_fatwa), class: "hover:text-indigo-600" %>
                     </h3>
-                    
                     <% if related_fatwa.respond_to?(:question) && related_fatwa.question.present? %>
                       <p class="text-gray-600 text-sm mb-4">
                         <%= truncate(strip_tags(related_fatwa.question.to_s), length: 100) %>
                       </p>
                     <% end %>
-                    
                     <div class="flex items-center justify-between text-sm text-gray-500">
                       <span class="bg-gray-100 px-2 py-1 rounded"><%= related_fatwa.category %></span>
-                      <span><%= related_fatwa.created_at.strftime("%Y/%m/%d") %></span>
+                      <% if false %>
+                        <span><%= related_fatwa.created_at.strftime("%Y/%m/%d") %></span>
+                      <% end %>
                     </div>
                   </div>
                 <% end %>
               </div>
             <% else %>
               <div class="text-center text-gray-500 py-8">
-                <p>لا توجد فتاوى أخرى في نفس التصنيف حالياً</p>
+                <p>
+                  <%= t('.no_related_fatwas') %>
+                </p>
               </div>
             <% end %>
           </section>
         </article>
       </div>
-
       <!-- Sidebar -->
       <%= render partial: "shared/side_bar" %>
     </div>
   </div>
 </div>
-
 <script>
-function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).then(function() {
-    alert('تم نسخ الرابط بنجاح!');
-  }, function(err) {
-    console.error('خطأ في نسخ الرابط: ', err);
-  });
-}
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+      alert('تم نسخ الرابط بنجاح!');
+    }, function(err) {
+      console.error('خطأ في نسخ الرابط: ', err);
+    });
+  }
 </script>
-        </header>
-
-        <div class="prose prose-lg max-w-none">
-          <% if @fatwa.question.present? %>
-            <div class="bg-gray-50 border-r-4 border-blue-500 p-6 mb-8">
-              <h2 class="text-xl font-semibold text-gray-900 mb-4"><%= t('fatwa.question') %></h2>
-              <div class="text-gray-700">
-                <%= @fatwa.question %>
-              </div>
-            </div>
-          <% end %>
-
-          <% if @fatwa.answer.present? %>
-            <div class="mb-8">
-              <h2 class="text-xl font-semibold text-gray-900 mb-4"><%= t('fatwa.answer') %></h2>
-              <div class="text-gray-700">
-                <%= @fatwa.answer %>
-              </div>
-            </div>
-          <% end %>
-        </div>
-
-        <!-- Share -->
-        <div class="mt-8 pt-6 border-t border-gray-200">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4"><%= t('fatwa.share_fatwa') %></h3>
-          <div class="flex items-center gap-4">
-            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-              <%= t('actions.share') %>
-            </button>
-            <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">
-              <%= t('actions.print') %>
-            </button>
-          </div>
-        </div>
-      </article>
+</header>
+<div class="prose prose-lg max-w-none">
+  <% if @fatwa.question.present? %>
+    <div class="bg-gray-50 border-r-4 border-blue-500 p-6 mb-8">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4"><%= t('.question') %></h2>
+      <div class="text-gray-700">
+        <%= @fatwa.question %>
+      </div>
     </div>
-
-    <!-- Sidebar -->
-    <div class="lg:col-span-1">
-      <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4"><%= t('fatwa.related_fatwas') %></h3>
-        <div class="space-y-4">
-          <% Fatwa.limit(5).each do |related_fatwa| %>
-            <% if related_fatwa != @fatwa %>
-              <%= link_to fatwa_path(related_fatwa), class: "block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors" do %>
-                <h4 class="font-medium text-gray-900 line-clamp-2 text-sm">
-                  <%= related_fatwa.title || t('fatwa.title') %>
-                </h4>
-                <% if related_fatwa.category.present? %>
-                  <p class="text-xs text-gray-600 mt-1"><%= related_fatwa.category %></p>
-                <% end %>
-              <% end %>
+  <% end %>
+  <% if @fatwa.answer.present? %>
+    <div class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4"><%= t('.answer') %></h2>
+      <div class="text-gray-700">
+        <%= @fatwa.answer %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<!-- Share -->
+<div class="mt-8 pt-6 border-t border-gray-200">
+  <h3 class="text-lg font-semibold text-gray-900 mb-4"><%= t('.share_fatwa') %></h3>
+  <div class="flex items-center gap-4">
+    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+      <%= t('buttons.share') %>
+    </button>
+    <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+      <%= t('buttons.print') %>
+    </button>
+  </div>
+</div>
+</article>
+</div>
+<!-- Sidebar -->
+<div class="lg:col-span-1">
+  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4"><%= t('.related_fatwas') %></h3>
+    <div class="space-y-4">
+      <% Fatwa.limit(5).each do |related_fatwa| %>
+        <% if related_fatwa != @fatwa %>
+          <%= link_to fatwa_path(related_fatwa), class: "block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors" do %>
+            <h4 class="font-medium text-gray-900 line-clamp-2 text-sm">
+              <%= related_fatwa.title || t('fatwa.title') %>
+            </h4>
+            <% if related_fatwa.category.present? %>
+              <p class="text-xs text-gray-600 mt-1"><%= related_fatwa.category %></p>
             <% end %>
           <% end %>
-        </div>
-      </div>
-
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 class="text-lg font-semibold text-blue-900 mb-4"><%= t('fatwa.have_question') %></h3>
-        <p class="text-blue-700 text-sm mb-4">
-          <%= t('fatwa.send_question_desc') %>
-        </p>
-        <%= link_to t('actions.send_question'), contact_path, 
-                   class: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-block" %>
-      </div>
+        <% end %>
+      <% end %>
     </div>
   </div>
+  <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+    <h3 class="text-lg font-semibold text-blue-900 mb-4"><%= t('.have_question') %></h3>
+    <p class="text-blue-700 text-sm mb-4">
+      <%= t('.send_question_desc') %>
+    </p>
+    <%= link_to t('buttons.send_question'), contact_path, class: "btn btn-primary" %>
+  </div>
+</div>
+</div>
 </div>

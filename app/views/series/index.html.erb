@@ -1,10 +1,15 @@
+<% content_for :title, t('navigation.series') %>
 <div class="bg-gray-50 min-h-screen py-8">
-  <div class="container mx-auto px-4">    
+  <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div class="lg:col-span-2">
         <div class="bg-white rounded-lg shadow-md p-6">
-          <h1 class="text-2xl font-bold text-gray-900 mb-6">السلاسل العلمية</h1>
-          <p class="text-gray-600 mb-6">استعرض مجموعة متنوعة من السلاسل العلمية والدروس المنظمة</p>
+          <h1 class="text-2xl font-bold text-gray-900 mb-6">
+            <%= t('.title') %>
+          </h1>
+          <p class="text-gray-600 mb-6">
+            <%= t('.description') %>
+          </p>
           <%= render 'shared/filters' %>
           <% if @series.any? %>
             <div class="flex flex-col items-center gap-3">
@@ -14,9 +19,11 @@
             </div>
           <% else %>
             <div class="text-center text-gray-500 py-8">
-              <p>لا توجد سلاسل متاحة حالياً</p>
+              <p>
+                <%= t('.no_series') %>
+              </p>
             </div>
-          <% end %>          
+          <% end %>
           <%= render 'shared/pagination' %>
         </div>
       </div>

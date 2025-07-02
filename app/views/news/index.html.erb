@@ -1,10 +1,11 @@
+<% content_for :title, t('navigation.news') %>
 <div class="bg-gray-50 min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div class="lg:col-span-2">
         <div class="bg-white rounded-lg shadow-md p-6">
-          <h1 class="text-2xl font-bold text-gray-900 mb-6">الأخبار</h1>
-          <p class="text-gray-600 mb-6">اطلع على آخر الأخبار والمستجدات</p>
+          <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t('.title') %></h1>
+          <p class="text-gray-600 mb-6"><%= t('.description') %></p>
           <!-- Filters -->
           <%= render 'shared/filters' %>
           <!-- News Grid -->
@@ -12,7 +13,10 @@
             <div class="grid grid-cols-1 gap-6">
               <% @news.each do |news_item| %>
                 <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                  <div class="flex items-start justify-between">
+                  <div class="flex flex-col gap-1">
+                    <% if news_item.thumbnail.present? %>
+                      <%= image_tag news_item.thumbnail, class: "max-h-md object-cover rounded cursor-pointer" %>
+                    <% end %>
                     <div class="flex-1">
                       <h3 class="text-lg font-semibold text-gray-900 mb-2">
                         <%= link_to news_item.title, news_path(news_item), class: "hover:text-indigo-600" %>
@@ -22,12 +26,12 @@
                       <% end %>
                       <div class="flex items-center justify-between text-sm text-gray-500">
                         <div class="flex space-x-4 rtl:space-x-reverse">
-                          <% if false && news_item.respond_to?(:views) %>
-                            <span><%= news_item.views %> مشاهدة</span>
+                          <% if false %>
+                            <span><%= news_item.views %> <%= t('common.view_count', count: news_item.views) %></span>
                           <% end %>
                         </div>
-                        <%= link_to news_path(news_item), class: "text-indigo-600 hover:text-indigo-800" do %>
-                          اقرأ المزيد ←
+                        <%= link_to news_path(news_item), class: "btn btn-link" do %>
+                          <%= t('common.read_more_arrow') %>
                         <% end %>
                       </div>
                     </div>
@@ -37,7 +41,9 @@
             </div>
           <% else %>
             <div class="text-center text-gray-500 py-8">
-              <p>لا توجد أخبار متاحة حالياً</p>
+              <p>
+                <%= t('.no_news') %>
+              </p>
             </div>
           <% end %>
           <!-- Pagination -->

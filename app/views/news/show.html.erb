@@ -1,3 +1,4 @@
+<% content_for :title, @news.title %>
 <div class="bg-gray-50 min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -8,30 +9,24 @@
             <h1 class="text-3xl font-bold text-gray-900 mb-4">
               <%= @news.title %>
             </h1>
-            
             <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
-              <% if @news.published_at %>
+              <% if false %>
                 <time class="flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                   </svg>
                   <%= @news.published_at.strftime("%Y/%m/%d - %H:%M") %>
                 </time>
-              <% end %>
-              
-              <% if @news.respond_to?(:views) && @news.views %>
                 <span class="flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                   </svg>
-                  <%= @news.views %> مشاهدة
+                  <%= @news.views %> <%= t('common.view_count', count: @news.views) %>
                 </span>
               <% end %>
             </div>
           </header>
-
-          <!-- News Thumbnail -->
           <% if @news.thumbnail.present? %>
             <section class="mb-8">
               <div class="rounded-lg overflow-hidden">
@@ -39,66 +34,58 @@
               </div>
             </section>
           <% end %>
-
-          <!-- News Content -->
           <section class="mb-8">
-            <% if @news.respond_to?(:content) && @news.content.present? %>
+            <% if @news.content.present? %>
               <div class="prose prose-lg max-w-none leading-relaxed">
                 <%= @news.content %>
               </div>
             <% else %>
               <div class="text-gray-600">
-                <p>محتوى الخبر سيكون متاحاً قريباً.</p>
+                <p>
+                  <%= t(".will_be_available") %>
+                </p>
               </div>
             <% end %>
           </section>
-
           <!-- Share Section -->
           <section class="mb-8">
             <div class="border-t border-gray-200 pt-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">شارك الخبر</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                <%= t('.share_news') %>
+              </h3>
               <div class="flex items-center gap-4">
                 <!-- Social sharing buttons -->
                 <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape(@news.title) %>&url=<%= CGI.escape(request.original_url) %>" 
                    target="_blank" rel="noopener"
-                   class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  <svg class="w-4 h-4 ml-2 rtl:mr-2 rtl:ml-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"></path>
-                  </svg>
-                  تويتر
+                   class="btn btn-primary">
+                  <%= icon "twitter", library: "lucide", class: "size-4"%>
+                  <%= t("buttons.share_on_twitter")%>
                 </a>
-                
                 <a href="https://www.facebook.com/sharer/sharer.php?u=<%= CGI.escape(request.original_url) %>" 
                    target="_blank" rel="noopener"
-                   class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  <svg class="w-4 h-4 ml-2 rtl:mr-2 rtl:ml-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" clip-rule="evenodd"></path>
-                  </svg>
-                  فيسبوك
+                   class="btn btn-primary">
+                  <%= icon "facebook", library: "lucide", class: "size-4"%>
+                  <%= t("buttons.share_on_facebook")%>
                 </a>
-                
                 <button onclick="copyToClipboard('<%= request.original_url %>')" 
-                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  <svg class="w-4 h-4 ml-2 rtl:mr-2 rtl:ml-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                  </svg>
-                  نسخ الرابط
+                        class="btn btn-secondary">
+                  <%= icon "clipboard", class: "size-4" %>
+                  <%= t("buttons.copy_link")%>
                 </button>
               </div>
             </div>
           </section>
-
           <!-- Related News -->
           <section class="mt-12">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">أخبار ذات صلة</h2>
-            
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">
+              <%= t('.related_news') %>
+            </h2>
             <% 
               # Get related news (latest news excluding current one)
               related_news = News.where.not(id: @news.id)
                                 .order(published_at: :desc)
                                 .limit(4)
             %>
-            
             <% if related_news.any? %>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% related_news.each do |related_item| %>
@@ -108,50 +95,45 @@
                         <%= image_tag related_item.thumbnail, class: "w-full h-full object-cover", alt: related_item.title %>
                       </div>
                     <% end %>
-                    
                     <div class="p-6">
                       <h3 class="text-lg font-semibold text-gray-900 mb-2">
                         <%= link_to related_item.title, news_path(related_item), class: "hover:text-indigo-600" %>
                       </h3>
-                      
-                      <% if related_item.respond_to?(:content) && related_item.content.present? %>
+                      <% if related_item.content.present? %>
                         <p class="text-gray-600 text-sm mb-4">
                           <%= truncate(strip_tags(related_item.content.to_s), length: 100) %>
                         </p>
                       <% end %>
-                      
-                      <div class="flex items-center justify-between text-sm text-gray-500">
-                        <time><%= related_item.published_at.strftime("%Y/%m/%d") if related_item.published_at %></time>
-                        <% if related_item.respond_to?(:views) %>
-                          <span><%= related_item.views %> مشاهدة</span>
-                        <% end %>
-                      </div>
+                      <% if false %>
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                          <time><%= related_item.published_at.strftime("%Y/%m/%d") if related_item.published_at %></time>
+                          <span><%= related_item.views %></span>
+                        </div>
+                      <% end %>
                     </div>
                   </div>
                 <% end %>
               </div>
             <% else %>
               <div class="text-center text-gray-500 py-8">
-                <p>لا توجد أخبار أخرى حالياً</p>
+                <p><%= t('common.no_related_items', items: t('activerecord.model_names.news')) %></p>
               </div>
             <% end %>
           </section>
         </article>
       </div>
-
       <!-- Sidebar -->
       <%= render partial: "shared/side_bar" %>
     </div>
   </div>
 </div>
-
 <script>
-function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).then(function() {
-    // You can add a toast notification here
-    alert('تم نسخ الرابط بنجاح!');
-  }, function(err) {
-    console.error('خطأ في نسخ الرابط: ', err);
-  });
-}
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+      // You can add a toast notification here
+      alert('<%= t('common.copy_success') %>');
+    }, function(err) {
+      console.error('<%= t('common.copy_error') %>', err);
+    });
+  }
 </script>

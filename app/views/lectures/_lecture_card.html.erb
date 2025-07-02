@@ -1,6 +1,5 @@
 <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
   <div class="flex items-start space-x-4 rtl:space-x-reverse">
-    <!-- Thumbnail Section -->
     <div class="flex-shrink-0 w-24 h-24 rounded overflow-hidden bg-gray-100">
       <% if lecture.thumbnail.attached? %>
         <%= image_tag(lecture.thumbnail, 
@@ -12,7 +11,6 @@
             class: "w-full h-full object-cover") %>
       <% end %>
     </div>
-    <!-- Lecture Info -->
     <div class="flex-1">
       <h3 class="text-lg font-semibold text-gray-900 mb-2">
         <%= link_to lecture.title, lecture_path(lecture), class: "hover:text-gray-600" %>

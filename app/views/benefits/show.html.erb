@@ -8,7 +8,6 @@
             <h1 class="text-3xl font-bold text-gray-900 mb-4">
               <%= @benefit.title %>
             </h1>
-            
             <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
               <% if @benefit.category.present? %>
                 <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
@@ -17,23 +16,21 @@
               <% end %>
               <time><%= @benefit.created_at.strftime("%Y/%m/%d") %></time>
               <% if @benefit.respond_to?(:views) %>
-                <span><%= @benefit.views %> مشاهدة</span>
+                <span><%= @benefit.views %> <%= t('common.view_count', count: @benefit.views) %></span>
               <% end %>
             </div>
           </header>
-
           <!-- Audio Player (if available) -->
           <% if @benefit.audio.present? %>
             <section class="mb-8">
               <div class="bg-gray-900 rounded-lg p-6">
                 <audio controls class="w-full">
                   <source src="<%= url_for(@benefit.audio) %>" type="audio/mpeg">
-                  متصفحك لا يدعم تشغيل الصوت.
+                  <%= t('common.browser_no_support_audio') %>
                 </audio>
               </div>
             </section>
           <% end %>
-
           <!-- Benefit Content -->
           <section class="mb-8">
             <% if @benefit.respond_to?(:content) && @benefit.content.present? %>
@@ -46,11 +43,12 @@
               </div>
             <% else %>
               <div class="text-gray-600">
-                <p>محتوى الفائدة سيكون متاحاً قريباً.</p>
+                <p>
+                  <%= t(".will_be_available")%>
+                </p>
               </div>
             <% end %>
           </section>
-
           <!-- Thumbnail (if available) -->
           <% if @benefit.thumbnail.present? %>
             <section class="mb-8">
@@ -59,7 +57,6 @@
               </div>
             </section>
           <% end %>
-
           <!-- Download Audio -->
           <% if @benefit.audio.present? %>
             <section class="mb-8">
@@ -70,16 +67,14 @@
                   <svg class="w-4 h-4 ml-2 rtl:mr-2 rtl:ml-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                   </svg>
-                  تحميل الصوت
+                  <%= t('buttons.download_audio') %>
                 <% end %>
               </div>
             </section>
           <% end %>
-
           <!-- Related Benefits -->
           <section class="mt-12">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">فوائد ذات صلة</h2>
-            
+            <h2 class="text-2xl font-bold text-gray-900 mb-6"><%= t('pages.headings.related_benefits') %></h2>
             <% 
               # Get related benefits from same category
               related_benefits = Benefit.where(category: @benefit.category)
@@ -87,7 +82,6 @@
                                        .order(created_at: :desc)
                                        .limit(4)
             %>
-            
             <% if related_benefits.any? %>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% related_benefits.each do |related_benefit| %>
@@ -95,13 +89,11 @@
                     <h3 class="text-lg font-semibold text-gray-900 mb-3">
                       <%= link_to related_benefit.title, benefit_path(related_benefit), class: "hover:text-indigo-600" %>
                     </h3>
-                    
                     <% if related_benefit.respond_to?(:content) && related_benefit.content.present? %>
                       <p class="text-gray-600 text-sm mb-4">
                         <%= truncate(strip_tags(related_benefit.content.to_s), length: 100) %>
                       </p>
                     <% end %>
-                    
                     <div class="flex items-center justify-between text-sm text-gray-500">
                       <span class="bg-gray-100 px-2 py-1 rounded"><%= related_benefit.category %></span>
                       <div class="flex items-center gap-2">
@@ -118,13 +110,14 @@
               </div>
             <% else %>
               <div class="text-center text-gray-500 py-8">
-                <p>لا توجد فوائد أخرى في نفس التصنيف حالياً</p>
+                <p>
+                  <%= t(".no_related_benefits")%>
+                </p>
               </div>
             <% end %>
           </section>
         </article>
       </div>
-
       <!-- Sidebar -->
       <%= render partial: "shared/side_bar" %>
     </div>
