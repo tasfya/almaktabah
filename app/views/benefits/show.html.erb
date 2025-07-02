@@ -15,9 +15,6 @@
                 </span>
               <% end %>
               <time><%= @benefit.created_at.strftime("%Y/%m/%d") %></time>
-              <% if @benefit.respond_to?(:views) %>
-                <span><%= @benefit.views %> <%= t('common.view_count', count: @benefit.views) %></span>
-              <% end %>
             </div>
           </header>
           <!-- Audio Player (if available) -->
@@ -74,7 +71,7 @@
           <% end %>
           <!-- Related Benefits -->
           <section class="mt-12">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6"><%= t('pages.headings.related_benefits') %></h2>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6"><%= t('.related_benefits') %></h2>
             <% 
               # Get related benefits from same category
               related_benefits = Benefit.where(category: @benefit.category)

@@ -14,14 +14,6 @@
   <div class="flex items-center justify-between text-sm text-gray-500">
     <span class="badge badge-primary"><%= book.category %></span>
     <div class="flex space-x-4 rtl:space-x-reverse">
-      <% if false && book.respond_to?(:views) %>
-        <span>
-          <%= t("common.view_count", book.views)%>
-        </span>
-      <% end %>
-      <% if false && book.respond_to?(:downloads) %>
-        <span><%= t("common.download_count", book.downloads) %></span>
-      <% end %>
     </div>
   </div>
 <% end %>

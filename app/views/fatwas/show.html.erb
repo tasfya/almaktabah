@@ -19,9 +19,6 @@
               <% elsif @fatwa.created_at %>
                 <time><%= @fatwa.created_at.strftime("%Y/%m/%d") %></time>
               <% end %>
-              <% if false %>
-                <span><%= t("common.views_count", @fatwa.views) %></span>
-              <% end %>
             </div>
           </header>
           <!-- Question Section -->

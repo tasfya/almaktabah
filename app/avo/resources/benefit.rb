@@ -13,7 +13,6 @@ class Avo::Resources::Benefit < Avo::BaseResource
     field :audio, as: :file, accept: "audio/*"
     field :thumbnail, as: :file, accept: "image/*"
     field :category, as: :text
-    field :views, as: :number
     field :duration, as: :number
     field :published_date, as: :date
   end

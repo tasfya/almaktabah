@@ -9,7 +9,6 @@ class NewsController < ApplicationController
   end
 
   def show
-    @news.increment!(:views) if @news.respond_to?(:views)
   end
 
   private

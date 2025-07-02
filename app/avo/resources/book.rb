@@ -11,7 +11,6 @@ class Avo::Resources::Book < Avo::BaseResource
     field :description, as: :text
     field :category, as: :text
     field :published_date, as: :date
-    field :views, as: :number
     field :downloads, as: :number
     field :file, as: :file
     field :cover_image, as: :file

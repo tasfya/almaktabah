@@ -18,7 +18,6 @@ module Seeds
           b.published_date = Date.today
         end
 
-        book.views = data['counter'].to_i if data['counter']
         book.downloads ||= 0
         book.pages ||= 0
 

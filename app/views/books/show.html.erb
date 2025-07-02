@@ -35,11 +35,6 @@
                       <%= @book.category %>
                     </span>
                   <% end %>
-                  <% if false  %>
-                    <time><%= @book.published_date.strftime("%Y/%m/%d") %></time>
-                    <span><%= @book.views %> <%= t('common.view_count', count: @book.views) %></span>
-                    <span><%= @book.downloads %> <%= t('common.download_count', count: @book.downloads) %></span>
-                  <% end %>
                 </div>
                 <% if @book.description.present? %>
                   <section class="mb-8">
