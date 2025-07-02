@@ -25,8 +25,7 @@ Rails.application.configure do
     config.action_controller.perform_caching = false
   end
 
-  # For API applications, keep debug output for API consumers
-  config.debug_exception_response_format = :api
+  config.debug_exception_response_format = :default
 
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
