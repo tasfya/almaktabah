@@ -99,3 +99,6 @@ gem "rails_icons", "~> 1.3"
 gem "tailwindcss-ruby", "~> 4.1"
 
 gem "nice_partials", "~> 0.10.1"
+
+gem "cairo", "~> 1.18"
+gem "pango", "~> 4.2"
