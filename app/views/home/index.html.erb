@@ -8,27 +8,28 @@
           <h3 class="text-xl font-bold text-gray-900 mb-6 text-right"><%= t('navigation.recent_lessons') %></h3>
           <div class="space-y-4 w-full">
             <% @recent_lessons.each do |lesson| %>
-              <div class="flex items-center gap-4 justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors w-full">
-                <div class="text-left">
-                  <div class="bg-white p-2 rounded-lg border">
-                    <%= icon "book-open", class: "w-6 h-6 text-gray-700" %>
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors w-full">
+                <!-- Icon Section -->
+                <div class="flex-shrink-0 self-start sm:self-auto">
+                  <div class="bg-white p-2 rounded-lg border w-fit">
+                    <%= icon "book-open", class: "size-6 text-gray-700" %>
                   </div>
                 </div>
-                <div class="text-right flex-1 ml-4 w-full">
+                <!-- Content Section -->
+                <div class="flex-1 text-right sm:ml-4 w-full">
                   <h4 class="font-semibold text-gray-900 mb-1"><%= lesson.full_title %></h4>
                   <p class="text-sm text-gray-600"><%= truncate(lesson.description, length: 200) %></p>
                 </div>
-                <div class="flex items-center gap-4 flex-row-reverse ml-auto">
-                  <div class="flex items-center gap-2 flex-row-reverse">
-                    <%= link_to lesson_path(lesson), class: "btn btn-primary gap-2" do %>
-                      <%= icon "eye", class: "size-5" %>
-                      <%= t('buttons.read') %>
-                    <% end %>
-                    <%= play_button(resource: lesson, path: play_lesson_path(lesson), klass: "btn btn-secondary") %>
-                  </div>
+                <!-- Actions Section -->
+                <div class="flex sm:flex-row flex-col sm:items-center sm:justify-end gap-2 sm:ml-auto w-full sm:w-auto">
+                  <%= link_to lesson_path(lesson), class: "btn btn-primary flex items-center justify-center gap-2 w-full sm:w-auto" do %>
+                    <%= icon "eye", class: "size-5" %>
+                    <%= t('buttons.read') %>
+                  <% end %>
+                  <%= play_button(resource: lesson, path: play_lesson_path(lesson), klass: "btn btn-secondary w-full sm:w-auto") %>
                 </div>
-              <% end %>
-            </div>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
