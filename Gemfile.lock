@@ -137,7 +137,7 @@ GEM
     database_validations (1.1.1)
       activerecord (>= 4.2.0)
     date (3.4.1)
-    debug (1.10.0)
+    debug (1.11.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
     devise (4.9.4)
