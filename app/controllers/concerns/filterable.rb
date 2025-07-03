@@ -8,8 +8,4 @@ module Filterable
     @pagy, @records = pagy(@q.result(distinct: true), limit: 12)
     @records
   end
-
-  def get_categories(model_class)
-    model_class.distinct.pluck(:category).compact.sort
-  end
 end

@@ -6,8 +6,6 @@ class BooksController < ApplicationController
   def index
     @q = Book.includes(:author).ransack(params[:q])
     @pagy, @books = pagy(@q.result(distinct: true), limit: 12)
-    @categories = get_categories(Book)
-
     respond_to do |format|
       format.html
       format.json { render json: @books }

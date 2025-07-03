@@ -6,7 +6,6 @@ class BenefitsController < ApplicationController
   def index
     @q = Benefit.ransack(params[:q])
     @pagy, @benefits = pagy(@q.result(distinct: true), limit: 12)
-    @categories = get_categories(Benefit)
   end
 
   def show; end
