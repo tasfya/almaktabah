@@ -7,7 +7,6 @@ class LessonsController < ApplicationController
     @q = Lesson.includes(:series).ransack(params[:q])
     @pagy, @lessons = pagy(@q.result(distinct: true), limit: 12)
     @series = Series.order(:title)
-    @categories = get_categories(Lesson)
     @lessons = @lessons.ordered_by_lesson_number
     respond_to do |format|
       format.html

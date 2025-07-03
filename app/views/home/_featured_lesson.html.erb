@@ -23,7 +23,7 @@
         <%= lesson.description %>
       </p>
       <!-- Buttons -->
-      <div class="flex flex-wrap gap-4">
+      <div class="flex gap-4">
         <%= link_to t('buttons.read_more'), lesson_path(lesson), class: "btn btn-secondary w-fit" %>
         <%= play_button(resource: lesson, path: play_lesson_path(lesson))%>
       </div>

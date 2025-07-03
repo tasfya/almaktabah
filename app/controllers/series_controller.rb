@@ -6,7 +6,6 @@ class SeriesController < ApplicationController
   def index
     @q = Series.includes(:lessons).ransack(params[:q])
     @pagy, @series = pagy(@q.result(distinct: true), limit: 12)
-    @categories = get_categories(Series)
   end
 
   def show

@@ -6,7 +6,6 @@ class FatwasController < ApplicationController
   def index
     @q = Fatwa.ransack(params[:q])
     @pagy, @fatwas = pagy(@q.result(distinct: true), limit: 12)
-    @categories = get_categories(Fatwa)
   end
 
   def show

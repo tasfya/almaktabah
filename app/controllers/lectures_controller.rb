@@ -6,7 +6,6 @@ class LecturesController < ApplicationController
   def index
     @q = Lecture.ransack(params[:q])
     @pagy, @lectures = pagy(@q.result(distinct: true), limit: 12)
-    @categories = get_categories(Lecture)
 
     respond_to do |format|
       format.html

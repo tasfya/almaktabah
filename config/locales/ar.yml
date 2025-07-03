@@ -211,6 +211,8 @@ ar:
     about_sheikh_alt: "عن الشيخ"
     contact_us: "اتصل بنا"
   common:
+    video: "فيديو"
+    audio: "صوتي"
     site_contents: "محتويات الموقع"
     no_items_available: "لا توجد %{items} متاحة حالياً"
     no_lessons_in_series: "لا توجد دروس في هذه السلسلة حالياً"
