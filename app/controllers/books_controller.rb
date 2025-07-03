@@ -15,7 +15,6 @@ class BooksController < ApplicationController
   end
 
   def show
-    @book.increment!(:views) if @book.respond_to?(:views)
     @related_books = Book.by_category(@book.category)
                         .where.not(id: @book.id)
                         .recent
@@ -27,9 +26,9 @@ class BooksController < ApplicationController
   def setup_books_breadcrumbs
     case action_name
     when "index"
-      breadcrumb_for("الكتب", books_path)
+      breadcrumb_for(t("breadcrumbs.books"), books_path)
     when "show"
-      breadcrumb_for("الكتب", books_path)
+      breadcrumb_for(t("breadcrumbs.books"), books_path)
       breadcrumb_for(@book.title, book_path(@book))
     end
   end
@@ -37,6 +36,6 @@ class BooksController < ApplicationController
   def set_book
     @book = Book.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to books_path, alert: "الكتاب غير موجود"
+    redirect_to books_path, alert: t("messages.book_not_found")
   end
 end

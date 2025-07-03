@@ -15,7 +15,6 @@ class LecturesController < ApplicationController
   end
 
   def show
-    @lecture.increment!(:views) if @lecture.respond_to?(:views)
     @related_lectures = Lecture.by_category(@lecture.category)
                               .where.not(id: @lecture.id)
                               .recent
@@ -27,9 +26,9 @@ class LecturesController < ApplicationController
   def setup_lectures_breadcrumbs
     case action_name
     when "index"
-      breadcrumb_for("المحاضرات", lectures_path)
+      breadcrumb_for(t("breadcrumbs.lectures"), lectures_path)
     when "show"
-      breadcrumb_for("المحاضرات", lectures_path)
+      breadcrumb_for(t("breadcrumbs.lectures"), lectures_path)
       breadcrumb_for(@lecture.title, lecture_path(@lecture))
     end
   end
@@ -37,6 +36,6 @@ class LecturesController < ApplicationController
   def set_lecture
     @lecture = Lecture.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to lectures_path, alert: "المحاضرة غير موجودة"
+    redirect_to lectures_path, alert: t("messages.lecture_not_found")
   end
 end

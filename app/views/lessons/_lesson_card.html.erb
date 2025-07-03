@@ -15,15 +15,6 @@
           <span class="bg-gray-100 px-2 py-1 rounded"><%= lesson.category %></span>
         <% end %>
         <div class="flex space-x-4 rtl:space-x-reverse">
-          <% if false && lesson.respond_to?(:duration) %>
-            <span><%= lesson.duration %> دقيقة</span>
-          <% end %>
-          <% if false && lesson.respond_to?(:view_count) %>
-            <span><%= lesson.view_count %> مشاهدة</span>
-          <% end %>
-          <% if false %>
-            <span><%= lesson.created_at.strftime("%Y/%m/%d") %></span>
-          <% end %>
         </div>
       </div>
     </div>

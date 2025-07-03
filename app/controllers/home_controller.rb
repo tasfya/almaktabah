@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   def index
-    @recent_lessons = Lesson.recent.limit(6)
+    @recent_lessons = Lesson.limit(6).ordered_by_lesson_number
     @recent_books = Book.recent.limit(6)
     @recent_lectures = Lecture.recent.limit(6)
     @recent_news = News.recent.limit(3)

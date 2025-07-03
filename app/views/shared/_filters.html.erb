@@ -4,67 +4,71 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <!-- Search Input -->
       <div>
-        <%= form.label :title_or_description_cont, "البحث", 
+        <%= form.label :title_or_description_cont, t('forms.labels.search'), 
             class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.search_field :title_or_description_cont, 
-            placeholder: "ابحث في العنوان أو الوصف...", 
+            placeholder: t('forms.placeholders.search_title_description'), 
             class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" %>
       </div>
+
       <!-- Category Filter -->
       <% if defined?(@categories) && @categories.present? %>
         <div>
-          <%= form.label :category_eq, "التصنيف", 
+          <%= form.label :category_eq, t('forms.labels.category'), 
               class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.select :category_eq, 
-              options_for_select([["جميع التصنيفات", ""]] + @categories.map { |cat| [cat, cat] }, 
+              options_for_select([[t('forms.options.all_categories'), ""]] + @categories.map { |cat| [cat, cat] }, 
               params.dig(:q, :category_eq)),
               {}, 
               { class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" } %>
         </div>
       <% end %>
+
       <!-- Series Filter (for lessons only) -->
       <% if defined?(@series) && @series.present? && controller_name == "lessons" %>
         <div>
-          <%= form.label :series_id_eq, "السلسلة", 
+          <%= form.label :series_id_eq, t('forms.labels.series'), 
               class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.select :series_id_eq, 
-              options_for_select([["جميع السلاسل", ""]] + @series.pluck(:title, :id), 
+              options_for_select([[t('forms.options.all_series'), ""]] + @series.pluck(:title, :id), 
               params.dig(:q, :series_id_eq)),
               {}, 
               { class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" } %>
         </div>
       <% end %>
+
       <!-- Sort Options -->
       <div>
-        <%= form.label :s, "ترتيب حسب", 
+        <%= form.label :s, t('forms.labels.sort_by'), 
             class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.select :s, 
             options_for_select([
-              ["الأحدث", "created_at desc"],
-              ["الأقدم", "created_at asc"],
-              ["الاسم أ-ي", "title asc"],
-              ["الاسم ي-أ", "title desc"],
-              ["الأكثر مشاهدة", "views desc"],
-              ["الأكثر تحميلاً", "downloads desc"]
+              [t('forms.options.newest'), "created_at desc"],
+              [t('forms.options.oldest'), "created_at asc"],
+              [t('forms.options.name_asc'), "title asc"],
+              [t('forms.options.name_desc'), "title desc"],
+              [t('forms.options.most_downloaded'), "downloads desc"]
             ].select { |option| 
               option[1] != "downloads desc" || controller_name == "books"
             }, params.dig(:q, :s)),
-            { include_blank: "افتراضي" }, 
+            { include_blank: t('forms.options.default') }, 
             { class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" } %>
       </div>
     </div>
+
     <div class="flex flex-wrap gap-3 pt-4">
-      <%= form.submit "تطبيق الفلترة", 
+      <%= form.submit t('buttons.apply_filter'), 
           class: "btn btn-primary w-fit" %>
-      <%= link_to "إعادة تعيين", request.path, 
+      <%= link_to t('buttons.reset'), request.path, 
           class: "btn btn-secondary w-fit" %>
     </div>
   <% end %>
 </div>
+
 <div class="flex justify-between items-center mb-4">
   <div class="text-sm text-gray-600">
-    <% if defined?(@pagy) && @pagy %>
-      عرض <%= @pagy.from %>-<%= @pagy.to %> من <%= @pagy.count %> نتيجة
+    <% if defined?(@pagy) && @pagy && @pagy.count > 0 %>
+      <%= t('pagination.results_info', from: @pagy.from, to: @pagy.to, count: @pagy.count) %>
     <% end %>
   </div>
 </div>

@@ -3,37 +3,42 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <div class="md:col-span-1">
         <div class="flex items-center gap-3 mb-4">
-          <%= image_tag "logo.png", alt: "المكتبة",width: 400, height: 300, class: "rounded-full" %>
+          <%= image_tag "logo.png", alt: t('site.name'), width: 400, height: 150, class: "rounded-full" %>
         </div>
         <p class="text-gray-400 text-sm">
-          الموقع الرسمي لفضيلة الشيخ محمد بن رمزان الهاجري يحتوي على مجموعة متنوعة من الدروس والمحاضرات والكتب والفتاوى.
+          <%= t('sheikh.description') %>
         </p>
       </div>
+
       <div>
-        <h4 class="text-lg font-semibold mb-4">روابط سريعة</h4>
+        <h4 class="text-lg font-semibold mb-4"><%= t('navigation.quick_links') %></h4>
         <ul class="space-y-2">
-          <li><%= link_to "الرئيسية", root_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to "الكتب", books_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to "المحاضرات", lectures_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to "السلاسل", series_index_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to "الدروس", lessons_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.home'), root_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.books'), books_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.lectures'), lectures_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.series'), series_index_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.lessons'), lessons_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
         </ul>
       </div>
+
       <div>
-        <h4 class="text-lg font-semibold mb-4">المحتوى</h4>
+        <h4 class="text-lg font-semibold mb-4"><%= t('navigation.content') %></h4>
         <ul class="space-y-2">
-          <li><%= link_to "أحدث الكتب", books_path(recent: true), class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to "أحدث المحاضرات", lectures_path(recent: true), class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to "أحدث الدروس", lessons_path(recent: true), class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to "عن الشيخ", about_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to "اتصل بنا", contact_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.recent_books'), books_path(recent: true), class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.recent_lectures'), lectures_path(recent: true), class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.recent_lessons'), lessons_path(recent: true), class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.about_sheikh_alt'), about_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.contact_us'), contact_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
         </ul>
       </div>
+
       <div>
-        <h4 class="text-lg font-semibold mb-4">تواصل معنا</h4>
+        <h4 class="text-lg font-semibold mb-4"><%= t('footer.contact_title') %></h4>
         <div class="space-y-2">
-          <p class="text-gray-400 text-sm">للاستفسارات والتواصل</p>
-          <p class="text-gray-400 text-sm">البريد الإلكتروني: <%= site_info[:support_email]%></p>
+          <p class="text-gray-400 text-sm"><%= t('footer.contact_description') %></p>
+          <p class="text-gray-400 text-sm">
+            <%= t('footer.email_label') %>: <%= site_info[:support_email] %>
+          </p>
         </div>
         <div class="mt-4 flex gap-4">
           <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm" do %>
@@ -45,9 +50,10 @@
         </div>
       </div>
     </div>
+
     <div class="border-t border-gray-800 mt-8 pt-8 text-center">
       <p class="text-gray-400 text-sm">
-        &copy; <%= Date.current.year %> جميع الحقوق محفوظة - موقع فضيلة الشيخ محمد بن رمزان الهاجري
+        &copy; <%= Date.current.year %> <%= t('footer.copyright') %>
       </p>
     </div>
   </div>

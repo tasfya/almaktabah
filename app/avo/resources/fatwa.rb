@@ -9,7 +9,6 @@ class Avo::Resources::Fatwa < Avo::BaseResource
     field :id, as: :id
     field :title, as: :text
     field :category, as: :text
-    field :views, as: :number
     field :question, as: :trix
     field :answer, as: :trix
     field :published_date, as: :date

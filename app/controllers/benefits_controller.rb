@@ -1,5 +1,6 @@
 class BenefitsController < ApplicationController
   include Filterable
+  before_action :set_benefit, only: [ :show ]
   before_action :setup_benefits_breadcrumbs
 
   def index
@@ -8,20 +9,23 @@ class BenefitsController < ApplicationController
     @categories = get_categories(Benefit)
   end
 
-  def show
-    @benefit = Benefit.find(params[:id])
-    @benefit.increment!(:views) if @benefit.respond_to?(:views)
-  end
+  def show; end
 
   private
+
+  def set_benefit
+    @benefit = Benefit.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to benefits_path, alert: t("messages.benefit_not_found")
+  end
 
   def setup_benefits_breadcrumbs
     case action_name
     when "index"
-      breadcrumb_for("الفوائد", benefits_path)
+      breadcrumb_for(t("breadcrumbs.benefits"), benefits_path)
     when "show"
-      breadcrumb_for("الفوائد", benefits_path)
-      # Current benefit will be added in the view
+      breadcrumb_for(t("breadcrumbs.benefits"), benefits_path)
+      breadcrumb_for(@benefit.title, benefit_path(@benefit))
     end
   end
 end

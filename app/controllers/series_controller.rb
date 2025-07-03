@@ -10,7 +10,7 @@ class SeriesController < ApplicationController
   end
 
   def show
-    @lessons = @series.lessons.recent
+    @lessons = @series.lessons.ordered_by_lesson_number
     @related_series = Series.by_category(@series.category)
                            .where.not(id: @series.id)
                            .recent
@@ -22,9 +22,9 @@ class SeriesController < ApplicationController
   def setup_series_breadcrumbs
     case action_name
     when "index"
-      breadcrumb_for("السلاسل العلمية", series_index_path)
+      breadcrumb_for(t("breadcrumbs.series"), series_index_path)
     when "show"
-      breadcrumb_for("السلاسل العلمية", series_index_path)
+      breadcrumb_for(t("breadcrumbs.series"), series_index_path)
       breadcrumb_for(@series.title, series_path(@series))
     end
   end
@@ -32,6 +32,6 @@ class SeriesController < ApplicationController
   def set_series
     @series = Series.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to series_index_path, alert: "السلسلة غير موجودة"
+    redirect_to series_index_path, alert: t("messages.series_not_found")
   end
 end

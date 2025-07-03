@@ -1,32 +1,33 @@
 class FatwasController < ApplicationController
   include Filterable
+  before_action :set_fatwa, only: [ :show ]
   before_action :setup_fatwas_breadcrumbs
 
   def index
     @q = Fatwa.ransack(params[:q])
     @pagy, @fatwas = pagy(@q.result(distinct: true), limit: 12)
     @categories = get_categories(Fatwa)
-
-    respond_to do |format|
-      format.html
-      format.json { render json: @fatwas }
-    end
   end
 
   def show
     @fatwa = Fatwa.find(params[:id])
-    @fatwa.increment!(:views) if @fatwa.respond_to?(:views)
   end
 
   private
 
+  def set_fatwa
+    @fatwa = Fatwa.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to fatwas_path, alert: t("messages.fatwa_not_found")
+  end
+
   def setup_fatwas_breadcrumbs
     case action_name
     when "index"
-      breadcrumb_for("الفتاوى", fatwas_path)
+      breadcrumb_for(t("breadcrumbs.fatwas"), fatwas_path)
     when "show"
-      breadcrumb_for("الفتاوى", fatwas_path)
-      # Current fatwa will be added in the view
+      breadcrumb_for(t("breadcrumbs.fatwas"), fatwas_path)
+      breadcrumb_for(@fatwa.title, fatwa_path(@fatwa))
     end
   end
 end

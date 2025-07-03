@@ -8,13 +8,12 @@ class Book < ApplicationRecord
 
   # Scopes
   scope :recent, -> { order(published_date: :desc) }
-  scope :most_viewed, -> { order(views: :desc) }
   scope :most_downloaded, -> { order(downloads: :desc) }
   scope :by_category, ->(category) { where(category: category) if category.present? }
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "author_id", "category", "created_at", "description", "downloads", "id", "published_date", "title", "updated_at", "views" ]
+    [ "author_id", "category", "created_at", "description", "downloads", "id", "published_date", "title", "updated_at" ]
   end
 
   def self.ransackable_associations(auth_object = nil)

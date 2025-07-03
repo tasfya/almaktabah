@@ -1,4 +1,6 @@
 class Lesson < ApplicationRecord
+  include MediaHandler
+
   belongs_to :series
 
   validates :title, presence: true, uniqueness: true
@@ -10,34 +12,32 @@ class Lesson < ApplicationRecord
 
   has_rich_text :content
 
-  after_save :extract_media_duration
-  after_commit :process_media_files, on: [ :create, :update ]
-
   # Scopes
   scope :recent, -> { order(published_date: :desc) }
-  scope :most_viewed, -> { order(view_count: :desc) }
   scope :by_category, ->(category) { where(category: category) if category.present? }
   scope :by_series, ->(series_id) { where(series_id: series_id) if series_id.present? }
 
+  scope :ordered_by_lesson_number, -> {
+    all.sort_by do |lesson|
+      lesson.extract_lesson_number || Float::INFINITY
+    end
+  }
+
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "category", "created_at", "description", "duration", "id", "published_date", "series_id", "title", "updated_at", "view_count" ]
+    [ "category", "created_at", "description", "duration", "id", "published_date", "series_id", "title", "updated_at" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
     [ "series" ]
   end
 
-  def video?
-    video.attached?
-  end
-
   def media_type
       video? ? "video" : "audio"
   end
 
-  def audio?
-    audio.attached?
+  def full_title
+    "#{series_title} #{title}"
   end
 
   def audio_url
@@ -49,28 +49,8 @@ class Lesson < ApplicationRecord
     series&.title
   end
 
-  private
-
-  def process_media_files
-    if video?
-      VideoProcessingJob.perform_later(self)
-    end
-
-    if audio?
-      AudioOptimizationJob.perform_later(self)
-    end
-  end
-
-  def extract_media_duration
-    return unless audio.attached? || video.attached?
-
-    media_file = video.attached? ? video : audio
-
-    media_file.open do |file|
-      movie = FFMPEG::Movie.new(file.path)
-      update_column(:duration, movie.duration.to_i) if movie.duration
-    end
-  rescue => e
-    Rails.logger.error "Failed to extract duration: #{e.message}"
+  def extract_lesson_number
+    match = title.match(/(\d+)/)
+    match ? match[1].to_i : Float::INFINITY
   end
 end

@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
   end
 
   def most_viewed_books
-    @most_viewed_books ||= Book.order(views: :desc).limit(5)
+    @most_viewed_books ||= Book.order(published_date: :desc).limit(5)
   end
 
   def latest_news

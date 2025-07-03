@@ -33,7 +33,6 @@ module Seeds
           l.old_id = data['id']
           l.video_url = data['video_url'] if data['video_url'].present?
           l.published_date = Date.today
-          l.views = 0
         end
 
         if lecture.save
