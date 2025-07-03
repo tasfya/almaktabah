@@ -112,7 +112,7 @@
                       </div>
                       <% unless series_lesson == @lesson %>
                         <div class="flex items-center gap-2">
-                          <%= play_button(resource: @lesson, path: play_lesson_path(@lesson)) %>
+                          <%= play_button(resource: @series_lesson, path: play_lesson_path(@series_lesson)) %>
                           <%= link_to lesson_path(series_lesson), class: "btn btn-primary gap-2" do %>
                             <%= icon "eye", class: "size-5" %>
                             <%= t('buttons.read') %>
