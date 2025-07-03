@@ -33,7 +33,7 @@ class Lesson < ApplicationRecord
   end
 
   def media_type
-      video? ? "video" : "audio"
+    video? ? I18n.t("common.video") : I18n.t("common.audio")
   end
 
   def full_title
