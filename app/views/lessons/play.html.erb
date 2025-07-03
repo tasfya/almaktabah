@@ -1,0 +1,8 @@
+<%= render "shared/podcast_frame", podcast: nil do |frame| %>
+  <% frame.player do %>
+    <div class="mb-[env(safe-area-inset-bottom)] flex flex-1 flex-col gap-3 overflow-hidden p-1 py-4">
+      <%= link_to @lesson.full_title, lesson_path(@lesson), class: "truncate text-right text-lg font-bold leading-6 md:text-left py-4" %>
+      <%= audio_tag @lesson.audio, id: dom_id(@lesson, :audio), class: "w-full pb-4", controls: true, muted: Rails.env.test?, data: {controller: "player", action: "loadeddata->player#play"} %>
+    </div>
+  <% end %>
+<% end %>

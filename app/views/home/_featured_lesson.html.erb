@@ -24,10 +24,8 @@
       </p>
       <!-- Buttons -->
       <div class="flex flex-wrap gap-4">
-        <%= link_to t('buttons.read_more'), lesson_path(lesson),
-           class: "btn btn-secondary w-fit" %>
-        <%= audio_play_button_with_text(lesson.audio_url, lesson.title, lesson.description,'',t('buttons.listen'),
-                        class: "btn btn-primary w-fit") if lesson.audio? %>
+        <%= link_to t('buttons.read_more'), lesson_path(lesson), class: "btn btn-secondary w-fit" %>
+        <%= play_button(resource: lesson, path: play_lesson_path(lesson))%>
       </div>
     </div>
   </div>
