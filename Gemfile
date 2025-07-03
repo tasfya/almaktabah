@@ -97,3 +97,5 @@ gem "avo", ">= 3.2"
 gem "rails_icons", "~> 1.3"
 
 gem "tailwindcss-ruby", "~> 4.1"
+
+gem "nice_partials", "~> 0.10.1"
