@@ -4,8 +4,16 @@ Rails.application.routes.draw do
   end
 
   resources :books, only: [ :index, :show ]
-  resources :lectures, only: [ :index, :show ]
-  resources :lessons, only: [ :index, :show ]
+  resources :lectures, only: [ :index, :show ] do
+    member do
+      get :play
+    end
+  end
+  resources :lessons, only: [ :index, :show ] do
+    member do
+      get :play
+    end
+  end
   resources :series, only: [ :index, :show ]
   resources :news, only: [ :index, :show ]
   resources :benefits, only: [ :index, :show ]

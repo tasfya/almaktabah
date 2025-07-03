@@ -16,7 +16,11 @@
                   <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
                     <div class="aspect-video bg-gray-200 relative flex items-center justify-center">
                       <%= image_tag "background.jpg", class: "absolute inset-0 w-full h-full object-cover" %>
-                      <%= audio_play_button_with_text(@lesson.audio_url, @lesson.title, @lesson.description, '', '', class: "btn btn-secondary w-fit z-10 bg-black/70 hover:bg-black/90 text-white", svg_class: "size-12") %>
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <%= play_button(resource: @lesson, path: play_lesson_path(@lesson),
+                                      klass: "btn btn-primary w-fit", 
+                                      icon_class: "size-8 flex items-center justify-center") %>
+                      </div>
                     </div>
                   </div>
                 <% end %>
@@ -61,7 +65,7 @@
                   <% if @lesson.audio? %>
                     <%= link_to rails_blob_url(@lesson.audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
-                       <%= t('buttons.download_audio') %>
+                      <%= t('buttons.download_audio') %>
                     <% end %>
                   <% end %>
                   <% if @lesson.video? %>
@@ -81,7 +85,7 @@
                 <% if @lesson.series.lessons.count > 5 %>
                   <div class="mt-4">
                     <%= link_to series_path(@lesson.series), class: "btn btn-link" do %>
-                      <%= t('buttons.view_all_lessons') %>                       
+                      <%= t('buttons.view_all_lessons') %>
                       <%= icon "arrow-left", class:"size-4" %>
                     <% end %>
                   </div>
@@ -108,7 +112,7 @@
                       </div>
                       <% unless series_lesson == @lesson %>
                         <div class="flex items-center gap-2">
-                          <%= audio_play_button_with_text(series_lesson.audio_url, series_lesson.title, series_lesson.description, '', t('buttons.listen'), class: "btn btn-secondary w-fit") if series_lesson.audio?  %>
+                          <%= play_button(resource: @lesson, path: play_lesson_path(@lesson)) %>
                           <%= link_to lesson_path(series_lesson), class: "btn btn-primary gap-2" do %>
                             <%= icon "eye", class: "size-5" %>
                             <%= t('buttons.read') %>

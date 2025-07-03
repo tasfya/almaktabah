@@ -1,0 +1,11 @@
+
+<main class="min-h-screen" aria-labelledby="main_title">
+  <div class="relative">
+    <%= yield %>
+  </div>
+  <%= render "shared/player" do %>
+    <% if partial.player %>
+      <%= partial.yield :player %>
+    <% end %>
+  <% end %>
+</main>

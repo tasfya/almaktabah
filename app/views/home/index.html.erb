@@ -20,18 +20,15 @@
                 </div>
                 <div class="flex items-center gap-4 flex-row-reverse ml-auto">
                   <div class="flex items-center gap-2 flex-row-reverse">
-                    <%= audio_play_button_with_text(
-                        lesson.audio_url, 
-                        lesson.title, 
-                        lesson.description,
-                        '',
-                        t('buttons.listen'),
-                        class: "btn btn-primary w-fit"
-                      ) if lesson.audio? %>
+                    <%= link_to lesson_path(lesson), class: "btn btn-primary gap-2" do %>
+                      <%= icon "eye", class: "size-5" %>
+                      <%= t('buttons.read') %>
+                    <% end %>
+                    <%= play_button(resource: lesson, path: play_lesson_path(lesson), klass: "btn btn-secondary") %>
                   </div>
                 </div>
-              </div>
-            <% end %>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>

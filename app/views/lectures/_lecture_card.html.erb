@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="ml-4 rtl:mr-4 rtl:ml-0 flex-shrink-0 flex items-center gap-2">
-      <%= audio_play_button_with_text(lecture.audio_url, lecture.title, lecture.description, '', t('buttons.listen'), class: "btn btn-secondary") if lecture.audio? %>
+      <%= play_button(resource: lecture, path: play_lecture_path(lecture)) %>
       <%= link_to lecture_path(lecture), class: "btn btn-primary gap-2" do %>
         <%= icon "eye", class: "size-5" %>
         <%= t('buttons.read') %>

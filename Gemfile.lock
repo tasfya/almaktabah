@@ -263,6 +263,8 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     net-ssh (7.3.0)
+    nice_partials (0.10.1)
+      actionview (>= 4.2.6)
     nio4r (2.7.4)
     nokogiri (1.18.8-aarch64-linux-gnu)
       racc (~> 1.4)
@@ -560,6 +562,7 @@ DEPENDENCIES
   jsbundling-rails
   kamal
   mission_control-jobs
+  nice_partials (~> 0.10.1)
   overcommit
   pagy (~> 9.0)
   propshaft

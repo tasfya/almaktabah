@@ -22,6 +22,10 @@ class LessonsController < ApplicationController
                             .limit(4)
   end
 
+  def play
+    @lesson = Lesson.find(params[:id])
+  end
+
   private
 
   def setup_lessons_breadcrumbs

@@ -16,7 +16,11 @@
                   <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
                     <div class="aspect-video bg-gray-200 relative flex items-center justify-center">
                       <%= image_tag "background.jpg", class: "absolute inset-0 w-full h-full object-cover" %>
-                      <%= audio_play_button_with_text(@lecture.audio_url, @lecture.title, @lecture.description, '', '', class: "btn btn-secondary w-fit z-10 bg-black/70 hover:bg-black/90 text-white", svg_class: "size-12") %>
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <%= play_button(resource: @lecture, path: play_lecture_path(@lecture), 
+                                      klass: "btn btn-primary w-fit", 
+                                      icon_class: "size-8 flex items-center justify-center") %>
+                      </div>
                     </div>
                   </div>
                 <% end %>
