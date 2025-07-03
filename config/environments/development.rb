@@ -84,5 +84,5 @@ Rails.application.configure do
 
   # Log to STDOUT (console)
   config.logger = ActiveSupport::Logger.new($stdout)
-  config.i18n.raise_on_missing_translations = true
+  # config.i18n.raise_on_missing_translations = true
 end

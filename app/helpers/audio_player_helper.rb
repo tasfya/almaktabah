@@ -1,5 +1,5 @@
 module AudioPlayerHelper
-  def play_button(resource:, path:, klass: "btn btn-secondary w-fit")
+  def play_button(resource:, path:, klass: "btn btn-secondary w-fit", icon_class: "size-4")
     return unless resource&.audio? && path.present?
     tag.form(
       action: path,
