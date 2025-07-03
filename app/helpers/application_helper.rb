@@ -8,12 +8,11 @@ module ApplicationHelper
   end
 
   def site_info
-    # TODO: Replace with actual site information
     {
-      support_email: "info@almaktabah.com",
-      facebook_url: "https://facebook.com/myapp",
+      support_email: "",
       contact_phone: "+212 600 000 000",
-      twitter_url: "https://twitter.com/myapp"
+      twitter_url: "https://x.com/Moh1Rz2H3?ref",
+      youtube_url: "https://www.youtube.com/@mohammedramzan"
     }
   end
 
