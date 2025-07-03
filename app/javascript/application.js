@@ -1,23 +1,21 @@
 import "@hotwired/turbo-rails"
 import { Application } from "@hotwired/stimulus"
 
-// Import all Stimulus controllers manually
-import AudioPlayerController from "./controllers/audio_player_controller"
 import NavigationController from "./controllers/navigation_controller"
-import ClipboardController from "./controllers/clipboard_controller"
 
-// Start Stimulus application
+import ClipboardController from "./controllers/clipboard_controller"
+import PlayButtonController from "./controllers/play_button_controller"
+import PlayerController from "./controllers/player_controller"
+
 const application = Application.start()
 
-// Register controllers
-application.register("audio-player", AudioPlayerController)
 application.register("navigation", NavigationController)
 application.register("clipboard", ClipboardController)
+application.register("play-button", PlayButtonController)
+application.register("player", PlayerController)
 
-// Configure Stimulus development experience
 application.debug = false
 window.Stimulus = application
 window.application = application
-
 
 export { application }
