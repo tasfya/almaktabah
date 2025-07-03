@@ -16,7 +16,7 @@
                   <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
                     <div class="aspect-video bg-gray-200 relative flex items-center justify-center">
                       <%= image_tag "background.jpg", class: "absolute inset-0 w-full h-full object-cover" %>
-                      <%= play_button(resource: lecture, path: play_lecture_path(lecture)) %>
+                      <%= play_button(resource: @lecture, path: play_lecture_path(@lecture)) %>
                     </div>
                   </div>
                 <% end %>
