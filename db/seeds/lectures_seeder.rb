@@ -40,27 +40,27 @@ module Seeds
         end
 
         if data['audio_url'].present?
-          #  && !lecture.audio.attached?
-          path = Rails.root.join('tmp', 'audio', 'lectures', "lecture_#{data['id']}.mp3")
+          path = Rails.root.join('tmp', 'audio', 'lectures', "lecture_#{lecture.id}.mp3")
           if download_file(data['audio_url'], path)
             lecture.audio.attach(io: File.open(path), filename: File.basename(path))
+            CleanupTemporaryFilesJob.perform_later(path.to_s)
           else
             puts "❌ Failed to download audio for lecture: #{lecture.title}"
           end
         end
 
-        if data['video_url'].present?
-          # && !lecture.video.attached? && data['video_url'].end_with?('mp4')
-          path = Rails.root.join('tmp', 'video', 'lectures', "lecture_#{data['id']}.mp4")
+        if data['video_url'].present? && data['video_url'].end_with?('mp4')
+          path = Rails.root.join('tmp', 'video', 'lectures', "lecture_#{lecture.id}.mp4")
           if download_file(data['video_url'], path)
             lecture.video.attach(io: File.open(path), filename: File.basename(path))
+            CleanupTemporaryFilesJob.perform_later(path.to_s)
           else
             puts "❌ Failed to download video for lecture: #{lecture.title}"
           end
         end
       end
 
-      puts "\n==== Seeding Summary ===="
+      puts "==== Seeding Summary ===="
       puts "Total lectures in source: #{total}"
       puts "Lectures processed (saved): #{processed.size}"
       puts "Lectures failed to save: #{failed.size}"
