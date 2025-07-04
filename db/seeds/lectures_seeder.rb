@@ -14,8 +14,8 @@ module Seeds
       lecture_array.each do |data|
         name = data['name']
 
-        if name.blank? || name =~ /^\d+$/
-          puts "⚠️ Skipping lecture with invalid name: #{name || 'nil'}"
+        if name.blank?
+          puts "⚠️ Skipping lecture with invalid #{data["id"]} name: #{name || 'nil'}"
           next
         end
 
@@ -39,7 +39,8 @@ module Seeds
           next
         end
 
-        if data['audio_url'].present? && !lecture.audio.attached?
+        if data['audio_url'].present?
+          #  && !lecture.audio.attached?
           path = Rails.root.join('tmp', 'audio', 'lectures', "lecture_#{data['id']}.mp3")
           if download_file(data['audio_url'], path)
             lecture.audio.attach(io: File.open(path), filename: File.basename(path))
@@ -48,7 +49,8 @@ module Seeds
           end
         end
 
-        if data['video_url'].present? && !lecture.video.attached? && data['video_url'].end_with?('mp4')
+        if data['video_url'].present?
+          # && !lecture.video.attached? && data['video_url'].end_with?('mp4')
           path = Rails.root.join('tmp', 'video', 'lectures', "lecture_#{data['id']}.mp4")
           if download_file(data['video_url'], path)
             lecture.video.attach(io: File.open(path), filename: File.basename(path))
