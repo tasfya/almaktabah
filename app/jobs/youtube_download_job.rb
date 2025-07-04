@@ -1,170 +1,125 @@
+require "open-uri"
+require "fileutils"
+require "streamio-ffmpeg"
+
 class YoutubeDownloadJob < ApplicationJob
   queue_as :default
 
-  def perform(record_type, record_id, download_type = "video")
-    @record = record_type.constantize.find(record_id)
-    @download_type = download_type
+  TEMP_DIR = Rails.root.join("tmp", "youtube_downloads").freeze
+  VIDEO_STORAGE_DIR = Rails.root.join("tmp", "youtube", "videos").freeze
+  THUMBNAIL_STORAGE_DIR = Rails.root.join("tmp", "thumbnails").freeze
 
-    return unless @record.youtube_url.present?
+  def perform(resource, file_url:)
+    @resource = resource
+    @file_url = file_url
 
-    Rails.logger.info "Starting YouTube processing for #{record_type} #{record_id}: #{@record.youtube_url}"
+    return unless @resource.youtube_url.present?
 
-    downloader = YoutubeDownloaderService.new(
-      url: @record.youtube_url,
-      download_path: storage_path,
-      format: download_format
-    )
+    setup_directories
 
-    # First, get video info and update record
-    video_info = downloader.get_video_info
-    if video_info
-      update_record_with_info(video_info)
-      Rails.logger.info "Updated #{record_type} #{record_id} with YouTube video info"
-    end
+    begin
+      Rails.logger.info "Starting YouTube video processing for #{resource_name}: #{@file_url}"
 
-    # Try to download if external tools are available
-    if downloader.can_download?
-      downloaded_file = case @download_type
-      when "audio"
-                         downloader.download_audio_only
-      else
-                         downloader.download
+      downloader = YoutubeDownloaderService.new(
+        url: @file_url,
+        download_path: VIDEO_STORAGE_DIR,
+        format: "mp4"
+      )
+
+      video_info = downloader.get_video_info
+      if video_info
+        update_resource_with_info(video_info)
+        Rails.logger.info "Updated #{resource_name} with YouTube video info"
       end
 
-      if downloaded_file.is_a?(String) && File.exist?(downloaded_file)
-        attach_downloaded_file(downloaded_file)
-        Rails.logger.info "Successfully downloaded and attached file for #{record_type} #{record_id}"
+      if downloader.can_download?
+        downloaded_file = downloader.download
+        if downloaded_file.is_a?(String) && File.exist?(downloaded_file)
+          attach_downloaded_file(downloaded_file)
+          process_thumbnail(downloaded_file) unless @resource.thumbnail.attached?
+          extract_duration(downloaded_file)
+          Rails.logger.info "Successfully downloaded and processed video for #{resource_name}"
+        else
+          Rails.logger.info "Download completed but no file to attach for #{resource_name}"
+        end
       else
-        Rails.logger.info "Download completed but no file to attach for #{record_type} #{record_id}"
+        Rails.logger.warn "External download tools not available for #{resource_name}. Only extracted video info."
+        Rails.logger.warn "To enable downloading: #{downloader.installation_suggestion}"
       end
-    else
-      Rails.logger.warn "External download tools not available. Only extracted video info."
-      Rails.logger.warn "To enable downloading: #{downloader.installation_suggestion}"
-    end
 
-  rescue StandardError => e
-    Rails.logger.error "YouTube processing job failed for #{record_type} #{record_id}: #{e.message}"
-    Rails.logger.error e.backtrace.join("\n")
+      @resource.save! if @resource.changed?
+
+    rescue StandardError => e
+      Rails.logger.error "YouTube video processing failed for #{resource_name}: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      raise
+    ensure
+      cleanup_temp_files
+    end
   end
 
   private
 
-  def download_with_external_tools
-    output_path = File.join(storage_path, "%(title)s.%(ext)s")
-    format = @download_type == "audio" ? "mp3" : "mp4"
-
-    YoutubeDownloaderService.download_with_external_tool(
-      @record.youtube_url,
-      output_path,
-      format: format
-    )
+  def setup_directories
+    FileUtils.mkdir_p(TEMP_DIR)
+    FileUtils.mkdir_p(VIDEO_STORAGE_DIR)
+    FileUtils.mkdir_p(THUMBNAIL_STORAGE_DIR)
   end
 
-  def storage_path
-    case @record.class.name.downcase
-    when "lesson"
-      Rails.root.join("storage", "youtube", "lessons")
-    when "lecture"
-      Rails.root.join("storage", "youtube", "lectures")
+  def download_file
+    temp_filename = "#{resource_name}_#{Time.current.to_i}_download.mp4"
+    temp_path = TEMP_DIR.join(temp_filename)
+
+    downloaded_path = ApplicationJob.download_file(@file_url, temp_path.to_s)
+
+    if downloaded_path
+      Rails.logger.info "Downloaded video to: #{downloaded_path}"
+      downloaded_path
     else
-      Rails.root.join("storage", "youtube", "downloads")
-    end
-  end
-
-  def download_format
-    @download_type == "audio" ? "mp3" : "mp4"
-  end
-
-  def update_record_with_info(video_info)
-    return unless video_info.is_a?(Hash)
-
-    # Update duration if available and not already set
-    if video_info["duration"] && (!@record.duration || @record.duration.zero?)
-      @record.update_column(:duration, video_info["duration"].to_i)
-    end
-
-    # Update title if empty (optional) - handle encoding properly
-    if video_info["title"] && @record.title.blank?
-      title = safe_encode_text(video_info["title"])
-      @record.update_column(:title, title) if title
-    end
-
-    # Update description if empty (optional) - handle encoding properly
-    if video_info["description"] && @record.description.blank?
-      description = safe_encode_text(video_info["description"].to_s.truncate(500))
-      @record.update_column(:description, description) if description
-    end
-  end
-
-  # Helper method to safely handle text encoding
-  def safe_encode_text(text)
-    return nil unless text.present?
-
-    text_str = text.to_s
-
-    # If it's already valid UTF-8, return as is
-    if text_str.encoding == Encoding::UTF_8 && text_str.valid_encoding?
-      return text_str
-    end
-
-    # Try different encoding approaches
-    begin
-      # First, try to detect if it's actually UTF-8 with wrong encoding label
-      if text_str.encoding == Encoding::ASCII_8BIT
-        utf8_attempt = text_str.force_encoding("UTF-8")
-        return utf8_attempt if utf8_attempt.valid_encoding?
-      end
-
-      # Convert to UTF-8 with replacement characters for invalid bytes
-      text_str.encode("UTF-8", invalid: :replace, undef: :replace, replace: "?")
-    rescue Encoding::UndefinedConversionError, Encoding::InvalidByteSequenceError => e
-      Rails.logger.warn "Encoding issue with text: #{e.message}"
-      # Fallback: scrub invalid characters
-      text_str.encode("UTF-8", invalid: :replace, undef: :replace, replace: "?").scrub("?")
-    rescue => e
-      Rails.logger.warn "Unexpected encoding error: #{e.message}"
-      # Last resort: use only ASCII characters
-      text_str.gsub(/[^\x00-\x7F]/, "?")
+      Rails.logger.error "Failed to download video from: #{@file_url}"
+      nil
     end
   end
 
   def attach_downloaded_file(file_path)
-    return unless File.exist?(file_path)
+    return unless File.exist?(file_path) && @resource.respond_to?(:video)
 
-    file_extension = File.extname(file_path).downcase
-
-    case file_extension
-    when ".mp3"
-      attach_audio_file(file_path)
-    when ".mp4", ".webm", ".mkv"
-      attach_video_file(file_path)
-    end
-  end
-
-  def attach_audio_file(file_path)
-    return unless @record.respond_to?(:audio)
-
-    @record.audio.purge_later if @record.audio.attached?
-    @record.audio.attach(
-      io: File.open(file_path),
-      filename: File.basename(file_path),
-      content_type: "audio/mpeg"
-    )
-
-    Rails.logger.info "Attached audio file for #{@record.class.name} #{@record.id}"
-  end
-
-  def attach_video_file(file_path)
-    return unless @record.respond_to?(:video)
-
-    @record.video.purge_later if @record.video.attached?
-    @record.video.attach(
+    @resource.video.purge_later if @resource.video.attached?
+    @resource.video.attach(
       io: File.open(file_path),
       filename: File.basename(file_path),
       content_type: content_type_for_file(file_path)
     )
+    Rails.logger.info "Attached video file for #{resource_name}"
+  end
 
-    Rails.logger.info "Attached video file for #{@record.class.name} #{@record.id}"
+  def process_thumbnail(file_path)
+    thumbnail_output_filename = "#{resource_name}_thumb.jpg"
+    thumbnail_output_path = THUMBNAIL_STORAGE_DIR.join(thumbnail_output_filename)
+
+    movie = FFMPEG::Movie.new(file_path)
+    movie.screenshot(thumbnail_output_path.to_s, seek_time: 0, resolution: "640x360")
+    Rails.logger.info "Generated thumbnail to: #{thumbnail_output_path}"
+
+    @resource.thumbnail.attach(
+      io: File.open(thumbnail_output_path),
+      filename: thumbnail_output_filename,
+      content_type: "image/jpeg"
+    )
+    Rails.logger.info "Attached thumbnail for #{resource_name}"
+  end
+
+  def extract_duration(file_path)
+    movie = FFMPEG::Movie.new(file_path)
+
+    if movie.duration&.positive? && @resource.duration != movie.duration.to_i
+      @resource.duration = movie.duration.to_i
+      Rails.logger.info "Set duration to #{@resource.duration} seconds for #{resource_name}"
+    end
+  rescue FFMPEG::Error => e
+    Rails.logger.warn "FFmpeg error extracting duration for #{resource_name}: #{e.message}"
+  rescue => e
+    Rails.logger.warn "Error extracting duration for #{resource_name}: #{e.message}"
   end
 
   def content_type_for_file(file_path)
@@ -178,5 +133,22 @@ class YoutubeDownloadJob < ApplicationJob
     else
       "application/octet-stream"
     end
+  end
+
+  def resource_name
+    "#{@resource.class.name.downcase}_#{@resource.id}"
+  end
+
+  def cleanup_temp_files
+    Dir.glob(TEMP_DIR.join("*")).each do |file|
+      FileUtils.rm_f(file)
+    end
+    Dir.glob(VIDEO_STORAGE_DIR.join("*")).each do |file|
+      FileUtils.rm_f(file)
+    end
+    Dir.glob(THUMBNAIL_STORAGE_DIR.join("*")).each do |file|
+      FileUtils.rm_f(file)
+    end
+    Rails.logger.info "Cleaned up temp files for #{resource_name}"
   end
 end

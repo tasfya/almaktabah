@@ -1,5 +1,4 @@
 require_relative './base'
-require 'ruby-progressbar'
 
 module Seeds
   class LessonsSeeder < Base
@@ -8,26 +7,22 @@ module Seeds
 
       lesson_array = load_json('data/lessons.json')
       total = lesson_array.size
-      processed = 0
 
-      progress = ProgressBar.create(
-        total: total,
-        format: "%a [%B] %p%% (%c/%C)",
-        progress_mark: "▓",
-        remainder_mark: "░"
-      )
+      processed = []
+      failed = []
 
       lesson_array.each do |data|
-        progress.increment
+        name = data['name']
 
-        next if data['name'].blank? || data['name'] =~ /^\d+$/
+        if name.blank? || name =~ /^\d+$/
+          puts "⚠️ Skipping lesson with invalid name: #{name || 'nil'}"
+          next
+        end
 
         series = Series.find_or_initialize_by(title: data["series_name"])
         if series.new_record?
           series.description = "مجموعة #{data['series_name']} للشيخ محمد بن رمزان الهاجري"
           series.category = data["series_name"]
-          series.published_date = Date.today
-
           unless series.save
             puts "❌ Failed to save series: #{series.title}"
             puts "Errors: #{series.errors.full_messages.join(', ')}"
@@ -35,56 +30,50 @@ module Seeds
           end
         end
 
-
-        lesson = Lesson.find_or_initialize_by(title: data['name']) do |l|
-          l.title = data['name']
-          l.series = series
-          l.category = data["series_name"]
-          l.description = data['name']
-          l.video_url = data['video_url']
-          l.published_date = Date.today
-          l.duration = 100
-          l.old_id = data['id']
-          l.view_count = 0
+        lesson = Lesson.find_or_initialize_by(title: name)
+        if lesson.new_record?
+          lesson.series = series
+          lesson.category = data["series_name"]
+          lesson.description = name
+          lesson.video_url = data['video_url']
+          lesson.youtube_url = data['youtube_url']
+          lesson.old_id = data['id']
         end
-        # report validation errors if any
-        processed += 1 if lesson.save
-        unless lesson.valid?
+
+        begin
+          lesson.save!
+          processed << lesson
+          puts "✅ Successfully saved lesson: #{lesson.title} (ID: #{lesson.id})"
+        rescue ActiveRecord::RecordInvalid
           puts "❌ Failed to save lesson: #{lesson.title}"
           puts "Errors: #{lesson.errors.full_messages.join(', ')}"
-          raise "Validation failed for lesson: #{lesson.title}. Errors: #{lesson.errors.full_messages.join(', ')}"
+          failed << lesson
+          next
         end
-        puts "📥 Processing lesson: #{lesson.title} (ID: #{lesson.id})"
 
         if data['audio_url'].present? && !lesson.audio.attached?
-          path = Rails.root.join('storage', 'audio', "lessons", "lesson_#{data["id"]}.mp3")
-          downloaded_audio = download_file(data['audio_url'], path)
-          if downloaded_audio
-            lesson.audio.attach(io: File.open(downloaded_audio), filename: File.basename(downloaded_audio)) if downloaded_audio
-            puts "🔄 Queuing audio optimization job for lesson: #{lesson.title} (ID: #{lesson.id})"
-            ProcessLessonMediaJob.perform_later(lesson.id, 'audio')
+          path = Rails.root.join('tmp', 'audio', 'lessons', "lesson_#{data['id']}.mp3")
+          if download_file(data['audio_url'], path)
+            lesson.audio.attach(io: File.open(path), filename: File.basename(path))
           else
             puts "❌ Failed to download audio for lesson: #{lesson.title}"
           end
         end
 
-
-        if data['video_url'].present? && !lesson.video.attached?
-            if data['video_url'].end_with?('mp4')
-              path = Rails.root.join('storage', 'video', "lessons", "lesson_#{data["id"]}.mp4")
-              downloaded = download_file(data['video_url'], path)
-              if downloaded
-                lesson.video.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
-                puts "🔄 Queuing video processing job for lesson: #{lesson.title} (ID: #{lesson.id})"
-                ProcessLessonMediaJob.perform_later(lesson.id, 'video')
-              else
-                puts "❌ Failed to download video for lesson: #{lesson.title}"
-              end
-            end
+        if data['video_url'].present? && !lesson.video.attached? && data['video_url'].end_with?('mp4')
+          path = Rails.root.join('tmp', 'video', 'lessons', "lesson_#{data['id']}.mp4")
+          if download_file(data['video_url'], path)
+            lesson.video.attach(io: File.open(path), filename: File.basename(path))
+          else
+            puts "❌ Failed to download video for lesson: #{lesson.title}"
+          end
         end
       end
 
-      puts "\n✅ Successfully seeded #{processed} lessons out of #{total}"
+      puts "\n==== Seeding Summary ===="
+      puts "Total lessons in source: #{total}"
+      puts "Lessons processed (saved): #{processed.size}"
+      puts "Lessons failed to save: #{failed.size}"
     end
   end
 end

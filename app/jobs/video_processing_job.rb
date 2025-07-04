@@ -8,8 +8,8 @@ class VideoProcessingJob < ApplicationJob
   queue_as :default
 
   TEMP_DIR = Rails.root.join("tmp", "video_processing").freeze
-  AUDIO_STORAGE_DIR = Rails.root.join("storage", "audio", "items").freeze
-  THUMBNAIL_STORAGE_DIR = Rails.root.join("storage", "thumbnails").freeze
+  AUDIO_STORAGE_DIR = Rails.root.join("tmp", "audio", "items").freeze
+  THUMBNAIL_STORAGE_DIR = Rails.root.join("tmp", "thumbnails").freeze
 
   def perform(item)
     return unless item.video?
