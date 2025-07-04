@@ -37,6 +37,7 @@ module Seeds
           lesson.description = name
           lesson.video_url = data['video_url']
           lesson.youtube_url = data['youtube_url']
+          lesson.position = data['position'].to_i
           lesson.old_id = data['id']
         end
 
