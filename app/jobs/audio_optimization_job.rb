@@ -7,7 +7,7 @@ class AudioOptimizationJob < ApplicationJob
   queue_as :default
 
   TEMP_DIR = Rails.root.join("tmp", "audio_processing").freeze
-  AUDIO_STORAGE_DIR = Rails.root.join("storage", "audio").freeze
+  AUDIO_STORAGE_DIR = Rails.root.join("tmp", "audio").freeze
 
   def perform(item)
     return unless item.audio?
@@ -33,7 +33,7 @@ class AudioOptimizationJob < ApplicationJob
         item.optimized_audio.attach(
           io: StringIO.new(optimized_file_binary),
           filename: optimized_filename,
-          content_type: "audio/opus"
+          content_type: "audio/mpeg"
         )
 
         item.save!
@@ -58,10 +58,10 @@ class AudioOptimizationJob < ApplicationJob
 
   def optimize_audio(input_path, timestamp, unique_id)
     base = File.basename(input_path, ".*")
-    output_filename = "op_#{base}_#{timestamp}_#{unique_id}.opus"
+    output_filename = "op_#{base}_#{timestamp}_#{unique_id}.mp3"
     output_path = AUDIO_STORAGE_DIR.join(output_filename)
 
-    optimizer = AudioOptimizer.new(input_path.to_s, output_path.to_s, bitrate: "12k", format: :opus)
+    optimizer = AudioOptimizer.new(input_path.to_s, output_path.to_s)
     optimizer.optimize
 
     output_path
