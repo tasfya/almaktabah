@@ -52,6 +52,7 @@ class VideoProcessingJob < ApplicationJob
           content_type: "audio/mpeg"
         )
         AudioOptimizationJob.perform_later(item) if item.audio.attached?
+        CleanupTemporaryFilesJob.perform_later(audio_output_path.to_s)
         Rails.logger.info "Attached extracted audio for item #{item.id}"
       end
 

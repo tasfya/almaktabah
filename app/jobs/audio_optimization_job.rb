@@ -35,7 +35,7 @@ class AudioOptimizationJob < ApplicationJob
           filename: optimized_filename,
           content_type: "audio/mpeg"
         )
-
+        CleanupTemporaryFilesJob.perform_later(optimized_path.to_s)
         item.save!
       end
     rescue => e
