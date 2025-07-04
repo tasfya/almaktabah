@@ -19,7 +19,7 @@ class Lesson < ApplicationRecord
 
   scope :ordered_by_lesson_number, -> {
     all.sort_by do |lesson|
-      lesson.extract_lesson_number || Float::INFINITY
+      lesson.extract_lesson_number || position || Float::INFINITY
     end
   }
 

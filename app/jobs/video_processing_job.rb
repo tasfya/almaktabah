@@ -8,8 +8,8 @@ class VideoProcessingJob < ApplicationJob
   queue_as :default
 
   TEMP_DIR = Rails.root.join("tmp", "video_processing").freeze
-  AUDIO_STORAGE_DIR = Rails.root.join("storage", "audio", "items").freeze
-  THUMBNAIL_STORAGE_DIR = Rails.root.join("storage", "thumbnails").freeze
+  AUDIO_STORAGE_DIR = Rails.root.join("tmp", "audio", "items").freeze
+  THUMBNAIL_STORAGE_DIR = Rails.root.join("tmp", "thumbnails").freeze
 
   def perform(item)
     return unless item.video?
@@ -52,6 +52,7 @@ class VideoProcessingJob < ApplicationJob
           content_type: "audio/mpeg"
         )
         AudioOptimizationJob.perform_later(item) if item.audio.attached?
+        CleanupTemporaryFilesJob.perform_later(audio_output_path.to_s)
         Rails.logger.info "Attached extracted audio for item #{item.id}"
       end
 
