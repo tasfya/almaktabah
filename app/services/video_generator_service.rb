@@ -1,6 +1,8 @@
 class VideoGeneratorService
   attr_reader :title, :description, :audio_file, :logo_file, :temp_dir
 
+  include ArabicHelper
+
   def initialize(title:, description: nil, audio_file:, logo_file:)
     @title = title
     @description = description
@@ -28,7 +30,7 @@ class VideoGeneratorService
       {
         success: true,
         video_path: output_path.to_s,
-        filename: "#{title.parameterize}.mp4"
+        filename: "#{transliterate_arabic(title).parameterize}.mp4"
       }
     rescue => e
       Rails.logger.error "Video generation failed: #{e.message}"
