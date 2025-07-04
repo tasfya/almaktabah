@@ -5,39 +5,28 @@ require "streamio-ffmpeg"
 class YoutubeDownloadJob < ApplicationJob
   queue_as :default
 
-  TEMP_DIR = Rails.root.join("tmp", "youtube_downloads").freeze
   VIDEO_STORAGE_DIR = Rails.root.join("tmp", "youtube", "videos").freeze
   THUMBNAIL_STORAGE_DIR = Rails.root.join("tmp", "thumbnails").freeze
 
-  def perform(resource, file_url:)
+  def perform(resource)
     @resource = resource
-    @file_url = file_url
 
     return unless @resource.youtube_url.present?
 
     setup_directories
 
     begin
-      Rails.logger.info "Starting YouTube video processing for #{resource_name}: #{@file_url}"
+      Rails.logger.info "Starting YouTube video processing for #{resource_name}"
 
       downloader = YoutubeDownloaderService.new(
-        url: @file_url,
-        download_path: VIDEO_STORAGE_DIR,
-        format: "mp4"
-      )
-
-      video_info = downloader.get_video_info
-      if video_info
-        update_resource_with_info(video_info)
-        Rails.logger.info "Updated #{resource_name} with YouTube video info"
-      end
+        url: @resource.youtube_url,
+        download_path: VIDEO_STORAGE_DIR)
 
       if downloader.can_download?
         downloaded_file = downloader.download
         if downloaded_file.is_a?(String) && File.exist?(downloaded_file)
           attach_downloaded_file(downloaded_file)
           process_thumbnail(downloaded_file) unless @resource.thumbnail.attached?
-          extract_duration(downloaded_file)
           Rails.logger.info "Successfully downloaded and processed video for #{resource_name}"
         else
           Rails.logger.info "Download completed but no file to attach for #{resource_name}"
@@ -61,25 +50,10 @@ class YoutubeDownloadJob < ApplicationJob
   private
 
   def setup_directories
-    FileUtils.mkdir_p(TEMP_DIR)
     FileUtils.mkdir_p(VIDEO_STORAGE_DIR)
     FileUtils.mkdir_p(THUMBNAIL_STORAGE_DIR)
   end
 
-  def download_file
-    temp_filename = "#{resource_name}_#{Time.current.to_i}_download.mp4"
-    temp_path = TEMP_DIR.join(temp_filename)
-
-    downloaded_path = ApplicationJob.download_file(@file_url, temp_path.to_s)
-
-    if downloaded_path
-      Rails.logger.info "Downloaded video to: #{downloaded_path}"
-      downloaded_path
-    else
-      Rails.logger.error "Failed to download video from: #{@file_url}"
-      nil
-    end
-  end
 
   def attach_downloaded_file(file_path)
     return unless File.exist?(file_path) && @resource.respond_to?(:video)
@@ -91,6 +65,7 @@ class YoutubeDownloadJob < ApplicationJob
       content_type: content_type_for_file(file_path)
     )
     Rails.logger.info "Attached video file for #{resource_name}"
+    CleanupTemporaryFilesJob.perform_later(file_path)
   end
 
   def process_thumbnail(file_path)
@@ -107,19 +82,6 @@ class YoutubeDownloadJob < ApplicationJob
       content_type: "image/jpeg"
     )
     Rails.logger.info "Attached thumbnail for #{resource_name}"
-  end
-
-  def extract_duration(file_path)
-    movie = FFMPEG::Movie.new(file_path)
-
-    if movie.duration&.positive? && @resource.duration != movie.duration.to_i
-      @resource.duration = movie.duration.to_i
-      Rails.logger.info "Set duration to #{@resource.duration} seconds for #{resource_name}"
-    end
-  rescue FFMPEG::Error => e
-    Rails.logger.warn "FFmpeg error extracting duration for #{resource_name}: #{e.message}"
-  rescue => e
-    Rails.logger.warn "Error extracting duration for #{resource_name}: #{e.message}"
   end
 
   def content_type_for_file(file_path)
@@ -140,9 +102,6 @@ class YoutubeDownloadJob < ApplicationJob
   end
 
   def cleanup_temp_files
-    Dir.glob(TEMP_DIR.join("*")).each do |file|
-      FileUtils.rm_f(file)
-    end
     Dir.glob(VIDEO_STORAGE_DIR.join("*")).each do |file|
       FileUtils.rm_f(file)
     end

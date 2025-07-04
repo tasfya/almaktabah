@@ -15,7 +15,7 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes
-    field :yotube_url, as: :text, help: "YouTube URL for video lessons"
+    field :youtube_url, as: :text, help: "YouTube URL for video lessons"
     field :video_url, as: :text, help: "URL for video lessons"
   end
 end

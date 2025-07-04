@@ -18,12 +18,13 @@ module MediaHandler
   def process_media_files
     return unless audio.attached? || video.attached?
 
-    MediaDurationExtractionJob.perform_later(self)
     AudioOptimizationJob.perform_later(self)
     VideoProcessingJob.perform_later(self)
+
+    handle_youtube_resource if youtube_url.present? && !video.attached?
   end
 
   def handle_youtube_resource
-      YoutubeDownloadJob.perform_later("Lesson", lesson.id, "video")
+    YoutubeDownloadJob.perform_later(self, file_url: youtube_url)
   end
 end
