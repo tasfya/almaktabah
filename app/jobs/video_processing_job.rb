@@ -13,6 +13,7 @@ class VideoProcessingJob < ApplicationJob
 
   def perform(item)
     return unless item.video?
+    return unless item.audio.attached? && item.thumbnail.attached?
 
     FileUtils.mkdir_p(TEMP_DIR)
     FileUtils.mkdir_p(AUDIO_STORAGE_DIR)
