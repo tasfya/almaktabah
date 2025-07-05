@@ -2,7 +2,7 @@ require_relative './base'
 
 module Seeds
   class LecturesSeeder < Base
-    def self.seed
+    def self.seed(from: nil)
       puts "📚 Seeding audio lectures..."
 
       lecture_array = load_json('data/lectures.json')
@@ -10,9 +10,14 @@ module Seeds
 
       processed = []
       failed = []
+      started = from.blank?
 
       lecture_array.each do |data|
         name = data['name']
+        if !started
+          started = (name == from)
+          next unless started
+        end
 
         if name.blank?
           puts "⚠️ Skipping lecture with invalid #{data["id"]} name: #{name || 'nil'}"
