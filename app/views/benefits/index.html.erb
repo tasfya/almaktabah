@@ -13,22 +13,9 @@
           <%= render 'shared/filters' %>
           <!-- Benefits Grid -->
           <% if @benefits.any? %>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-6">
               <% @benefits.each do |benefit| %>
-                <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                  <h3 class="text-lg font-semibold text-gray-900 mb-3">
-                    <%= link_to benefit.title, benefit_path(benefit), class: "hover:text-indigo-600" %>
-                  </h3>
-                  <p class="text-gray-600 text-sm mb-4"><%= truncate(benefit.description, length: 150) %></p>
-                  <div class="flex items-center justify-between text-sm text-gray-500">
-                    <span class="bg-gray-100 px-2 py-1 rounded"><%= benefit.category %></span>
-                    <div class="flex space-x-4 rtl:space-x-reverse">
-                      <% if false %>
-                        <span><%= benefit.created_at.strftime("%Y/%m/%d") %></span>
-                      <% end %>
-                    </div>
-                  </div>
-                </div>
+                <%= render partial: "benefit_card", locals: { benefit: }%>
               <% end %>
             </div>
           <% else %>
