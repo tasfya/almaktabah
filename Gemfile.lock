@@ -358,7 +358,7 @@ GEM
       activerecord (>= 6.1.5)
       activesupport (>= 6.1.5)
       i18n
-    rdoc (6.14.1)
+    rdoc (6.14.2)
       erb
       psych (>= 4.0.0)
     regexp_parser (2.10.0)
@@ -487,7 +487,7 @@ GEM
     streamio-ffmpeg (3.0.2)
       multi_json (~> 1.8)
     stringio (3.1.7)
-    tailwindcss-rails (4.2.3)
+    tailwindcss-rails (4.3.0)
       railties (>= 7.0.0)
       tailwindcss-ruby (~> 4.0)
     tailwindcss-ruby (4.1.11)
