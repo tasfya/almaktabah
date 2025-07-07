@@ -10,10 +10,11 @@ class Avo::Resources::Benefit < Avo::BaseResource
     field :title, as: :text
     field :description, as: :textarea
     field :content, as: :trix
-    field :audio, as: :file, accept: "audio/*"
-    field :thumbnail, as: :file, accept: "image/*"
     field :category, as: :text
     field :duration, as: :number
     field :published_date, as: :date
+    field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
+    field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
+    field :video, as: :file, accept: "video/*", max_size: 100.megabytes
   end
 end
