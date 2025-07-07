@@ -1,5 +1,4 @@
 class Avo::Resources::Lesson < Avo::BaseResource
-  self.model_class = "Lesson"
   # self.includes = []
   # self.attachments = []
   # self.search = {
@@ -13,11 +12,12 @@ class Avo::Resources::Lesson < Avo::BaseResource
     field :content, as: :trix
     field :published_date, as: :date
     field :category, as: :text
+    field :youtube_url, as: :text, help: "YouTube URL for video lessons"
+    field :position, as: :number, help: "Position in the series", sortable: true
+    field :video_url, as: :text, help: "URL for video lessons"
     field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes
-    field :yotube_url, as: :text, help: "YouTube URL for video lessons"
-    field :video_url, as: :text, help: "URL for video lessons"
     field :series, as: :belongs_to, resource: "Series", searchable: true
   end
 end

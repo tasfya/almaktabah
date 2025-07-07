@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_02_123343) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_05_223147) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -111,7 +111,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_123343) do
     t.integer "old_id"
     t.string "youtube_url"
     t.index ["old_id"], name: "index_lectures_on_old_id"
-    t.index ["title"], name: "index_lectures_on_title", unique: true
+    t.index ["title"], name: "index_lectures_on_title"
   end
 
   create_table "lessons", force: :cascade do |t|
@@ -127,9 +127,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_123343) do
     t.string "video_url"
     t.integer "old_id"
     t.string "youtube_url"
+    t.integer "position"
     t.index ["old_id"], name: "index_lessons_on_old_id"
+    t.index ["position"], name: "index_lessons_on_position"
     t.index ["series_id"], name: "index_lessons_on_series_id"
-    t.index ["title"], name: "index_lessons_on_title", unique: true
+    t.index ["title"], name: "index_lessons_on_title"
   end
 
   create_table "news", force: :cascade do |t|

@@ -8,13 +8,14 @@ SEEDERS = {
 }
 
 parts = ENV["PARTS"]&.split(",") || SEEDERS.keys
+starting_from = ENV["FROM"]&.strip
 
 puts "Running seeders for: #{parts.join(', ')}"
 
 parts.each do |part|
   seeder = SEEDERS[part.strip]
   if seeder
-    seeder.seed
+    seeder.seed(from: starting_from)
   else
     puts "⚠️ Unknown seed part: #{part}"
   end

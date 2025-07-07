@@ -3,7 +3,7 @@ require 'active_support/inflector'
 
 module Seeds
   class NewsSeeder < Base
-    def self.seed
+    def self.seed(from: nil)
       puts "📰 Seeding news..."
 
       news_array = load_json('data/news.json')
