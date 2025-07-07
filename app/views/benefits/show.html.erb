@@ -5,114 +5,64 @@
       <div class="lg:col-span-2">
         <article class="bg-white rounded-lg shadow-md p-8">
           <header class="mb-8">
+            <% if @benefit.video? || @benefit.audio? %>
+              <section class="mb-8">
+                <% if @benefit.video? %>
+                  <video controls class="w-full rounded">
+                    <source src="<%= @benefit.video_url %>" type="video/mp4">
+                    <%= t('common.browser_no_support_video') %>
+                  </video>
+                <% elsif @benefit.audio? %>
+                  <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
+                    <div class="aspect-video bg-gray-200 relative flex items-center justify-center">
+                      <%= image_tag "background.jpg", class: "absolute inset-0 w-full h-full object-cover" %>
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <%= play_button(resource: @benefit, path: play_benefit_path(@benefit), 
+                                      klass: "btn btn-primary w-fit", 
+                                      icon_class: "size-8 flex items-center justify-center") %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </section>
+            <% end %>
             <h1 class="text-3xl font-bold text-gray-900 mb-4">
               <%= @benefit.title %>
             </h1>
             <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
               <% if @benefit.category.present? %>
-                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                <span class="badge badge-primary">
                   <%= @benefit.category %>
                 </span>
               <% end %>
-              <time><%= @benefit.created_at.strftime("%Y/%m/%d") %></time>
+              <% if false && @benefit.published_date %>
+                <time><%= @benefit.published_date.strftime("%Y/%m/%d") %></time>
+              <% end %>
             </div>
           </header>
-          <!-- Audio Player (if available) -->
-          <% if @benefit.audio.present? %>
-            <section class="mb-8">
-              <div class="bg-gray-900 rounded-lg p-6">
-                <audio controls class="w-full">
-                  <source src="<%= url_for(@benefit.audio) %>" type="audio/mpeg">
-                  <%= t('common.browser_no_support_audio') %>
-                </audio>
-              </div>
-            </section>
-          <% end %>
-          <!-- Benefit Content -->
-          <section class="mb-8">
-            <% if @benefit.respond_to?(:content) && @benefit.content.present? %>
-              <div class="prose prose-lg max-w-none">
-                <%= @benefit.content %>
-              </div>
-            <% elsif @benefit.respond_to?(:description) && @benefit.description.present? %>
-              <div class="prose prose-lg max-w-none">
-                <%= simple_format(@benefit.description) %>
-              </div>
-            <% else %>
-              <div class="text-gray-600">
-                <p>
-                  <%= t(".will_be_available")%>
-                </p>
-              </div>
-            <% end %>
-          </section>
-          <!-- Thumbnail (if available) -->
-          <% if @benefit.thumbnail.present? %>
-            <section class="mb-8">
-              <div class="text-center">
-                <%= image_tag @benefit.thumbnail, class: "max-w-full h-auto rounded-lg shadow-md mx-auto", alt: @benefit.title %>
-              </div>
-            </section>
-          <% end %>
-          <!-- Download Audio -->
-          <% if @benefit.audio.present? %>
+          <% if @benefit.audio? || @benefit.video? %>
             <section class="mb-8">
               <div class="bg-gray-50 rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">تحميل الفائدة</h3>
-                <%= link_to url_for(@benefit.audio), download: true, target: "_blank",
-                    class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
-                  <svg class="w-4 h-4 ml-2 rtl:mr-2 rtl:ml-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                  </svg>
-                  <%= t('buttons.download_audio') %>
-                <% end %>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                  <%= t(".download_options")%>
+                </h3>
+                <div class="flex flex-wrap gap-4">
+                  <% if @benefit.audio? %>
+                    <%= link_to rails_blob_url(@benefit.audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
+                      <%= icon "arrow-down-tray", class: "size-5" %>
+                      <%= t("buttons.download_audio")%>
+                    <% end %>
+                  <% end %>
+                  <% if @benefit.video? %>
+                    <%= link_to rails_blob_url(@benefit.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary w-fit" do %>
+                      <%= icon "arrow-down-tray", class: "size-5" %>
+                      <%= t("buttons.download_video")%>
+                    <% end %>
+                  <% end %>
+                </div>
               </div>
             </section>
           <% end %>
-          <!-- Related Benefits -->
-          <section class="mt-12">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6"><%= t('.related_benefits') %></h2>
-            <% 
-              # Get related benefits from same category
-              related_benefits = Benefit.where(category: @benefit.category)
-                                       .where.not(id: @benefit.id)
-                                       .order(created_at: :desc)
-                                       .limit(4)
-            %>
-            <% if related_benefits.any? %>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <% related_benefits.each do |related_benefit| %>
-                  <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
-                      <%= link_to related_benefit.title, benefit_path(related_benefit), class: "hover:text-indigo-600" %>
-                    </h3>
-                    <% if related_benefit.respond_to?(:content) && related_benefit.content.present? %>
-                      <p class="text-gray-600 text-sm mb-4">
-                        <%= truncate(strip_tags(related_benefit.content.to_s), length: 100) %>
-                      </p>
-                    <% end %>
-                    <div class="flex items-center justify-between text-sm text-gray-500">
-                      <span class="bg-gray-100 px-2 py-1 rounded"><%= related_benefit.category %></span>
-                      <div class="flex items-center gap-2">
-                        <% if related_benefit.audio.present? %>
-                          <svg class="w-4 h-4 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.816L4.617 14H2a1 1 0 01-1-1V7a1 1 0 011-1h2.617l3.766-2.816a1 1 0 011.617.816zM16.5 12c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z" clip-rule="evenodd"></path>
-                          </svg>
-                        <% end %>
-                        <span><%= related_benefit.created_at.strftime("%Y/%m/%d") %></span>
-                      </div>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <div class="text-center text-gray-500 py-8">
-                <p>
-                  <%= t(".no_related_benefits")%>
-                </p>
-              </div>
-            <% end %>
-          </section>
         </article>
       </div>
       <!-- Sidebar -->

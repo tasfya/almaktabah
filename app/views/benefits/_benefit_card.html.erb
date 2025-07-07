@@ -1,27 +1,27 @@
 <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
   <div class="flex items-start space-x-4 rtl:space-x-reverse">
     <div class="flex-shrink-0 w-24 h-24 rounded overflow-hidden bg-gray-100">
-      <% if lecture.thumbnail.attached? %>
-        <%= image_tag(lecture.thumbnail, 
-            alt: lecture.title, 
+      <% if benefit.thumbnail.attached? %>
+        <%= image_tag(benefit.thumbnail, 
+            alt: benefit.title, 
             class: "w-full h-full object-cover") %>
       <% else %>
         <%= image_tag('audio-thumbnail.jpg', 
-            alt: lecture.title, 
+            alt: benefit.title, 
             class: "w-full h-full object-cover") %>
       <% end %>
     </div>
     <div class="flex-1">
       <h3 class="text-lg font-semibold text-gray-900 mb-2">
-        <%= link_to lecture.title, lecture_path(lecture), class: "hover:text-gray-600" %>
+        <%= link_to benefit.title, benefit_path(benefit), class: "hover:text-gray-600" %>
       </h3>
       <div class="badge badge-primary mb-2">
-        <%= lecture.category %>
+        <%= benefit.category %>
       </div>
     </div>
     <div class="ml-4 rtl:mr-4 rtl:ml-0 flex-shrink-0 flex items-center gap-2">
-      <%= play_button(resource: lecture, path: play_lecture_path(lecture)) %>
-      <%= link_to lecture_path(lecture), class: "btn btn-primary gap-2" do %>
+      <%= play_button(resource: benefit, path: play_benefit_path(benefit)) %>
+      <%= link_to benefit_path(benefit), class: "btn btn-primary gap-2" do %>
         <%= icon "eye", class: "size-5" %>
         <%= t('buttons.read') %>
       <% end %>

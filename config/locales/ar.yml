@@ -22,6 +22,7 @@ ar:
       description: "اكتشف فوائد ونصائح علمية مفيدة ومختصرة"
       no_benefits: "لا توجد فوائد متاحة حالياً"
     show:
+      download_options: "خيارات التحميل"
       related_benefits: "فوائد ذات صلة"
       will_be_available: "محتوى الفائدة سيكون متاحاً قريباً."
       no_related_benefits: "لا توجد فوائد أخرى في نفس التصنيف حالياً"
