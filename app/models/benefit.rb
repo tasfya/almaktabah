@@ -6,14 +6,16 @@ class Benefit < ApplicationRecord
     has_rich_text :content
 
     after_commit :set_duration, on: [ :create, :update ]
+    validates :title, presence: true, length: { maximum: 255 }
+    validates :description, presence: true, length: { maximum: 1000 }
+    validates :category, presence: true
 
-    # Ransack configuration
     def self.ransackable_attributes(auth_object = nil)
-        [ "category", "created_at", "id", "title", "description", "updated_at" ]
+      [ "id", "title", "description", "category", "updated_at", "created_at" ]
     end
 
     def self.ransackable_associations(auth_object = nil)
-        []
+      []
     end
 
     def audio?
@@ -25,7 +27,13 @@ class Benefit < ApplicationRecord
     end
 
     def media_type
-      video? ? I18n.t("common.video") : I18n.t("common.audio")
+      if video?
+        I18n.t("common.video")
+      elsif audio?
+        I18n.t("common.audio")
+      else
+        nil
+      end
     end
 
     private
