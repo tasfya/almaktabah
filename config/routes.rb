@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   resources :scholars, only: [ :index, :show ]
   resources :fatwas, only: [ :index, :show ]
 
+  get "search", to: "search#index"
+
   # Static pages
   get "about", to: "about#index"
   get "contact-us", to: "contacts#new", as: :contact
