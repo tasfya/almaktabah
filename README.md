@@ -22,3 +22,4 @@ bin/rake users:list_admins
 ```
 
 The admin dashboard is available at `/avo` and requires admin user credentials to access.
+
