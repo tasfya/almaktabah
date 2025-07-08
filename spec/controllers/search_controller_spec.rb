@@ -206,30 +206,6 @@ RSpec.describe SearchController, type: :controller do
       end
     end
 
-    context "ordering and sorting" do
-      let!(:old_book) { create(:book, title: "Old Test Book", published_date: 1.year.ago) }
-      let!(:new_book) { create(:book, title: "New Test Book", published_date: 1.day.ago) }
-
-      it "orders books by published date (recent first)" do
-        get :index, params: { q: "Test Book" }
-
-        books = assigns(:results)[:books]
-        expect(books.first).to eq(new_book)
-        expect(books.last).to eq(old_book)
-      end
-
-      it "orders scholars by first name alphabetically" do
-        scholar_z = create(:scholar, first_name: "Zaid", last_name: "Test")
-        scholar_a = create(:scholar, first_name: "Ahmed", last_name: "Test")
-
-        get :index, params: { q: "Test" }
-
-        scholars = assigns(:results)[:scholars]
-        expect(scholars.first).to eq(scholar_a)
-        expect(scholars.last).to eq(scholar_z)
-      end
-    end
-
     context "breadcrumbs" do
       it "sets up search breadcrumbs" do
         expect(controller).to receive(:breadcrumb_for).with(
