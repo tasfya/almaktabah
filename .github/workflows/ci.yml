@@ -78,6 +78,9 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: migrate database
+        run: bin/rails db:create db:migrate RAILS_ENV=test
+
       - name: Run tests
         run: bundle exec rspec --format documentation --color --profile --order defined
 
