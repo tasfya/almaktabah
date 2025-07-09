@@ -2,7 +2,7 @@ ar:
   search:
     index:
       search_too_short: "يجب أن يكون البحث مكونًا من حرفين على الأقل"
-      results_found: "تم العثور على %{count} نتيجة للبحث عن \"<span class='font-semibold text-gray-900'>%{query}</span>\""
+      results_found: "تم العثور على %{count} نتيجة للبحث عن"
       no_results_title: "لم يتم العثور على نتائج"
       no_results_description: "جرب البحث بكلمات مختلفة أو تحقق من الكتابة الصحيحة"
       prompt_title: "ابحث في مكتبة الشيخ"
