@@ -177,7 +177,6 @@ ar:
     close: "إغلاق"
   news_bar:
     latest_news: "آخر الأخبار"
-    more_news: "المزيد من الأخبار"
   sidebar:
     most_downloaded_books: "الكتب الأكثر تحميلاً"
     most_viewed_books: "الكتب الأكثر مشاهدة"
