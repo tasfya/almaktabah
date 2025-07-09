@@ -1,4 +1,18 @@
 ar:
+  search:
+    index:
+      search_too_short: "يجب أن يكون البحث مكونًا من حرفين على الأقل"
+      results_found: "تم العثور على %{count} نتيجة للبحث عن"
+      no_results_title: "لم يتم العثور على نتائج"
+      no_results_description: "جرب البحث بكلمات مختلفة أو تحقق من الكتابة الصحيحة"
+      prompt_title: "ابحث في مكتبة الشيخ"
+      prompt_description: "يمكنك البحث في الكتب، المحاضرات، الدروس، الفتاوى، والمزيد"
+    search_section:
+      view: "عرض"
+      result_count:
+        one: "نتيجة"
+        other: "نتائج"
+      view_all_in: "عرض جميع النتائج في %{type}"
   audio_player:
     select_audio_clip: "اختر مقطع صوتي"
     library: "المكتبة"
@@ -101,6 +115,9 @@ ar:
         website_text: "مكتبة صوتية"
       correspondence_tips:
         heading: "آداب المراسلة"
+        search_content: "ابحث في المحتوى الموجود قبل السؤال"
+        be_polite: "تحلى بالأدب في المخاطبة"
+        be_patient: "انتظر الرد بصبر وأدب"
         tips:
           - "اكتب السؤال بوضوح ودقة"
           - "ابحث في المحتوى المتاح قبل إرسال السؤال"
@@ -204,6 +221,7 @@ ar:
     contact: "تواصل معنا"
     lessons: "الدروس العلمية"
     series: "السلاسل"
+    search: "البحث"
     quick_links: "روابط سريعة"
     content: "المحتوى"
     recent_books: "أحدث الكتب"
@@ -270,6 +288,7 @@ ar:
       most_downloaded: "الأكثر تحميلًا"
       default: "الافتراضي"
     search_placeholder: "البحث في %{type}..."
+    search: "بحث"
     labels:
       search: "البحث"
       category: "التصنيف"
