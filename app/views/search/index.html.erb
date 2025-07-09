@@ -6,7 +6,6 @@
       <%= t('navigation.search') %>
     </h1>
 
-    <!-- Search Form -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
       <%= form_with url: search_path, method: :get, local: true, 
           class: "flex gap-3", data: { controller: "search-form" } do |form| %>
@@ -27,13 +26,13 @@
       <% if @query.length < 2 %>
         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
           <p class="text-yellow-800">
-            يجب أن يكون البحث مكونًا من حرفين على الأقل
+            <%= t('.search_too_short') %>
           </p>
         </div>
       <% elsif @results.present? && @total_results > 0 %>
         <div class="mb-6">
           <p class="text-gray-600 text-center">
-            تم العثور على <%= @total_results %> نتيجة للبحث عن "<span class="font-semibold text-gray-900"><%= @query %></span>"
+            <%= t('.results_found', count: @total_results, query: @query).html_safe %>
           </p>
         </div>
         
@@ -52,23 +51,23 @@
             <%= icon "magnifying-glass", class: "size-12 text-gray-400 mx-auto" %>
           </div>
           <h3 class="text-lg font-medium text-gray-900 mb-2">
-            لم يتم العثور على نتائج
+            <%= t('.no_results_title') %>
           </h3>
           <p class="text-gray-600">
-            جرب البحث بكلمات مختلفة أو تحقق من الكتابة الصحيحة
+            <%= t('.no_results_description') %>
           </p>
         </div>
       <% end %>
     <% else %>
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-8 text-center">
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
         <div class="mb-4">
-          <%= icon "magnifying-glass", class: "size-12 text-blue-400 mx-auto" %>
+          <%= icon "magnifying-glass", class: "size-12 text-gray-400 mx-auto" %>
         </div>
-        <h3 class="text-lg font-medium text-blue-900 mb-2">
-          ابحث في مكتبة الشيخ
+        <h3 class="text-lg font-medium text-gray-900 mb-2">
+          <%= t('.prompt_title') %>
         </h3>
-        <p class="text-blue-700">
-          يمكنك البحث في الكتب، المحاضرات، الدروس، الفتاوى، والمزيد
+        <p class="text-gray-700">
+          <%= t('.prompt_description') %>
         </p>
       </div>
     <% end %>

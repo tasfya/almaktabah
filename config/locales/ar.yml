@@ -1,4 +1,18 @@
 ar:
+  search:
+    index:
+      search_too_short: "يجب أن يكون البحث مكونًا من حرفين على الأقل"
+      results_found: "تم العثور على %{count} نتيجة للبحث عن \"<span class='font-semibold text-gray-900'>%{query}</span>\""
+      no_results_title: "لم يتم العثور على نتائج"
+      no_results_description: "جرب البحث بكلمات مختلفة أو تحقق من الكتابة الصحيحة"
+      prompt_title: "ابحث في مكتبة الشيخ"
+      prompt_description: "يمكنك البحث في الكتب، المحاضرات، الدروس، الفتاوى، والمزيد"
+    search_section:
+      view: "عرض"
+      result_count:
+        one: "نتيجة"
+        other: "نتائج"
+      view_all_in: "عرض جميع النتائج في %{type}"
   audio_player:
     select_audio_clip: "اختر مقطع صوتي"
     library: "المكتبة"

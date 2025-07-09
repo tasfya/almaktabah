@@ -3,7 +3,7 @@
     <h3 class="text-lg font-semibold text-gray-900">
       <%= t("navigation.#{model_name}") %>
       <span class="text-sm font-normal text-gray-600">
-        (<%= results.count %> <%= results.count == 1 ? 'نتيجة' : 'نتائج' %>)
+        (<%= results.count %> <%= t(".result_count", count: results.count) %>)
       </span>
     </h3>
   </div>
@@ -35,7 +35,7 @@
           
           <div class="flex-1 min-w-0">
             <h4 class="text-lg font-medium text-gray-900 mb-2">
-              <%= link_to result.title, send("#{model_name.to_s.singularize}_path", result), class: "hover:text-blue-600 transition-colors" %>
+              <%= link_to result.title, send("#{model_name.to_s.singularize}_path", result), class: "hover:text-gray-600 transition-colors" %>
             </h4>
             
             <% if result.respond_to?(:description) && result.description.present? %>
@@ -56,7 +56,7 @@
           
           <div class="flex-shrink-0">
             <%= link_to send("#{model_name.to_s.singularize}_path", result), class: "btn btn-secondary btn-sm" do %>
-              عرض
+              <%= t('.view') %>
               <%= icon "arrow-left", class: "size-3" %>
             <% end %>
           </div>
@@ -67,8 +67,8 @@
     <% if results.count >= 5 %>
       <div class="mt-6 text-center">
         <%= link_to send("#{model_name}_path", q: { title_or_description_cont: @query }),
-            class: "btn btn-link text-gray-600 hover:text-blue-800" do %>
-          عرض جميع النتائج في <%= t("navigation.#{model_name}") %>
+            class: "btn btn-link text-gray-600 hover:text-gray-800" do %>
+          <%= t('.view_all_in', type: t("navigation.#{model_name}")) %>
           <%= icon "arrow-left", class: "size-4" %>
         <% end %>
       </div>
