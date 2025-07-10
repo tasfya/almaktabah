@@ -12,6 +12,7 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :category, as: :text
     field :content, as: :trix
     field :published, as: :boolean
+    field :published_at, as: :date_time, help: "The date and time when this lecture was published", hide_on: [ :new, :edit ]
     field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes

@@ -11,5 +11,6 @@ class Avo::Resources::Scholar < Avo::BaseResource
     field :last_name, as: :text
     field :bio, as: :trix
     field :published, as: :boolean
+    field :published_at, as: :date_time, help: "The date and time when this scholar was published", hide_on: [ :new, :edit ]
   end
 end

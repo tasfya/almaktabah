@@ -12,6 +12,7 @@ class Avo::Resources::News < Avo::BaseResource
     field :description, as: :textarea
     field :published, as: :boolean
     field :published_at, as: :date_time
-    field :thumbnail, as: :file
+    field :published_at, as: :date_time, help: "The date and time when this news was published", hide_on: [ :new, :edit ]
+    field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
   end
 end

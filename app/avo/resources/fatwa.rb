@@ -12,5 +12,6 @@ class Avo::Resources::Fatwa < Avo::BaseResource
     field :question, as: :trix
     field :answer, as: :trix
     field :published, as: :boolean
+    field :published_at, as: :date_time, help: "The date and time when this fatwa was published", hide_on: [ :new, :edit ]
   end
 end
