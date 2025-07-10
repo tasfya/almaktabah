@@ -10,7 +10,7 @@ class Avo::Resources::Book < Avo::BaseResource
     field :title, as: :text
     field :description, as: :text
     field :category, as: :text
-    field :published_date, as: :date
+    field :published, as: :boolean
     field :downloads, as: :number
     field :file, as: :file
     field :cover_image, as: :file

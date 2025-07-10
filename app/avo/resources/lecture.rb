@@ -11,7 +11,7 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :description, as: :textarea
     field :category, as: :text
     field :content, as: :trix
-    field :published_date, as: :date
+    field :published, as: :boolean
     field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes

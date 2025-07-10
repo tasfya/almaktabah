@@ -33,49 +33,49 @@ class SearchController < ApplicationController
   end
 
   def search_books
-    Book.includes(:author).ransack(
+    Book.published.includes(:author).ransack(
       title_or_description_cont: @query
     ).result(distinct: true).recent.limit(5)
   end
 
   def search_lectures
-    Lecture.ransack(
+    Lecture.published.ransack(
       title_or_description_cont: @query
     ).result(distinct: true).recent.limit(5)
   end
 
   def search_lessons
-    Lesson.includes(:series).ransack(
+    Lesson.published.includes(:series).ransack(
       title_or_description_cont: @query
     ).result(distinct: true).limit(5)
   end
 
   def search_series
-    Series.ransack(
+    Series.published.ransack(
       title_or_description_cont: @query
     ).result(distinct: true).recent.limit(5)
   end
 
   def search_news
-    News.ransack(
+    News.published.ransack(
       title_or_description_cont: @query
     ).result(distinct: true).recent.limit(5)
   end
 
   def search_benefits
-    Benefit.ransack(
+    Benefit.published.ransack(
       title_or_description_cont: @query
     ).result(distinct: true).order(created_at: :desc).limit(5)
   end
 
   def search_fatwas
-    Fatwa.ransack(
+    Fatwa.published.ransack(
       title_cont: @query
     ).result(distinct: true).order(created_at: :desc).limit(5)
   end
 
   def search_scholars
-    Scholar.ransack(
+    Scholar.published.ransack(
       first_name_or_last_name_cont: @query
     ).result(distinct: true).order(:first_name).limit(5)
   end

@@ -11,8 +11,8 @@ class Avo::Resources::Benefit < Avo::BaseResource
     field :description, as: :textarea
     field :content, as: :trix
     field :category, as: :text
-    field :duration, as: :number
-    field :published_date, as: :date
+    field :published, as: :boolean
+    field :youtube_url, as: :text, help: "YouTube video URL"
     field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes

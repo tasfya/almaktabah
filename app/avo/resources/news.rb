@@ -10,6 +10,7 @@ class Avo::Resources::News < Avo::BaseResource
     field :title, as: :text
     field :content, as: :trix
     field :description, as: :textarea
+    field :published, as: :boolean
     field :published_at, as: :date_time
     field :thumbnail, as: :file
   end

@@ -10,5 +10,6 @@ class Avo::Resources::Scholar < Avo::BaseResource
     field :first_name, as: :text
     field :last_name, as: :text
     field :bio, as: :trix
+    field :published, as: :boolean
   end
 end

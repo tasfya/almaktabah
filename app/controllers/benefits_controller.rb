@@ -4,7 +4,7 @@ class BenefitsController < ApplicationController
   before_action :setup_benefits_breadcrumbs
 
   def index
-    @q = Benefit.ransack(params[:q])
+    @q = Benefit.published.ransack(params[:q])
     @pagy, @benefits = pagy(@q.result(distinct: true), limit: 12)
   end
 
@@ -15,7 +15,7 @@ class BenefitsController < ApplicationController
   private
 
   def set_benefit
-    @benefit = Benefit.find(params[:id])
+    @benefit = Benefit.published.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to benefits_path, alert: t("messages.benefit_not_found")
   end

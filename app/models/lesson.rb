@@ -1,5 +1,6 @@
 class Lesson < ApplicationRecord
   include MediaHandler
+  include Publishable
 
   belongs_to :series
 
@@ -13,23 +14,19 @@ class Lesson < ApplicationRecord
   has_rich_text :content
 
   # Scopes
-  scope :recent, -> { order(published_date: :desc) }
+  scope :recent, -> { order(published_at: :desc) }
   scope :by_category, ->(category) { where(category: category) if category.present? }
   scope :by_series, ->(series_id) { where(series_id: series_id) if series_id.present? }
 
-  scope :ordered_by_lesson_number, -> {
-    all.sort_by do |lesson|
-      lesson.extract_lesson_number || position || Float::INFINITY
-    end
-  }
+  scope :ordered_by_lesson_number, -> { order(Arel.sql("COALESCE(position, 999999)")) }
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "category", "created_at", "description", "duration", "id", "published_date", "series_id", "title", "updated_at" ]
+    [ "category", "created_at", "description", "duration", "id", "published", "published_at", "scholar_id", "series_id", "title", "updated_at" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    [ "series" ]
+    [ "series", "scholar" ]
   end
 
   def media_type
@@ -46,7 +43,7 @@ class Lesson < ApplicationRecord
   end
 
   def series_title
-    series&.title
+    series.title
   end
 
   def extract_lesson_number

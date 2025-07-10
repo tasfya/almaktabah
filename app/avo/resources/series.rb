@@ -9,7 +9,7 @@ class Avo::Resources::Series < Avo::BaseResource
     field :id, as: :id
     field :title, as: :text
     field :description, as: :textarea
-    field :published_date, as: :date
+    field :published, as: :boolean
     field :category, as: :text
     field :lessons, as: :has_many
   end

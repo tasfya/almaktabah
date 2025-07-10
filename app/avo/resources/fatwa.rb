@@ -11,6 +11,6 @@ class Avo::Resources::Fatwa < Avo::BaseResource
     field :category, as: :text
     field :question, as: :trix
     field :answer, as: :trix
-    field :published_date, as: :date
+    field :published, as: :boolean
   end
 end
