@@ -8,5 +8,17 @@ FactoryBot.define do
     content { Faker::Lorem.paragraphs(number: 3).join("\n\n") }
     audio { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
     thumbnail { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'thumbnail.jpg'), 'image/jpeg') }
+
+    trait :with_video do
+      video { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'test_video.mp4'), 'video/mp4') }
+    end
+
+    trait :without_audio do
+      audio { nil }
+    end
+
+    trait :without_thumbnail do
+      thumbnail { nil }
+    end
   end
 end
