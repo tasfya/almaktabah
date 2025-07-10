@@ -21,9 +21,6 @@ FactoryBot.define do
       thumbnail { nil }
     end
 
-    trait :without_audio_and_thumbnail do
-      audio { nil }
-      thumbnail { nil }
-    end
+# Removed the :without_audio_and_thumbnail trait as it duplicates the logic of combining :without_audio and :without_thumbnail traits.
   end
 end
