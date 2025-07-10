@@ -35,8 +35,8 @@
                   <%= @lecture.category %>
                 </span>
               <% end %>
-              <% if false && @lecture.published_date %>
-                <time><%= @lecture.published_date.strftime("%Y/%m/%d") %></time>
+              <% if false && @lecture.published_at %>
+                <time><%= @lecture.published_at.strftime("%Y/%m/%d") %></time>
               <% end %>
             </div>
           </header>

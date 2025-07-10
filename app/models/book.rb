@@ -1,4 +1,6 @@
 class Book < ApplicationRecord
+  include Publishable
+
   belongs_to :author, class_name: "Scholar", foreign_key: "author_id"
   has_one_attached :file, service: Rails.application.config.public_storage
   has_one_attached :cover_image, service: Rails.application.config.public_storage
@@ -7,13 +9,13 @@ class Book < ApplicationRecord
   validates :title, presence: true, uniqueness: true
 
   # Scopes
-  scope :recent, -> { order(published_date: :desc) }
+  scope :recent, -> { order(published_at: :desc) }
   scope :most_downloaded, -> { order(downloads: :desc) }
   scope :by_category, ->(category) { where(category: category) if category.present? }
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "author_id", "category", "created_at", "description", "downloads", "id", "published_date", "title", "updated_at" ]
+    [ "author_id", "category", "created_at", "description", "downloads", "id", "published", "published_at", "title", "updated_at" ]
   end
 
   def self.ransackable_associations(auth_object = nil)

@@ -35,8 +35,8 @@
                   <%= @benefit.category %>
                 </span>
               <% end %>
-              <% if false && @benefit.published_date %>
-                <time><%= @benefit.published_date.strftime("%Y/%m/%d") %></time>
+              <% if false && @benefit.published_at %>
+                <time><%= @benefit.published_at.strftime("%Y/%m/%d") %></time>
               <% end %>
             </div>
           </header>

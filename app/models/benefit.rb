@@ -1,4 +1,6 @@
 class Benefit < ApplicationRecord
+    include Publishable
+
     has_one_attached :thumbnail, service: Rails.application.config.public_storage
     has_one_attached :audio, service: Rails.application.config.public_storage
     has_one_attached :video, service: Rails.application.config.public_storage
@@ -11,11 +13,11 @@ class Benefit < ApplicationRecord
     validates :category, presence: true
 
     def self.ransackable_attributes(auth_object = nil)
-      [ "id", "title", "description", "category", "updated_at", "created_at" ]
+      [ "id", "title", "description", "category", "published", "published_at", "scholar_id", "updated_at", "created_at" ]
     end
 
     def self.ransackable_associations(auth_object = nil)
-      []
+      [ "scholar" ]
     end
 
     def audio?
