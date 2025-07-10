@@ -8,7 +8,7 @@ export default class extends Controller {
   }
 
   connect() {
-    console.log("NewsTickerController connected")
+    
     if (this.itemTargets.length === 0) return
     
     this.currentIndex = 0
