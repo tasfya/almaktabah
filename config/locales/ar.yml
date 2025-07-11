@@ -192,6 +192,7 @@ ar:
     share: "مشاركة"
     print: "طباعة"
     close: "إغلاق"
+    search_button: "بحث"
   news_bar:
     latest_news: "آخر الأخبار"
   sidebar:
