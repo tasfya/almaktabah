@@ -4,7 +4,7 @@ class LecturesController < ApplicationController
   before_action :setup_lectures_breadcrumbs
 
   def index
-    @q = Lecture.published.ransack(params[:q])
+    @q = Lecture.published.order(published_at: :desc).ransack(params[:q])
     @pagy, @lectures = pagy(@q.result(distinct: true), limit: 12)
 
     respond_to do |format|

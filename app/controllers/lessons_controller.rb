@@ -4,7 +4,7 @@ class LessonsController < ApplicationController
   before_action :setup_lessons_breadcrumbs
 
   def index
-    @q = Lesson.published.includes(:series).ransack(params[:q])
+    @q = Lesson.published.order(published_at: :desc).includes(:series).ransack(params[:q])
     @pagy, @lessons = pagy(@q.result(distinct: true), limit: 12)
     @series = Series.published.order(:title)
     @lessons = @lessons.ordered_by_lesson_number
