@@ -229,6 +229,7 @@ ar:
     about_sheikh_alt: "عن الشيخ"
     contact_us: "اتصل بنا"
   common:
+    no_media_available: "لا توجد وسائط متاحة حالياً"
     video: "فيديو"
     audio: "صوتي"
     site_contents: "محتويات الموقع"
