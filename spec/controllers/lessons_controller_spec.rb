@@ -112,18 +112,6 @@ RSpec.describe LessonsController, type: :controller do
 
       get :index
     end
-
-    context "JSON format" do
-      it "returns JSON response" do
-        create_list(:lesson, 3, published: true, published_at: 1.day.ago)
-
-        get :index, format: :json
-
-        expect(response).to be_successful
-        expect(response.content_type).to include('application/json')
-        expect(assigns(:lessons)).to be_present
-      end
-    end
   end
 
   describe "GET #show" do

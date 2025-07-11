@@ -8,10 +8,6 @@ class LessonsController < ApplicationController
     @pagy, @lessons = pagy(@q.result(distinct: true), limit: 12)
     @series = Series.published.order(:title)
     @lessons = @lessons.ordered_by_lesson_number
-    respond_to do |format|
-      format.html
-      format.json { render json: @lessons }
-    end
   end
 
   def show
