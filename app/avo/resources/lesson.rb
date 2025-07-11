@@ -10,8 +10,9 @@ class Avo::Resources::Lesson < Avo::BaseResource
     field :title, as: :text
     field :description, as: :textarea
     field :content, as: :trix
-    field :published_date, as: :date
     field :category, as: :text
+    field :published, as: :boolean
+    field :published_at, as: :date_time, help: "The date and time when this lesson was published", hide_on: [ :new, :edit ]
     field :youtube_url, as: :text, help: "YouTube URL for video lessons"
     field :position, as: :number, help: "Position in the series", sortable: true
     field :video_url, as: :text, help: "URL for video lessons"

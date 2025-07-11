@@ -1,6 +1,7 @@
 class Lecture < ApplicationRecord
   include MediaHandler
   include DomainAssignable
+  include Publishable
 
   validates :title, presence: true
 
@@ -10,15 +11,15 @@ class Lecture < ApplicationRecord
   has_one_attached :optimized_audio, service: Rails.application.config.public_storage
   has_rich_text :content
 
-  scope :recent, -> { order(published_date: :desc) }
+  scope :recent, -> { order(published_at: :desc) }
   scope :by_category, ->(category) { where(category: category) if category.present? }
 
   def self.ransackable_attributes(auth_object = nil)
-    [ "category", "created_at", "description", "duration", "id", "published_date", "title", "updated_at" ]
+    [ "category", "created_at", "description", "duration", "id", "published", "published_at", "scholar_id", "title", "updated_at" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    []
+    [ "scholar" ]
   end
 
   def video?

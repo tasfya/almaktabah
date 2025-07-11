@@ -28,14 +28,14 @@ class ApplicationController < ActionController::Base
   end
 
   def most_downloaded_books
-    @most_downloaded_books ||= Book.order(downloads: :desc).limit(5)
+    @most_downloaded_books ||= Book.published.order(downloads: :desc).limit(5)
   end
 
   def most_viewed_books
-    @most_viewed_books ||= Book.order(published_date: :desc).limit(5)
+    @most_viewed_books ||= Book.published.order(published_at: :desc).limit(5)
   end
 
   def latest_news
-    @latest_news ||= News.order(created_at: :desc).limit(5)
+    @latest_news ||= News.published.order(published_at: :desc).limit(5)
   end
 end

@@ -4,7 +4,7 @@ class BooksController < ApplicationController
   before_action :setup_books_breadcrumbs
 
   def index
-    @q = Book.includes(:author).ransack(params[:q])
+    @q = Book.published.includes(:author).ransack(params[:q])
     @pagy, @books = pagy(@q.result(distinct: true), limit: 12)
     respond_to do |format|
       format.html
@@ -13,7 +13,7 @@ class BooksController < ApplicationController
   end
 
   def show
-    @related_books = Book.by_category(@book.category)
+    @related_books = Book.published.by_category(@book.category)
                         .where.not(id: @book.id)
                         .recent
                         .limit(4)
@@ -32,7 +32,7 @@ class BooksController < ApplicationController
   end
 
   def set_book
-    @book = Book.find(params[:id])
+    @book = Book.published.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to books_path, alert: t("messages.book_not_found")
   end

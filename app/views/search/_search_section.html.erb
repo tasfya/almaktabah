@@ -45,10 +45,10 @@
             <% end %>
             
             <div class="flex items-center gap-4 mt-3 text-xs text-gray-500">
-              <% if false && result.respond_to?(:published_date) && result.published_date.present? %>
+              <% if false && result.respond_to?(:published_at) && result.published_at.present? %>
                 <span class="flex items-center gap-1">
                   <%= icon "calendar", class: "size-3" %>
-                  <%= l(result.published_date, format: :long) %>
+                  <%= l(result.published_at, format: :long) %>
                 </span>
               <% end %>
             </div>
