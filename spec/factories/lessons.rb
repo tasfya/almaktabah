@@ -1,6 +1,6 @@
 FactoryBot.define do
     factory :lesson do
-        title { "#{Faker::Book.unique.title} ##{SecureRandom.hex(3)}" }
+        title { "#{Faker::Book.title} ##{SecureRandom.hex(6)}" }
         description { Faker::Lorem.paragraph }
         content { Faker::Lorem.paragraphs(number: 3).join("\n\n") }
         published_at { Faker::Date.between(from: 2.days.ago, to: Date.today) }

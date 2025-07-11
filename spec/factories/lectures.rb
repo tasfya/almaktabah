@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :lecture do
-    title { "#{Faker::Book.unique.title} ##{SecureRandom.hex(3)}" }
+    title { "#{Faker::Book.title} ##{SecureRandom.hex(6)}" }
     description { Faker::Lorem.paragraph }
     duration { Faker::Number.between(from: 1, to: 120) }
     category { Faker::Lorem.word }
