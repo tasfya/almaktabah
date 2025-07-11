@@ -10,6 +10,5 @@ class Avo::Resources::Domain < Avo::BaseResource
     field :name, as: :text
     field :host, as: :text
     field :description, as: :textarea
-    field :active, as: :boolean
   end
 end

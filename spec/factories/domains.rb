@@ -3,6 +3,5 @@ FactoryBot.define do
     name { "MyString" }
     host { "MyString" }
     description { "MyText" }
-    active { false }
   end
 end
