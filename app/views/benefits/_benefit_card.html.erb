@@ -26,7 +26,9 @@
       <%= play_button(resource: benefit, path: play_benefit_path(benefit)) %>
       <%= link_to benefit_path(benefit), class: "btn btn-primary gap-2" do %>
         <%= icon "eye", class: "size-5" %>
-        <%= t('buttons.read') %>
+        <span class="text-sm whitespace-nowrap">
+          <%= t('buttons.view') %>
+        </span>
       <% end %>
     </div>
   </div>

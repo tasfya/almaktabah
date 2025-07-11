@@ -164,6 +164,7 @@ ar:
         birth_year: "مواليد 1384 هـ"
         contact_button: "تواصل معنا"
   buttons:
+    watch_on_youtube: "شاهد على يوتيوب"
     send_question: "إرسال سؤال"
     share: "مشاركة"
     print: "طباعة"
@@ -176,6 +177,7 @@ ar:
     view_series: "عرض السلسلة"
     listen: "استمع"
     read: "اقرأ"
+    view: "عرض"
     play: "تشغيل"
     read_more: "اقرأ المزيد"
     download_audio: "تحميل الصوت"
