@@ -1,6 +1,6 @@
 class LessonsController < ApplicationController
   include Filterable
-  before_action :set_lesson, only: [ :show ]
+  before_action :set_lesson, only: [ :show, :play ]
   before_action :setup_lessons_breadcrumbs
 
   def index
@@ -22,7 +22,6 @@ class LessonsController < ApplicationController
   end
 
   def play
-    @lesson = Lesson.published.find(params[:id])
   end
 
   private
