@@ -8,8 +8,13 @@ class ApplicationController < ActionController::Base
   before_action :most_viewed_books
   before_action :latest_news
   before_action :setup_breadcrumbs
+  before_action :set_domain
 
   protected
+
+  def set_domain
+    @domain = Domain.find_by_host(request.host)
+  end
 
   def setup_breadcrumbs
     # Cleanup old breadcrumbs and set limits

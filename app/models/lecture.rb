@@ -1,5 +1,6 @@
 class Lecture < ApplicationRecord
   include MediaHandler
+  include DomainAssignable
 
   validates :title, presence: true
 

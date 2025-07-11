@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_05_223147) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_11_174715) do
+  create_table "action_logs", force: :cascade do |t|
+    t.string "action"
+    t.string "actionable_type", null: false
+    t.integer "actionable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actionable_type", "actionable_id"], name: "index_action_logs_on_actionable"
+  end
+
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -87,6 +96,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_05_223147) do
     t.string "email"
     t.string "subject"
     t.text "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "domain_assignments", force: :cascade do |t|
+    t.string "assignable_type", null: false
+    t.integer "assignable_id", null: false
+    t.integer "domain_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignable_type", "assignable_id"], name: "index_domain_assignments_on_assignable"
+    t.index ["domain_id"], name: "index_domain_assignments_on_domain_id"
+  end
+
+  create_table "domains", force: :cascade do |t|
+    t.string "name"
+    t.string "host"
+    t.text "description"
+    t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -298,6 +326,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_05_223147) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "scholars", column: "author_id"
   add_foreign_key "books", "scholars", column: "author_id"
+  add_foreign_key "domain_assignments", "domains"
   add_foreign_key "lessons", "series"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
