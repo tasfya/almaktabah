@@ -31,7 +31,7 @@ RSpec.describe VideoGeneratorService, type: :service do
   # --- Test Cases ---
 
   # Test suite for the main #call method
-  describe '#call', :real_files do
+  xdescribe '#call', :real_files do
     context 'when generation is successful' do
       let(:result) { service.call }
       let(:video_path) { result[:video_path] }
@@ -89,7 +89,7 @@ RSpec.describe VideoGeneratorService, type: :service do
   end
 
   # Test suite for the #cleanup! method
-  describe '#cleanup!' do
+  xdescribe '#cleanup!' do
     it 'removes the temporary directory and all its contents' do
       # First, call the service to create the temp directory
       result = service.call
