@@ -16,10 +16,16 @@ Rails.application.routes.draw do
   end
   resources :series, only: [ :index, :show ]
   resources :news, only: [ :index, :show ]
-  resources :benefits, only: [ :index, :show ]
+  resources :benefits, only: [ :index, :show ] do
+    member do
+      get :play
+    end
+  end
   resources :articles, only: [ :index, :show ]
   resources :scholars, only: [ :index, :show ]
   resources :fatwas, only: [ :index, :show ]
+
+  get "search", to: "search#index"
 
   # Static pages
   get "about", to: "about#index"

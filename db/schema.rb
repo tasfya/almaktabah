@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_04_121809) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_11_174715) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -63,7 +63,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_121809) do
     t.integer "author_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "published", default: false, null: false
     t.index ["author_id"], name: "index_articles_on_author_id"
+    t.index ["published"], name: "index_articles_on_published"
   end
 
   create_table "benefits", force: :cascade do |t|
@@ -71,9 +73,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_121809) do
     t.text "description"
     t.string "category"
     t.integer "duration", default: 0
-    t.date "published_date"
+    t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "published", default: false, null: false
+    t.index ["published"], name: "index_benefits_on_published"
   end
 
   create_table "books", force: :cascade do |t|
@@ -83,11 +87,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_121809) do
     t.string "title"
     t.text "description"
     t.string "category"
-    t.date "published_date"
+    t.datetime "published_at"
     t.integer "downloads", default: 0
     t.integer "pages"
+    t.boolean "published", default: false, null: false
     t.index ["author_id"], name: "index_books_on_author_id"
     t.index ["category"], name: "index_books_on_category"
+    t.index ["published"], name: "index_books_on_published"
     t.index ["title"], name: "index_books_on_title"
   end
 
@@ -98,14 +104,36 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_121809) do
     t.text "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "published_at"
+  end
+
+  create_table "domain_assignments", force: :cascade do |t|
+    t.string "assignable_type", null: false
+    t.integer "assignable_id", null: false
+    t.integer "domain_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignable_type", "assignable_id"], name: "index_domain_assignments_on_assignable"
+    t.index ["domain_id"], name: "index_domain_assignments_on_domain_id"
+  end
+
+  create_table "domains", force: :cascade do |t|
+    t.string "name"
+    t.string "host"
+    t.text "description"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "fatwas", force: :cascade do |t|
     t.string "title"
     t.string "category"
-    t.date "published_date"
+    t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "published", default: false, null: false
+    t.index ["published"], name: "index_fatwas_on_published"
   end
 
   create_table "lectures", force: :cascade do |t|
@@ -113,19 +141,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_121809) do
     t.text "description"
     t.integer "duration"
     t.string "category"
-    t.date "published_date"
+    t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "video_url"
     t.integer "old_id"
     t.string "youtube_url"
+    t.boolean "published", default: false, null: false
     t.index ["old_id"], name: "index_lectures_on_old_id"
+    t.index ["published"], name: "index_lectures_on_published"
     t.index ["title"], name: "index_lectures_on_title"
   end
 
   create_table "lessons", force: :cascade do |t|
     t.string "title", null: false
-    t.date "published_date"
+    t.datetime "published_at"
     t.string "category"
     t.integer "duration"
     t.text "description"
@@ -137,8 +167,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_121809) do
     t.integer "old_id"
     t.string "youtube_url"
     t.integer "position"
+    t.boolean "published", default: false, null: false
     t.index ["old_id"], name: "index_lessons_on_old_id"
     t.index ["position"], name: "index_lessons_on_position"
+    t.index ["published"], name: "index_lessons_on_published"
     t.index ["series_id"], name: "index_lessons_on_series_id"
     t.index ["title"], name: "index_lessons_on_title"
   end
@@ -150,6 +182,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_121809) do
     t.string "slug", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "published", default: false, null: false
+    t.index ["published"], name: "index_news_on_published"
     t.index ["slug"], name: "index_news_on_slug", unique: true
   end
 
@@ -158,15 +192,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_121809) do
     t.string "last_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "published", default: false, null: false
+    t.datetime "published_at"
+    t.index ["published"], name: "index_scholars_on_published"
   end
 
   create_table "series", force: :cascade do |t|
     t.string "title"
     t.text "description"
-    t.date "published_date"
+    t.datetime "published_at"
     t.string "category"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "published", default: false, null: false
+    t.index ["published"], name: "index_series_on_published"
   end
 
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
@@ -307,6 +346,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_121809) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "scholars", column: "author_id"
   add_foreign_key "books", "scholars", column: "author_id"
+  add_foreign_key "domain_assignments", "domains"
   add_foreign_key "lessons", "series"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

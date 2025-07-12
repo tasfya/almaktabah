@@ -1,6 +1,6 @@
 <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-  <div class="flex items-start space-x-4 rtl:space-x-reverse">
-    <div class="flex-shrink-0 w-24 h-24 rounded overflow-hidden bg-gray-100">
+  <div class="flex flex-col sm:flex-row items-start space-x-4 rtl:space-x-reverse">
+    <div class="hidden flex-shrink-0 w-24 h-24 rounded overflow-hidden bg-gray-100">
       <% if lecture.thumbnail.attached? %>
         <%= image_tag(lecture.thumbnail, 
             alt: lecture.title, 
@@ -15,14 +15,6 @@
       <h3 class="text-lg font-semibold text-gray-900 mb-2">
         <%= link_to lecture.title, lecture_path(lecture), class: "hover:text-gray-600" %>
       </h3>
-      <% if lecture.respond_to?(:speaker) && lecture.speaker.present? %>
-        <p class="text-sm text-gray-600 mb-2">المحاضر: <%= lecture.speaker %></p>
-      <% end %>
-      <% if false  %>
-        <p class="text-gray-600 text-sm mb-4">
-          <%= truncate(lecture.description, length: 200) %>
-        </p>
-      <% end %>
       <div class="badge badge-primary mb-2">
         <%= lecture.category %>
       </div>

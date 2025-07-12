@@ -1,4 +1,18 @@
 ar:
+  search:
+    index:
+      search_too_short: "يجب أن يكون البحث مكونًا من حرفين على الأقل"
+      results_found: "تم العثور على %{count} نتيجة للبحث عن"
+      no_results_title: "لم يتم العثور على نتائج"
+      no_results_description: "جرب البحث بكلمات مختلفة أو تحقق من الكتابة الصحيحة"
+      prompt_title: "ابحث في مكتبة الشيخ"
+      prompt_description: "يمكنك البحث في الكتب، المحاضرات، الدروس، الفتاوى، والمزيد"
+    search_section:
+      view: "عرض"
+      result_count:
+        one: "نتيجة"
+        other: "نتائج"
+      view_all_in: "عرض جميع النتائج في %{type}"
   audio_player:
     select_audio_clip: "اختر مقطع صوتي"
     library: "المكتبة"
@@ -22,6 +36,7 @@ ar:
       description: "اكتشف فوائد ونصائح علمية مفيدة ومختصرة"
       no_benefits: "لا توجد فوائد متاحة حالياً"
     show:
+      download_options: "خيارات التحميل"
       related_benefits: "فوائد ذات صلة"
       will_be_available: "محتوى الفائدة سيكون متاحاً قريباً."
       no_related_benefits: "لا توجد فوائد أخرى في نفس التصنيف حالياً"
@@ -100,6 +115,9 @@ ar:
         website_text: "مكتبة صوتية"
       correspondence_tips:
         heading: "آداب المراسلة"
+        search_content: "ابحث في المحتوى الموجود قبل السؤال"
+        be_polite: "تحلى بالأدب في المخاطبة"
+        be_patient: "انتظر الرد بصبر وأدب"
         tips:
           - "اكتب السؤال بوضوح ودقة"
           - "ابحث في المحتوى المتاح قبل إرسال السؤال"
@@ -176,7 +194,6 @@ ar:
     close: "إغلاق"
   news_bar:
     latest_news: "آخر الأخبار"
-    more_news: "المزيد من الأخبار"
   sidebar:
     most_downloaded_books: "الكتب الأكثر تحميلاً"
     most_viewed_books: "الكتب الأكثر مشاهدة"
@@ -203,6 +220,7 @@ ar:
     contact: "تواصل معنا"
     lessons: "الدروس العلمية"
     series: "السلاسل"
+    search: "البحث"
     quick_links: "روابط سريعة"
     content: "المحتوى"
     recent_books: "أحدث الكتب"
@@ -269,6 +287,7 @@ ar:
       most_downloaded: "الأكثر تحميلًا"
       default: "الافتراضي"
     search_placeholder: "البحث في %{type}..."
+    search: "بحث"
     labels:
       search: "البحث"
       category: "التصنيف"
@@ -295,6 +314,13 @@ ar:
     logout: "تسجيل الخروج"
     login: "تسجيل الدخول"
     register: "إنشاء حساب"
+  time:
+    formats:
+      default: "%H:%M"
+      long: "%-I:%M %p"
+      short: "%H:%M"
+    am: "ص"
+    pm: "م"
   date:
     formats:
       default: "%d/%m/%Y"
@@ -305,6 +331,9 @@ ar:
     month_names: [~, "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
     abbr_month_names: [~, "ينا", "فبر", "مار", "أبر", "ماي", "يون", "يول", "أغس", "سبت", "أكت", "نوف", "ديس"]
   activerecord:
+    errors:
+      messages:
+        record_invalid: "حدث خطأ أثناء معالجة النموذج. يرجى التحقق من المدخلات وإعادة المحاولة."
     models:
       lesson: "درس"
       fatwa: "فتوى"

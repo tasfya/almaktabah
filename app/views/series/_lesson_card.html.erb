@@ -9,9 +9,9 @@
       <span class="bg-black text-white px-2 py-1 rounded-full text-xs">
         <%= lesson.media_type %>
       </span>
-      <% if false && lesson.published_date %>
+      <% if false && lesson.published_at %>
         <span class="text-gray-500">
-          <%= l(lesson.published_date, format: :long) %>
+          <%= l(lesson.published_at, format: :long) %>
         </span>
       <% end %>
     </div>

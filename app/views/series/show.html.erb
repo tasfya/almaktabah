@@ -16,7 +16,7 @@
                 </span>
               <% end %>
               <% if false %>
-                <time><%= @series.published_date.strftime("%Y/%m/%d") %></time>
+                <time><%= @series.published_at.strftime("%Y/%m/%d") %></time>
               <% end %>
               <span class="flex items-center gap-2">
                 <%= icon "book-open", class: "size-5"%>

@@ -22,7 +22,7 @@ gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
 
 # Pagination
-gem "pagy", "~> 9.0"
+gem "pagy", "~> 9.3"
 
 # Filtering and searching
 gem "ransack", "~> 4.0"
@@ -83,6 +83,7 @@ group :development, :test do
   gem "rubocop-rspec_rails"
   gem "rspec-instafail", require: false
   gem "fuubar", require: false
+  gem "rails-controller-testing"
 end
 
 group :development do

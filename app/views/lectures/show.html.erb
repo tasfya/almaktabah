@@ -9,7 +9,7 @@
               <section class="mb-8">
                 <% if @lecture.video? %>
                   <video controls class="w-full rounded">
-                    <source src="<%= @lecture.video_url %>" type="video/mp4">
+                    <source src="<%= url_for(@lecture.video) %>" type="<%= @lecture.video.content_type %>">
                     <%= t('common.browser_no_support_video') %>
                   </video>
                 <% elsif @lecture.audio? %>
@@ -35,8 +35,8 @@
                   <%= @lecture.category %>
                 </span>
               <% end %>
-              <% if false && @lecture.published_date %>
-                <time><%= @lecture.published_date.strftime("%Y/%m/%d") %></time>
+              <% if false && @lecture.published_at %>
+                <time><%= @lecture.published_at.strftime("%Y/%m/%d") %></time>
               <% end %>
             </div>
           </header>

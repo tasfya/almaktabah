@@ -4,9 +4,9 @@ class LessonsController < ApplicationController
   before_action :setup_lessons_breadcrumbs
 
   def index
-    @q = Lesson.includes(:series).ransack(params[:q])
+    @q = Lesson.for_domain(@domain).published.includes(:series).ransack(params[:q])
     @pagy, @lessons = pagy(@q.result(distinct: true), limit: 12)
-    @series = Series.order(:title)
+    @series = Series.published.order(:title)
     @lessons = @lessons.ordered_by_lesson_number
     respond_to do |format|
       format.html
@@ -15,14 +15,14 @@ class LessonsController < ApplicationController
   end
 
   def show
-    @related_lessons = Lesson.by_series(@lesson.series_id)
+    @related_lessons = Lesson.for_domain(@domain).published.by_series(@lesson.series_id)
                             .where.not(id: @lesson.id)
                             .recent
                             .limit(4)
   end
 
   def play
-    @lesson = Lesson.find(params[:id])
+    @lesson = Lesson.published.find(params[:id])
   end
 
   private
@@ -33,16 +33,14 @@ class LessonsController < ApplicationController
       breadcrumb_for(t("breadcrumbs.lessons"), lessons_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.lessons"), lessons_path)
-      # Add series breadcrumb if lesson belongs to a series
       if @lesson&.series
         breadcrumb_for(@lesson.series.title, series_path(@lesson.series))
       end
-      # Current lesson will be added in the view
     end
   end
 
   def set_lesson
-    @lesson = Lesson.find(params[:id])
+    @lesson = Lesson.published.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to lessons_path, alert: t("messages.lesson_not_found")
   end
