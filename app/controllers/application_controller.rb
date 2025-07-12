@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
 
   def set_domain
     @domain = Domain.find_by_host(request.host)
+    @logo_url = @domain&.logo.present? ?  url_for(@domain.logo) : ActionController::Base.helpers.asset_path("logo.png")
   end
 
   def setup_breadcrumbs

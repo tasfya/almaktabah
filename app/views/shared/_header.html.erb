@@ -1,9 +1,9 @@
-<header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 left-0 right-0 z-50" 
-        data-controller="navigation" 
+<header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 left-0 right-0 z-50"
+        data-controller="navigation"
         data-action="click@window->navigation#clickOutside">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
     <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto" do %>
-      <img src="<%= asset_path('logo.png') %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
+      <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
     <% end %>
     <div class="hidden md:flex flex-row-reverse gap-2 items-center w-full flex-1 mr-auto">
       <div class="hidden md:flex items-center gap-3">
