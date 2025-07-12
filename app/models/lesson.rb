@@ -1,6 +1,7 @@
 class Lesson < ApplicationRecord
   include MediaHandler
   include Publishable
+  include DomainAssignable
 
   belongs_to :series
 

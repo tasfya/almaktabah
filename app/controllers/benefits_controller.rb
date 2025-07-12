@@ -4,7 +4,7 @@ class BenefitsController < ApplicationController
   before_action :setup_benefits_breadcrumbs
 
   def index
-    @q = Benefit.published.ransack(params[:q])
+    @q = Benefit.for_domain(@domain).published.ransack(params[:q])
     @pagy, @benefits = pagy(@q.result(distinct: true), limit: 12)
   end
 

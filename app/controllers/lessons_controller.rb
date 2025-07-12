@@ -4,7 +4,7 @@ class LessonsController < ApplicationController
   before_action :setup_lessons_breadcrumbs
 
   def index
-    @q = Lesson.published.includes(:series).ransack(params[:q])
+    @q = Lesson.for_domain(@domain).published.includes(:series).ransack(params[:q])
     @pagy, @lessons = pagy(@q.result(distinct: true), limit: 12)
     @series = Series.published.order(:title)
     @lessons = @lessons.ordered_by_lesson_number
@@ -15,7 +15,7 @@ class LessonsController < ApplicationController
   end
 
   def show
-    @related_lessons = Lesson.published.by_series(@lesson.series_id)
+    @related_lessons = Lesson.for_domain(@domain).published.by_series(@lesson.series_id)
                             .where.not(id: @lesson.id)
                             .recent
                             .limit(4)

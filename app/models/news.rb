@@ -2,6 +2,7 @@ require "digest/md5"
 
 class News < ApplicationRecord
   include Publishable
+  include DomainAssignable
 
   has_one_attached :thumbnail, service: Rails.application.config.public_storage
 
