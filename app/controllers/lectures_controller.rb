@@ -4,7 +4,7 @@ class LecturesController < ApplicationController
   before_action :setup_lectures_breadcrumbs
 
   def index
-    @q = Lecture.published.ransack(params[:q])
+    @q = Lecture.for_domain(@domain).published.ransack(params[:q])
     @pagy, @lectures = pagy(@q.result(distinct: true), limit: 12)
 
     respond_to do |format|
@@ -14,10 +14,11 @@ class LecturesController < ApplicationController
   end
 
   def show
-    @related_lectures = Lecture.published.by_category(@lecture.category)
-                              .where.not(id: @lecture.id)
-                              .recent
-                              .limit(4)
+    @related_lectures = Lecture.for_domain(@domain)
+                               .published.by_category(@lecture.category)
+                               .where.not(id: @lecture.id)
+                               .recent
+                               .limit(4)
   end
 
   def play
