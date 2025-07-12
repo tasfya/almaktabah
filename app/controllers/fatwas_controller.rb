@@ -4,7 +4,7 @@ class FatwasController < ApplicationController
   before_action :setup_fatwas_breadcrumbs
 
   def index
-    @q = Fatwa.ransack(params[:q])
+    @q = Fatwa.for_domain(@domain).ransack(params[:q])
     @pagy, @fatwas = pagy(@q.result(distinct: true), limit: 12)
   end
 

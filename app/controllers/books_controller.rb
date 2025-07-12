@@ -4,7 +4,7 @@ class BooksController < ApplicationController
   before_action :setup_books_breadcrumbs
 
   def index
-    @q = Book.published.includes(:author).ransack(params[:q])
+    @q = Book.published.for_domain(@domain).includes(:author).ransack(params[:q])
     @pagy, @books = pagy(@q.result(distinct: true), limit: 12)
     respond_to do |format|
       format.html
@@ -13,10 +13,11 @@ class BooksController < ApplicationController
   end
 
   def show
-    @related_books = Book.published.by_category(@book.category)
-                        .where.not(id: @book.id)
-                        .recent
-                        .limit(4)
+    @related_books = Book.for_domain(@domain)
+                         .published.by_category(@book.category)
+                         .where.not(id: @book.id)
+                         .recent
+                         .limit(4)
   end
 
   private

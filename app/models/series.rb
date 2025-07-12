@@ -1,5 +1,7 @@
 class Series < ApplicationRecord
     include Publishable
+    include DomainAssignable
+
     has_many :lessons, dependent: :destroy
 
     # Scopes

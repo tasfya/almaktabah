@@ -1,5 +1,6 @@
 class Article < ApplicationRecord
   include Publishable
+  include DomainAssignable
 
   belongs_to :author, class_name: "Scholar"
 
