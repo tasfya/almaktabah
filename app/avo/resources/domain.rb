@@ -9,6 +9,7 @@ class Avo::Resources::Domain < Avo::BaseResource
     field :id, as: :id
     field :name, as: :text
     field :host, as: :text
+    field :logo, as: :file, accept: "image/*", max_size: 5.megabytes
     field :description, as: :textarea
   end
 end
