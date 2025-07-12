@@ -15,7 +15,7 @@ namespace :db do
     end
 
     # Create backup directory if it doesn't exist
-    backup_dir = File.join(Rails.root, "db", "backups")
+    backup_dir = File.join(Rails.root, "storage", "backups")
     FileUtils.mkdir_p(backup_dir)
 
     # Create backup filename
@@ -54,7 +54,7 @@ namespace :db do
 
     if backup_file.nil?
       # If no backup file specified, list available backups and ask user to choose
-      backup_dir = File.join(Rails.root, "db", "backups")
+      backup_dir = File.join(Rails.root, "storage", "backups")
 
       unless Dir.exist?(backup_dir)
         puts "No backup directory found at #{backup_dir}"
@@ -94,7 +94,7 @@ namespace :db do
       # If backup file is specified, check if it's a full path or just filename
       unless File.exist?(backup_file)
         # Try looking in the backups directory
-        backup_dir = File.join(Rails.root, "db", "backups")
+        backup_dir = File.join(Rails.root, "storage", "backups")
         potential_backup = File.join(backup_dir, backup_file)
 
         if File.exist?(potential_backup)
@@ -148,7 +148,7 @@ namespace :db do
 
   desc "List available database backups"
   task list_backups: :environment do
-    backup_dir = File.join(Rails.root, "db", "backups")
+    backup_dir = File.join(Rails.root, "storage", "backups")
 
     unless Dir.exist?(backup_dir)
       puts "No backup directory found at #{backup_dir}"
