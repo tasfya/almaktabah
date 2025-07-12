@@ -1,4 +1,5 @@
 class Domain < ApplicationRecord
+  has_one_attached :logo, service: Rails.application.config.public_storage
   has_many :domain_assignments, dependent: :destroy
 
   def self.find_by_host(host)
