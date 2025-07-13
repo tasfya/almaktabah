@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_11_174715) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_13_102020) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -124,6 +124,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_11_174715) do
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "layout_name", default: "application", null: false
   end
 
   create_table "fatwas", force: :cascade do |t|

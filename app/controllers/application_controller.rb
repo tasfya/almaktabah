@@ -9,12 +9,18 @@ class ApplicationController < ActionController::Base
   before_action :latest_news
   before_action :setup_breadcrumbs
   before_action :set_domain
+  layout :determine_layout
 
   protected
 
   def set_domain
     @domain = Domain.find_by_host(request.host)
     @logo_url = @domain&.logo.present? ?  url_for(@domain.logo) : ActionController::Base.helpers.asset_path("logo.png")
+  end
+
+  def determine_layout
+    return @domain.layout_name if @domain&.layout_name.present?
+    "application"
   end
 
   def setup_breadcrumbs
