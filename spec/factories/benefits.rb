@@ -20,5 +20,9 @@ FactoryBot.define do
     trait :without_thumbnail do
       thumbnail { nil }
     end
+
+    after(:create) do |benefit|
+      benefit.domains = [ Domain.find_or_create_by(host: "localhost") ]
+    end
   end
 end

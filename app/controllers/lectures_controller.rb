@@ -4,13 +4,8 @@ class LecturesController < ApplicationController
   before_action :setup_lectures_breadcrumbs
 
   def index
-    @q = Lecture.for_domain(@domain).published.ransack(params[:q])
+    @q = Lecture.for_domain(@domain).published.order(published_at: :desc).ransack(params[:q])
     @pagy, @lectures = pagy(@q.result(distinct: true), limit: 12)
-
-    respond_to do |format|
-      format.html
-      format.json { render json: @lectures }
-    end
   end
 
   def show
@@ -37,7 +32,7 @@ class LecturesController < ApplicationController
   end
 
   def set_lecture
-    @lecture = Lecture.published.find(params[:id])
+    @lecture = Lecture.for_domain(@domain).published.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to lectures_path, alert: t("messages.lecture_not_found")
   end

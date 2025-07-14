@@ -25,6 +25,21 @@
                   </div>
                 <% end %>
               </section>
+            <% elsif @lesson.youtube_url.present? %>
+              <section class="mb-8">
+                <div class="aspect-video">
+                  <iframe src="<%= youtube_embed_url(@lesson.youtube_url) %>" 
+                          frameborder="0" 
+                          allowfullscreen 
+                          class="w-full h-full rounded"></iframe>
+                </div>
+              </section>
+            <% else %>
+              <div class="mb-8">
+                <p class="text-gray-500">
+                  <%= t("common.no_media_available") %>
+                </p>
+              </div>
             <% end %>
             <h1 class="text-3xl font-bold text-gray-900 mb-4">
               <%= @lesson.title %>
@@ -113,9 +128,17 @@
                       <% unless series_lesson == @lesson %>
                         <div class="flex items-center gap-2">
                           <%= play_button(resource: series_lesson, path: play_lesson_path(series_lesson)) %>
+                          <% if series_lesson.youtube_url.present? %>
+                            <%= link_to youtube_embed_url(series_lesson.youtube_url), class: "btn btn-secondary gap-2", target: "_blank" do %>
+                              <%= icon "youtube", library: "lucide", class: "size-5" %>
+                              <%= t('buttons.watch_on_youtube') %>
+                            <% end %>
+                          <% end %>
                           <%= link_to lesson_path(series_lesson), class: "btn btn-primary gap-2" do %>
                             <%= icon "eye", class: "size-5" %>
-                            <%= t('buttons.read') %>
+                            <span class="text-sm whitespace-nowrap">
+                              <%= t('buttons.view') %>
+                  
                           <% end %>
                         </div>
                       <% end %>

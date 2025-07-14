@@ -33,49 +33,49 @@
     end
 
     def search_books
-      Book.includes(:author).published.ransack(
+      Book.includes(:author).published.published.ransack(
         title_or_description_cont: @query
       ).result(distinct: true).recent.limit(5)
     end
 
     def search_lectures
-      Lecture.published.ransack(
+      Lecture.published.published.ransack(
         title_or_description_cont: @query
       ).result(distinct: true).recent.limit(5)
     end
 
     def search_lessons
-      Lesson.includes(:series).published.ransack(
+      Lesson.includes(:series).published.published.ransack(
         title_or_description_cont: @query
       ).result(distinct: true).limit(5)
     end
 
     def search_series
-      Series.published.ransack(
+      Series.published.published.ransack(
         title_or_description_cont: @query
       ).result(distinct: true).recent.limit(5)
     end
 
     def search_news
-      News.published.ransack(
+      News.published.published.ransack(
         title_or_description_cont: @query
       ).result(distinct: true).recent.limit(5)
     end
 
     def search_benefits
-      Benefit.published.ransack(
+      Benefit.published.published.ransack(
         title_or_description_cont: @query
       ).result(distinct: true).order(created_at: :desc).limit(5)
     end
 
     def search_fatwas
-      Fatwa.published.ransack(
+      Fatwa.published.published.ransack(
         title_cont: @query
       ).result(distinct: true).order(created_at: :desc).limit(5)
     end
 
     def search_scholars
-      Scholar.published.ransack(
+      Scholar.published.published.ransack(
         first_name_or_last_name_cont: @query
       ).result(distinct: true).order(:first_name).limit(5)
     end

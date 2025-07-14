@@ -14,7 +14,7 @@ class NewsController < ApplicationController
   private
 
   def set_news
-    @news = News.published.find_by!(slug: params[:id]) rescue News.published.find(params[:id])
+    @news = News.for_domain(@domain).published.find_by!(slug: params[:id]) rescue News.for_domain(@domain).published.find(params[:id])
   end
 
   def setup_news_breadcrumbs

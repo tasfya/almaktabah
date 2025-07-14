@@ -28,4 +28,15 @@ module ApplicationHelper
     remaining_seconds = seconds % 60
     format("%d:%02d", minutes, remaining_seconds)
   end
+
+  def youtube_embed_url(url)
+    return unless url.present?
+
+    video_id = url.match(/(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]+)|(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/)
+    return unless video_id
+
+    video_id = video_id[1] || video_id[2]
+
+    "https://www.youtube.com/embed/#{video_id}"
+  end
 end

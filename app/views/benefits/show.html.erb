@@ -8,10 +8,10 @@
             <% if @benefit.video? || @benefit.audio? %>
               <section class="mb-8">
                 <% if @benefit.video? %>
-                    <video controls class="w-full rounded-lg shadow-sm">
+                  <video controls class="w-full rounded-lg shadow-sm">
                     <source src="<%= url_for(@benefit.video) %>" type="<%= @benefit.video.content_type %>">
                     <%= t('common.browser_no_support_video') %>
-                    </video>
+                  </video>
                 <% elsif @benefit.audio? %>
                   <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
                     <div class="aspect-video bg-gray-200 relative flex items-center justify-center">
@@ -25,6 +25,12 @@
                   </div>
                 <% end %>
               </section>
+            <% else %>
+              <div class="mb-8">
+                <p class="text-gray-500">
+                  <%= t("common.no_media_available") %>
+                </p>
+              </div>
             <% end %>
             <h1 class="text-3xl font-bold text-gray-900 mb-4">
               <%= @benefit.title %>

@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Lecture, type: :model do
   describe "domain assignment" do
-    let(:domain) { create(:domain) }
-    let(:lecture) { create(:lecture) }
+    let!(:domain) { create(:domain) }
+    let!(:lecture) { create(:lecture) }
 
     it "assigns lecture to domain" do
       expect {

@@ -25,6 +25,21 @@
                   </div>
                 <% end %>
               </section>
+            <% elsif @lecture.youtube_url.present? %>
+              <section class="mb-8">
+                <div class="aspect-video">
+                  <iframe src="<%= youtube_embed_url(@lecture.youtube_url) %>" 
+                          frameborder="0" 
+                          allowfullscreen 
+                          class="w-full h-full rounded"></iframe>
+                </div>
+              </section>
+            <% else %>
+              <div class="mb-8">
+                <p class="text-gray-500">
+                  <%= t("common.no_media_available") %>
+                </p>
+              </div>
             <% end %>
             <h1 class="text-3xl font-bold text-gray-900 mb-4">
               <%= @lecture.title %>

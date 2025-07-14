@@ -164,6 +164,7 @@ ar:
         birth_year: "مواليد 1384 هـ"
         contact_button: "تواصل معنا"
   buttons:
+    watch_on_youtube: "شاهد على يوتيوب"
     send_question: "إرسال سؤال"
     share: "مشاركة"
     print: "طباعة"
@@ -176,6 +177,7 @@ ar:
     view_series: "عرض السلسلة"
     listen: "استمع"
     read: "اقرأ"
+    view: "عرض"
     play: "تشغيل"
     read_more: "اقرأ المزيد"
     download_audio: "تحميل الصوت"
@@ -192,6 +194,7 @@ ar:
     share: "مشاركة"
     print: "طباعة"
     close: "إغلاق"
+    search_button: "بحث"
   news_bar:
     latest_news: "آخر الأخبار"
   sidebar:
@@ -229,6 +232,7 @@ ar:
     about_sheikh_alt: "عن الشيخ"
     contact_us: "اتصل بنا"
   common:
+    no_media_available: "لا توجد وسائط متاحة حالياً"
     video: "فيديو"
     audio: "صوتي"
     site_contents: "محتويات الموقع"

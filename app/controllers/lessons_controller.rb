@@ -1,17 +1,13 @@
 class LessonsController < ApplicationController
   include Filterable
-  before_action :set_lesson, only: [ :show ]
+  before_action :set_lesson, only: [ :show, :play ]
   before_action :setup_lessons_breadcrumbs
 
   def index
-    @q = Lesson.for_domain(@domain).published.includes(:series).ransack(params[:q])
+    @q = Lesson.for_domain(@domain).published.order(published_at: :desc).includes(:series).ransack(params[:q])
     @pagy, @lessons = pagy(@q.result(distinct: true), limit: 12)
-    @series = Series.published.order(:title)
+    @series = Series.for_domain(@domain).published.order(:title)
     @lessons = @lessons.ordered_by_lesson_number
-    respond_to do |format|
-      format.html
-      format.json { render json: @lessons }
-    end
   end
 
   def show
@@ -22,7 +18,6 @@ class LessonsController < ApplicationController
   end
 
   def play
-    @lesson = Lesson.published.find(params[:id])
   end
 
   private
@@ -40,7 +35,7 @@ class LessonsController < ApplicationController
   end
 
   def set_lesson
-    @lesson = Lesson.published.find(params[:id])
+    @lesson = Lesson.for_domain(@domain).published.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to lessons_path, alert: t("messages.lesson_not_found")
   end
