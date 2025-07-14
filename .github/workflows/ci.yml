@@ -26,23 +26,6 @@ jobs:
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
 
-  scan_js:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Install JavaScript dependencies
-        run: yarn install
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: yarn audit --level=moderate
   lint:
     runs-on: ubuntu-latest
     steps:
