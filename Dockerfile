@@ -16,7 +16,8 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 ffmpeg python3 && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 ffmpeg python3 \
+    libglib2.0-dev libcairo2-dev libgirepository1.0-dev libpango1.0-dev  &&\
     curl -L https://github.com/yt-dlp/yt-dlp/releases/download/2025.06.30/yt-dlp -o /usr/local/bin/yt-dlp && \
     chmod a+rx /usr/local/bin/yt-dlp && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
