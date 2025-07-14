@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe BenefitsController, type: :controller do
+   before(:each) do
+    request.host = "localhost"
+  end
+  let!(:domain) { create(:domain, host: "localhost") }
   let(:published_benefit) { create(:benefit, published: true, published_at: 1.day.ago) }
   let(:unpublished_benefit) { create(:benefit, published: false) }
 

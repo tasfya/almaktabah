@@ -6,7 +6,7 @@ class ContactsController < ApplicationController
   end
 
   def create
-    @contact = Contact.new(contact_params)
+    @contact = Contact.for_domain(@domain).new(contact_params)
     if @contact.save
       redirect_to contact_path, notice: t("messages.contact_success")
     else

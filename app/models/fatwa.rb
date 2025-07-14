@@ -1,5 +1,6 @@
 class Fatwa < ApplicationRecord
   include Publishable
+  include DomainAssignable
 
   has_rich_text :question
   has_rich_text :answer

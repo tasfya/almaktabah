@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe SearchController, type: :controller do
+  before(:each) do
+    Faker::UniqueGenerator.clear
+    request.host = "localhost"
+  end
+  let(:domain) { create(:domain, host: "localhost") }
   describe "GET #index" do
     let!(:book) { create(:book, title: "Test Book Title", description: "Test book description", published: true, published_at: DateTime.new) }
     let!(:lecture) { create(:lecture, title: "Test Lecture", description: "Test lecture description", published: true, published_at: DateTime.new) }

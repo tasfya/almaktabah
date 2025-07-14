@@ -20,6 +20,8 @@ FactoryBot.define do
       if File.exist?(cover_image_path)
         book.cover_image.attach(io: File.open(cover_image_path), filename: 'thumbnail.jpg', content_type: 'image/jpeg')
       end
+
+      book.domains = [ Domain.find_or_create_by(host: "localhost") ]
     end
   end
 end

@@ -8,5 +8,9 @@ FactoryBot.define do
     trait :with_lessons do
       lessons { build_list(:lesson, 5) }
     end
+
+    after(:create) do |serie|
+      serie.domains = [ Domain.find_or_create_by(host: "localhost") ]
+    end
   end
 end

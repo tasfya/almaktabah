@@ -3,8 +3,9 @@ require 'rails_helper'
 RSpec.describe LessonsController, type: :controller do
   before(:each) do
     Faker::UniqueGenerator.clear
+    request.host = "localhost"
   end
-
+  let(:domain) { create(:domain, host: "localhost") }
   let(:published_series) { create(:series, published: true, published_at: 1.day.ago) }
   let(:series) { create(:series, published: true, published_at: 1.day.ago) }
   let(:published_lesson) { create(:lesson, series: series, published: true, published_at: 1.day.ago) }
@@ -19,9 +20,7 @@ RSpec.describe LessonsController, type: :controller do
     it "assigns @lessons, @pagy, and @series" do
       create_list(:series, 3, published: true, published_at: 1.day.ago)
       create_list(:lesson, 5, published: true, published_at: 1.day.ago)
-
       get :index
-
       expect(assigns(:lessons)).to be_present
       expect(assigns(:pagy)).to be_present
       expect(assigns(:q)).to be_present

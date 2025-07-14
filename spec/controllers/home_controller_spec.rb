@@ -3,7 +3,10 @@ require 'rails_helper'
 RSpec.describe HomeController, type: :controller do
   before(:each) do
     Faker::UniqueGenerator.clear
+    request.host = "localhost"
   end
+
+  let!(:domain) { create(:domain, host: "localhost") }
 
   describe "GET #index" do
     let!(:published_lessons) { create_list(:lesson, 8, published: true, published_at: 1.day.ago) }
@@ -14,6 +17,7 @@ RSpec.describe HomeController, type: :controller do
     let!(:published_series) { create_list(:series, 6, published: true, published_at: 1.day.ago) }
 
     before do
+      published_lectures.each { |lecture| create(:domain_assignment, domain: domain, assignable: lecture) }
       get :index
     end
 

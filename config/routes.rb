@@ -40,4 +40,16 @@ Rails.application.routes.draw do
   end
 
   root "home#index"
+
+  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
+  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+  get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+
+  get "spotify_search", to: "spotify_search#index"
+  get "spotify", to: "spotify#index"
+  get "library", to: "library#index"
+  get "playlist/:id", to: "playlist#show", as: "playlist"
+  get "category/:id", to: "category#show", as: "category"
+  get "artist/:id", to: "artist#show", as: "artist"
+  get "album/:id", to: "album#show", as: "album"
 end

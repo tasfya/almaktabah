@@ -4,7 +4,7 @@ class NewsController < ApplicationController
   before_action :setup_news_breadcrumbs
 
   def index
-    @q = News.published.ransack(params[:q])
+    @q = News.for_domain(@domain).published.ransack(params[:q])
     @pagy, @news = pagy(@q.result(distinct: true), limit: 12)
   end
 
@@ -14,7 +14,7 @@ class NewsController < ApplicationController
   private
 
   def set_news
-    @news = News.published.find_by!(slug: params[:id]) rescue News.published.find(params[:id])
+    @news = News.for_domain(@domain).published.find_by!(slug: params[:id]) rescue News.for_domain(@domain).published.find(params[:id])
   end
 
   def setup_news_breadcrumbs

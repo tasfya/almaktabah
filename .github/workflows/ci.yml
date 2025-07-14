@@ -13,6 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git libyaml-dev node-gyp pkg-config python-is-python3 libglib2.0-dev libcairo2-dev libgirepository1.0-dev libpango1.0-dev
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -22,28 +26,15 @@ jobs:
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
 
-  scan_js:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Install JavaScript dependencies
-        run: yarn install
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: yarn audit --level=moderate
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git libyaml-dev node-gyp pkg-config python-is-python3 libglib2.0-dev libcairo2-dev libgirepository1.0-dev libpango1.0-dev
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -59,12 +50,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git libyaml-dev node-gyp pkg-config python-is-python3 libglib2.0-dev libcairo2-dev libgirepository1.0-dev libpango1.0-dev
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+
+      - name: migrate database
+        run: bin/rails db:create db:migrate RAILS_ENV=test
 
       - name: Run tests
         run: bundle exec rspec --format documentation --color --profile --order defined

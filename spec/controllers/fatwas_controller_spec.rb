@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe FatwasController, type: :controller do
+  before(:each) do
+    Faker::UniqueGenerator.clear
+    request.host = "localhost"
+  end
+  let!(:domain) { create(:domain, host: "localhost") }
   let(:published_fatwa) { create(:fatwa, published: true, published_at: 1.day.ago) }
   let(:unpublished_fatwa) { create(:fatwa, published: false) }
 

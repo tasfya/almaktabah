@@ -4,18 +4,16 @@ class FatwasController < ApplicationController
   before_action :setup_fatwas_breadcrumbs
 
   def index
-    @q = Fatwa.published.order(published_at: :desc).ransack(params[:q])
+    @q = Fatwa.for_domain(@domain).published.order(published_at: :desc).ransack(params[:q])
     @pagy, @fatwas = pagy(@q.result(distinct: true), limit: 12)
   end
 
-  def show
-    @fatwa = Fatwa.find(params[:id])
-  end
+  def show; end
 
   private
 
   def set_fatwa
-    @fatwa = Fatwa.find(params[:id])
+    @fatwa = Fatwa.for_domain(@domain).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to fatwas_path, alert: t("messages.fatwa_not_found")
   end

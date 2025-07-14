@@ -13,5 +13,9 @@ FactoryBot.define do
         after(:build) do |lesson|
             lesson.series ||= create(:series) if lesson.series.nil?
         end
+
+        after(:create) do |lesson|
+            lesson.domains = [ Domain.find_or_create_by(host: "localhost") ]
+        end
     end
 end
