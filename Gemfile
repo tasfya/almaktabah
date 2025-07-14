@@ -11,11 +11,8 @@ gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
 
-# Build modern JavaScript/CSS with esbuild [https://github.com/rails/jsbundling-rails]
-gem "jsbundling-rails"
-
-# CSS framework
 gem "tailwindcss-rails"
+
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
@@ -95,8 +92,8 @@ end
 gem "ruby-progressbar"
 gem "avo", ">= 3.2"
 gem "rails_icons", "~> 1.3"
-gem "tailwindcss-ruby", "~> 4.1"
 gem "nice_partials", "~> 0.10.1"
+gem "importmap-rails"
 
 group :video_services do
   gem "cairo", "~> 1.18"
