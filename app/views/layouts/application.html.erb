@@ -10,51 +10,30 @@
     <meta name="theme-color" content="#000000">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= yield :head %>
-
     <%# Enable PWA manifest for installable apps %>
     <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
-
-  <body class="h-full font-arabic overflow-hidden">
-    <div class="h-full flex flex-col mobile-height" data-controller="app">
-      <!-- Main Content -->
-      <div class="flex-1 flex overflow-hidden md:pb-20">
-        <!-- Main Content Area -->
-        <div class="flex-1 bg-gradient-to-b from-gray-900 to-black overflow-hidden">
-          <div class="h-full overflow-y-auto content-safe" data-controller="scroll">
-            <%= yield %>
-          </div>
+  <body class="bg-gray-50" data-controller="audio-player">
+    <%= render 'shared/header' %>
+    <%= render 'shared/news_bar' %>
+    <%= render "shared/podcast_frame", podcast: @podcast do %>
+      <% unless controller_name == 'home' %>
+        <div class="container mx-auto px-4">
+          <%= render 'shared/breadcrumb' %>
         </div>
-
-        <!-- Sidebar (moved to right side for RTL) -->
-        <%# <div class="hidden md:flex w-64 flex-col bg-black border-l border-gray-800"> %>
-          <%# render 'shared/sidebar' %>
-        <%# </div> %>
-      </div>
-
-      <!-- Player with data-turbo-permanent to prevent reload -->
-      <div id="spotify-player" data-turbo-permanent>
-        <%= render 'shared/player' %>
-      </div>
-
-      <!-- Mobile Navigation -->
-      <div class="md:hidden mobile-nav-safe">
-        <%= render 'shared/mobile_nav' %>
-      </div>
-    </div>
+      <% end %>
+      <%= yield %>
+    <% end %>
+    <%= render 'shared/footer' %>
   </body>
 </html>
