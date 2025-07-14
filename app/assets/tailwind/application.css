@@ -48,9 +48,14 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
+  }
+
+  input {
     color: black;
   }
 }
+
+
 
 /* Custom component styles */
 @utility btn {
