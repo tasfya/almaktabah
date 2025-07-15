@@ -10,9 +10,8 @@ module ApplicationHelper
   def site_info
     {
       support_email: "",
-      contact_phone: "+212 600 000 000",
       twitter_url: "https://x.com/Moh1Rz2H3?ref",
-      youtube_url: "https://www.youtube.com/@mohammedramzan"
+      youtube_url: "https://www.youtube.com/@bin-ramzan"
     }
   end
 
