@@ -13,8 +13,6 @@ class LessonsController < ApplicationController
   def show
     @related_lessons = Lesson.for_domain(@domain).published.by_series(@lesson.series_id)
                             .where.not(id: @lesson.id)
-                            .recent
-                            .limit(4)
   end
 
   def play
