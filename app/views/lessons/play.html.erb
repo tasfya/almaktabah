@@ -1,7 +1,7 @@
 <%= render "shared/podcast_frame", podcast: nil do |frame| %>
   <% frame.player do %>
     <div class="mb-[env(safe-area-inset-bottom)] flex flex-1 flex-col gap-3 overflow-hidden p-1">
-      <%= link_to @lesson.full_title, lesson_path(@lesson), class: "truncate text-right text-lg font-bold leading-6 md:text-left my-4" %>
+      <%= link_to @lesson.full_title, lesson_path(@lesson), class: "truncate text-right font-bold leading-6 md:text-right my-4" %>
       <%= audio_tag @lesson.optimized_audio, id: dom_id(@lesson, :audio), class: "w-full mb-4", controls: true, muted: Rails.env.test?, data: {controller: "player", action: "loadeddata->player#play"} %>
     </div>
   <% end %>
