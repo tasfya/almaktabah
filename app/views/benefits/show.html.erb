@@ -5,7 +5,7 @@
       <div class="lg:col-span-2">
         <article class="bg-white rounded-lg shadow-md p-8">
           <header class="mb-8">
-            <% if @benefit.video? || @benefit.optimized_audio? %>
+            <% if @benefit.video? %>
               <section class="mb-8">
                 <% if @benefit.video? %>
                   <video controls class="w-full rounded-lg shadow-sm">
@@ -14,12 +14,6 @@
                   </video>
                 <% end %>
               </section>
-            <% else %>
-              <div class="mb-8">
-                <p class="text-gray-500">
-                  <%= t("common.no_media_available") %>
-                </p>
-              </div>
             <% end %>
             <h1 class="text-3xl font-bold text-gray-900 mb-4">
               <%= @benefit.title %>
