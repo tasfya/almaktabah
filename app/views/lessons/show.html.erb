@@ -64,7 +64,7 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-4"><%= t('.download_options') %></h3>
                 <div class="flex flex-wrap gap-4">
                   <% if @lesson.audio? %>
-                    <%= link_to rails_blob_url(@lesson.audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
+                    <%= link_to rails_blob_url(@lesson.optimized_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       <%= t('buttons.download_audio') %>
                     <% end %>
