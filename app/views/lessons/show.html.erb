@@ -5,7 +5,7 @@
       <div class="lg:col-span-2">
         <article class="bg-white rounded-lg shadow-md p-8">
           <header class="mb-8">
-            <% if @lesson.video? || @lesson.audio? %>
+            <% if @lesson.video? %>
               <section class="mb-8">
                 <% if @lesson.video? %>
                   <video controls class="w-full rounded">
@@ -58,12 +58,12 @@
               </div>
             </section>
           <% end %>
-          <% if @lesson.audio? || @lesson.video? %>
+          <% if @lesson.optimized_audio? || @lesson.video? %>
             <section class="mb-8">
               <div class="bg-gray-50 rounded-lg p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4"><%= t('.download_options') %></h3>
                 <div class="flex flex-wrap gap-4">
-                  <% if @lesson.audio? %>
+                  <% if @lesson.optimized_audio? %>
                     <%= link_to rails_blob_url(@lesson.optimized_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       <%= t('buttons.download_audio') %>

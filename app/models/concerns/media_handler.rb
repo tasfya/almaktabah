@@ -13,6 +13,20 @@ module MediaHandler
     audio.attached?
   end
 
+  def optimized_audio?
+    optimized_audio.attached?
+  end
+
+  def media_type
+    if video?
+      I18n.t("common.video")
+    elsif audio?
+      I18n.t("common.audio")
+    else
+      nil
+    end
+  end
+
   private
 
   def process_media_files

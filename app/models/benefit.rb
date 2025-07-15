@@ -22,24 +22,6 @@ class Benefit < ApplicationRecord
       [ "scholar" ]
     end
 
-    def audio?
-      audio.attached?
-    end
-
-    def video?
-      video.attached?
-    end
-
-    def media_type
-      if video?
-        I18n.t("common.video")
-      elsif audio?
-        I18n.t("common.audio")
-      else
-        nil
-      end
-    end
-
     private
 
     def set_duration
