@@ -29,8 +29,6 @@ Rails.application.routes.draw do
 
   # Static pages
   get "about", to: "about#index"
-  get "contact-us", to: "contacts#new", as: :contact
-  post "contact-us", to: "contacts#create"
 
   get "up" => "rails/health#show", as: :rails_health_check
 
