@@ -1,7 +1,7 @@
 <% content_for :title, "#{@lesson.series_title}- #{@lesson.title}" %>
 <div class="bg-gray-50 min-h-screen py-8">
   <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 gap-8">
       <div class="lg:col-span-2">
         <article class="bg-white rounded-lg shadow-md p-8">
           <header class="mb-8">
@@ -18,7 +18,7 @@
                       <%= image_tag "background.jpg", class: "absolute inset-0 w-full h-full object-cover" %>
                       <div class="absolute inset-0 flex items-center justify-center">
                         <%= play_button(resource: @lesson, path: play_lesson_path(@lesson),
-                                      klass: "btn btn-primary w-fit", 
+                                      klass: "btn btn-primary w-fit",
                                       icon_class: "size-8 flex items-center justify-center") %>
                       </div>
                     </div>
@@ -28,9 +28,9 @@
             <% elsif @lesson.youtube_url.present? %>
               <section class="mb-8">
                 <div class="aspect-video">
-                  <iframe src="<%= youtube_embed_url(@lesson.youtube_url) %>" 
-                          frameborder="0" 
-                          allowfullscreen 
+                  <iframe src="<%= youtube_embed_url(@lesson.youtube_url) %>"
+                          frameborder="0"
+                          allowfullscreen
                           class="w-full h-full rounded"></iframe>
                 </div>
               </section>
@@ -138,7 +138,7 @@
                             <%= icon "eye", class: "size-5" %>
                             <span class="text-sm whitespace-nowrap">
                               <%= t('buttons.view') %>
-                  
+
                           <% end %>
                         </div>
                       <% end %>
@@ -151,7 +151,6 @@
         </article>
       </div>
       <!-- Sidebar -->
-      <%= render partial: "shared/side_bar" %>
     </div>
   </div>
 </div>

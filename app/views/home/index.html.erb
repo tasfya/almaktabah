@@ -2,7 +2,7 @@
 <%= render partial: "featured_lesson", locals: { lesson: @featured_lesson } if @featured_lesson.present?%>
 <section class="py-16 bg-gray-50">
   <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 gap-8">
       <div class="lg:col-span-2">
         <div class="bg-white w-full rounded-lg shadow-md flex items-center gap-1 flex-wrap p-6">
           <h3 class="text-xl font-bold text-gray-900 mb-6 text-right"><%= t('navigation.recent_lessons') %></h3>
@@ -40,7 +40,6 @@
         </div>
       </div>
       <!-- Left Sidebar - Downloads -->
-      <%= render partial: "shared/side_bar" %>
     </div>
   </div>
 </section>

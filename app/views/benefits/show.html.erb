@@ -1,6 +1,6 @@
 <div class="bg-gray-50 min-h-screen py-8">
   <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 gap-8">
       <!-- Main Content -->
       <div class="lg:col-span-2">
         <article class="bg-white rounded-lg shadow-md p-8">
@@ -17,8 +17,8 @@
                     <div class="aspect-video bg-gray-200 relative flex items-center justify-center">
                       <%= image_tag "background.jpg", class: "absolute inset-0 w-full h-full object-cover" %>
                       <div class="absolute inset-0 flex items-center justify-center">
-                        <%= play_button(resource: @benefit, path: play_benefit_path(@benefit), 
-                                      klass: "btn btn-primary w-fit", 
+                        <%= play_button(resource: @benefit, path: play_benefit_path(@benefit),
+                                      klass: "btn btn-primary w-fit",
                                       icon_class: "size-8 flex items-center justify-center") %>
                       </div>
                     </div>
@@ -72,7 +72,6 @@
         </article>
       </div>
       <!-- Sidebar -->
-      <%= render partial: "shared/side_bar" %>
     </div>
   </div>
 </div>

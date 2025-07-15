@@ -1,7 +1,7 @@
 <% content_for :title, t('navigation.books') %>
 <div class="bg-gray-50 min-h-screen py-8">
   <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 gap-8">
       <div class="lg:col-span-2">
         <div class="bg-white rounded-lg shadow-md p-6">
           <h1 class="text-2xl font-bold text-gray-900 mb-6">
@@ -30,7 +30,6 @@
           <%= render 'shared/pagination' %>
         </div>
       </div>
-      <%= render partial: "shared/side_bar" %>
     </div>
   </div>
 </div>

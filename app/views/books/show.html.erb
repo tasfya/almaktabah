@@ -1,7 +1,7 @@
 <% content_for :title, @book.title %>
 <div class="bg-gray-50 min-h-screen py-8">
   <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 gap-8">
       <!-- Main Content -->
       <div class="lg:col-span-2">
         <article class="bg-white rounded-lg shadow-md p-8">
@@ -47,7 +47,7 @@
                 <!-- Download Button -->
                 <% if @book.file.present? %>
                   <div class="mb-6">
-                    <%= link_to @book.file, target: "_blank", 
+                    <%= link_to @book.file, target: "_blank",
                         class: "btn btn-primary" do %>
                       <%= icon "arrow-down-tray", class:"size-5" %>
                       <%= t("buttons.download_book")%>
@@ -113,7 +113,6 @@
         </article>
       </div>
       <!-- Sidebar -->
-      <%= render partial: "shared/side_bar" %>
     </div>
   </div>
 </div>
