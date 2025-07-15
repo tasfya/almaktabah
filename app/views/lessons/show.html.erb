@@ -5,7 +5,7 @@
       <div class="lg:col-span-2">
         <article class="bg-white rounded-lg shadow-md p-8">
           <header class="mb-8">
-            <% if @lesson.video? %>
+            <% if @lesson.video? && @lesson.optimized_audio? %>
               <section class="mb-8">
                 <% if @lesson.video? %>
                   <video controls class="w-full rounded">
