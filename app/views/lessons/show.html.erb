@@ -84,14 +84,6 @@
             <section class="mb-8">
               <div class="flex items-center justify-between mb-4">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.other_series_lessons') %></h2>
-                <% if @lesson.series.lessons.count > 5 %>
-                  <div class="mt-4">
-                    <%= link_to series_path(@lesson.series), class: "btn btn-link" do %>
-                      <%= t('buttons.view_all_lessons') %>
-                      <%= icon "arrow-left", class:"size-4" %>
-                    <% end %>
-                  </div>
-                <% end %>
               </div>
               <div class="space-y-3">
                 <% @lesson.series.lessons.recent.limit(5).each do |series_lesson| %>
