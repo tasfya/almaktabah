@@ -2,7 +2,7 @@ module MediaHandler
   extend ActiveSupport::Concern
 
   included do
-    after_commit :process_media_files, on: [ :create, :update ]
+    after_save :process_media_files
   end
 
   def video?
