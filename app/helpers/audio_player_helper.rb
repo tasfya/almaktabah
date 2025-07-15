@@ -1,6 +1,6 @@
 module AudioPlayerHelper
   def play_button(resource:, path:, klass: "btn btn-secondary w-fit", icon_class: "size-4")
-    return unless resource&.audio? && path.present?
+    return unless resource&.optimized_audio.present? && path.present?
     tag.form(
       action: path,
       data: { action: "submit->application#preventDefault:reload", turbo_frame: "audio" }
