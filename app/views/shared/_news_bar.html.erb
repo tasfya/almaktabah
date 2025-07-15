@@ -10,17 +10,16 @@
       
       <div class="flex-1 overflow-hidden h-6 relative">
         <div 
-          style="position: relative; overflow: hidden; height: 2rem; display: flex; align-items: center;"
           data-controller="news-ticker"
           data-news-ticker-speed-value="4000"
           data-news-ticker-pause-on-hover-value="true"
+          class="relative overflow-hidden w-[2rem] flex items-center"
           data-action="mouseenter->news-ticker#pauseAnimation mouseleave->news-ticker#resumeAnimation"
         >
           <% @latest_news.each_with_index do |news, index| %>
-            <div class="absolute inset-0 flex items-center" 
+            <div class="absolute inset-0 flex items-center hidden" 
                  data-news-ticker-target="item"
-                 data-news-ticker-index="<%= index %>"
-                 style="display: none;">
+                 data-news-ticker-index="<%= index %>">
               <%= link_to news_path(news), class: "text-white hover:text-gray-300 transition-colors text-sm truncate" do %>
                 <%= news.title %>
               <% end %>
