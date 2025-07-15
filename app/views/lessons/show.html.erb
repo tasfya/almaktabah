@@ -12,26 +12,12 @@
                     <source src="<%= url_for(@lecture.video) %>" type="<%= @lecture.video.content_type %>">
                     <%= t('common.browser_no_support_video') %>
                   </video>
-                <% elsif @lesson.audio? %>
-                  <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
-                    <div class="aspect-video bg-gray-200 relative flex items-center justify-center">
-                      <%= image_tag "background.jpg", class: "absolute inset-0 w-full h-full object-cover" %>
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <%= play_button(resource: @lesson, path: play_lesson_path(@lesson),
-                                      klass: "btn btn-primary w-fit",
-                                      icon_class: "size-8 flex items-center justify-center") %>
-                      </div>
-                    </div>
-                  </div>
                 <% end %>
               </section>
             <% elsif @lesson.youtube_url.present? %>
               <section class="mb-8">
                 <div class="aspect-video">
-                  <iframe src="<%= youtube_embed_url(@lesson.youtube_url) %>"
-                          frameborder="0"
-                          allowfullscreen
-                          class="w-full h-full rounded"></iframe>
+                  <iframe src="<%= youtube_embed_url(@lesson.youtube_url) %>" frameborder="0" allowfullscreen class="w-full h-full rounded"></iframe>
                 </div>
               </section>
             <% else %>
@@ -82,6 +68,7 @@
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       <%= t('buttons.download_audio') %>
                     <% end %>
+                    <%= play_button(resource: @lesson, path: play_lesson_path(@lesson)) %>
                   <% end %>
                   <% if @lesson.video? %>
                     <%= link_to rails_blob_url(@lesson.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>

@@ -84,7 +84,7 @@
                 <% related_fatwas.each do |related_fatwa| %>
                   <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
                     <h3 class="text-lg font-semibold text-gray-900 mb-3">
-                      <%= link_to related_fatwa.title, fatwa_path(related_fatwa), class: "hover:text-indigo-600" %>
+                      <%= link_to related_fatwa.title, fatwa_path(related_fatwa), class: "hover:text-gray-600" %>
                     </h3>
                     <% if related_fatwa.question.present? %>
                       <p class="text-gray-600 text-sm mb-4">

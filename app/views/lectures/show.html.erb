@@ -12,17 +12,6 @@
                     <source src="<%= url_for(@lecture.video) %>" type="<%= @lecture.video.content_type %>">
                     <%= t('common.browser_no_support_video') %>
                   </video>
-                <% elsif @lecture.audio? %>
-                  <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
-                    <div class="aspect-video bg-gray-200 relative flex items-center justify-center">
-                      <%= image_tag "background.jpg", class: "absolute inset-0 w-full h-full object-cover" %>
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <%= play_button(resource: @lecture, path: play_lecture_path(@lecture),
-                                      klass: "btn btn-primary w-fit",
-                                      icon_class: "size-8 flex items-center justify-center") %>
-                      </div>
-                    </div>
-                  </div>
                 <% end %>
               </section>
             <% elsif @lecture.youtube_url.present? %>
@@ -67,6 +56,7 @@
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       <%= t("buttons.download_audio")%>
                     <% end %>
+                    <%= play_button(resource: @lecture, path: play_lecture_path(@lesson)) %>
                   <% end %>
                   <% if @lecture.video? %>
                     <%= link_to rails_blob_url(@lecture.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary w-fit" do %>
@@ -80,7 +70,6 @@
           <% end %>
         </article>
       </div>
-      <!-- Sidebar -->
     </div>
   </div>
 </div>

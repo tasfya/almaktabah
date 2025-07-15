@@ -21,6 +21,8 @@ class Lesson < ApplicationRecord
 
   scope :ordered_by_lesson_number, -> { order(Arel.sql("COALESCE(position, 999999)")) }
 
+  default_scope { ordered_by_lesson_number }
+
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
     [ "category", "created_at", "description", "duration", "id", "published", "published_at", "scholar_id", "series_id", "title", "updated_at" ]

@@ -25,9 +25,9 @@ class LessonsController < ApplicationController
   def setup_lessons_breadcrumbs
     case action_name
     when "index"
-      breadcrumb_for(t("breadcrumbs.lessons"), lessons_path)
+      breadcrumb_for(t("breadcrumbs.series"), series_index_path)
     when "show"
-      breadcrumb_for(t("breadcrumbs.lessons"), lessons_path)
+      breadcrumb_for(t("breadcrumbs.series"), series_index_path)
       if @lesson&.series
         breadcrumb_for(@lesson.series.title, series_path(@lesson.series))
       end
