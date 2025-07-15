@@ -19,7 +19,7 @@
                     <% end %>
                     <div class="flex-1">
                       <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                        <%= link_to news_item.title, news_path(news_item), class: "hover:text-indigo-600" %>
+                        <%= link_to news_item.title, news_path(news_item), class: "hover:text-gray-600" %>
                       </h3>
                       <% if news_item.description %>
                         <p class="text-gray-600 text-sm mb-4"><%= truncate(news_item.description, length: 200) %></p>

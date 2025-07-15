@@ -1,5 +1,6 @@
 class Benefit < ApplicationRecord
     include Publishable
+    include MediaHandler
     include DomainAssignable
 
     has_one_attached :thumbnail, service: Rails.application.config.public_storage
@@ -20,24 +21,6 @@ class Benefit < ApplicationRecord
 
     def self.ransackable_associations(auth_object = nil)
       [ "scholar" ]
-    end
-
-    def audio?
-      audio.attached?
-    end
-
-    def video?
-      video.attached?
-    end
-
-    def media_type
-      if video?
-        I18n.t("common.video")
-      elsif audio?
-        I18n.t("common.audio")
-      else
-        nil
-      end
     end
 
     private

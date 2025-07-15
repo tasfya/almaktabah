@@ -25,11 +25,11 @@ class LessonsController < ApplicationController
   def setup_lessons_breadcrumbs
     case action_name
     when "index"
-      breadcrumb_for(t("breadcrumbs.lessons"), lessons_path)
+      breadcrumb_for(t("breadcrumbs.series"), series_index_path)
     when "show"
-      breadcrumb_for(t("breadcrumbs.lessons"), lessons_path)
+      breadcrumb_for(t("breadcrumbs.series"), series_index_path)
       if @lesson&.series
-        breadcrumb_for(@lesson.series.title, series_path(@lesson.series))
+        breadcrumb_for(@lesson.series.title, series_index_path(@lesson.series))
       end
     end
   end
@@ -37,6 +37,6 @@ class LessonsController < ApplicationController
   def set_lesson
     @lesson = Lesson.for_domain(@domain).published.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to lessons_path, alert: t("messages.lesson_not_found")
+    redirect_to series_index_path, alert: t("messages.lesson_not_found")
   end
 end
