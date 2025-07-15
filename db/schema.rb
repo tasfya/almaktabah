@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_13_102020) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_15_134318) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -95,16 +95,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_13_102020) do
     t.index ["category"], name: "index_books_on_category"
     t.index ["published"], name: "index_books_on_published"
     t.index ["title"], name: "index_books_on_title"
-  end
-
-  create_table "contacts", force: :cascade do |t|
-    t.string "name"
-    t.string "email"
-    t.string "subject"
-    t.text "message"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "published_at"
   end
 
   create_table "domain_assignments", force: :cascade do |t|
