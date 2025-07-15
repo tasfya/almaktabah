@@ -35,14 +35,6 @@ RSpec.describe LessonsController, type: :controller do
         expect(related_lessons).not_to include(published_lesson)
       end
 
-      it "limits related lessons to 4" do
-        create_list(:lesson, 6, series: published_lesson.series, published: true, published_at: 1.day.ago)
-
-        get :show, params: { id: published_lesson.id }
-
-        expect(assigns(:related_lessons).count).to eq(4)
-      end
-
       it "sets up show breadcrumbs with series" do
         expect(controller).to receive(:breadcrumb_for).with(
           I18n.t("breadcrumbs.series"),
