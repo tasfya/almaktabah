@@ -1,5 +1,6 @@
 class Benefit < ApplicationRecord
     include Publishable
+    include MediaHandler
     include DomainAssignable
 
     has_one_attached :thumbnail, service: Rails.application.config.public_storage

@@ -35,10 +35,11 @@ module MediaHandler
     # AudioOptimizationJob.perform_later(self)
     # VideoProcessingJob.perform_later(self)
 
-    # handle_youtube_resource if youtube_url.present? && !video.attached?
+    # handle_youtube_resource
   end
 
   def handle_youtube_resource
+    return unless self.respond_to?(:youtube_url) && youtube_url.present? && !video.attached?
     YoutubeDownloadJob.perform_later(self, file_url: youtube_url)
   end
 end
