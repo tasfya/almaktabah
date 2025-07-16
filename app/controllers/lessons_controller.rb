@@ -11,8 +11,12 @@ class LessonsController < ApplicationController
   end
 
   def show
-    @related_lessons = Lesson.for_domain(@domain).published.by_series(@lesson.series_id)
+    @related_lessons = Lesson
+                            .for_domain(@domain)
+                            .published
+                            .by_series(@lesson.series_id)
                             .where.not(id: @lesson.id)
+                            .limit(4)
   end
 
   def play
