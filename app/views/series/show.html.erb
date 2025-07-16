@@ -20,7 +20,7 @@
               <% end %>
               <span class="flex items-center gap-2">
                 <%= icon "book-open", class: "size-5"%>
-                <%= pluralize(@series.lessons.count, 'درس') %>
+                <%= pluralize(@series.lessons.published.count, 'درس') %>
                 <%# TODO: fix pluralize for this %>
               </span>
             </div>
