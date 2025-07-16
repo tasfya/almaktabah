@@ -32,7 +32,7 @@ class BenefitImportJob < ApplicationJob
   def process_media_files(benefit, benefit_data)
     if benefit_data["image"].present? && benefit_data["image"].end_with?(".mp3")
       audio_url = benefit_data["image"]
-      MediaDownloadJob.perform_later(benefit, audio_url, "audio", "audio/mpeg")
+      MediaDownloadJob.perform_later(benefit, "audio", "https://mohammed-ramzan.com/#{audio_url}", "audio/mpeg")
     end
   end
 end
