@@ -20,7 +20,7 @@
               <% end %>
               <span class="flex items-center gap-2">
                 <%= icon "book-open", class: "size-5"%>
-                <%= pluralize(@series.lessons.count, 'درس') %>
+                <%= pluralize(@series.lessons.published.count, 'درس') %>
                 <%# TODO: fix pluralize for this %>
               </span>
             </div>
@@ -58,7 +58,7 @@
                 <% @related_series.each do |related_series| %>
                   <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                      <%= link_to related_series.title, series_path(related_series), class: "hover:text-indigo-600" %>
+                      <%= link_to related_series.title, series_path(related_series), class: "hover:text-gray-600" %>
                     </h3>
                     <p class="text-gray-600 text-sm mb-4">
                       <%= truncate(related_series.description, length: 100) %>
@@ -75,7 +75,6 @@
           <% end %>
         </article>
       </div>
-      <!-- Sidebar -->
     </div>
   </div>
 </div>

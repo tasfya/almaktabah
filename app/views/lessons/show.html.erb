@@ -5,41 +5,21 @@
       <div class="lg:col-span-2">
         <article class="bg-white rounded-lg shadow-md p-8">
           <header class="mb-8">
-            <% if @lesson.video? || @lesson.audio? %>
+            <% if @lesson.video? %>
               <section class="mb-8">
                 <% if @lesson.video? %>
                   <video controls class="w-full rounded">
-                    <source src="<%= url_for(@lecture.video) %>" type="<%= @lecture.video.content_type %>">
+                    <source src="<%= url_for(@lesson.video) %>" type="<%= @lesson.video.content_type %>">
                     <%= t('common.browser_no_support_video') %>
                   </video>
-                <% elsif @lesson.audio? %>
-                  <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
-                    <div class="aspect-video bg-gray-200 relative flex items-center justify-center">
-                      <%= image_tag "background.jpg", class: "absolute inset-0 w-full h-full object-cover" %>
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <%= play_button(resource: @lesson, path: play_lesson_path(@lesson),
-                                      klass: "btn btn-primary w-fit",
-                                      icon_class: "size-8 flex items-center justify-center") %>
-                      </div>
-                    </div>
-                  </div>
                 <% end %>
               </section>
             <% elsif @lesson.youtube_url.present? %>
               <section class="mb-8">
                 <div class="aspect-video">
-                  <iframe src="<%= youtube_embed_url(@lesson.youtube_url) %>"
-                          frameborder="0"
-                          allowfullscreen
-                          class="w-full h-full rounded"></iframe>
+                  <iframe src="<%= youtube_embed_url(@lesson.youtube_url) %>" frameborder="0" allowfullscreen class="w-full h-full rounded"></iframe>
                 </div>
               </section>
-            <% else %>
-              <div class="mb-8">
-                <p class="text-gray-500">
-                  <%= t("common.no_media_available") %>
-                </p>
-              </div>
             <% end %>
             <h1 class="text-3xl font-bold text-gray-900 mb-4">
               <%= @lesson.title %>
@@ -72,16 +52,17 @@
               </div>
             </section>
           <% end %>
-          <% if @lesson.audio? || @lesson.video? %>
+          <% if @lesson.optimized_audio? || @lesson.video? %>
             <section class="mb-8">
               <div class="bg-gray-50 rounded-lg p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4"><%= t('.download_options') %></h3>
                 <div class="flex flex-wrap gap-4">
-                  <% if @lesson.audio? %>
-                    <%= link_to rails_blob_url(@lesson.audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
+                  <% if @lesson.optimized_audio? %>
+                    <%= link_to rails_blob_url(@lesson.optimized_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       <%= t('buttons.download_audio') %>
                     <% end %>
+                    <%= play_button(resource: @lesson, path: play_lesson_path(@lesson)) %>
                   <% end %>
                   <% if @lesson.video? %>
                     <%= link_to rails_blob_url(@lesson.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
@@ -97,14 +78,6 @@
             <section class="mb-8">
               <div class="flex items-center justify-between mb-4">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.other_series_lessons') %></h2>
-                <% if @lesson.series.lessons.count > 5 %>
-                  <div class="mt-4">
-                    <%= link_to series_path(@lesson.series), class: "btn btn-link" do %>
-                      <%= t('buttons.view_all_lessons') %>
-                      <%= icon "arrow-left", class:"size-4" %>
-                    <% end %>
-                  </div>
-                <% end %>
               </div>
               <div class="space-y-3">
                 <% @lesson.series.lessons.recent.limit(5).each do |series_lesson| %>
@@ -129,7 +102,7 @@
                         <div class="flex items-center gap-2">
                           <%= play_button(resource: series_lesson, path: play_lesson_path(series_lesson)) %>
                           <% if series_lesson.youtube_url.present? %>
-                            <%= link_to youtube_embed_url(series_lesson.youtube_url), class: "btn btn-secondary gap-2", target: "_blank" do %>
+                            <%= link_to youtube_embed_url(series_lesson.youtube_url), class: "btn btn-secondary gap-2 whitespace-nowrap", target: "_blank" do %>
                               <%= icon "youtube", library: "lucide", class: "size-5" %>
                               <%= t('buttons.watch_on_youtube') %>
                             <% end %>

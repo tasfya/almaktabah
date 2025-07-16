@@ -17,7 +17,6 @@
           <li><%= link_to t('navigation.books'), books_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
           <li><%= link_to t('navigation.lectures'), lectures_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
           <li><%= link_to t('navigation.series'), series_index_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to t('navigation.lessons'), lessons_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
         </ul>
       </div>
 
@@ -26,9 +25,7 @@
         <ul class="space-y-2">
           <li><%= link_to t('navigation.recent_books'), books_path(recent: true), class: "text-gray-400 hover:text-white transition-colors" %></li>
           <li><%= link_to t('navigation.recent_lectures'), lectures_path(recent: true), class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to t('navigation.recent_lessons'), lessons_path(recent: true), class: "text-gray-400 hover:text-white transition-colors" %></li>
           <li><%= link_to t('navigation.about_sheikh_alt'), about_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to t('navigation.contact_us'), contact_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
         </ul>
       </div>
 

@@ -5,24 +5,13 @@
       <div class="lg:col-span-2">
         <article class="bg-white rounded-lg shadow-md p-8">
           <header class="mb-8">
-            <% if @lecture.video? || @lecture.audio? %>
+            <% if @lecture.video? %>
               <section class="mb-8">
                 <% if @lecture.video? %>
                   <video controls class="w-full rounded">
                     <source src="<%= url_for(@lecture.video) %>" type="<%= @lecture.video.content_type %>">
                     <%= t('common.browser_no_support_video') %>
                   </video>
-                <% elsif @lecture.audio? %>
-                  <div class="relative w-full overflow-hidden rounded-lg shadow-sm mx-auto">
-                    <div class="aspect-video bg-gray-200 relative flex items-center justify-center">
-                      <%= image_tag "background.jpg", class: "absolute inset-0 w-full h-full object-cover" %>
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <%= play_button(resource: @lecture, path: play_lecture_path(@lecture),
-                                      klass: "btn btn-primary w-fit",
-                                      icon_class: "size-8 flex items-center justify-center") %>
-                      </div>
-                    </div>
-                  </div>
                 <% end %>
               </section>
             <% elsif @lecture.youtube_url.present? %>
@@ -34,12 +23,6 @@
                           class="w-full h-full rounded"></iframe>
                 </div>
               </section>
-            <% else %>
-              <div class="mb-8">
-                <p class="text-gray-500">
-                  <%= t("common.no_media_available") %>
-                </p>
-              </div>
             <% end %>
             <h1 class="text-3xl font-bold text-gray-900 mb-4">
               <%= @lecture.title %>
@@ -55,18 +38,19 @@
               <% end %>
             </div>
           </header>
-          <% if @lecture.audio? || @lecture.video? %>
+          <% if @lecture.optimized_audio? || @lecture.video? %>
             <section class="mb-8">
               <div class="bg-gray-50 rounded-lg p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">
                   <%= t(".download_options")%>
                 </h3>
                 <div class="flex flex-wrap gap-4">
-                  <% if @lecture.audio? %>
-                    <%= link_to rails_blob_url(@lecture.audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
+                  <% if @lecture.optimized_audio? %>
+                    <%= link_to rails_blob_url(@lecture.optimized_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       <%= t("buttons.download_audio")%>
                     <% end %>
+                    <%= play_button(resource: @lecture, path: play_lecture_path(@lecture)) %>
                   <% end %>
                   <% if @lecture.video? %>
                     <%= link_to rails_blob_url(@lecture.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary w-fit" do %>
@@ -80,7 +64,6 @@
           <% end %>
         </article>
       </div>
-      <!-- Sidebar -->
     </div>
   </div>
 </div>

@@ -22,7 +22,7 @@
                 <div class="flex sm:flex-row flex-col sm:items-center sm:justify-end gap-2 sm:ml-auto w-full sm:w-auto">
                   <%= play_button(resource: lesson, path: play_lesson_path(lesson), klass: "btn btn-secondary w-full sm:w-auto") %>
                   <% if lesson.youtube_url.present? %>
-                    <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-secondary gap-2", target: "_blank" do %>
+                    <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-secondary gap-2 youtube_url.present?", target: "_blank" do %>
                       <%= icon "youtube", library: "lucide", class: "size-5" %>
                       <span class="text-sm whitespace-nowrap">
                         <%= t('buttons.watch_on_youtube') %>
@@ -62,17 +62,17 @@
         </div>
         <h3 class="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors"><%= t('navigation.lectures') %></h3>
       <% end %>
-      <%= link_to lessons_path, class: "group flex flex-col items-center" do %>
+      <%= link_to series_index_path, class: "group flex flex-col items-center" do %>
         <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-red-200 transition-colors">
           <%= icon("book-open", class: "w-8 h-8 text-red-600") %>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-red-600 transition-colors"><%= t('navigation.lessons') %></h3>
+        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-red-600 transition-colors"><%= t('navigation.scientific_series') %></h3>
       <% end %>
-      <%= link_to series_index_path, class: "group flex flex-col items-center" do %>
+      <%= link_to benefits_path, class: "group flex flex-col items-center" do %>
         <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-purple-200 transition-colors">
           <%= icon("circle-stack", class: "w-8 h-8 text-purple-600") %>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors"><%= t('navigation.series') %></h3>
+        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors"><%= t('navigation.benefits') %></h3>
       <% end %>
     </div>
   </div>

@@ -2,7 +2,7 @@ require_relative './base'
 
 module Seeds
   class LessonsSeeder < Base
-    def self.seed(from: nil)
+    def self.seed(from: nil, domain_id: nil)
       puts "📚 Seeding audio lessons..."
 
       lesson_array = load_json('data/lessons.json')

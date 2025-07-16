@@ -2,7 +2,7 @@ require_relative './base'
 
 module Seeds
   class BooksSeeder < Base
-    def self.seed(from: nil)
+    def self.seed(from: nil, domain_id: nil)
       puts "Seeding books..."
       scholar = Scholar.find_or_create_by(first_name: "محمد", last_name: "بن رمزان الهاجري")
       books_data = load_json('data/books.json').find { |item| item['type'] == 'table' }['data']

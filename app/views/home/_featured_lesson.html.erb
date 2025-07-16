@@ -26,7 +26,7 @@
       <div class="flex gap-4">
         <%= play_button(resource: lesson, path: play_lesson_path(lesson))%>
         <% if lesson.youtube_url.present? %>
-          <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-primary gap-2 w-fit", target: "_blank" do %>
+          <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-primary gap-2 w-fit youtube_url.present?", target: "_blank" do %>
             <%= icon "youtube", library: "lucide", class: "size-5" %>
             <span class="text-sm whitespace-nowrap">
               <%= t('buttons.watch_on_youtube') %>

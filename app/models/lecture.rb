@@ -22,13 +22,6 @@ class Lecture < ApplicationRecord
     [ "scholar" ]
   end
 
-  def video?
-    video.attached?
-  end
-
-  def audio?
-    audio.attached?
-  end
 
   def audio_url
     return nil unless audio.attached?
