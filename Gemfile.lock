@@ -603,9 +603,10 @@ DEPENDENCIES
   rails-controller-testing
   rails_icons (~> 1.3)
   ransack (~> 4.0)
-  roo (~> 2.10)
+  roo
   rspec-instafail
   rspec-rails
+  rubocop
   rubocop-factory_bot
   rubocop-rails-omakase
   rubocop-rspec

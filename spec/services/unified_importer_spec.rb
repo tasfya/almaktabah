@@ -2,9 +2,10 @@ require 'rails_helper'
 
 RSpec.describe UnifiedImporter, type: :service do
   let(:test_file_path) { Rails.root.join('spec', 'fixtures', 'unified_test.xlsx') }
+  let(:domain) { create(:domain) }
 
   before do
-    allow_any_instance_of(BaseImporter).to receive(:download_and_attach_file)
+    allow_any_instance_of(BaseImporter).to receive(:attach_from_url)
     workbook = WriteXLSX.new(test_file_path.to_s)
     youtube_url = Faker::Internet.url(host: "youtube.com", path: "/watch?v=#{Faker::Alphanumeric.alpha(number: 11)}")
     image_url = Faker::Internet.url(host: "example.com", path: "/files/#{Faker::File.file_name(ext: "png")}")
@@ -81,16 +82,17 @@ RSpec.describe UnifiedImporter, type: :service do
   end
 
   describe '#initialize' do
-    it 'initializes with file path' do
-      importer = UnifiedImporter.new(test_file_path)
+    it 'initializes with file path and domain_id' do
+      importer = UnifiedImporter.new(test_file_path, domain_id: domain.id)
       expect(importer.file_path).to eq(test_file_path)
+      expect(importer.domain_id).to eq(domain.id)
       expect(importer.results).to be_empty
     end
   end
 
   describe '#import_all' do
     it 'imports all content types' do
-      importer = UnifiedImporter.new(test_file_path)
+      importer = UnifiedImporter.new(test_file_path, domain_id: domain.id)
       expect {
         importer.import_all
       }.to change(Book, :count).by(1)
@@ -111,7 +113,7 @@ RSpec.describe UnifiedImporter, type: :service do
   end
 
   describe 'individual import methods' do
-    let(:importer) { UnifiedImporter.new(test_file_path) }
+    let(:importer) { UnifiedImporter.new(test_file_path, domain_id: domain.id) }
 
     it 'imports books only' do
       expect {

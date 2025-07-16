@@ -1,26 +1,22 @@
 namespace :import_resources do
-  desc "Generate unified Excel template with all content types as tabs"
-  task generate_template: :environment do
-    puts "Generating unified Excel template..."
-    ExcelTemplateGenerator.generate_unified_template
-    puts "Template generated successfully!"
-  end
-
   desc "Import books from Excel file"
-  task :books, [ :file_path, :sheet_name ] => :environment do |t, args|
+  task :books, [ :file_path, :sheet_name, :domain_id ] => :environment do |t, args|
     file_path = args[:file_path]
     sheet_name = args[:sheet_name] || "Books"
-    if file_path.nil? || file_path.empty?
-      puts "Usage: rails import_resources:books[/path/to/file.xlsx,SheetName]"
+    domain_id = args[:domain_id]
+
+    if file_path.nil? || file_path.empty? || domain_id.nil? || domain_id.empty?
+      puts "Usage: rails import_resources:books[/path/to/file.xlsx,SheetName,domain_id]"
       exit 1
     end
     puts "Importing books from: #{file_path}"
     puts "Using sheet: #{sheet_name}"
+    puts "Domain ID: #{domain_id}"
 
-    importer = BooksImporter.new(file_path, sheet_name)
+    importer = BooksImporter.new(file_path, sheet_name: sheet_name, domain_id: domain_id.to_i)
     importer.import
 
-    summary = importer.import_summary
+    summary = importer.summary
     puts "Import completed!"
     puts "Successfully imported: #{summary[:success_count]} books"
     puts "Errors: #{summary[:error_count]}"
@@ -32,22 +28,24 @@ namespace :import_resources do
   end
 
   desc "Import lectures from Excel file"
-  task :lectures, [ :file_path, :sheet_name ] => :environment do |t, args|
+  task :lectures, [ :file_path, :sheet_name, :domain_id ] => :environment do |t, args|
     file_path = args[:file_path]
     sheet_name = args[:sheet_name] || "Lectures"
+    domain_id = args[:domain_id]
 
-    if file_path.nil? || file_path.empty?
-      puts "Usage: rails import_resources:lectures[/path/to/file.xlsx,SheetName]"
+    if file_path.nil? || file_path.empty? || domain_id.nil? || domain_id.empty?
+      puts "Usage: rails import_resources:lectures[/path/to/file.xlsx,SheetName,domain_id]"
       exit 1
     end
 
     puts "Importing lectures from: #{file_path}"
     puts "Using sheet: #{sheet_name}"
+    puts "Domain ID: #{domain_id}"
 
-    importer = LecturesImporter.new(file_path, sheet_name)
+    importer = LecturesImporter.new(file_path, sheet_name: sheet_name, domain_id: domain_id.to_i)
     importer.import
 
-    summary = importer.import_summary
+    summary = importer.summary
     puts "Import completed!"
     puts "Successfully imported: #{summary[:success_count]} lectures"
     puts "Errors: #{summary[:error_count]}"
@@ -59,22 +57,24 @@ namespace :import_resources do
   end
 
   desc "Import lessons from Excel file"
-  task :lessons, [ :file_path, :sheet_name ] => :environment do |t, args|
+  task :lessons, [ :file_path, :sheet_name, :domain_id ] => :environment do |t, args|
     file_path = args[:file_path]
     sheet_name = args[:sheet_name] || "Lessons"
+    domain_id = args[:domain_id]
 
-    if file_path.nil? || file_path.empty?
-      puts "Usage: rails import_resources:lessons[/path/to/file.xlsx,SheetName]"
+    if file_path.nil? || file_path.empty? || domain_id.nil? || domain_id.empty?
+      puts "Usage: rails import_resources:lessons[/path/to/file.xlsx,SheetName,domain_id]"
       exit 1
     end
 
     puts "Importing lessons from: #{file_path}"
     puts "Using sheet: #{sheet_name}"
+    puts "Domain ID: #{domain_id}"
 
-    importer = LessonsImporter.new(file_path, sheet_name)
+    importer = LessonsImporter.new(file_path, sheet_name, domain_id: domain_id.to_i)
     importer.import
 
-    summary = importer.import_summary
+    summary = importer.summary
     puts "Import completed!"
     puts "Successfully imported: #{summary[:success_count]} lessons"
     puts "Errors: #{summary[:error_count]}"
@@ -86,22 +86,24 @@ namespace :import_resources do
   end
 
   desc "Import benefits from Excel file"
-  task :benefits, [ :file_path, :sheet_name ] => :environment do |t, args|
+  task :benefits, [ :file_path, :sheet_name, :domain_id ] => :environment do |t, args|
     file_path = args[:file_path]
     sheet_name = args[:sheet_name] || "Benefits"
+    domain_id = args[:domain_id]
 
-    if file_path.nil? || file_path.empty?
-      puts "Usage: rails import_resources:benefits[/path/to/file.xlsx,SheetName]"
+    if file_path.nil? || file_path.empty? || domain_id.nil? || domain_id.empty?
+      puts "Usage: rails import_resources:benefits[/path/to/file.xlsx,SheetName,domain_id]"
       exit 1
     end
 
     puts "Importing benefits from: #{file_path}"
     puts "Using sheet: #{sheet_name}"
+    puts "Domain ID: #{domain_id}"
 
-    importer = BenefitsImporter.new(file_path, sheet_name)
+    importer = BenefitsImporter.new(file_path, sheet_name: sheet_name, domain_id: domain_id.to_i)
     importer.import
 
-    summary = importer.import_summary
+    summary = importer.summary
     puts "Import completed!"
     puts "Successfully imported: #{summary[:success_count]} benefits"
     puts "Errors: #{summary[:error_count]}"
@@ -113,22 +115,24 @@ namespace :import_resources do
   end
 
   desc "Import fatwas from Excel file"
-  task :fatwas, [ :file_path, :sheet_name ] => :environment do |t, args|
+  task :fatwas, [ :file_path, :sheet_name, :domain_id ] => :environment do |t, args|
     file_path = args[:file_path]
     sheet_name = args[:sheet_name] || "Fatwas"
+    domain_id = args[:domain_id]
 
-    if file_path.nil? || file_path.empty?
-      puts "Usage: rails import_resources:fatwas[/path/to/file.xlsx,SheetName]"
+    if file_path.nil? || file_path.empty? || domain_id.nil? || domain_id.empty?
+      puts "Usage: rails import_resources:fatwas[/path/to/file.xlsx,SheetName,domain_id]"
       exit 1
     end
 
     puts "Importing fatwas from: #{file_path}"
     puts "Using sheet: #{sheet_name}"
+    puts "Domain ID: #{domain_id}"
 
-    importer = FatwasImporter.new(file_path, sheet_name)
+    importer = FatwasImporter.new(file_path, sheet_name: sheet_name, domain_id: domain_id.to_i)
     importer.import
 
-    summary = importer.import_summary
+    summary = importer.summary
     puts "Import completed!"
     puts "Successfully imported: #{summary[:success_count]} fatwas"
     puts "Errors: #{summary[:error_count]}"
@@ -140,18 +144,20 @@ namespace :import_resources do
   end
 
   desc "Import all content types from unified Excel file"
-  task :all, [ :file_path ] => :environment do |t, args|
+  task :all, [ :file_path, :domain_id ] => :environment do |t, args|
     file_path = args[:file_path]
+    domain_id = args[:domain_id]
 
-    if file_path.nil? || file_path.empty?
-      puts "Usage: rails import_resources:all[/path/to/file.xlsx]"
+    if file_path.nil? || file_path.empty? || domain_id.nil? || domain_id.empty?
+      puts "Usage: rails import_resources:all[/path/to/file.xlsx,domain_id]"
       exit 1
     end
 
     puts "Starting unified import from: #{file_path}"
+    puts "Domain ID: #{domain_id}"
     puts "=" * 50
 
-    importer = UnifiedImporter.new(file_path)
+    importer = UnifiedImporter.new(file_path, domain_id: domain_id.to_i)
     importer.import_all
     importer.print_summary
   end

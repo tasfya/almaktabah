@@ -1,8 +1,9 @@
 class UnifiedImporter
-  attr_reader :file_path, :results
+  attr_reader :file_path, :domain_id, :results
 
-  def initialize(file_path)
+  def initialize(file_path, domain_id:)
     @file_path = file_path
+    @domain_id = domain_id
     @results = {}
   end
 
@@ -16,34 +17,34 @@ class UnifiedImporter
     @results
   end
 
-  def import_books(sheet_name = "Books")
-    importer = BooksImporter.new(@file_path, sheet_name)
+  def import_books
+    importer = BooksImporter.new(@file_path, domain_id: @domain_id)
     importer.import
-    @results[:books] = importer.import_summary
+    @results[:books] = importer.summary
   end
 
-  def import_lectures(sheet_name = "Lectures")
-    importer = LecturesImporter.new(@file_path, sheet_name)
+  def import_lectures
+    importer = LecturesImporter.new(@file_path, domain_id: @domain_id)
     importer.import
-    @results[:lectures] = importer.import_summary
+    @results[:lectures] = importer.summary
   end
 
-  def import_lessons(sheet_name = "Lessons")
-    importer = LessonsImporter.new(@file_path, sheet_name)
+  def import_lessons
+    importer = LessonsImporter.new(@file_path, domain_id: @domain_id)
     importer.import
-    @results[:lessons] = importer.import_summary
+    @results[:lessons] = importer.summary
   end
 
-  def import_benefits(sheet_name = "Benefits")
-    importer = BenefitsImporter.new(@file_path, sheet_name)
+  def import_benefits
+    importer = BenefitsImporter.new(@file_path, domain_id: @domain_id)
     importer.import
-    @results[:benefits] = importer.import_summary
+    @results[:benefits] = importer.summary
   end
 
-  def import_fatwas(sheet_name = "Fatwas")
-    importer = FatwasImporter.new(@file_path, sheet_name)
+  def import_fatwas
+    importer = FatwasImporter.new(@file_path, domain_id: @domain_id)
     importer.import
-    @results[:fatwas] = importer.import_summary
+    @results[:fatwas] = importer.summary
   end
 
   def print_summary

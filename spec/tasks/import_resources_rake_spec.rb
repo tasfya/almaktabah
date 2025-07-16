@@ -15,9 +15,9 @@ RSpec.describe 'import_resources rake tasks' do
     let(:mock_importer) { instance_double(importer_class) }
 
     before do
-      allow(importer_class.constantize).to receive(:new).with(file_path, sheet_name).and_return(mock_importer)
+      allow(importer_class.constantize).to receive(:new).with(file_path, sheet_name:, domain_id: nil).and_return(mock_importer)
       allow(mock_importer).to receive(:import)
-      allow(mock_importer).to receive(:import_summary).and_return({
+      allow(mock_importer).to receive(:summary).and_return({
         success_count: 2,
         error_count: 1,
         errors: [ "Row 3: Invalid format" ]
@@ -28,12 +28,12 @@ RSpec.describe 'import_resources rake tasks' do
 
     it "runs #{task_name} with mocked #{importer_class}" do
       expect {
-        task.invoke(file_path, sheet_name)
+        task.invoke(file_path)
       }.to output(/Import completed!/).to_stdout
 
-      expect(importer_class.constantize).to have_received(:new).with(file_path, sheet_name)
+      expect(importer_class.constantize).to have_received(:new).with(file_path)
       expect(mock_importer).to have_received(:import)
-      expect(mock_importer).to have_received(:import_summary)
+      expect(mock_importer).to have_received(:summary)
     end
   end
 
@@ -77,24 +77,6 @@ RSpec.describe 'import_resources rake tasks' do
       expect(UnifiedImporter).to have_received(:new).with(file_path)
       expect(mock_importer).to have_received(:import_all)
       expect(mock_importer).to have_received(:print_summary)
-    end
-  end
-
-  describe 'import_resources:generate_template' do
-    let(:task) { Rake::Task['import_resources:generate_template'] }
-
-    before do
-      allow(ExcelTemplateGenerator).to receive(:generate_unified_template)
-    end
-
-    after { task.reenable }
-
-    it 'generates the Excel template' do
-      expect {
-        task.invoke
-      }.to output(/Generating unified Excel template/).to_stdout
-
-      expect(ExcelTemplateGenerator).to have_received(:generate_unified_template)
     end
   end
 

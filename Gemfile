@@ -60,8 +60,7 @@ gem "mission_control-jobs"
 gem "httparty"
 
 # Excel file support
-gem "roo", "~> 2.10"
-gem "write_xlsx"
+gem "roo"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -71,6 +70,7 @@ group :development, :test do
   gem "brakeman", require: false
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
+  gem "rubocop"
   gem "rubocop-rails-omakase", require: false
 
   gem "rspec-rails"
@@ -85,6 +85,7 @@ group :development, :test do
   gem "rspec-instafail", require: false
   gem "fuubar", require: false
   gem "rails-controller-testing"
+  gem "write_xlsx"
 end
 
 group :development do
