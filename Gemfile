@@ -59,9 +59,6 @@ gem "mission_control-jobs"
 # YouTube video downloader and HTTP requests
 gem "httparty"
 
-# Excel file support
-gem "roo"
-
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
@@ -85,7 +82,6 @@ group :development, :test do
   gem "rspec-instafail", require: false
   gem "fuubar", require: false
   gem "rails-controller-testing"
-  gem "write_xlsx"
 end
 
 group :development do

@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
-require "roo"
+require "csv"
 require "open-uri"
 require "ostruct"
 
 class BaseImporter
-  attr_reader :file_path, :sheet_name, :domain_id, :errors, :success_count, :error_count
+  attr_reader :file_path, :domain_id, :errors, :success_count, :error_count
 
-  def initialize(file_path, sheet_name: nil, domain_id:)
+  def initialize(file_path, domain_id:)
     raise ArgumentError, "domain_id is required" if domain_id.blank?
 
     @file_path   = file_path
-    @sheet_name  = sheet_name
     @domain_id   = domain_id
     @errors      = []           # [{line: 123, message: "..."}, ...]
     @success_count = 0
@@ -20,12 +19,36 @@ class BaseImporter
 
   def import
     return false unless valid_file?
-    process_excel
-    errors.empty?
+
+    Rails.logger.info "Starting async import for #{self.class.name} from #{file_path}"
+
+    total_rows = 0
+    line_number = 0
+
+    CSV.foreach(file_path, headers: true, encoding: "utf-8") do |row|
+      line_number += 1
+      next if row.to_h.values.all?(&:blank?) # Skip empty rows
+
+      total_rows += 1
+
+      # Queue individual row job
+      ImportRowJob.perform_later(
+        self.class.name,
+        row.to_h,
+        line_number + 1, # +1 for header line
+        domain_id
+      )
+    end
+
+    Rails.logger.info "Queued #{total_rows} row jobs for import"
+    true
+  rescue => e
+    add_error(line: nil, message: "Failed to process import: #{e.message}")
+    false
   end
 
   def summary
-    { success_count:, error_count:, errors: }
+    { message: "Import jobs have been queued. Check logs for progress." }
   end
 
   private
@@ -35,44 +58,14 @@ class BaseImporter
       add_error(line: nil, message: "File not found: #{file_path}")
       return false
     end
-    unless excel_file?
-      add_error(line: nil, message: "Only Excel files (.xlsx, .xls) are supported")
+    unless csv_file?
+      add_error(line: nil, message: "Only CSV files (.csv) are supported")
       return false
     end
     true
   end
 
-  def excel_file? = %w[.xlsx .xls].include?(File.extname(file_path).downcase)
-
-  def process_excel
-    spreadsheet = open_spreadsheet
-
-    if sheet_name
-      unless spreadsheet.sheets.include?(sheet_name)
-        add_error(line: nil, message: "Sheet '#{sheet_name}' not found. Available: #{spreadsheet.sheets.join(', ')}")
-        return
-      end
-      spreadsheet.default_sheet = sheet_name
-    end
-
-    headers = spreadsheet.row(1).compact
-    (2..spreadsheet.last_row).each do |line|
-      row_hash = headers.zip(spreadsheet.row(line)).to_h.compact
-      process_row(OpenStruct.new(row_hash), line)
-      @success_count += 1
-    rescue => e
-      add_error(line:, message: e.message)
-    end
-  rescue => e
-    add_error(line: nil, message: "Failed to process file: #{e.message}")
-  end
-
-  def open_spreadsheet
-    case File.extname(file_path).downcase
-    when ".xlsx" then Roo::Excelx.new(file_path)
-    when ".xls"  then Roo::Excel.new(file_path)
-    end
-  end
+  def csv_file? = File.extname(file_path).downcase == ".csv"
 
   def process_row(row, line)
     raise NotImplementedError, "#{self.class} must implement #process_row(row, line)"
