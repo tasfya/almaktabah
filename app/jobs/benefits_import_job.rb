@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class BenefitsImportJob < ApplicationJob
-  queue_as :imports
-
-  retry_on StandardError, wait: :exponentially_longer, attempts: 3
+  queue_as :default
 
   def perform(row_data, domain_id, line_number = nil)
     Rails.logger.info "Processing benefit import for line #{line_number}"
@@ -32,27 +30,5 @@ class BenefitsImportJob < ApplicationJob
   rescue => e
     Rails.logger.error "Failed to process benefit import for line #{line_number}: #{e.message}"
     raise e
-  end
-
-  private
-
-  def parse_datetime(value)
-    return nil unless value.present?
-    return value if value.is_a?(DateTime) || value.is_a?(Time)
-    DateTime.parse(value.to_s) rescue nil
-  end
-
-  def attach_from_url(record, attachment_name, url, content_type: nil)
-    return if url.blank?
-
-    Rails.logger.info "Enqueuing media download for #{attachment_name} from #{url} for record ##{record.id}"
-    MediaDownloadJob.perform_later(
-      record,
-      attachment_name,
-      url,
-      content_type
-    )
-  rescue => e
-    Rails.logger.error "Failed to enqueue media download for #{attachment_name}: #{e.message}"
   end
 end

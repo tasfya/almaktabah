@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class FatwasImportJob < ApplicationJob
-  queue_as :imports
+  queue_as :default
 
-  retry_on StandardError, wait: :exponentially_longer, attempts: 3
 
   def perform(row_data, domain_id, line_number = nil)
     Rails.logger.info "Processing fatwa import for line #{line_number}"
