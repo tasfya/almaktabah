@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BooksImportJob < ApplicationJob
+class BookImportJob < ApplicationJob
   queue_as :default
 
 

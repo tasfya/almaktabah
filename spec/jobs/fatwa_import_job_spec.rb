@@ -1,6 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe FatwasImportJob, type: :job do
+require 'ostruct'
+
+RSpec.describe FatwaImportJob, type: :job do
   let(:domain) { create(:domain) }
   let(:row_data) do
     {

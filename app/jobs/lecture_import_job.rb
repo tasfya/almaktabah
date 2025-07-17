@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class LecturesImportJob < ApplicationJob
+class LectureImportJob < ApplicationJob
   queue_as :default
 
 

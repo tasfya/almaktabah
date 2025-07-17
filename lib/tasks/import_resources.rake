@@ -12,7 +12,7 @@ namespace :import_resources do
     puts "Processing CSV and enqueuing book import jobs from: #{file_path}"
     puts "Domain ID: #{domain_id}"
 
-    processor = CsvImportProcessor.new(file_path, "BooksImportJob", domain_id.to_i)
+    processor = CsvImportProcessor.new(file_path, "BookImportJob", domain_id.to_i)
     success = processor.process
 
     summary = processor.summary
@@ -44,7 +44,7 @@ namespace :import_resources do
     puts "Processing CSV and enqueuing lecture import jobs from: #{file_path}"
     puts "Domain ID: #{domain_id}"
 
-    processor = CsvImportProcessor.new(file_path, "LecturesImportJob", domain_id.to_i)
+    processor = CsvImportProcessor.new(file_path, "LectureImportJob", domain_id.to_i)
     success = processor.process
 
     summary = processor.summary
@@ -76,7 +76,7 @@ namespace :import_resources do
     puts "Processing CSV and enqueuing lesson import jobs from: #{file_path}"
     puts "Domain ID: #{domain_id}"
 
-    processor = CsvImportProcessor.new(file_path, "LessonsImportJob", domain_id.to_i)
+    processor = CsvImportProcessor.new(file_path, "LessonImportJob", domain_id.to_i)
     success = processor.process
 
     summary = processor.summary
@@ -108,7 +108,7 @@ namespace :import_resources do
     puts "Processing CSV and enqueuing benefit import jobs from: #{file_path}"
     puts "Domain ID: #{domain_id}"
 
-    processor = CsvImportProcessor.new(file_path, "BenefitsImportJob", domain_id.to_i)
+    processor = CsvImportProcessor.new(file_path, "BenefitImportJob", domain_id.to_i)
     success = processor.process
 
     summary = processor.summary
@@ -140,7 +140,7 @@ namespace :import_resources do
     puts "Processing CSV and enqueuing fatwa import jobs from: #{file_path}"
     puts "Domain ID: #{domain_id}"
 
-    processor = CsvImportProcessor.new(file_path, "FatwasImportJob", domain_id.to_i)
+    processor = CsvImportProcessor.new(file_path, "FatwaImportJob", domain_id.to_i)
     success = processor.process
 
     summary = processor.summary

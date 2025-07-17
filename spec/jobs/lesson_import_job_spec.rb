@@ -1,6 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe LessonsImportJob, type: :job do
+require 'ostruct'
+
+RSpec.describe LessonImportJob, type: :job do
   let(:domain) { create(:domain) }
   let(:row_data) do
     {
@@ -16,6 +18,10 @@ RSpec.describe LessonsImportJob, type: :job do
       'audio_file_url' => 'https://example.com/audio.mp3',
       'video_file_url' => 'https://example.com/video.mp4'
     }
+  end
+
+  before do
+    allow(MediaDownloadJob).to receive(:perform_now)
   end
 
   describe '#perform' do
@@ -65,7 +71,7 @@ RSpec.describe LessonsImportJob, type: :job do
     end
 
     it 'enqueues media download jobs for attachments' do
-      expect(MediaDownloadJob).to receive(:perform_later).exactly(3).times
+      expect(MediaDownloadJob).to receive(:perform_now).exactly(3).times
 
       described_class.new.perform(row_data, domain.id, 2)
     end

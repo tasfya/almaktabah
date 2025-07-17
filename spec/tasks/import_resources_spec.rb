@@ -20,7 +20,7 @@ RSpec.describe 'Import Resources Rake Tasks', type: :task do
 
     it 'calls CsvImportProcessor with correct parameters' do
       expect(CsvImportProcessor).to receive(:new)
-        .with(csv_path.to_s, 'BooksImportJob', domain.id)
+        .with(csv_path.to_s, 'BookImportJob', domain.id)
         .and_return(processor_mock)
       expect(processor_mock).to receive(:process).and_return(true)
       expect(processor_mock).to receive(:summary).and_return({
@@ -39,7 +39,7 @@ RSpec.describe 'Import Resources Rake Tasks', type: :task do
 
     it 'handles processing errors gracefully' do
       expect(CsvImportProcessor).to receive(:new)
-        .with(csv_path.to_s, 'BooksImportJob', domain.id)
+        .with(csv_path.to_s, 'BookImportJob', domain.id)
         .and_return(processor_mock)
       expect(processor_mock).to receive(:process).and_return(false)
       expect(processor_mock).to receive(:summary).and_return({
@@ -67,7 +67,7 @@ RSpec.describe 'Import Resources Rake Tasks', type: :task do
 
     it 'calls CsvImportProcessor with correct parameters' do
       expect(CsvImportProcessor).to receive(:new)
-        .with(csv_path.to_s, 'LecturesImportJob', domain.id)
+        .with(csv_path.to_s, 'LectureImportJob', domain.id)
         .and_return(processor_mock)
       expect(processor_mock).to receive(:process).and_return(true)
       expect(processor_mock).to receive(:summary).and_return({
@@ -93,7 +93,7 @@ RSpec.describe 'Import Resources Rake Tasks', type: :task do
 
     it 'calls CsvImportProcessor with correct parameters' do
       expect(CsvImportProcessor).to receive(:new)
-        .with(csv_path.to_s, 'LessonsImportJob', domain.id)
+        .with(csv_path.to_s, 'LessonImportJob', domain.id)
         .and_return(processor_mock)
       expect(processor_mock).to receive(:process).and_return(true)
       expect(processor_mock).to receive(:summary).and_return({
@@ -119,7 +119,7 @@ RSpec.describe 'Import Resources Rake Tasks', type: :task do
 
     it 'calls CsvImportProcessor with correct parameters' do
       expect(CsvImportProcessor).to receive(:new)
-        .with(csv_path.to_s, 'BenefitsImportJob', domain.id)
+        .with(csv_path.to_s, 'BenefitImportJob', domain.id)
         .and_return(processor_mock)
       expect(processor_mock).to receive(:process).and_return(true)
       expect(processor_mock).to receive(:summary).and_return({
@@ -145,7 +145,7 @@ RSpec.describe 'Import Resources Rake Tasks', type: :task do
 
     it 'calls CsvImportProcessor with correct parameters' do
       expect(CsvImportProcessor).to receive(:new)
-        .with(csv_path.to_s, 'FatwasImportJob', domain.id)
+        .with(csv_path.to_s, 'FatwaImportJob', domain.id)
         .and_return(processor_mock)
       expect(processor_mock).to receive(:process).and_return(true)
       expect(processor_mock).to receive(:summary).and_return({

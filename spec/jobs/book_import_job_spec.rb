@@ -1,6 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe BooksImportJob, type: :job do
+require 'ostruct'
+
+RSpec.describe BookImportJob, type: :job do
   let(:domain) { create(:domain) }
   let(:row_data) do
     {
@@ -14,6 +16,10 @@ RSpec.describe BooksImportJob, type: :job do
       'file_url' => 'https://example.com/book.pdf',
       'cover_image_url' => 'https://example.com/cover.jpg'
     }
+  end
+
+  before do
+    allow(MediaDownloadJob).to receive(:perform_now)
   end
 
   describe '#perform' do
@@ -62,7 +68,7 @@ RSpec.describe BooksImportJob, type: :job do
     end
 
     it 'enqueues media download jobs for attachments' do
-      expect(MediaDownloadJob).to receive(:perform_later).twice
+      expect(MediaDownloadJob).to receive(:perform_now).twice
 
       described_class.new.perform(row_data, domain.id, 2)
     end

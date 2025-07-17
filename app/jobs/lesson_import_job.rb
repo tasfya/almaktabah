@@ -2,7 +2,7 @@
 
 require "ostruct"
 
-class LessonsImportJob < ApplicationJob
+class LessonImportJob < ApplicationJob
   queue_as :default
 
 

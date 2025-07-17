@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FatwasImportJob < ApplicationJob
+class FatwaImportJob < ApplicationJob
   queue_as :default
 
 

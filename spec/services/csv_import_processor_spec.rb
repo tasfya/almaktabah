@@ -24,10 +24,10 @@ RSpec.describe CsvImportProcessor, type: :service do
 
   describe '#initialize' do
     it 'initializes with correct attributes' do
-      processor = CsvImportProcessor.new(test_csv_path, 'BooksImportJob', domain.id)
+      processor = CsvImportProcessor.new(test_csv_path, 'BookImportJob', domain.id)
 
       expect(processor.file_path).to eq(test_csv_path)
-      expect(processor.job_class).to eq('BooksImportJob')
+      expect(processor.job_class).to eq('BookImportJob')
       expect(processor.domain_id).to eq(domain.id)
       expect(processor.enqueued_count).to eq(0)
       expect(processor.skipped_count).to eq(0)
@@ -38,9 +38,9 @@ RSpec.describe CsvImportProcessor, type: :service do
   describe '#process' do
     context 'with valid CSV file' do
       it 'processes CSV and enqueues jobs' do
-        processor = CsvImportProcessor.new(test_csv_path, 'BooksImportJob', domain.id)
+        processor = CsvImportProcessor.new(test_csv_path, 'BookImportJob', domain.id)
 
-        expect(BooksImportJob).to receive(:perform_later).exactly(3).times
+        expect(BookImportJob).to receive(:perform_later).exactly(3).times
 
         result = processor.process
 
@@ -51,9 +51,9 @@ RSpec.describe CsvImportProcessor, type: :service do
       end
 
       it 'skips empty rows' do
-        processor = CsvImportProcessor.new(test_csv_path, 'BooksImportJob', domain.id)
+        processor = CsvImportProcessor.new(test_csv_path, 'BookImportJob', domain.id)
 
-        allow(BooksImportJob).to receive(:perform_later)
+        allow(BookImportJob).to receive(:perform_later)
 
         processor.process
 
@@ -61,9 +61,9 @@ RSpec.describe CsvImportProcessor, type: :service do
       end
 
       it 'handles job enqueue errors gracefully' do
-        processor = CsvImportProcessor.new(test_csv_path, 'BooksImportJob', domain.id)
+        processor = CsvImportProcessor.new(test_csv_path, 'BookImportJob', domain.id)
 
-        allow(BooksImportJob).to receive(:perform_later).and_raise(StandardError.new("Job error"))
+        allow(BookImportJob).to receive(:perform_later).and_raise(StandardError.new("Job error"))
 
         result = processor.process
 
@@ -76,7 +76,7 @@ RSpec.describe CsvImportProcessor, type: :service do
 
     context 'with invalid file' do
       it 'returns false for non-existent file' do
-        processor = CsvImportProcessor.new(invalid_file_path, 'BooksImportJob', domain.id)
+        processor = CsvImportProcessor.new(invalid_file_path, 'BookImportJob', domain.id)
 
         result = processor.process
 
@@ -86,7 +86,7 @@ RSpec.describe CsvImportProcessor, type: :service do
 
       it 'returns false for non-CSV file' do
         File.write(non_csv_path, "not a csv file")
-        processor = CsvImportProcessor.new(non_csv_path, 'BooksImportJob', domain.id)
+        processor = CsvImportProcessor.new(non_csv_path, 'BookImportJob', domain.id)
 
         result = processor.process
 
@@ -107,7 +107,7 @@ RSpec.describe CsvImportProcessor, type: :service do
       end
 
       it 'handles CSV parsing errors' do
-        processor = CsvImportProcessor.new(malformed_csv_path, 'BooksImportJob', domain.id)
+        processor = CsvImportProcessor.new(malformed_csv_path, 'BookImportJob', domain.id)
 
         result = processor.process
 
@@ -119,7 +119,7 @@ RSpec.describe CsvImportProcessor, type: :service do
 
   describe '#summary' do
     it 'returns correct summary' do
-      processor = CsvImportProcessor.new(test_csv_path, 'BooksImportJob', domain.id)
+      processor = CsvImportProcessor.new(test_csv_path, 'BookImportJob', domain.id)
 
       # Simulate some processing
       processor.instance_variable_set(:@enqueued_count, 5)
@@ -136,34 +136,34 @@ RSpec.describe CsvImportProcessor, type: :service do
   end
 
   describe 'integration with different job classes' do
-    it 'works with LecturesImportJob' do
-      processor = CsvImportProcessor.new(test_csv_path, 'LecturesImportJob', domain.id)
+    it 'works with LectureImportJob' do
+      processor = CsvImportProcessor.new(test_csv_path, 'LectureImportJob', domain.id)
 
-      expect(LecturesImportJob).to receive(:perform_later).exactly(3).times
-
-      processor.process
-    end
-
-    it 'works with LessonsImportJob' do
-      processor = CsvImportProcessor.new(test_csv_path, 'LessonsImportJob', domain.id)
-
-      expect(LessonsImportJob).to receive(:perform_later).exactly(3).times
+      expect(LectureImportJob).to receive(:perform_later).exactly(3).times
 
       processor.process
     end
 
-    it 'works with BenefitsImportJob' do
-      processor = CsvImportProcessor.new(test_csv_path, 'BenefitsImportJob', domain.id)
+    it 'works with LessonImportJob' do
+      processor = CsvImportProcessor.new(test_csv_path, 'LessonImportJob', domain.id)
 
-      expect(BenefitsImportJob).to receive(:perform_later).exactly(3).times
+      expect(LessonImportJob).to receive(:perform_later).exactly(3).times
 
       processor.process
     end
 
-    it 'works with FatwasImportJob' do
-      processor = CsvImportProcessor.new(test_csv_path, 'FatwasImportJob', domain.id)
+    it 'works with BenefitImportJob' do
+      processor = CsvImportProcessor.new(test_csv_path, 'BenefitImportJob', domain.id)
 
-      expect(FatwasImportJob).to receive(:perform_later).exactly(3).times
+      expect(BenefitImportJob).to receive(:perform_later).exactly(3).times
+
+      processor.process
+    end
+
+    it 'works with FatwaImportJob' do
+      processor = CsvImportProcessor.new(test_csv_path, 'FatwaImportJob', domain.id)
+
+      expect(FatwaImportJob).to receive(:perform_later).exactly(3).times
 
       processor.process
     end
