@@ -1,25 +1,76 @@
-<h2>Change your password</h2>
+<% content_for :title, t('auth.change_password') %>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-  <%= f.hidden_field :reset_password_token %>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div class="rounded-sm border bg-white text-gray-900 shadow-2xl overflow-hidden">
+      <div class="flex flex-col space-y-1.5 p-8 text-center bg-gray-900 text-white">
+        <div class="mx-auto mb-4">
+          <svg class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold tracking-tight">
+          <%= t('auth.change_password') %>
+        </h3>
+        <p class="text-gray-100 mt-2"><%= t('auth.change_password_subtitle') %></p>
+      </div>
+      
+      <div class="p-8">
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
+          <%= f.hidden_field :reset_password_token %>
 
-  <div class="field">
-    <%= f.label :password, "New password" %><br />
-    <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em><br />
-    <% end %>
-    <%= f.password_field :password, autofocus: true, autocomplete: "new-password" %>
+          <div>
+            <%= f.label :password, t('auth.new_password'), class: "block text-sm font-semibold text-gray-700 mb-2" %>
+            <% if @minimum_password_length %>
+              <p class="text-xs text-gray-500 mb-2">
+                (<%= t('auth.minimum_password_length', count: @minimum_password_length) %>)
+              </p>
+            <% end %>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <%= f.password_field :password, 
+                placeholder: t('auth.password_placeholder'),
+                autofocus: true, 
+                autocomplete: "new-password",
+                class: "pl-10 w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition duration-200 text-gray-900 placeholder-gray-500" %>
+            </div>
+          </div>
+
+          <div>
+            <%= f.label :password_confirmation, t('auth.confirm_new_password'), class: "block text-sm font-semibold text-gray-700 mb-2" %>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <%= f.password_field :password_confirmation, 
+                placeholder: t('auth.password_confirmation_placeholder'),
+                autocomplete: "new-password",
+                class: "pl-10 w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition duration-200 text-gray-900 placeholder-gray-500" %>
+            </div>
+          </div>
+
+          <div>
+            <%= f.submit t('auth.update_password'), 
+                class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="px-8 py-6 bg-gray-50 border-t border-gray-200 text-center">
+        <%= link_to t('auth.back_to_login'), new_session_path(resource_name), 
+            class: "btn btn-link btn-sm" %>
+      </div>
+    </div>
+    
+    <div class="text-center text-sm text-gray-600">
+      <%= t('site.copyright') %>
+    </div>
   </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation, "Confirm new password" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Change my password" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
