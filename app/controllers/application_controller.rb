@@ -4,8 +4,6 @@ class ApplicationController < ActionController::Base
   include BreadcrumbHelper
   include Pagy::Backend
 
-  before_action :most_downloaded_books
-  before_action :most_viewed_books
   before_action :latest_news
   before_action :setup_breadcrumbs
   before_action :set_domain
@@ -36,14 +34,6 @@ class ApplicationController < ActionController::Base
     if controller_name == "home" && action_name == "index"
       reset_breadcrumbs
     end
-  end
-
-  def most_downloaded_books
-    @most_downloaded_books ||= Book.published.order(downloads: :desc).limit(5)
-  end
-
-  def most_viewed_books
-    @most_viewed_books ||= Book.published.order(published_at: :desc).limit(5)
   end
 
   def latest_news

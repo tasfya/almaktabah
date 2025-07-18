@@ -197,9 +197,7 @@ ar:
     search_button: "بحث"
   news_bar:
     latest_news: "آخر الأخبار"
-  sidebar:
-    most_downloaded_books: "الكتب الأكثر تحميلاً"
-    most_viewed_books: "الكتب الأكثر مشاهدة"
+
   site:
     name: "مكتبة الشيخ محمد بن رمزان الهاجري"
     tagline: "موقع فضيلة الشيخ محمد بن رمزان الهاجري"
