@@ -37,6 +37,7 @@ class Lecture < ApplicationRecord
 
   def audio_url
     return nil unless audio.attached?
+
     Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
   end
 end

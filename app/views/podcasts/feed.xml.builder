@@ -35,7 +35,7 @@ xml.rss version: "2.0",
         xml.description episode.summary
 
         # Enclosure tag is crucial for the audio file
-        xml.enclosure url: scheme + "://" + @host + episode.audio_url, length: episode.audio_file_size, type: "audio/mpeg"
+        xml.enclosure url: @scheme + "://" + @host + episode.audio_url, length: episode.audio_file_size, type: "audio/mpeg"
 
         # A unique identifier for the episode
         xml.guid @scheme + "://" + @host + episode.audio_url, isPermaLink: "true"
