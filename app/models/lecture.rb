@@ -17,6 +17,8 @@ class Lecture < ApplicationRecord
   def self.ransackable_attributes(auth_object = nil)
     [ "category", "created_at", "description", "duration", "id", "published", "published_at", "scholar_id", "title", "updated_at" ]
   end
+  scope :with_audio, -> { joins(:audio_attachment) }
+  scope :without_audio, -> { where.missing(:audio_attachment) }
 
   def self.ransackable_associations(auth_object = nil)
     [ "scholar" ]

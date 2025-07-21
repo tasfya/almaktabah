@@ -29,4 +29,18 @@ RSpec.describe Lecture, type: :model do
       expect(lecture.assigned_domains).to include(domain)
     end
   end
+
+  describe "scopes" do
+    describe "with_audio" do
+      it "returns the ones with audios" do
+        lecture = create(:lecture)
+        expect(Lecture.with_audio).to include(lecture)
+        expect(Lecture.without_audio).to_not include(lecture)
+
+        lecture.audio.delete
+        expect(Lecture.with_audio).to_not include(lecture)
+        expect(Lecture.without_audio).to include(lecture)
+      end
+    end
+  end
 end

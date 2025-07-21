@@ -18,6 +18,8 @@ class Lesson < ApplicationRecord
   scope :recent, -> { order(published_at: :desc) }
   scope :by_category, ->(category) { where(category: category) if category.present? }
   scope :by_series, ->(series_id) { where(series_id: series_id) if series_id.present? }
+  scope :with_audio, -> { joins(:audio_attachment) }
+  scope :without_audio, -> { where.missing(:audio_attachment) }
 
   scope :ordered_by_lesson_number, -> { order(Arel.sql("COALESCE(position, 999999)")) }
 

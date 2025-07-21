@@ -11,8 +11,8 @@ module PodcastsHelper
   end
 
   def get_podcast_audios(domain_id:)
-    lessons = Lesson.published.where.not(duration: nil)
-    lectures = Lecture.published.where.not(duration: nil)
+    lessons = Lesson.published.with_audio.where.not(duration: nil)
+    lectures = Lecture.published.with_audio.where.not(duration: nil)
     lessons = lessons.for_domain_id(domain_id)
     lectures = lectures.for_domain_id(domain_id)
     lectures + lessons
