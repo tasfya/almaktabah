@@ -3,7 +3,7 @@ class Series < ApplicationRecord
     include DomainAssignable
 
     has_many :lessons, dependent: :destroy
-
+    belongs_to :scholar
     # Scopes
     scope :recent, -> { order(published_at: :desc) }
     scope :by_category, ->(category) { where(category: category) if category.present? }

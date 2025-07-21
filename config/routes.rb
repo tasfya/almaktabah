@@ -44,4 +44,6 @@ Rails.application.routes.draw do
   get "category/:id", to: "category#show", as: "category"
   get "artist/:id", to: "artist#show", as: "artist"
   get "album/:id", to: "album#show", as: "album"
+
+  get "/podcasts/feed", to: "podcasts#feed", as: "podcast_feed", defaults: { format: "xml" }
 end
