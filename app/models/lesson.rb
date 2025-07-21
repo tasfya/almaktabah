@@ -45,6 +45,16 @@ class Lesson < ApplicationRecord
     Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
   end
 
+  def audio_file_size
+    return nil unless audio.attached?
+
+    audio.blob.byte_size
+  end
+
+  def podcast_title
+    "#{position} - #{series.title} - #{title}"
+  end
+
   def series_title
     series.title
   end
@@ -52,5 +62,9 @@ class Lesson < ApplicationRecord
   def extract_lesson_number
     match = title.match(/(\d+)/)
     match ? match[1].to_i : Float::INFINITY
+  end
+
+  def summary
+    description
   end
 end

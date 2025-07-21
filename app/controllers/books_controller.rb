@@ -4,12 +4,12 @@ class BooksController < ApplicationController
   before_action :setup_books_breadcrumbs
 
   def index
-    @q = Book.for_domain(@domain).published.includes(:author).ransack(params[:q])
+    @q = Book.for_domain_id(@domain.id).published.includes(:author).ransack(params[:q])
     @pagy, @books = pagy(@q.result(distinct: true), limit: 12)
   end
 
   def show
-    @related_books = Book.for_domain(@domain)
+    @related_books = Book.for_domain_id(@domain.id)
                          .published.by_category(@book.category)
                          .where.not(id: @book.id)
                          .recent
@@ -29,7 +29,7 @@ class BooksController < ApplicationController
   end
 
   def set_book
-    @book = Book.for_domain(@domain).published.find(params[:id])
+    @book = Book.for_domain_id(@domain.id).published.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to books_path, alert: t("messages.book_not_found")
   end

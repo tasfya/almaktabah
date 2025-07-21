@@ -5,7 +5,7 @@ class BenefitImportJob < ApplicationJob
     return if benefit_data["name"].blank?
     domain = Domain.find_by(id: domain_id) if domain_id
 
-    benefit = Benefit.for_domain(domain).find_or_initialize_by(title: benefit_data["name"])
+    benefit = Benefit.for_domain_id(domain.id).find_or_initialize_by(title: benefit_data["name"])
 
     if benefit.new_record?
       benefit.category = benefit_data["series_name"]

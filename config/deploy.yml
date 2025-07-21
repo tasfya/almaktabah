@@ -23,6 +23,7 @@ proxy:
    - binramzan.hachimy.com
    - ilm.hachimy.com
    - suhayimi.hachimy.com
+   - ubayd.hachimy.com
 
 # Credentials for your image host.
 registry:
