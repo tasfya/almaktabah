@@ -10,6 +10,7 @@ class ActiveStorageOrganizer
       old_key = blob.key
       next if new_key == old_key
 
+      puts "Migrating: #{old_key} -> #{new_key}"
       copy_s3_object(old_key, new_key)
       blob.update!(key: new_key)
       delete_s3_object(old_key)
