@@ -43,7 +43,7 @@ class Lecture < ApplicationRecord
     Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
   end
 
-  def generate_bucket_folder_structure
+  def generate_bucket_key
     ext = audio.attachment.blob.filename.extension
     "#{scholar.first_name} #{scholar.last_name}/#{title}.#{ext}"
   end

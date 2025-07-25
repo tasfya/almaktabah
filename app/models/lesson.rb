@@ -70,7 +70,7 @@ class Lesson < ApplicationRecord
     description
   end
 
-  def generate_bucket_folder_structure
+  def generate_bucket_key
     ext = audio.attachment.blob.filename.ext
     structure = "#{series.scholar.first_name} #{series.scholar.last_name}"
     structure += "/#{series.title}/#{position}-#{title}.#{ext}"
