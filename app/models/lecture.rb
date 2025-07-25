@@ -2,6 +2,7 @@ class Lecture < ApplicationRecord
   include MediaHandler
   include DomainAssignable
   include Publishable
+  include ArabicHelper
 
   validates :title, presence: true
 
@@ -45,6 +46,7 @@ class Lecture < ApplicationRecord
 
   def generate_bucket_key
     ext = audio.attachment.blob.filename.extension
-    "#{scholar.first_name} #{scholar.last_name}/#{title}.#{ext}"
+    bucket_key = "#{scholar.first_name} #{scholar.last_name}/#{title}.#{ext}"
+    transliterate_arabic(key)
   end
 end
