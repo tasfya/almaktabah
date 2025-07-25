@@ -3,47 +3,16 @@ class ActiveStorageOrganizer
   # TODO make sure this is happening after optimization
   def self.organize(contents)
     contents.find_each do |content|
-      next unless content.audio&.attachment.present?
+      next unless content.optimized_audio&.attachment.present?
 
-      key = content.generate_bucket_key
-      blob = content.audio.attachment.blob
-      next if key == blob.key
-    end
+      old_key = content.generate_bucket_key
+      blob = content.optimized_audio.attachment.blob
+      next if old_key == blob.key
 
-    ActiveStorage::Blob.includes(:attachments).find_each do |blob|
-      next unless blob.attachments.any?
-
-      # Get the first attachment to determine the model
-      attachment = blob.attachments.first
-      record = attachment.record
-
-      # Skip if no record or if it doesn't have the expected attributes
-      next unless record.respond_to?(:scholar) && record.respond_to?(:id)
-
-      old_key = blob.key
-      new_key = generate_new_key(record, blob.filename.to_s)
-
-      # Skip if keys are the same
-      next if old_key == new_key
       copy_s3_object(old_key, new_key)
-
-      begin
-        # Copy object to new key
-        copy_s3_object(old_key, new_key)
-
-        # Update the blob record
-        blob.update!(key: new_key)
-
-        # Delete old object
-        delete_s3_object(old_key)
-
-        puts "Migrated: #{old_key} -> #{new_key}"
-
-      rescue => e
-        puts "Error migrating #{old_key}: #{e.message}"
-        # Rollback: delete new key if it was created
-        delete_s3_object(new_key) rescue nil
-      end
+      blob.update!(key: new_key)
+      delete_s3_object(old_key)
+      puts "Migrated: #{old_key} -> #{new_key}"
     end
   end
 
