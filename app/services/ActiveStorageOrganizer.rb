@@ -34,7 +34,7 @@ class ActiveStorageOrganizer
   def self.copy_s3_object(old_key, new_key)
     s3_client.copy_object(
       bucket: bucket_config["bucket"],
-      copy_source: "#{bucket_name}/#{old_key}",
+      copy_source: "#{bucket_config['bucket']}/#{old_key}",
       key: new_key
     )
   end
