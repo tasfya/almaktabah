@@ -2,7 +2,7 @@ class ActiveStorageOrganizer
   all_content = Lesson.with_audio + Lecture.with_audio
   # TODO make sure this is happening after optimization
   def self.organize(contents)
-    contents.find_each do |content|
+    contents.each do |content|
       next unless content.optimized_audio&.attachment.present?
 
       old_key = content.generate_bucket_key
