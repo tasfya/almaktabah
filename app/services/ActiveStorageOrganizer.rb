@@ -5,9 +5,10 @@ class ActiveStorageOrganizer
     contents.each do |content|
       next unless content.optimized_audio&.attachment.present?
 
-      old_key = content.generate_bucket_key
+      new_key = content.generate_bucket_key
       blob = content.optimized_audio.attachment.blob
-      next if old_key == blob.key
+      old_key = blob.key
+      next if old_key == old_key
 
       copy_s3_object(old_key, new_key)
       blob.update!(key: new_key)
