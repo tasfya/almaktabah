@@ -47,6 +47,6 @@ class Lecture < ApplicationRecord
   def generate_bucket_key
     ext = audio.attachment.blob.filename.extension
     bucket_key = "#{scholar.first_name} #{scholar.last_name}/#{title}.#{ext}"
-    transliterate_arabic(key)
+    transliterate_arabic(bucket_key)
   end
 end
