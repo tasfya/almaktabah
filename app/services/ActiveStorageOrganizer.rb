@@ -41,7 +41,7 @@ class ActiveStorageOrganizer
 
   def self.delete_s3_object(key)
     s3_client.delete_object(
-      bucket: bucket_name,
+      bucket: bucket_config["bucket"],
       key: key
     )
   end
