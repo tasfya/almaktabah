@@ -8,7 +8,7 @@ class ActiveStorageOrganizer
       new_key = content.generate_bucket_key
       blob = content.optimized_audio.attachment.blob
       old_key = blob.key
-      next if old_key == old_key
+      next if new_key == old_key
 
       copy_s3_object(old_key, new_key)
       blob.update!(key: new_key)
