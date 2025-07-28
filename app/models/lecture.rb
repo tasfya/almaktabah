@@ -2,6 +2,7 @@ class Lecture < ApplicationRecord
   include MediaHandler
   include DomainAssignable
   include Publishable
+  include ArabicHelper
 
   validates :title, presence: true
 
@@ -41,5 +42,11 @@ class Lecture < ApplicationRecord
     return nil unless audio.attached?
 
     Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
+  end
+
+  def generate_bucket_key
+    ext = audio.attachment.blob.filename.extension
+    bucket_key = "#{scholar.first_name} #{scholar.last_name}/#{title}.#{ext}"
+    transliterate_arabic(bucket_key)
   end
 end
