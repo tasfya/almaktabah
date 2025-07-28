@@ -1,21 +1,10 @@
 <%= form_with url: play_path(resource_type: resource.class.name.downcase, id: resource.id), 
                 local: true, 
-                data: { action: "submit->application#preventDefault:reload", turbo_frame: "audio" } do |form| %>
+                data: { turbo_frame: "audio" } do |form| %>
   <%= form.button type: "submit",
                   class: klass,
-                  data: {
-                    controller: "play-button",
-                    "play-button-player-outlet": "##{dom_id(resource, :audio)}",
-                    action: "click->play-button#toggle"
-                  } do %>
-    <div class="block group-aria-pressed:hidden">
-      <span class="sr-only">Play <%= resource_type_for_accessibility(resource) %> <%= resource.title %></span>
-      <%= icon("play", class: "size-4") %>
-    </div>
-    <div class="hidden group-aria-pressed:block">
-      <span class="sr-only">Pause <%= resource_type_for_accessibility(resource) %> <%= resource.title %></span>
-      <%= icon("pause", class: "size-4") %>
-    </div>
+                  data: { turbo_stream: true } do %>
+    <%= icon("play", class: "size-4") %>
     <span class="ml-3" aria-hidden="true"><%= t("buttons.listen") %></span>
   <% end %>
 <% end %>

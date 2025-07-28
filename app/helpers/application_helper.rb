@@ -47,17 +47,4 @@ module ApplicationHelper
       resource.title
     end
   end
-
-  def resource_type_for_accessibility(resource)
-    case resource
-    when Lesson
-      "lesson"
-    when Lecture
-      "lecture"
-    when Benefit
-      "benefit"
-    else
-      "content"
-    end
-  end
 end
