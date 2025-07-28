@@ -1,36 +1,44 @@
-require "streamio-ffmpeg"
-require "fileutils"
+# frozen_string_literal: true
+
+require "open3"
 
 class AudioOptimizer
-  def initialize(input_path, output_path = nil, bitrate: "32k")
-    @input_path = input_path.to_s
-    @bitrate = bitrate
-    @output_path = (output_path || default_output_path).to_s
+  DEFAULT_BITRATE = "64k"
+
+  def initialize(input_io:, output_io: nil, bitrate: DEFAULT_BITRATE)
+    @input_io  = ensure_io(input_io)
+    @output_io = output_io || StringIO.new
+    @bitrate   = bitrate
   end
 
   def optimize
-    movie = FFMPEG::Movie.new(@input_path)
-    puts "Optimizing audio file: #{@input_path} to #{@output_path} as MP3 (speech-optimized)"
+    command = %W[
+      ffmpeg -loglevel error
+      -i -
+      -f mp3
+      -codec:a libmp3lame
+      -b:a #{@bitrate}
+      -fflags +fastseek+genpts
+      -avoid_negative_ts make_zero
+      -
+    ]
 
-    options = {
-      audio_codec: "libmp3lame",
-      audio_bitrate: @bitrate,
-      custom: %w[-y -fflags +fastseek+genpts -avoid_negative_ts make_zero]
-    }
+    Open3.popen2(*command) do |stdin, stdout, wait_thr|
+      writer = Thread.new { IO.copy_stream(@input_io, stdin); stdin.close }
+      IO.copy_stream(stdout, @output_io)
+      writer.join
+      raise "ffmpeg failed (exit #{wait_thr.value.exitstatus})" unless wait_thr.value.success?
+    end
 
-    movie.transcode(@output_path, options)
-    @output_path
+    @output_io.rewind
+    @output_io
   rescue => e
-    puts "Error optimizing audio: #{e.message}"
-    FileUtils.cp(@input_path, @output_path)
-    @output_path
+    raise "Audio optimization failed: #{e.message}"
   end
 
   private
 
-  def default_output_path
-    dir = File.dirname(@input_path)
-    base = File.basename(@input_path, ".*")
-    File.join(dir, "#{base}_optimized.mp3")
+  def ensure_io(io)
+    io.respond_to?(:read) ? io : StringIO.new(io)
   end
 end
