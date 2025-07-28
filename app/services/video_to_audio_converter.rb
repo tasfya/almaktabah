@@ -12,16 +12,22 @@ class VideoToAudioConverter
   def convert
     output_io = StringIO.new
 
-    command = %W[
-      ffmpeg -loglevel error
-      -i -
-      -vn
-      -f mp3
-      -codec:a libmp3lame
-      -b:a #{@bitrate}
-      -ar 44100
-      -ac 2
-      -
+    # Validate bitrate to ensure it's in a safe format
+    unless @bitrate =~ /\A\d+k\z/ # e.g., "128k", "256k"
+      raise ArgumentError, "Invalid bitrate format. Must be like '128k'."
+    end
+
+    command = [
+      "ffmpeg",
+      "-loglevel", "error",
+      "-i", "-",
+      "-vn",
+      "-f", "mp3",
+      "-codec:a", "libmp3lame",
+      "-b:a", @bitrate,
+      "-ar", "44100",
+      "-ac", "2",
+      "-",
     ]
 
     Open3.popen2(*command) do |stdin, stdout, wait_thr|

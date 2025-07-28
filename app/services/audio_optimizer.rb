@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "open3"
+require "stringio"
 
 class AudioOptimizer
   DEFAULT_BITRATE = "64k"
@@ -12,15 +13,20 @@ class AudioOptimizer
   end
 
   def optimize
-    command = %W[
-      ffmpeg -loglevel error
-      -i -
-      -f mp3
-      -codec:a libmp3lame
-      -b:a #{@bitrate}
-      -fflags +fastseek+genpts
-      -avoid_negative_ts make_zero
-      -
+    unless @bitrate =~ /\A\d+k\z/ # e.g., "64k", "128k", "256k"
+      raise ArgumentError, "Invalid bitrate format. Bitrate must be in the format 'NNNk' (e.g., '128k')."
+    end
+
+    command = [
+      "ffmpeg",
+      "-loglevel", "error",
+      "-i", "-",
+      "-f", "mp3",
+      "-codec:a", "libmp3lame",
+      "-b:a", @bitrate, # Pass as a separate argument
+      "-fflags", "+fastseek+genpts",
+      "-avoid_negative_ts", "make_zero",
+      "-",
     ]
 
     Open3.popen2(*command) do |stdin, stdout, wait_thr|
