@@ -50,7 +50,7 @@
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       <%= t("buttons.download_audio")%>
                     <% end %>
-                    <%= play_button(resource: @lecture, path: play_lecture_path(@lecture)) %>
+                    <%= play_button(resource: @lecture) %>
                   <% end %>
                   <% if @lecture.video? %>
                     <%= link_to rails_blob_url(@lecture.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary w-fit" do %>

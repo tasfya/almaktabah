@@ -1,6 +1,6 @@
 class LessonsController < ApplicationController
   include Filterable
-  before_action :set_lesson, only: [ :show, :play ]
+  before_action :set_lesson, only: [ :show ]
   before_action :setup_lessons_breadcrumbs
 
   def index
@@ -17,9 +17,6 @@ class LessonsController < ApplicationController
                             .by_series(@lesson.series_id)
                             .where.not(id: @lesson.id)
                             .limit(4)
-  end
-
-  def play
   end
 
   private

@@ -38,4 +38,26 @@ module ApplicationHelper
 
     "https://www.youtube.com/embed/#{video_id}"
   end
+
+  def resource_title(resource)
+    case resource
+    when Lesson
+      resource.full_title
+    else
+      resource.title
+    end
+  end
+
+  def resource_type_for_accessibility(resource)
+    case resource
+    when Lesson
+      "lesson"
+    when Lecture
+      "lecture"
+    when Benefit
+      "benefit"
+    else
+      "content"
+    end
+  end
 end
