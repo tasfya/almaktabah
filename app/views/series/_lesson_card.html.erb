@@ -1,26 +1,26 @@
-<div class="border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:shadow transition">
-  <div class="flex flex-col gap-3 text-sm text-gray-700">
+<div class="border border-background-subtle rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:shadow transition">
+  <div class="flex flex-col gap-3 text-sm text-foreground">
     <div class="flex items-center gap-2">
       <% if lesson.series.present? %>
-        <span class="bg-gray-100 px-2 py-1 rounded-full text-xs text-gray-600">
+        <span class="bg-background-subtle px-2 py-1 rounded-full text-xs text-foreground">
           <%= lesson.series.title %>
         </span>
       <% end %>
-      <span class="bg-black text-white px-2 py-1 rounded-full text-xs">
+      <span class="bg-primary-800 text-background px-2 py-1 rounded-full text-xs">
         <%= lesson.media_type %>
       </span>
       <% if false && lesson.published_at %>
-        <span class="text-gray-500">
+        <span class="text-foreground">
           <%= l(lesson.published_at, format: :long) %>
         </span>
       <% end %>
     </div>
-    <%= link_to lesson.title, lesson_path(lesson), class: "text-xl font-semibold hover:text-gray-600" %>
+    <%= link_to lesson.title, lesson_path(lesson), class: "text-xl font-semibold hover:text-primary-500" %>
   </div>
   <div class="flex items-center gap-2">
     <%= play_button(resource: lesson, path: play_lesson_path(lesson)) %>
     <% if lesson.youtube_url.present? %>
-      <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-secondary gap-2 youtube_url.present?", target: "_blank" do %>
+      <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-secondary gap-2", target: "_blank" do %>
         <%= icon "youtube", library: "lucide", class: "size-5" %>
         <span class="text-sm whitespace-nowrap">
           <%= t('buttons.watch_on_youtube') %>

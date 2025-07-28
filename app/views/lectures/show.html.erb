@@ -1,9 +1,8 @@
-<div class="bg-gray-50 min-h-screen py-8">
+<div class="bg-background-subtle min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
-      <!-- Main Content -->
       <div class="lg:col-span-2">
-        <article class="bg-white rounded-lg shadow-md p-8">
+        <article class="bg-background rounded-lg shadow-md p-8">
           <header class="mb-8">
             <% if @lecture.video? %>
               <section class="mb-8">
@@ -24,24 +23,24 @@
                 </div>
               </section>
             <% end %>
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">
+            <h1 class="text-3xl font-bold text-foreground mb-4">
               <%= @lecture.title %>
             </h1>
-            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
+            <div class="flex flex-wrap items-center gap-4 text-sm text-foreground mb-6">
               <% if @lecture.category.present? %>
                 <span class="badge badge-primary">
                   <%= @lecture.category %>
                 </span>
               <% end %>
               <% if false && @lecture.published_at %>
-                <time><%= @lecture.published_at.strftime("%Y/%m/%d") %></time>
+                <time class="text-foreground"><%= @lecture.published_at.strftime("%Y/%m/%d") %></time>
               <% end %>
             </div>
           </header>
           <% if @lecture.optimized_audio? || @lecture.video? %>
             <section class="mb-8">
-              <div class="bg-gray-50 rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              <div class="bg-background-subtle rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-foreground mb-4">
                   <%= t(".download_options")%>
                 </h3>
                 <div class="flex flex-wrap gap-4">

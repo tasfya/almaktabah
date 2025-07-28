@@ -1,9 +1,9 @@
 <% content_for :title, "#{@lesson.series_title}- #{@lesson.title}" %>
-<div class="bg-gray-50 min-h-screen py-8">
+<div class="bg-background-subtle min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
       <div class="lg:col-span-2">
-        <article class="bg-white rounded-lg shadow-md p-8">
+        <article class="bg-background rounded-lg shadow-md p-8">
           <header class="mb-8">
             <% if @lesson.video? %>
               <section class="mb-8">
@@ -21,15 +21,15 @@
                 </div>
               </section>
             <% end %>
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">
+            <h1 class="text-3xl font-bold text-foreground mb-4">
               <%= @lesson.title %>
             </h1>
             <% if @lesson.series.present? %>
               <div class="mb-4">
-                <%= link_to @lesson.series.title, series_path(@lesson.series), class: "text-gray-800 hover:text-gray-900 font-medium" %>
+                <%= link_to @lesson.series.title, series_path(@lesson.series), class: "text-primary-500 hover:text-primary-600 font-medium text-md" %>
               </div>
             <% end %>
-            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
+            <div class="flex flex-wrap items-center gap-4 text-sm text-foreground mb-6">
               <% if @lesson.category.present? %>
                 <span class="badge badge-primary">
                   <%= @lesson.category %>
@@ -39,23 +39,23 @@
           </header>
           <% if @lesson.respond_to?(:content) && @lesson.content.present? %>
             <section class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.lesson_content') %></h2>
-              <div class="prose prose-lg max-w-none">
+              <h2 class="text-2xl font-bold text-foreground mb-4"><%= t('.lesson_content') %></h2>
+              <div class="prose prose-lg max-w-none text-foreground">
                 <%= @lesson.content %>
               </div>
             </section>
           <% elsif false && @lesson.description.present? %>
             <section class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.lesson_description') %></h2>
-              <div class="prose prose-lg max-w-none">
+              <h2 class="text-2xl font-bold text-foreground mb-4"><%= t('.lesson_description') %></h2>
+              <div class="prose prose-lg max-w-none text-foreground">
                 <%= simple_format(@lesson.description) %>
               </div>
             </section>
           <% end %>
           <% if @lesson.optimized_audio? || @lesson.video? %>
             <section class="mb-8">
-              <div class="bg-gray-50 rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4"><%= t('.download_options') %></h3>
+              <div class="bg-background-subtle rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-foreground mb-4"><%= t('.download_options') %></h3>
                 <div class="flex flex-wrap gap-4">
                   <% if @lesson.optimized_audio? %>
                     <%= link_to rails_blob_url(@lesson.optimized_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
@@ -77,22 +77,22 @@
           <% if @lesson.series.present? %>
             <section class="mb-8">
               <div class="flex items-center justify-between mb-4">
-                <h2 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.other_series_lessons') %></h2>
+                <h2 class="text-2xl font-bold text-foreground mb-4"><%= t('.other_series_lessons') %></h2>
               </div>
               <div class="space-y-3">
                 <% @lesson.series.lessons.recent.limit(5).each do |series_lesson| %>
-                  <div class="<%= 'bg-gray-50 border-gray-200' if series_lesson == @lesson %> border rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div class="<%= 'bg-background-subtle border-background-subtle' if series_lesson == @lesson %> border border-background-subtle rounded-lg p-4 hover:shadow-md transition-shadow">
                     <div class="flex flex-col sm:flex-row sm:items-center">
                       <div class="flex-1">
-                        <h3 class="font-medium <%= 'text-gray-900' if series_lesson == @lesson %>">
+                        <h3 class="font-medium <%= 'text-foreground' if series_lesson == @lesson %>">
                           <% if series_lesson == @lesson %>
                             <%= series_lesson.title %> (<%= t('.current_lesson') %>)
                           <% else %>
-                            <%= link_to series_lesson.title, lesson_path(series_lesson), class: "hover:text-gray-600" %>
+                            <%= link_to series_lesson.title, lesson_path(series_lesson), class: "text-foreground hover:text-primary-500" %>
                           <% end %>
                         </h3>
-                        <div class="flex items-center gap-3 text-sm text-gray-500 mt-1">
-                          <% if false  %>
+                        <div class="flex items-center gap-3 text-sm text-foreground mt-1">
+                          <% if false %>
                             <span><%= series_lesson.duration %> <%= t('common.duration_minutes') %></span>
                             <span><%= series_lesson.published_at.strftime("%Y/%m/%d") %></span>
                           <% end %>
@@ -111,7 +111,7 @@
                             <%= icon "eye", class: "size-5" %>
                             <span class="text-sm whitespace-nowrap">
                               <%= t('buttons.view') %>
-
+                            </span>
                           <% end %>
                         </div>
                       <% end %>
@@ -123,7 +123,6 @@
           <% end %>
         </article>
       </div>
-      <!-- Sidebar -->
     </div>
   </div>
 </div>

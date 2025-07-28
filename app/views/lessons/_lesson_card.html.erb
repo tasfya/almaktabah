@@ -1,4 +1,4 @@
-<div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+<div class="bg-background border border-background-subtle rounded-lg p-6 hover:shadow-md transition-shadow">
   <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between">
     <div class="flex-1">
       <% if lesson.series.present? %>
@@ -6,13 +6,13 @@
           <%= link_to lesson.series.title, series_path(lesson.series) %>
         </p>
       <% end %>
-      <h3 class="text-xl font-semibold text-gray-900 mb-2">
-        <%= link_to "#{lesson.title} - #{lesson.series.title}", lesson_path(lesson), class: "hover:text-gray-600" %>
+      <h3 class="text-xl font-semibold text-foreground mb-2">
+        <%= link_to "#{lesson.title} - #{lesson.series.title}", lesson_path(lesson), class: "hover:text-primary-500" %>
       </h3>
-      <p class="text-gray-600 text-sm mb-4"><%= truncate(lesson.description, length: 200) %></p>
-      <div class="flex items-center justify-between text-sm text-gray-500">
+      <p class="text-foreground text-sm mb-4"><%= truncate(lesson.description, length: 200) %></p>
+      <div class="flex items-center justify-between text-sm text-foreground">
         <% if false %>
-          <span class="bg-gray-100 px-2 py-1 rounded"><%= lesson.category %></span>
+          <span class="bg-background-subtle px-2 py-1 rounded text-foreground"><%= lesson.category %></span>
         <% end %>
         <div class="flex space-x-4 rtl:space-x-reverse">
         </div>

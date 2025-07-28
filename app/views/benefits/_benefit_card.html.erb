@@ -1,24 +1,24 @@
-<div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+<div class="bg-background border border-background-subtle rounded-lg p-6 hover:shadow-md transition-shadow">
   <div class="flex items-start space-x-4 rtl:space-x-reverse">
-    <div class="flex-shrink-0 w-24 h-24 rounded overflow-hidden bg-gray-100">
+    <div class="flex-shrink-0 w-24 h-24 rounded overflow-hidden bg-background-subtle">
       <% if benefit.thumbnail.attached? %>
-        <%= image_tag(benefit.thumbnail, 
-            alt: benefit.title, 
+        <%= image_tag(benefit.thumbnail,
+            alt: benefit.title,
             class: "w-full h-full object-cover") %>
       <% else %>
-        <%= image_tag('audio-thumbnail.jpg', 
-            alt: benefit.title, 
+        <%= image_tag('audio-thumbnail.jpg',
+            alt: benefit.title,
             class: "w-full h-full object-cover") %>
       <% end %>
     </div>
     <div class="flex-1">
-      <h3 class="text-lg font-semibold text-gray-900 mb-2">
-        <%= link_to benefit.title, benefit_path(benefit), class: "hover:text-gray-600" %>
+      <h3 class="text-lg font-semibold text-foreground mb-2">
+        <%= link_to benefit.title, benefit_path(benefit), class: "hover:text-primary-500" %>
       </h3>
       <div class="badge badge-primary mb-2">
         <%= benefit.category %>
       </div>
-      <span class="badge badge-secondary mb-2 border">
+      <span class="badge badge-secondary mb-2 border border-background-subtle">
         <%= benefit.media_type %>
       </span>
     </div>

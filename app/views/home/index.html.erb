@@ -1,23 +1,22 @@
 <% content_for :title, t('navigation.home') %>
 <%= render partial: "featured_lesson", locals: { lesson: @featured_lesson } if @featured_lesson.present?%>
-<section class="py-16 bg-gray-50">
+<section class="py-16 bg-background-subtle">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
       <div class="lg:col-span-2">
-        <div class="bg-white w-full rounded-lg shadow-md flex items-center gap-1 flex-wrap p-6">
-          <h3 class="text-xl font-bold text-gray-900 mb-6 text-right"><%= t('navigation.recent_lessons') %></h3>
+        <div class="bg-background w-full rounded-lg shadow-md flex items-center gap-1 flex-wrap p-6">
+          <h3 class="text-xl font-bold text-foreground mb-6 text-right"><%= t('navigation.recent_lessons') %></h3>
           <div class="space-y-4 w-full">
             <% @recent_lessons.each do |lesson| %>
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors w-full">
-                <!-- Icon Section -->
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 bg-background rounded-lg hover:bg-secondary-100 transition-colors w-full">
                 <div class="flex-shrink-0 self-start sm:self-auto">
-                  <div class="bg-white p-2 rounded-lg border w-fit">
-                    <%= icon "book-open", class: "size-6 text-gray-700" %>
+                  <div class="bg-background p-2 rounded-lg border w-fit border-background-subtle">
+                    <%= icon "book-open", class: "size-6 text-foreground" %>
                   </div>
                 </div>
                 <div class="flex-1 text-right sm:ml-4 w-full">
-                  <h4 class="font-semibold text-gray-900 mb-1"><%= lesson.full_title %></h4>
-                  <p class="text-sm text-gray-600"><%= truncate(lesson.description, length: 200) %></p>
+                  <h4 class="font-semibold text-foreground mb-1"><%= lesson.full_title %></h4>
+                  <p class="text-sm text-foreground"><%= truncate(lesson.description, length: 200) %></p>
                 </div>
                 <div class="flex sm:flex-row flex-col sm:items-center sm:justify-end gap-2 sm:ml-auto w-full sm:w-auto">
                   <%= play_button(resource: lesson, path: play_lesson_path(lesson), klass: "btn btn-secondary w-full sm:w-auto") %>
@@ -39,14 +38,12 @@
           </div>
         </div>
       </div>
-      <!-- Left Sidebar - Downloads -->
-    </div>
+      </div>
   </div>
 </section>
-<!-- Content Categories Icons -->
-<section class="py-16 bg-white">
+<section class="py-16 bg-background">
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">
+    <h2 class="text-3xl font-bold text-center mb-12 text-foreground">
       <%= t('common.site_contents') %>
     </h2>
     <div class="flex flex-wrap justify-center items-center gap-12 text-center">
