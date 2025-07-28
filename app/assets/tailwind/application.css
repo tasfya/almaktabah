@@ -4,16 +4,47 @@
   --font-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   --font-arabic: Amiri, Times New Roman, serif;
 
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
+  --primary-h: 210;  
+  --primary-s: 10%;  
+  --primary-l: 46%;
+
+  --color-primary-50: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) + 52%));
+  --color-primary-100: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) + 50%));
+  --color-primary-200: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) + 44%));
+  --color-primary-300: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) + 36%));
+  --color-primary-400: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) + 19%));
+  --color-primary-500: hsl(var(--primary-h) var(--primary-s) var(--primary-l));
+  --color-primary-600: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) - 16%));
+  --color-primary-700: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) - 23%));
+  --color-primary-800: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) - 29%));
+  --color-primary-900: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) - 36%));
+  --color-primary-950: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) - 39%));
+
+  --secondary-h: 79;
+  --secondary-s: 100%;
+  --secondary-l: 1.3%; 
+
+  --color-secondary-50: hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l));
+  --color-secondary-100: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 1%));
+  --color-secondary-200: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 2%));
+  --color-secondary-300: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 3%));
+  --color-secondary-400: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 5%));
+  --color-secondary-500: hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l));
+  --color-secondary-600: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 1%));
+  --color-secondary-700: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 2%));
+  --color-secondary-800: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 5%));
+  --color-secondary-900: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 10%));
+
+  /* Core UI Colors */
+  --color-foreground: hsl(0 0% 20%);           /* Dark text on light backgrounds */
+  --color-background: hsl(0 0% 100%);          /* Default light background (pure white) */
+  --color-background-subtle: hsl(0 0% 94%);    /* Lighter background for subtle elements, borders */
+
+  /* Semantic Alert Colors */
+  --color-error: hsl(350 78% 57%);
+  --color-success: hsl(135 60% 49%);
+  --color-warning: hsl(40 100% 51%);
+  --color-warning-foreground: hsl(40 90% 30%);
 }
 
 @utility container {
@@ -47,65 +78,83 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--color-background-subtle, currentcolor);
   }
 
   input {
-    color: black;
+    color: var(--color-foreground);
   }
 }
-
-
 
 /* Custom component styles */
 @utility btn {
   @apply px-4 py-2 rounded-xs w-full font-medium transition-colors duration-200 flex items-center justify-center gap-1;
 }
+
 @utility btn-primary {
-  @apply bg-gray-800 text-white hover:bg-gray-700 cursor-pointer;
+  @apply bg-primary-900 text-background hover:bg-primary-600 cursor-pointer;
 }
+
 @utility btn-secondary {
-  @apply bg-white text-gray-900 hover:bg-gray-100 border border-gray-300 cursor-pointer;
+  @apply bg-background text-foreground hover:bg-background-subtle border border-background-subtle cursor-pointer;
 }
+
 @utility btn-link {
-  @apply w-fit hover:underline cursor-pointer;
+  /* Link buttons use foreground color for text, with primary for hover */
+  @apply w-fit text-foreground hover:text-primary-600 hover:underline cursor-pointer;
 }
+
 @utility btn-sm {
   @apply px-3 py-1.5 text-sm;
 }
+
 @utility badge {
   @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
 }
+
 @utility badge-primary {
-  @apply bg-gray-900 text-white;
+  /* Primary badge uses primary color for background, background for text */
+  @apply bg-primary-900 text-background;
 }
+
 @utility badge-secondary {
-  @apply bg-gray-200 text-gray-800;
+  /* Secondary badge uses background-subtle for background, foreground for text */
+  @apply bg-background-subtle text-foreground;
 }
+
 @utility badge-sm {
   @apply px-2 py-1 text-xs;
 }
+
 @utility card {
-  @apply bg-white rounded-xs shadow-md border;
+  @apply bg-background rounded-xs shadow-md border border-background-subtle;
 }
+
 @utility card-header {
-  @apply p-6 border-b border-gray-200;
+  @apply p-6 border-b border-background-subtle;
 }
+
 @utility card-body {
   @apply p-6;
 }
+
 @utility card-footer {
-  @apply p-6 border-t border-gray-200;
+  @apply p-6 border-t border-background-subtle;
 }
+
 @utility audio-player {
-  @apply bg-white border-t border-gray-200 shadow-lg;
+  @apply bg-background border-t border-background-subtle shadow-lg;
 }
+
 @utility audio-progress {
-  @apply h-1 bg-blue-600 transition-all duration-100;
+  /* Progress bar uses primary-500 as an accent */
+  @apply h-1 bg-primary-500 transition-all duration-100;
 }
+
 @utility search-modal {
   backdrop-filter: blur(4px);
 }
+
 @utility flash-message {
   animation: slideInDown 0.3s ease-out;
 }
@@ -114,6 +163,7 @@
 @utility text-balance {
   text-wrap: balance;
 }
+
 @utility rtl-space-x-reverse {
   & > :not([hidden]) ~ :not([hidden]) {
     --tw-space-x-reverse: 1;
@@ -125,7 +175,7 @@
 /* Custom base styles */
 @layer base {
   html {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-sans);
   }
 
   body {
@@ -134,7 +184,20 @@
   }
 
   .container {
-    @apply mx-auto px-4;
+    margin-inline: auto;
+    padding-inline: 1rem;
+    @media (width >= theme(--breakpoint-sm)) {
+      padding-inline: 2rem;
+    }
+    @media (width >= theme(--breakpoint-lg)) {
+      padding-inline: 4rem;
+    }
+    @media (width >= theme(--breakpoint-xl)) {
+      padding-inline: 5rem;
+    }
+    @media (width >= theme(--breakpoint-2xl)) {
+      padding-inline: 6rem;
+    }
   }
 }
 
