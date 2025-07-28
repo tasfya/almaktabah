@@ -27,7 +27,7 @@ class VideoToAudioConverter
       "-b:a", @bitrate,
       "-ar", "44100",
       "-ac", "2",
-      "-",
+      "-"
     ]
 
     Open3.popen2(*command) do |stdin, stdout, wait_thr|

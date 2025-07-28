@@ -26,7 +26,7 @@ class AudioOptimizer
       "-b:a", @bitrate, # Pass as a separate argument
       "-fflags", "+fastseek+genpts",
       "-avoid_negative_ts", "make_zero",
-      "-",
+      "-"
     ]
 
     Open3.popen2(*command) do |stdin, stdout, wait_thr|
