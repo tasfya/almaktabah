@@ -3,7 +3,7 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <div class="md:col-span-1">
         <div class="flex items-center gap-3 mb-4">
-          <%= image_tag "logo.png", alt: t('site.name'), width: 400, height: 150, class: "rounded-full" %>
+          <%= image_tag @logo_url, alt: t('site.name'), width: 400, height: 150, class: "rounded-full" %>
         </div>
         <p class="text-primary-100 text-sm"> <%# text-primary-100 provides a subtle light text on dark background %>
           <%= t('sheikh.description') %>

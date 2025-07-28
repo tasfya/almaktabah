@@ -16,6 +16,12 @@
     <link rel="apple-touch-icon" href="/icon.png">
     <%# Includes built stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%# Include domain custom CSS %>
+    <% if content = custom_css_tag %>
+      <style nonce="<%= content_security_policy_nonce %>">
+        <%= content %>
+      </style>
+    <% end %>
     <%= javascript_importmap_tags %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
