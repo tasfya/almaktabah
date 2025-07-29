@@ -11,10 +11,6 @@ class Domain < ApplicationRecord
     domain_assignments.includes(:assignable)
   end
 
-  def available_layouts
-    [ "application" ]
-  end
-
   def has_custom_css?
     custom_css.present?
   end
