@@ -2,41 +2,33 @@
   --font-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   --font-arabic: Amiri, Times New Roman, serif;
 
-  --primary-h: 210;  
-  --primary-s: 10%;  
-  --primary-l: 46%;
+  --color-primary-100: #ffffff;
+  --color-primary-200: #e4e4e7;
+  --color-primary-300: #d4d4d8;
+  --color-primary-400: #71717a;
+  --color-primary-500: #4b5563;
+  --color-primary-600: #0d0512;
+  --color-primary-700: #4b5563;
+  --color-primary-800: #1f2937;
+  --color-primary-900: #111827;
 
-  --color-primary-50: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) + 52%));
-  --color-primary-100: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) + 50%));
-  --color-primary-200: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) + 44%));
-  --color-primary-300: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) + 36%));
-  --color-primary-400: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) + 19%));
-  --color-primary-500: hsl(var(--primary-h) var(--primary-s) var(--primary-l));
-  --color-primary-600: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) - 16%));
-  --color-primary-700: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) - 23%));
-  --color-primary-800: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) - 29%));
-  --color-primary-900: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) - 36%));
-  --color-primary-950: hsl(var(--primary-h) var(--primary-s) calc(var(--primary-l) - 39%));
+  --color-secondary: #64748b;       /* slate-500 */
+  --color-secondary-50: #f8fafc;   /* slate-50 */
+  --color-secondary-100: #f1f5f9;   /* slate-100 */
+  --color-secondary-200: #e2e8f0;   /* slate-200 */
+  --color-secondary-300: #cbd5e1;   /* slate-300 */
+  --color-secondary-400: #94a3b8;   /* slate-400 */
+  --color-secondary-500: #64748b;   /* slate-500 */
+  --color-secondary-600: #475569;   /* slate-600 */
+  --color-secondary-700: #334155;   /* slate-700 */
+  --color-secondary-800: #1e293b;   /* slate-800 */
+  --color-secondary-900: #0f172a;   /* slate-900 */
 
-  --secondary-h: 79;
-  --secondary-s: 100%;
-  --secondary-l: 1.3%; 
 
-  --color-secondary-50: hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l));
-  --color-secondary-100: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 1%));
-  --color-secondary-200: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 2%));
-  --color-secondary-300: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 3%));
-  --color-secondary-400: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 5%));
-  --color-secondary-500: hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l));
-  --color-secondary-600: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 1%));
-  --color-secondary-700: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 2%));
-  --color-secondary-800: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 5%));
-  --color-secondary-900: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 10%));
-
-  /* Core UI Colors */
+    /* Core UI Colors */
   --color-foreground: hsl(0 0% 20%);           /* Dark text on light backgrounds */
   --color-background: hsl(0 0% 100%);          /* Default light background (pure white) */
-  --color-background-subtle: hsl(0 0% 94%);    /* Lighter background for subtle elements, borders */
+  --color-background-subtle: #f8fafc;    /* Lighter background for subtle elements, borders */
 
   /* Semantic Alert Colors */
   --color-error: hsl(350 78% 57%);

@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import './theme.css';
+@import "./theme.css";
 
 @utility container {
   margin-inline: auto;
@@ -50,11 +50,10 @@
 }
 
 @utility btn-secondary {
-  @apply bg-background text-foreground hover:bg-background-subtle border border-background-subtle cursor-pointer;
+  @apply bg-background text-foreground hover:bg-background-subtle  border border-primary-200 cursor-pointer;
 }
 
 @utility btn-link {
-  /* Link buttons use foreground color for text, with primary for hover */
   @apply w-fit text-foreground hover:text-primary-600 hover:underline cursor-pointer;
 }
 
@@ -67,13 +66,11 @@
 }
 
 @utility badge-primary {
-  /* Primary badge uses primary color for background, background for text */
   @apply bg-primary-900 text-background;
 }
 
 @utility badge-secondary {
-  /* Secondary badge uses background-subtle for background, foreground for text */
-  @apply bg-background-subtle text-foreground;
+  @apply bg-background-subtle text-foreground border border-primary-200;
 }
 
 @utility badge-sm {
