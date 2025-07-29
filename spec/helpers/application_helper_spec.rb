@@ -197,44 +197,4 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
     end
   end
-
-  describe "#resource_title" do
-    let(:lesson) { create(:lesson) }
-    let(:lecture) { create(:lecture) }
-    let(:book) { create(:book) }
-
-    context "when resource is a Lesson" do
-      it "calls full_title method on lesson" do
-        expect(lesson).to receive(:full_title).and_return("Lesson Full Title")
-        result = helper.resource_title(lesson)
-        expect(result).to eq("Lesson Full Title")
-      end
-
-      it "returns the lesson's full title" do
-        allow(lesson).to receive(:full_title).and_return("Complete Lesson Title")
-        result = helper.resource_title(lesson)
-        expect(result).to eq("Complete Lesson Title")
-      end
-    end
-
-    context "when resource is not a Lesson" do
-      it "calls title method on lecture" do
-        expect(lecture).to receive(:title).and_return("Lecture Title")
-        result = helper.resource_title(lecture)
-        expect(result).to eq("Lecture Title")
-      end
-
-      it "calls title method on book" do
-        expect(book).to receive(:title).and_return("Book Title")
-        result = helper.resource_title(book)
-        expect(result).to eq("Book Title")
-      end
-
-      it "returns the resource's title for any other resource type" do
-        allow(lecture).to receive(:title).and_return("Standard Title")
-        result = helper.resource_title(lecture)
-        expect(result).to eq("Standard Title")
-      end
-    end
-  end
 end

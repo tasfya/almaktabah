@@ -38,13 +38,4 @@ module ApplicationHelper
 
     "https://www.youtube.com/embed/#{video_id}"
   end
-
-  def resource_title(resource)
-    case resource
-    when Lesson
-      resource.full_title
-    else
-      resource.title
-    end
-  end
 end
