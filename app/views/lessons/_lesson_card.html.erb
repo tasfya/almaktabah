@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="mr-4 rtl:ml-4 rtl:mr-0 flex items-center gap-2">
-      <%= play_button(resource: lesson, path: play_lesson_path(lesson)) %>
+      <%= play_button(resource: lesson) %>
       <% if lesson.youtube_url.present? %>
         <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-secondary gap-2 youtube_url.present?", target: "_blank" do %>
           <%= icon "youtube", library: "lucide", class: "size-5" %>

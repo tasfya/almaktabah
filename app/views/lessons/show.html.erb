@@ -62,7 +62,7 @@
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       <%= t('buttons.download_audio') %>
                     <% end %>
-                    <%= play_button(resource: @lesson, path: play_lesson_path(@lesson)) %>
+                    <%= play_button(resource: @lesson) %>
                   <% end %>
                   <% if @lesson.video? %>
                     <%= link_to rails_blob_url(@lesson.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
@@ -100,7 +100,7 @@
                       </div>
                       <% unless series_lesson == @lesson %>
                         <div class="flex items-center gap-2">
-                          <%= play_button(resource: series_lesson, path: play_lesson_path(series_lesson)) %>
+                          <%= play_button(resource: series_lesson) %>
                           <% if series_lesson.youtube_url.present? %>
                             <%= link_to youtube_embed_url(series_lesson.youtube_url), class: "btn btn-secondary gap-2 whitespace-nowrap", target: "_blank" do %>
                               <%= icon "youtube", library: "lucide", class: "size-5" %>

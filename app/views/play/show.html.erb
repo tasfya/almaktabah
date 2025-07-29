@@ -1,0 +1,86 @@
+<%= turbo_frame_tag "audio", class: "w-full" do %>
+  <div data-controller="collapsible" class="audio-player fixed bottom-0 left-0 right-0 z-50">
+    
+    <!-- Header Row: Close, Title, Collapse -->
+    <div class="flex items-center justify-between px-4 py-2">
+      <%= button_to stop_play_path, method: :delete, 
+          form: { data: { turbo_stream: true } },
+          class: "p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded",
+          title: t('buttons.close') do %>
+        <%= icon "x-mark", class: "w-5 h-5" %>
+      <% end %>
+
+      <h1 class="text-sm font-medium text-gray-800 truncate flex-1 text-center px-2">
+        <%= @resource.title %>
+      </h1>
+
+      <button data-action="click->collapsible#toggle" 
+              data-collapsible-target="toggleButton"
+              class="p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded">
+        <%= icon "minus", class: "w-5 h-5", data: { collapsible_target: "minimizeIcon" } %>
+        <%= icon "plus", class: "w-5 h-5 hidden", data: { collapsible_target: "maximizeIcon" } %>
+      </button>
+    </div>
+
+    <!-- Collapsible Info -->
+    <div data-collapsible-target="content" class="px-4 py-3">
+      <div class="flex flex-wrap gap-2 mb-2">
+        <% if @resource.respond_to?(:category) && @resource.category.present? %>
+          <span class="badge badge-primary badge-sm">
+            <%= @resource.category %>
+          </span>
+        <% end %>
+        <% if @resource.respond_to?(:media_type) && @resource.media_type.present? %>
+          <span class="badge badge-secondary badge-sm">
+            <%= @resource.media_type %>
+          </span>
+        <% end %>
+        <% if @resource.respond_to?(:series) && @resource.series.present? %>
+          <span class="badge badge-primary badge-sm">
+            <%= @resource.series.title %>
+          </span>
+        <% end %>
+      </div>
+      
+      <% if @resource.respond_to?(:description) && @resource.description.present? %>
+        <p class="text-gray-600 text-xs leading-relaxed mb-3">
+          <%= @resource.description %>
+        </p>
+      <% end %>
+
+      <div class="flex gap-2">
+        <%= link_to @resource, class: "btn btn-secondary btn-sm w-fit", data: { turbo: false } do %>
+          <%= icon "eye", class: "w-3 h-3" %>
+          <%= t("buttons.view") %>
+        <% end %>
+
+        <% if @resource&.optimized_audio? %>
+          <%= link_to rails_blob_url(@resource.optimized_audio, disposition: "attachment"), 
+              download: true, target: "_blank", 
+              class: "btn btn-primary btn-sm w-fit" do %>
+            <%= icon "arrow-down-tray", class: "w-3 h-3" %>
+          <%= t("buttons.download") %>
+          <% end %>
+        <% end %>
+
+        <% if @resource.respond_to?(:youtube_url) && @resource.youtube_url.present? %>
+          <%= link_to youtube_embed_url(@resource.youtube_url), 
+              class: "btn btn-secondary btn-sm w-fit", 
+              target: "_blank" do %>
+            YouTube
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Audio Player -->
+    <div class="px-4 py-3">
+      <% if @resource.respond_to?(:optimized_audio) && @resource.optimized_audio.attached? %>
+        <audio controls autoplay class="w-full h-8">
+          <source src="<%= url_for(@resource.optimized_audio) %>" type="<%= @resource.optimized_audio.content_type %>">
+          <%= t('common.browser_no_support_audio') %>
+        </audio>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -18,7 +18,7 @@
     <%= link_to lesson.title, lesson_path(lesson), class: "text-xl font-semibold hover:text-primary-500" %>
   </div>
   <div class="flex items-center gap-2">
-    <%= play_button(resource: lesson, path: play_lesson_path(lesson)) %>
+          <%= play_button(resource: lesson, klass: "btn btn-secondary w-full") %>
     <% if lesson.youtube_url.present? %>
       <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-secondary gap-2", target: "_blank" do %>
         <%= icon "youtube", library: "lucide", class: "size-5" %>

@@ -1,6 +1,6 @@
 class BenefitsController < ApplicationController
   include Filterable
-  before_action :set_benefit, only: [ :show, :play ]
+  before_action :set_benefit, only: [ :show ]
   before_action :setup_benefits_breadcrumbs
 
   def index
@@ -9,8 +9,6 @@ class BenefitsController < ApplicationController
   end
 
   def show; end
-
-  def play;end
 
   private
 

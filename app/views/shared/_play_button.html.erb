@@ -1,0 +1,10 @@
+<%= form_with url: play_path(resource_type: resource.class.name.downcase, id: resource.id), 
+                local: true, 
+                data: { turbo_frame: "audio" } do |form| %>
+  <%= form.button type: "submit",
+                  class: klass,
+                  data: { turbo_stream: true } do %>
+    <%= icon("play", class: "size-4") %>
+    <span class="ml-3" aria-hidden="true"><%= t("buttons.listen") %></span>
+  <% end %>
+<% end %>
