@@ -2,11 +2,16 @@ class PlayController < ApplicationController
   before_action :set_resource, only: [ :show ]
 
   def show
-    render "play/show", locals: { resource: @resource }
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.update("audio-player", render_to_string(partial: "play/player_content", locals: { resource: @resource }))
+      end
+      format.html { render "play/show", locals: { resource: @resource } }
+    end
   end
 
   def stop
-    render turbo_stream: turbo_stream.update("audio", "")
+    render turbo_stream: turbo_stream.update("audio-player", "")
   end
 
   private
