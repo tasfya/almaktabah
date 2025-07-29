@@ -4,7 +4,8 @@ export default class extends Controller {
   static targets = ["content", "minimizeIcon", "maximizeIcon", "toggleButton"]
 
   connect() {
-    this.isCollapsed = false
+    this.isCollapsed = true
+    this.collapse()
   }
 
   toggle() {

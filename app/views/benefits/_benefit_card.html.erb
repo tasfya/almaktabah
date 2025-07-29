@@ -1,5 +1,5 @@
 <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-  <div class="flex items-start space-x-4 rtl:space-x-reverse">
+  <div class="flex flex-col sm:flex-row items-start space-x-4 rtl:space-x-reverse">
     <div class="flex-shrink-0 w-24 h-24 rounded overflow-hidden bg-gray-100">
       <% if benefit.thumbnail.attached? %>
         <%= image_tag(benefit.thumbnail, 
@@ -22,7 +22,7 @@
         <%= benefit.media_type %>
       </span>
     </div>
-    <div class="ml-4 rtl:mr-4 rtl:ml-0 flex-shrink-0 flex items-center gap-2">
+    <div class="ml-4 rtl:mr-4 rtl:ml-0 flex-shrink-0 flex flex-wrap items-center gap-2">
       <%= play_button(resource: benefit) %>
       <%= link_to benefit_path(benefit), class: "btn btn-primary gap-2" do %>
         <%= icon "eye", class: "size-5" %>

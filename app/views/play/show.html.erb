@@ -2,7 +2,7 @@
   <div data-controller="collapsible" class="audio-player fixed bottom-0 left-0 right-0 z-50">
     
     <!-- Header Row: Close, Title, Collapse -->
-    <div class="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-200">
+    <div class="flex items-center justify-between px-4 py-2">
       <%= button_to stop_play_path, method: :delete, 
           form: { data: { turbo_stream: true } },
           class: "p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded",
@@ -23,7 +23,7 @@
     </div>
 
     <!-- Collapsible Info -->
-    <div data-collapsible-target="content" class="px-4 py-3 bg-gray-50">
+    <div data-collapsible-target="content" class="px-4 py-3">
       <div class="flex flex-wrap gap-2 mb-2">
         <% if @resource.respond_to?(:category) && @resource.category.present? %>
           <span class="badge badge-primary badge-sm">
