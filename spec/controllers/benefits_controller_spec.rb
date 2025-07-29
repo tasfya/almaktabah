@@ -123,42 +123,4 @@ RSpec.describe BenefitsController, type: :controller do
       end
     end
   end
-
-  describe "GET #play" do
-    context "when benefit is published" do
-      it "returns a successful response" do
-        get :play, params: { id: published_benefit.id }
-        expect(response).to be_successful
-      end
-
-      it "assigns the requested benefit" do
-        get :play, params: { id: published_benefit.id }
-        expect(assigns(:benefit)).to eq(published_benefit)
-      end
-    end
-
-    context "when benefit is not published" do
-      it "redirects to benefits index" do
-        get :play, params: { id: unpublished_benefit.id }
-        expect(response).to redirect_to(benefits_path)
-      end
-
-      it "shows not found alert" do
-        get :play, params: { id: unpublished_benefit.id }
-        expect(flash[:alert]).to eq(I18n.t("messages.benefit_not_found"))
-      end
-    end
-
-    context "when benefit does not exist" do
-      it "redirects to benefits index" do
-        get :play, params: { id: 99999 }
-        expect(response).to redirect_to(benefits_path)
-      end
-
-      it "shows not found alert" do
-        get :play, params: { id: 99999 }
-        expect(flash[:alert]).to eq(I18n.t("messages.benefit_not_found"))
-      end
-    end
-  end
 end

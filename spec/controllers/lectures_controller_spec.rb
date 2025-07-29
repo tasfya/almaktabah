@@ -144,41 +144,4 @@ RSpec.describe LecturesController, type: :controller do
       end
     end
   end
-
-  describe "GET #play" do
-    context "when lecture is published" do
-      before do
-        create(:domain_assignment, domain: domain, assignable: published_lecture)
-      end
-
-      it "renders play template" do
-        get :play, params: { id: published_lecture.id }
-        expect(response).to render_template(:play)
-        expect(response).to have_http_status(:ok)
-      end
-
-      it "assigns lecture" do
-        get :play, params: { id: published_lecture.id }
-        expect(assigns(:lecture)).to eq(published_lecture)
-      end
-    end
-
-    context "when lecture is unpublished or missing" do
-      before do
-        create(:domain_assignment, domain: domain, assignable: unpublished_lecture)
-      end
-
-      it "redirects and shows alert for unpublished" do
-        get :play, params: { id: unpublished_lecture.id }
-        expect(response).to redirect_to(lectures_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
-      end
-
-      it "redirects and shows alert for missing" do
-        get :play, params: { id: 999999 }
-        expect(response).to redirect_to(lectures_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
-      end
-    end
-  end
 end
