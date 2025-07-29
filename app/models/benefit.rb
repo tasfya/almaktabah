@@ -2,6 +2,7 @@ class Benefit < ApplicationRecord
     include Publishable
     include MediaHandler
     include DomainAssignable
+    include ArabicSluggable
 
     has_one_attached :thumbnail, service: Rails.application.config.public_storage
     has_one_attached :audio, service: Rails.application.config.public_storage
@@ -27,5 +28,12 @@ class Benefit < ApplicationRecord
 
     def set_duration
       MediaDurationExtractionJob.perform_later(self)
+    end
+
+    def generate_bucket_key
+      slug = slugify_arabic_advanced(title)
+      scholar_slug = slugify_arabic_advanced(scholar.name)
+      ext = audio.attachment.blob.filename.extension
+      "#{scholar_slug}/benefits/#{slug}.#{ext}"
     end
 end
