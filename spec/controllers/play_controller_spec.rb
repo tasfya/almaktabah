@@ -174,27 +174,27 @@ RSpec.describe PlayController, type: :controller do
 
       it "sets @resource when valid resource found" do
         controller.params = ActionController::Parameters.new(
-          resource_type: "lesson", 
+          resource_type: "lesson",
           id: published_lesson.id
         )
-        
+
         controller.send(:set_resource)
         expect(controller.instance_variable_get(:@resource)).to eq(published_lesson)
       end
 
       it "redirects when resource not found" do
         controller.params = ActionController::Parameters.new(
-          resource_type: "lesson", 
+          resource_type: "lesson",
           id: 99999
         )
-        
+
         expect(controller).to receive(:redirect_to).with(root_path, alert: I18n.t("messages.lesson_not_found"))
         controller.send(:set_resource)
       end
 
       it "redirects when invalid resource type" do
         controller.params = ActionController::Parameters.new(
-          resource_type: "invalid", 
+          resource_type: "invalid",
           id: 1
         )
         expect(controller).to receive(:redirect_to).with(root_path, alert: I18n.t("messages.invalid_resource"))

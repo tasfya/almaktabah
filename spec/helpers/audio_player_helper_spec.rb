@@ -151,7 +151,7 @@ RSpec.describe AudioPlayerHelper, type: :helper do
         result = helper.play_button(resource: resource_mock)
         expect(result).to be_nil
       end
-      
+
       it "preserves parameter names in render call" do
         allow(lesson).to receive(:optimized_audio).and_return(double(present?: true))
 

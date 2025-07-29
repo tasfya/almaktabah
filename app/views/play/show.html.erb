@@ -52,7 +52,7 @@
         <%= link_to @resource, 
             class: "btn btn-secondary btn-sm w-fit" do %>
           <%= icon "eye", class: "w-3 h-3" %>
-          View Resource
+          <%= t("buttons.view") %>
         <% end %>
 
         <% if @resource&.optimized_audio? %>
@@ -60,7 +60,7 @@
               download: true, target: "_blank", 
               class: "btn btn-primary btn-sm w-fit" do %>
             <%= icon "arrow-down-tray", class: "w-3 h-3" %>
-            Download
+          <%= t("buttons.download") %>
           <% end %>
         <% end %>
 
