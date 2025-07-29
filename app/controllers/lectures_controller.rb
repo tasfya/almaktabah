@@ -1,6 +1,6 @@
 class LecturesController < ApplicationController
   include Filterable
-  before_action :set_lecture, only: [ :show, :play ]
+  before_action :set_lecture, only: [ :show ]
   before_action :setup_lectures_breadcrumbs
 
   def index
@@ -14,9 +14,6 @@ class LecturesController < ApplicationController
                                .where.not(id: @lecture.id)
                                .recent
                                .limit(4)
-  end
-
-  def play
   end
 
   private

@@ -184,6 +184,7 @@ ar:
     download_video: "تحميل الفيديو"
     download_book: "تحميل الكتاب"
     download_benefit: "تحميل الفائدة"
+    download: "تحميل"
     send_message: "إرسال الرسالة"
     apply_filter: "تطبيق الفلترة"
     reset: "إعادة تعيين"
@@ -197,7 +198,6 @@ ar:
     search_button: "بحث"
   news_bar:
     latest_news: "آخر الأخبار"
-
   site:
     name: "مكتبة الشيخ محمد بن رمزان الهاجري"
     tagline: "موقع فضيلة الشيخ محمد بن رمزان الهاجري"

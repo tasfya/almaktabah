@@ -20,7 +20,7 @@
                   <p class="text-sm text-gray-600"><%= truncate(lesson.description, length: 200) %></p>
                 </div>
                 <div class="flex sm:flex-row flex-col sm:items-center sm:justify-end gap-2 sm:ml-auto w-full sm:w-auto">
-                  <%= play_button(resource: lesson, path: play_lesson_path(lesson), klass: "btn btn-secondary w-full sm:w-auto") %>
+                  <%= play_button(resource: lesson, klass: "btn btn-secondary w-full sm:w-auto") %>
                   <% if lesson.youtube_url.present? %>
                     <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-secondary gap-2 youtube_url.present?", target: "_blank" do %>
                       <%= icon "youtube", library: "lucide", class: "size-5" %>
