@@ -22,13 +22,9 @@ class PlayController < ApplicationController
   end
 
   def resource_class(resource_type)
-    case resource_type
-    when "Lesson"
-      Lesson
-    when "Lecture"
-      Lecture
-    when "Benefit"
-      Benefit
+    valid_resource_types = %w[Lesson Lecture Benefit]
+    if valid_resource_types.include?(resource_type)
+      resource_type.constantize
     else
       raise NameError, "Invalid resource type: #{resource_type}"
     end
