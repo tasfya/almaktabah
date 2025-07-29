@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
     set_breadcrumb_limits(8) # Keep max 8 breadcrumbs
 
     # Reset breadcrumbs on home page
-    if controller_name == "home" && action_name == "index"
+    if (controller_name == "home" && action_name == "index") || controller_path.start_with?("devise/")
       reset_breadcrumbs
     end
   end
