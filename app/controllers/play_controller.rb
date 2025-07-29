@@ -30,7 +30,7 @@ class PlayController < ApplicationController
     when "Benefit"
       Benefit
     else
-      raise "Invalid resource type: #{resource_type}"
+      raise NameError, "Invalid resource type: #{resource_type}"
     end
   end
 end
