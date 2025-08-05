@@ -42,8 +42,6 @@ module ApplicationHelper
   def slugify_arabic(text)
     return unless text.present?
 
-    text.downcase.gsub(/[^ا-ي0-9\s]/i, '').gsub(/\s+/, '-')
+    text.downcase.gsub(/[^ا-ي0-9\s]/i, "").gsub(/\s+/, "-")
   end
-
- 
 end

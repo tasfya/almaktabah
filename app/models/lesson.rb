@@ -72,7 +72,7 @@ class Lesson < ApplicationRecord
     description
   end
 
-  def generate_bucket_key()
+  def generate_bucket_key
     series_slug = slugify_arabic_advanced(series.title)
     scholar_slug = slugify_arabic_advanced(series.scholar.name)
 
