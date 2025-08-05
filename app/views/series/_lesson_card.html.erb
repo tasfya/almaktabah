@@ -17,17 +17,17 @@
     </div>
     <%= link_to lesson.title, lesson_path(lesson), class: "text-xl font-semibold hover:text-gray-600" %>
   </div>
-  <div class="flex items-center gap-2">
-          <%= play_button(resource: lesson, klass: "btn btn-secondary w-full") %>
+  <div class="flex items-center gap-2 flex-wrap">
+          <%= play_button(resource: lesson, klass: "btn btn-secondary w-fit whitespace-nowrap") %>
     <% if lesson.youtube_url.present? %>
-      <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-secondary gap-2 youtube_url.present?", target: "_blank" do %>
+      <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-secondary w-fit gap-2 youtube_url.present?", target: "_blank" do %>
         <%= icon "youtube", library: "lucide", class: "size-5" %>
         <span class="text-sm whitespace-nowrap">
           <%= t('buttons.watch_on_youtube') %>
         </span>
       <% end %>
     <% end %>
-    <%= link_to lesson_path(lesson), class: "btn btn-primary gap-2" do %>
+    <%= link_to lesson_path(lesson), class: "btn btn-primary gap-2 w-fit" do %>
       <%= icon "eye", class: "size-5" %>
       <span class="text-sm whitespace-nowrap">
         <%= t('buttons.view') %>
