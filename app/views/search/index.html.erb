@@ -1,68 +1,68 @@
 <% content_for :title, t('navigation.search') %>
 <div class="container mx-auto px-4 py-8">
   <div class="max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+    <h1 class="text-3xl font-bold text-foreground mb-8 text-center">
       <%= t('navigation.search') %>
     </h1>
-    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-      <%= form_with url: search_path, method: :get, local: true, 
+    <div class="bg-background rounded-lg shadow-md p-6 mb-8">
+      <%= form_with url: search_path, method: :get, local: true,
           class: "flex gap-3", data: { controller: "search-form" } do |form| %>
         <div class="flex-1 w-full">
           <%= form.search_field :q, value: @query,
-              placeholder: t('forms.search_placeholder', type: t('site.name')),
-              class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent",
-              data: { 
-                action: "input->search-form#search",
-                "search-form-target": "input"
-              } %>
+            placeholder: t('forms.search_placeholder', type: t('site.name')),
+            class: "w-full px-4 py-3 border border-background-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-foreground",
+            data: {
+              action: "input->search-form#search",
+              "search-form-target": "input"
+            } %>
         </div>
         <%= form.submit t('forms.search'), class: "btn btn-primary px-6 py-3 rounded-lg w-fit" %>
       <% end %>
     </div>
     <% if @query.present? %>
       <% if @query.length < 2 %>
-        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-          <p class="text-yellow-800">
+        <div class="bg-warning border border-warning rounded-lg p-4 mb-6 text-warning-foreground"> <%# Using semantic warning colors %>
+          <p class="text-warning-foreground">
             <%= t('.search_too_short') %>
           </p>
         </div>
       <% elsif @results.present? && @total_results > 0 %>
         <div class="mb-6">
-          <p class="text-gray-600 text-center">
+          <p class="text-foreground text-center">
             <%= t('.results_found', count: @total_results) %>
-            "<span class="font-semibold text-gray-900"><%= h(@query) %></span>"</p>
+            "<span class="font-semibold text-foreground"><%= h(@query) %></span>"</p>
         </div>
         <div class="space-y-8">
           <% @results.each do |model_name, results| %>
             <% if results.present? %>
-              <%= render "search_section", 
-                  model_name: model_name, 
+              <%= render "search_section",
+                  model_name: model_name,
                   results: results %>
             <% end %>
           <% end %>
         </div>
       <% else %>
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+        <div class="bg-background-subtle border border-background-subtle rounded-lg p-8 text-center">
           <div class="mb-4">
-            <%= icon "magnifying-glass", class: "size-12 text-gray-400 mx-auto" %>
+            <%= icon "magnifying-glass", class: "size-12 text-foreground mx-auto" %>
           </div>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">
+          <h3 class="text-lg font-medium text-foreground mb-2">
             <%= t('.no_results_title') %>
           </h3>
-          <p class="text-gray-600">
+          <p class="text-foreground">
             <%= t('.no_results_description') %>
           </p>
         </div>
       <% end %>
     <% else %>
-      <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+      <div class="bg-background-subtle border border-background-subtle rounded-lg p-8 text-center">
         <div class="mb-4">
-          <%= icon "magnifying-glass", class: "size-12 text-gray-400 mx-auto" %>
+          <%= icon "magnifying-glass", class: "size-12 text-foreground mx-auto" %>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">
+        <h3 class="text-lg font-medium text-foreground mb-2">
           <%= t('.prompt_title') %>
         </h3>
-        <p class="text-gray-700">
+        <p class="text-foreground">
           <%= t('.prompt_description') %>
         </p>
       </div>

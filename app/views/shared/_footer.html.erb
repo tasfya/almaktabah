@@ -1,11 +1,11 @@
-<footer class="bg-gray-900 text-white">
+<footer class="bg-primary-900 text-background">
   <div class="container mx-auto px-4 py-12">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <div class="md:col-span-1">
         <div class="flex items-center gap-3 mb-4">
-          <%= image_tag "logo.png", alt: t('site.name'), width: 400, height: 150, class: "rounded-full" %>
+          <%= image_tag @logo_url, alt: t('site.name'), width: 400, height: 150, class: "rounded-full" %>
         </div>
-        <p class="text-gray-400 text-sm">
+        <p class="text-primary-100 text-sm">
           <%= t('sheikh.description') %>
         </p>
       </div>
@@ -13,43 +13,43 @@
       <div>
         <h4 class="text-lg font-semibold mb-4"><%= t('navigation.quick_links') %></h4>
         <ul class="space-y-2">
-          <li><%= link_to t('navigation.home'), root_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to t('navigation.books'), books_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to t('navigation.lectures'), lectures_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to t('navigation.series'), series_index_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.home'), root_path, class: "text-foreground hover:text-primary-500 transition-colors" %></li>
+          <li><%= link_to t('navigation.books'), books_path, class: "text-foreground hover:text-primary-500 transition-colors" %></li>
+          <li><%= link_to t('navigation.lectures'), lectures_path, class: "text-foreground hover:text-primary-500 transition-colors" %></li>
+          <li><%= link_to t('navigation.series'), series_index_path, class: "text-foreground hover:text-primary-500 transition-colors" %></li>
         </ul>
       </div>
 
       <div>
         <h4 class="text-lg font-semibold mb-4"><%= t('navigation.content') %></h4>
         <ul class="space-y-2">
-          <li><%= link_to t('navigation.recent_books'), books_path(recent: true), class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to t('navigation.recent_lectures'), lectures_path(recent: true), class: "text-gray-400 hover:text-white transition-colors" %></li>
-          <li><%= link_to t('navigation.about_sheikh_alt'), about_path, class: "text-gray-400 hover:text-white transition-colors" %></li>
+          <li><%= link_to t('navigation.recent_books'), books_path(recent: true), class: "text-foreground hover:text-primary-500 transition-colors" %></li>
+          <li><%= link_to t('navigation.recent_lectures'), lectures_path(recent: true), class: "text-foreground hover:text-primary-500 transition-colors" %></li>
+          <li><%= link_to t('navigation.about_sheikh_alt'), about_path, class: "text-foreground hover:text-primary-500 transition-colors" %></li>
         </ul>
       </div>
 
       <div>
         <h4 class="text-lg font-semibold mb-4"><%= t('footer.contact_title') %></h4>
         <div class="space-y-2">
-          <p class="text-gray-400 text-sm"><%= t('footer.contact_description') %></p>
-          <p class="text-gray-400 text-sm">
+          <p class="text-primary-100 text-sm"><%= t('footer.contact_description') %></p>
+          <p class="text-primary-100 text-sm">
             <%# t('footer.email_label') %> <%# site_info[:support_email] %>
           </p>
         </div>
         <div class="mt-4 flex gap-4">
-          <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm" do %>
+          <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm text-background hover:text-primary-200" do %>
             <%= icon "youtube", library: "lucide", class: "size-5" %>
           <% end %>
-          <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm" do %>
+          <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm text-background hover:text-primary-200" do %>
             <%= icon "twitter", library: "lucide", class: "size-5" %>
           <% end %>
         </div>
       </div>
     </div>
 
-    <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-      <p class="text-gray-400 text-sm">
+    <div class="border-t border-primary-800 mt-8 pt-8 text-center">
+      <p class="text-primary-100 text-sm">
         &copy; <%= Date.current.year %> <%= t('footer.copyright') %>
       </p>
     </div>

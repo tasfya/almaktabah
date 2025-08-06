@@ -97,42 +97,4 @@ RSpec.describe LessonsController, type: :request  do
       end
     end
   end
-
-  xdescribe "GET #play" do
-    context "when lesson is published" do
-      it "returns a successful response" do
-        get play_lecture_path(published_lesson), headers: @headers
-        expect(response).to be_successful
-      end
-
-      it "assigns the requested lesson" do
-        get play_lecture_path(published_lesson), headers: @headers
-        expect(assigns(:lesson)).to eq(published_lesson)
-      end
-    end
-
-    context "when lesson is not published" do
-      it "redirects to lessons index" do
-        get play_lecture_path(unpublished_lesson), headers: @headers
-        expect(response).to redirect_to(series_index_path)
-      end
-
-      it "shows not found alert" do
-        get play_lecture_path(unpublished_lesson), headers: @headers
-        expect(flash[:alert]).to eq(I18n.t("messages.lesson_not_found"))
-      end
-    end
-
-    context "when lesson does not exist" do
-      it "redirects to lessons index" do
-        get play_lecture_path(99999), headers: @headers
-        expect(response).to redirect_to(series_index_path)
-      end
-
-      it "shows not found alert" do
-        get play_lecture_path(99999), headers: @headers
-        expect(flash[:alert]).to eq(I18n.t("messages.lesson_not_found"))
-      end
-    end
-  end
 end

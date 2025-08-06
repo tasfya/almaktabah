@@ -5,9 +5,9 @@ export default class extends ApplicationController {
     this.element.play()
   }
 
-   connect() {
+  connect() {
     console.log("Connected")
-   }
+  }
 
   toggle() {
     if (this.element.paused) this.play()

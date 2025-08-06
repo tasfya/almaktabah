@@ -16,20 +16,29 @@
     <link rel="apple-touch-icon" href="/icon.png">
     <%# Includes built stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%# Include domain custom CSS %>
+    <% if content = custom_css_tag %>
+      <style nonce="<%= content_security_policy_nonce %>">
+        <%= content %>
+      </style>
+    <% end %>
     <%= javascript_importmap_tags %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
-  <body class="bg-gray-50" data-controller="audio-player">
+  <body class="bg-gray-50 pb-20">
     <%= render 'shared/header' %>
     <%= render 'shared/news_bar' %>
-    <%= render "shared/podcast_frame", podcast: @podcast do %>
+    
+    <main class="min-h-screen w-full">
       <% unless controller_name == 'home' %>
         <div class="container mx-auto px-4">
           <%= render 'shared/breadcrumb' %>
         </div>
       <% end %>
       <%= yield %>
-    <% end %>
+    </main>
+    
     <%= render 'shared/footer' %>
+    <%= render 'shared/audio_player' %>
   </body>
 </html>

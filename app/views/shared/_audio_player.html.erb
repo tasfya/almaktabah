@@ -1,0 +1,15 @@
+<div id="audio-player-container" class="fixed inset-x-0 bottom-0 z-50" data-turbo-permanent>
+  <div id="audio-player" class="empty:hidden">
+    <!-- Audio player content will be rendered here via turbo streams -->
+  </div>
+  
+  <!-- Loading template -->
+  <template data-play-button-target="loadingTemplate">
+    <div class="bg-white border-t border-gray-200 shadow-lg p-4">
+      <div class="flex items-center justify-center space-x-3">
+        <%= icon("arrow-path", class: "w-5 h-5 animate-spin text-gray-600") %>
+        <span class="text-gray-700"><%= t("buttons.loading_audio") %></span>
+      </div>
+    </div>
+  </template>
+</div>

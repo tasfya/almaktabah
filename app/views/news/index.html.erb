@@ -1,30 +1,28 @@
 <% content_for :title, t('navigation.news') %>
-<div class="bg-gray-50 min-h-screen py-8">
+<div class="bg-background-subtle min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
       <div class="lg:col-span-2">
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t('.title') %></h1>
-          <p class="text-gray-600 mb-6"><%= t('.description') %></p>
-          <!-- Filters -->
+        <div class="bg-background rounded-lg shadow-md p-6">
+          <h1 class="text-2xl font-bold text-foreground mb-6"><%= t('.title') %></h1>
+          <p class="text-foreground mb-6"><%= t('.description') %></p>
           <%= render 'shared/filters' %>
-          <!-- News Grid -->
           <% if @news.any? %>
             <div class="grid grid-cols-1 gap-6">
               <% @news.each do |news_item| %>
-                <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                <div class="bg-background border border-background-subtle rounded-lg p-6 hover:shadow-md transition-shadow">
                   <div class="flex flex-col gap-1">
                     <% if news_item.thumbnail.present? %>
                       <%= image_tag news_item.thumbnail, class: "max-h-md object-cover rounded cursor-pointer" %>
                     <% end %>
                     <div class="flex-1">
-                      <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                        <%= link_to news_item.title, news_path(news_item), class: "hover:text-gray-600" %>
+                      <h3 class="text-lg font-semibold text-foreground mb-2">
+                        <%= link_to news_item.title, news_path(news_item), class: "hover:text-primary-500" %>
                       </h3>
                       <% if news_item.description %>
-                        <p class="text-gray-600 text-sm mb-4"><%= truncate(news_item.description, length: 200) %></p>
+                        <p class="text-foreground text-sm mb-4"><%= truncate(news_item.description, length: 200) %></p>
                       <% end %>
-                      <div class="flex items-center justify-between text-sm text-gray-500">
+                      <div class="flex items-center justify-between text-sm text-foreground">
                         <div class="flex space-x-4 rtl:space-x-reverse">
                         </div>
                         <%= link_to news_path(news_item), class: "btn btn-link" do %>
@@ -37,13 +35,12 @@
               <% end %>
             </div>
           <% else %>
-            <div class="text-center text-gray-500 py-8">
+            <div class="text-center text-foreground py-8">
               <p>
                 <%= t('.no_news') %>
               </p>
             </div>
           <% end %>
-          <!-- Pagination -->
           <%= render 'shared/pagination' %>
         </div>
       </div>
