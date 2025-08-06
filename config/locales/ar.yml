@@ -176,6 +176,7 @@ ar:
     download: "تحميل"
     view_series: "عرض السلسلة"
     listen: "استمع"
+    loading_audio: "جاري تحميل الصوت..."
     read: "اقرأ"
     view: "عرض"
     play: "تشغيل"
