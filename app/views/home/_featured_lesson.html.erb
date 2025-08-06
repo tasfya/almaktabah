@@ -4,16 +4,16 @@
     <div class="absolute inset-0 bg-black/20"></div>
   </div>
   <div class="relative container mx-auto h-full flex flex-col justify-center p-6 md:p-12 z-10">
-    <div class="max-w-3xl">
+    <div class="max-w-3xl text-white">
       <div class="flex items-center text-sm mb-3 gap-2">
-        <span class="bg-primary-800 text-background text-xs font-medium px-3 py-1 rounded-full">
+        <span class="badge badge-primary">
           <%= lesson.category %>
         </span>
       </div>
-      <h1 class="text-3xl md:text-5xl font-bold mb-6 text-background">
+      <h1 class="text-3xl md:text-5xl font-bold mb-6">
         <%= lesson.title %>
       </h1>
-      <p class="text-sm md:text-base mb-8 leading-relaxed text-background">
+      <p class="text-sm md:text-base mb-8 leading-relaxed">
         <%= lesson.description %>
       </p>
       <div class="flex gap-4">

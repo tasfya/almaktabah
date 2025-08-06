@@ -1,25 +1,20 @@
 <% content_for :title, @series.title %>
-<div class="bg-background-subtle min-h-screen py-8"> 
+<div class="min-h-screen py-8"> 
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
       <div class="lg:col-span-2">
-        <article class="bg-background rounded-lg shadow-md p-8">
+        <article class="border border-background-contrast rounded-lg shadow-md p-8">
           <header class="mb-8">
-            <h1 class="text-3xl font-bold text-foreground mb-4">
+            <h1 class="text-3xl font-bold mb-4">
               <%= @series.title %>
             </h1>
-            <div class="flex items-center gap-4 text-sm text-foreground mb-6">
+            <div class="flex items-center gap-4 text-sm mb-6">
               <% if @series.category.present? %>
                 <span class="badge badge-primary rounded-full">
                   <%= @series.category %>
                 </span>
               <% end %>
-              <% if false %>
-                <time class="text-foreground">
-                  <%= @series.published_at.strftime("%Y/%m/%d") %>
-                </time>
-              <% end %>
-              <span class="flex items-center gap-2 text-primary-500">
+              <span class="badge badge-primary">
                 <%= icon "book-open", class: "size-5"%>
                 <%= pluralize(@series.lessons.published.count, 'درس') %>
                 <%# TODO: fix pluralize for this %>
@@ -27,12 +22,12 @@
             </div>
           </header>
           <% if @series.description.present? %>
-            <div class="prose prose-lg max-w-none mb-8 text-foreground">
+            <div class="prose prose-lg max-w-none mb-8">
               <%= simple_format(@series.description) %>
             </div>
           <% end %>
           <section class="mt-8">
-            <h2 class="text-2xl font-bold text-foreground mb-6">
+            <h2 class="text-2xl font-bold mb-6">
               <%= t('.lessons_in_series') %>
             </h2>
             <% if @lessons.any? %>
@@ -42,30 +37,28 @@
                 <% end %>
               </div>
             <% else %>
-              <div class="text-center text-foreground py-8">
-                <p>
-                  <%= t('.no_lessons_in_series') %>
-                </p>
+              <div class="text-center py-8">
+                <%= t('.no_lessons_in_series') %>
               </div>
             <% end %>
           </section>
           <% if @related_series.any? %>
             <section class="mt-12">
-              <h2 class="text-2xl font-bold text-foreground mb-6">
+              <h2 class="text-2xl font-bold mb-6">
                 <%= t('.related_series') %>
               </h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% @related_series.each do |related_series| %>
-                  <div class="bg-background border border-background-subtle rounded-lg p-6 hover:shadow-md transition-shadow">
-                    <h3 class="text-lg font-semibold text-foreground mb-2">
-                      <%= link_to related_series.title, series_path(related_series), class: "hover:text-primary-500" %>
+                  <div class="bg-card hover:bg-card-hover text-card-contrast border border-background-contrast rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <h3 class="text-lg font-semibold mb-2">
+                      <%= link_to related_series.title, series_path(related_series), class: "secondary-link" %>
                     </h3>
-                    <p class="text-foreground text-sm mb-4">
+                    <p class="text-sm mb-4">
                       <%= truncate(related_series.description, length: 100) %>
                     </p>
-                    <div class="flex items-center justify-between text-sm text-foreground">
-                      <span class="bg-background-subtle px-2 py-1 rounded text-foreground"><%= related_series.category %></span>
-                      <span class="text-primary-500"><%= pluralize(related_series.lessons.count, 'درس') %></span>
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="badge badge-secondary"><%= related_series.category %></span>
+                      <span class="badge badge-primary"><%= pluralize(related_series.lessons.count, 'درس') %></span>
                       <%# TODO fix pluralize %>
                     </div>
                   </div>

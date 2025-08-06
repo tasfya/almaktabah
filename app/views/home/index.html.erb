@@ -1,22 +1,22 @@
 <% content_for :title, t('navigation.home') %>
 <%= render partial: "featured_lesson", locals: { lesson: @featured_lesson } if @featured_lesson.present?%>
-<section class="py-16 bg-background-subtle">
+<section class="py-16">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
       <div class="lg:col-span-2">
-        <div class="bg-background w-full rounded-lg shadow-md flex items-center gap-1 flex-wrap p-6">
-          <h3 class="text-xl font-bold text-foreground mb-6 text-right"><%= t('navigation.recent_lessons') %></h3>
+        <div class="border border-background-contrast w-full rounded-lg shadow-md flex items-center gap-1 flex-wrap p-6">
+          <h3 class="text-xl font-bold mb-6 text-right"><%= t('navigation.recent_lessons') %></h3>
           <div class="space-y-4 w-full">
             <% @recent_lessons.each do |lesson| %>
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 bg-background rounded-lg hover:bg-secondary-100 transition-colors w-full">
+              <div class="bg-card hover:bg-card-hover text-card-contrast flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 rounded-lg hover:bg-secondary-100 transition-colors w-full">
                 <div class="flex-shrink-0 self-start sm:self-auto">
-                  <div class="bg-background p-2 rounded-lg border w-fit border-background-subtle">
-                    <%= icon "book-open", class: "size-6 text-foreground" %>
+                  <div class="p-2 rounded-lg border w-fit border-background-contrast">
+                    <%= icon "book-open", class: "size-6" %>
                   </div>
                 </div>
                 <div class="flex-1 text-right sm:ml-4 w-full">
-                  <h4 class="font-semibold text-foreground mb-1"><%= lesson.full_title %></h4>
-                  <p class="text-sm text-foreground"><%= truncate(lesson.description, length: 200) %></p>
+                  <h4 class="font-semibold mb-1"><%= lesson.full_title %></h4>
+                  <p class="text-sm"><%= truncate(lesson.description, length: 200) %></p>
                 </div>
                 <div class="flex sm:flex-row flex-col sm:items-center sm:justify-end gap-2 sm:ml-auto w-full sm:w-auto">
                   <%= play_button(resource: lesson, klass: "btn btn-secondary w-full sm:w-auto") %>
@@ -41,9 +41,9 @@
       </div>
   </div>
 </section>
-<section class="py-16 bg-background">
+<section class="py-16">
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold text-center mb-12 text-foreground">
+    <h2 class="text-3xl font-bold text-center mb-12">
       <%= t('common.site_contents') %>
     </h2>
     <div class="flex flex-wrap justify-center items-center gap-12 text-center">
@@ -51,25 +51,25 @@
         <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-blue-200 transition-colors">
           <%= icon("book-open", class: "w-8 h-8 text-blue-600") %>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors"><%= t('navigation.books') %></h3>
+        <h3 class="text-lg font-semibold group-hover:text-blue-600 transition-colors"><%= t('navigation.books') %></h3>
       <% end %>
       <%= link_to lectures_path, class: "group flex flex-col items-center" do %>
         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-green-200 transition-colors">
           <%= icon("microphone", class: "w-8 h-8 text-green-600") %>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors"><%= t('navigation.lectures') %></h3>
+        <h3 class="text-lg font-semibold group-hover:text-green-600 transition-colors"><%= t('navigation.lectures') %></h3>
       <% end %>
       <%= link_to series_index_path, class: "group flex flex-col items-center" do %>
         <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-red-200 transition-colors">
           <%= icon("book-open", class: "w-8 h-8 text-red-600") %>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-red-600 transition-colors"><%= t('navigation.scientific_series') %></h3>
+        <h3 class="text-lg font-semibold group-hover:text-red-600 transition-colors"><%= t('navigation.scientific_series') %></h3>
       <% end %>
       <%= link_to benefits_path, class: "group flex flex-col items-center" do %>
         <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-purple-200 transition-colors">
           <%= icon("circle-stack", class: "w-8 h-8 text-purple-600") %>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors"><%= t('navigation.benefits') %></h3>
+        <h3 class="text-lg font-semibold group-hover:text-purple-600 transition-colors"><%= t('navigation.benefits') %></h3>
       <% end %>
     </div>
   </div>

@@ -1,21 +1,16 @@
-<div class="border border-background-subtle rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:shadow transition">
-  <div class="flex flex-col gap-3 text-sm text-foreground">
+<div class="bg-card hover:bg-card-hover text-card-contrast border border-background-contrast rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:shadow transition">
+  <div class="flex flex-col gap-3 text-sm ">
     <div class="flex items-center gap-2">
       <% if lesson.series.present? %>
-        <span class="bg-background-subtle px-2 py-1 rounded-full text-xs text-foreground">
+        <span class="badge badge-primary">
           <%= lesson.series.title %>
         </span>
       <% end %>
-      <span class="bg-primary-800 text-background px-2 py-1 rounded-full text-xs">
+      <span class="badge badge-secondary">
         <%= lesson.media_type %>
       </span>
-      <% if false && lesson.published_at %>
-        <span class="text-foreground">
-          <%= l(lesson.published_at, format: :long) %>
-        </span>
-      <% end %>
     </div>
-    <%= link_to lesson.title, lesson_path(lesson), class: "text-xl font-semibold hover:text-primary-500" %>
+    <%= link_to lesson.title, lesson_path(lesson), class: "secondary-link" %>
   </div>
   <div class="flex items-center gap-2 flex-wrap">
           <%= play_button(resource: lesson, klass: "btn btn-secondary w-fit whitespace-nowrap") %>

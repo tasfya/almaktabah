@@ -39,26 +39,50 @@
     color: var(--color-foreground);
   }
 }
+@utility search-input {
+  @apply w-full px-3 py-2 border rounded-md shadow-sm bg-input text-input-contrast;
+}
 
-/* Custom component styles */
+@utility select-primary {
+  @apply w-full px-3 py-2 border rounded-md shadow-sm bg-input text-input-contrast;
+}
+
 @utility btn {
   @apply px-4 py-2 rounded-xs w-full font-medium transition-colors duration-200 flex items-center justify-center gap-1;
 }
 
 @utility btn-primary {
-  @apply bg-primary-900 text-background hover:bg-primary-600 cursor-pointer;
+  @apply bg-primary text-primary-contrast hover:bg-primary-hover cursor-pointer border border-background-contrast;
 }
 
 @utility btn-secondary {
-  @apply bg-background text-foreground hover:bg-background-subtle  border border-primary-200 cursor-pointer;
+  @apply bg-secondary text-secondary-contrast hover:bg-secondary-hover border border-background-contrast cursor-pointer;
 }
 
 @utility btn-link {
-  @apply w-fit text-foreground hover:text-primary-600 hover:underline cursor-pointer;
+  @apply w-fit text-primary-link hover:text-primary-link-hover hover:underline cursor-pointer;
+}
+
+@utility btn-secondary-link {
+  @apply w-fit text-secondary-link hover:text-secondary-link-hover hover:underline cursor-pointer;
 }
 
 @utility btn-sm {
   @apply px-3 py-1.5 text-sm;
+}
+
+@utility secondary-link {
+  @apply text-secondary-link hover:text-secondary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center ;
+}
+@utility secondary-link-active {
+  @apply text-secondary-link-active hover:text-secondary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center;
+}
+
+@utility primary-link {
+  @apply text-primary-link hover:text-primary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center ;
+}
+@utility primary-link-active {
+  @apply text-primary-link-active hover:text-primary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center;
 }
 
 @utility badge {
@@ -66,51 +90,32 @@
 }
 
 @utility badge-primary {
-  @apply bg-primary-900 text-background;
+  @apply bg-primary text-primary-contrast hover:bg-primary-hover border border-background-contrast;
 }
 
 @utility badge-secondary {
-  @apply bg-background-subtle text-foreground border border-primary-200;
+  @apply bg-secondary text-secondary-contrast hover:bg-secondary-hover border border-background-contrast;
 }
 
 @utility badge-sm {
   @apply px-2 py-1 text-xs;
 }
 
-@utility card {
-  @apply bg-background rounded-xs shadow-md border border-background-subtle;
-}
 
-@utility card-header {
-  @apply p-6 border-b border-background-subtle;
-}
-
-@utility card-body {
-  @apply p-6;
-}
-
-@utility card-footer {
-  @apply p-6 border-t border-background-subtle;
-}
 
 @utility audio-player {
-  @apply bg-background border-t border-background-subtle shadow-lg;
+  @apply bg-primary border-t  shadow-lg;
 }
 
 @utility audio-progress {
-  /* Progress bar uses primary-500 as an accent */
-  @apply h-1 bg-primary-500 transition-all duration-100;
+  @apply h-1 bg-primary transition-all duration-100;
 }
 
-@utility search-modal {
-  backdrop-filter: blur(4px);
-}
 
 @utility flash-message {
   animation: slideInDown 0.3s ease-out;
 }
 
-/* Custom utility styles */
 @utility text-balance {
   text-wrap: balance;
 }
@@ -120,35 +125,6 @@
     --tw-space-x-reverse: 1;
     margin-right: calc(var(--tw-space-x) * var(--tw-space-x-reverse));
     margin-left: calc(var(--tw-space-x) * calc(1 - var(--tw-space-x-reverse)));
-  }
-}
-
-/* Custom base styles */
-@layer base {
-  html {
-    font-family: var(--font-sans);
-  }
-
-  body {
-    direction: rtl;
-    text-align: right;
-  }
-
-  .container {
-    margin-inline: auto;
-    padding-inline: 1rem;
-    @media (width >= theme(--breakpoint-sm)) {
-      padding-inline: 2rem;
-    }
-    @media (width >= theme(--breakpoint-lg)) {
-      padding-inline: 4rem;
-    }
-    @media (width >= theme(--breakpoint-xl)) {
-      padding-inline: 5rem;
-    }
-    @media (width >= theme(--breakpoint-2xl)) {
-      padding-inline: 6rem;
-    }
   }
 }
 

@@ -1,30 +1,30 @@
-<div class="bg-background rounded-lg shadow-sm border border-background-subtle p-6 mb-6">
+<div class="bg-filter text-filter-contrast rounded-lg shadow-sm border border-background-contrast p-6 mb-6">
   <%= search_form_for @q, url: request.path, method: :get, local: true,
       class: "space-y-4" do |form| %>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div>
         <%= form.label :title_or_description_cont, t('forms.labels.search'),
-            class: "block text-sm font-medium text-foreground mb-2" %>
+            class: "block text-sm font-medium mb-2" %>
         <%= form.search_field :title_or_description_cont,
             placeholder: t('forms.placeholders.search_title_description'),
-            class: "w-full px-3 py-2 border border-background-subtle rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-foreground" %>
+            class: "search-input" %>
       </div>
 
       <% if defined?(@series) && @series.present? && controller_name == "lessons" %>
         <div>
           <%= form.label :series_id_eq, t('forms.labels.series'),
-              class: "block text-sm font-medium text-foreground mb-2" %>
+              class: "block text-sm font-medium mb-2" %>
           <%= form.select :series_id_eq,
               options_for_select([[t('forms.options.all_series'), ""]] + @series.pluck(:title, :id),
               params.dig(:q, :series_id_eq)),
               {},
-              { class: "w-full px-3 py-2 border border-background-subtle rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-foreground" } %>
+              { class: "select-primary" } %>
         </div>
       <% end %>
 
       <div>
         <%= form.label :s, t('forms.labels.sort_by'),
-            class: "block text-sm font-medium text-foreground mb-2" %>
+            class: "block text-sm font-medium mb-2" %>
         <%= form.select :s,
             options_for_select([
               [t('forms.options.newest'), "created_at desc"],
@@ -36,7 +36,7 @@
               option[1] != "downloads desc" || controller_name == "books"
             }, params.dig(:q, :s)),
             { include_blank: t('forms.options.default') },
-            { class: "w-full px-3 py-2 border border-background-subtle rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-foreground" } %>
+            { class: "select-primary" } %>
       </div>
     </div>
 
@@ -50,7 +50,7 @@
 </div>
 
 <div class="flex justify-between items-center mb-4">
-  <div class="text-sm text-foreground">
+  <div class="text-sm">
     <% if defined?(@pagy) && @pagy && @pagy.count > 0 %>
       <%= t('pagination.results_info', from: @pagy.from, to: @pagy.to, count: @pagy.count) %>
     <% end %>

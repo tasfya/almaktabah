@@ -1,10 +1,10 @@
 <% content_for :title, t('navigation.series') %>
-<div class="bg-background-subtle min-h-screen py-8">
+<div class="min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
       <div class="lg:col-span-2">
-        <div class="bg-background rounded-lg shadow-md p-6">
-          <h1 class="text-2xl font-bold text-foreground mb-6">
+        <div class="rounded-lg shadow-md p-6 border border-background-contrast">
+          <h1 class="text-2xl font-bold mb-6">
             <%= t('.title') %>
           </h1>
           <p class="text-foreground mb-6">
@@ -18,7 +18,7 @@
               <% end %>
             </div>
           <% else %>
-            <div class="text-center text-foreground py-8">
+            <div class="text-center py-8">
               <p><%= t('.no_series') %> </p>
             </div>
           <% end %>
