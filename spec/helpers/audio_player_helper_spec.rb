@@ -16,7 +16,7 @@ RSpec.describe AudioPlayerHelper, type: :helper do
         expect(helper).to receive(:render).with(
           "shared/play_button",
           resource: lesson,
-          klass: "btn btn-secondary w-fit",
+          klass: "btn btn-secondary w-fit whitespace-nowrap",
           icon_class: "size-4"
         )
 
@@ -48,7 +48,7 @@ RSpec.describe AudioPlayerHelper, type: :helper do
         expect(helper).to receive(:render).with(
           "shared/play_button",
           resource: lecture,
-          klass: "btn btn-secondary w-fit",
+          klass: "btn btn-secondary w-fit whitespace-nowrap",
           icon_class: "size-4"
         )
 
@@ -57,7 +57,7 @@ RSpec.describe AudioPlayerHelper, type: :helper do
         expect(helper).to receive(:render).with(
           "shared/play_button",
           resource: benefit,
-          klass: "btn btn-secondary w-fit",
+          klass: "btn btn-secondary w-fit whitespace-nowrap",
           icon_class: "size-4"
         )
 
@@ -128,7 +128,7 @@ RSpec.describe AudioPlayerHelper, type: :helper do
         expect(helper).to receive(:render).with(
           "shared/play_button",
           resource: lesson_with_audio,
-          klass: "btn btn-secondary w-fit",
+          klass: "btn btn-secondary w-fit whitespace-nowrap",
           icon_class: "size-4"
         )
 
@@ -158,7 +158,7 @@ RSpec.describe AudioPlayerHelper, type: :helper do
         expect(helper).to receive(:render).with(
           "shared/play_button",
           resource: lesson,
-          klass: "btn btn-secondary w-fit",
+          klass: "btn btn-secondary w-fit whitespace-nowrap",
           icon_class: "size-4"
         )
 

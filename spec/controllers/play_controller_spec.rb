@@ -140,7 +140,7 @@ RSpec.describe PlayController, type: :controller do
 
     it "clears the audio element" do
       delete :stop
-      expect(response.body).to include('<turbo-stream action="update" target="audio">')
+      expect(response.body).to include('<turbo-stream action="update" target="audio-player">')
     end
   end
 
