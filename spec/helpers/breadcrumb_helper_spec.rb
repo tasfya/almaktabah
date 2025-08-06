@@ -105,7 +105,7 @@ RSpec.describe BreadcrumbHelper, type: :controller do
 
   describe '#add_breadcrumbs' do
     it 'adds multiple breadcrumbs from array and hash' do
-      controller.add_breadcrumbs(["Page1", "/page1"], { name: "Page2", path: "/page2" })
+      controller.add_breadcrumbs([ "Page1", "/page1" ], { name: "Page2", path: "/page2" })
       expect(session[:breadcrumbs].length).to eq(2)
       expect(session[:breadcrumbs].map { |b| b[:name] }).to include("Page1", "Page2")
     end
