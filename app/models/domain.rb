@@ -10,4 +10,8 @@ class Domain < ApplicationRecord
   def assigned_items
     domain_assignments.includes(:assignable)
   end
+
+  def has_custom_css?
+    custom_css.present?
+  end
 end
