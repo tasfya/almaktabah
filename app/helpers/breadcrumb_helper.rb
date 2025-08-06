@@ -45,12 +45,12 @@ module BreadcrumbHelper
     breadcrumbs = current_breadcrumbs
 
     default_classes = {
-      container: "mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4",
+      container: "mb-6 bg-white rounded-lg shadow-sm border border-background-contrast p-4",
       list: "flex items-center space-x-2 rtl:space-x-reverse text-sm",
       item: "flex items-center",
-      link: "text-gray-600 hover:text-gray-600 hover:underline font-medium transition-colors duration-200",
-      separator: "mx-3 text-gray-400",
-      current: "text-gray-900 font-semibold"
+      link: "link",
+      separator: "mx-3 text-main-text",
+      current: "font-semibold"
     }
 
     classes = default_classes.merge(options[:classes] || {})

@@ -1,88 +1,74 @@
 <%# Shared pagination component using Pagy %>
 <% if defined?(@pagy) && @pagy %>
-  <div class="flex items-center justify-between border-t border-background-subtle bg-background px-4 py-3 sm:px-6 mt-8">
-    <div class="flex flex-1 justify-between sm:hidden">
-      <% if @pagy.prev %>
-        <%= link_to t('buttons.previous'), pagy_url_for(@pagy, @pagy.prev),
-            class: "relative inline-flex items-center rounded-md border border-background-subtle bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-background-subtle" %>
-      <% else %>
-        <span class="relative inline-flex items-center rounded-md border border-background-subtle bg-background-subtle px-4 py-2 text-sm font-medium text-foreground cursor-not-allowed">
-          <%= t('buttons.previous') %>
-        </span>
-      <% end %>
+  <div class="flex items-center justify-between border-t border-background-contrast px-4 py-3 sm:px-6 mt-8">
 
-      <% if @pagy.next %>
-        <%= link_to t('buttons.next'), pagy_url_for(@pagy, @pagy.next),
-            class: "relative ml-3 inline-flex items-center rounded-md border border-background-subtle bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-background-subtle" %>
-      <% else %>
-        <span class="relative ml-3 inline-flex items-center rounded-md border border-background-subtle bg-background-subtle px-4 py-2 text-sm font-medium text-foreground cursor-not-allowed">
-          <%= t('buttons.next') %>
-        </span>
+    <!-- Mobile pagination -->
+    <div class="flex flex-1 justify-between sm:hidden">
+      <% ['prev', 'next'].each do |dir| %>
+        <% page = @pagy.public_send(dir) %>
+        <% label = t("buttons.#{dir}") %>
+        <% if page %>
+          <%= link_to label, pagy_url_for(@pagy, page), class: "btn btn-sm btn-secondary-link" %>
+        <% else %>
+          <span class="btn btn-sm btn-secondary-link disabled"><%= label %></span>
+        <% end %>
       <% end %>
     </div>
 
+    <!-- Desktop pagination -->
     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-      <div>
-        <p class="text-sm text-foreground">
-          <%= t('common.pagination_showing', from: @pagy.from, to: @pagy.to, count: @pagy.count) %>
-        </p>
-      </div>
+      <p class="text-sm">
+        <%= t('common.pagination_showing', from: @pagy.from, to: @pagy.to, count: @pagy.count) %>
+      </p>
 
-      <div>
-        <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-          <% if @pagy.prev %>
-            <%= link_to pagy_url_for(@pagy, @pagy.prev),
-                class: "relative inline-flex items-center rounded-r-md px-2 py-2 text-foreground ring-1 ring-inset ring-background-subtle hover:bg-background-subtle focus:z-20 focus:outline-offset-0" do %>
-              <span class="sr-only">السابق</span>
-              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-              </svg>
+      <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+        <%# Previous button %>
+        <% if @pagy.prev %>
+          <%= link_to pagy_url_for(@pagy, @pagy.prev), class: "btn btn-sm btn-secondary-link" do %>
+            <span class="sr-only"><%= t('buttons.previous') %></span>
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+            </svg>
+          <% end %>
+        <% else %>
+          <span class="btn btn-sm btn-secondary-link disabled" aria-disabled="true">
+            <span class="sr-only"><%= t('buttons.previous') %></span>
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+            </svg>
+          </span>
+        <% end %>
+
+        <%# Page number links %>
+        <% @pagy.series.each do |item| %>
+          <% if item.is_a?(Integer) %>
+            <% if item == @pagy.page %>
+              <span aria-current="page" class="primary-link-active"><%= item %></span>
+            <% else %>
+              <%= link_to item, pagy_url_for(@pagy, item), class: "btn btn-sm btn-secondary-link" %>
             <% end %>
           <% else %>
-            <span class="relative inline-flex items-center rounded-r-md px-2 py-2 text-foreground ring-1 ring-inset ring-background-subtle cursor-not-allowed">
-              <span class="sr-only"><%= t('buttons.previous') %></span>
-              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-              </svg>
-            </span>
+            <span class="btn btn-sm btn-secondary-link"><%= item %></span>
           <% end %>
+        <% end %>
 
-          <% @pagy.series.each do |item| %>
-            <% case item %>
-            <% when Integer %>
-              <% if item == @pagy.page %>
-                <span aria-current="page" class="relative z-10 inline-flex items-center bg-primary-500 px-4 py-2 text-sm font-semibold text-background focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500">
-                  <%= item %>
-                </span>
-              <% else %>
-                <%= link_to item, pagy_url_for(@pagy, item),
-                    class: "relative inline-flex items-center px-4 py-2 text-sm font-semibold text-foreground ring-1 ring-inset ring-background-subtle hover:bg-background-subtle focus:z-20 focus:outline-offset-0" %>
-              <% end %>
-            <% when String %>
-              <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-foreground ring-1 ring-inset ring-background-subtle focus:outline-offset-0">
-                <%= item %>
-              </span>
-            <% end %>
+        <%# Next button %>
+        <% if @pagy.next %>
+          <%= link_to pagy_url_for(@pagy, @pagy.next), class: "btn btn-sm btn-secondary-link" do %>
+            <span class="sr-only"><%= t('buttons.next') %></span>
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+            </svg>
           <% end %>
-
-          <% if @pagy.next %>
-            <%= link_to pagy_url_for(@pagy, @pagy.next),
-                class: "relative inline-flex items-center rounded-l-md px-2 py-2 text-foreground ring-1 ring-inset ring-background-subtle hover:bg-background-subtle focus:z-20 focus:outline-offset-0" do %>
-              <span class="sr-only">التالي</span>
-              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-              </svg>
-            <% end %>
-          <% else %>
-            <span class="relative inline-flex items-center rounded-l-md px-2 py-2 text-foreground ring-1 ring-inset ring-background-subtle cursor-not-allowed">
-              <span class="sr-only"><%= t('buttons.next') %></span>
-              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-              </svg>
-            </span>
-          <% end %>
-        </nav>
-      </div>
+        <% else %>
+          <span class="btn btn-sm btn-secondary-link disabled" aria-disabled="true">
+            <span class="sr-only"><%= t('buttons.next') %></span>
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+            </svg>
+          </span>
+        <% end %>
+      </nav>
     </div>
   </div>
 <% end %>

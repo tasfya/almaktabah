@@ -19,10 +19,9 @@
     <%= javascript_importmap_tags %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
-  <body class="bg-gray-50 pb-20">
+  <body class="bg-background">
     <%= render 'shared/header' %>
     <%= render 'shared/news_bar' %>
-    
     <main class="min-h-screen w-full">
       <% unless controller_name == 'home' %>
         <div class="container mx-auto px-4">
@@ -31,7 +30,6 @@
       <% end %>
       <%= yield %>
     </main>
-    
     <%= render 'shared/footer' %>
     <%= render 'shared/audio_player' %>
   </body>

@@ -191,6 +191,7 @@ ar:
     reset: "إعادة تعيين"
     view_all_lessons: "عرض جميع دروس السلسلة"
     previous: "السابق"
+    prev: "السابق"
     next: "التالي"
     copy_link: "نسخ الرابط"
     share: "مشاركة"
