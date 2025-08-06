@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :setup_breadcrumbs
   before_action :set_domain
   layout :determine_layout
+  before_action :latest_news
 
   protected
 
@@ -37,6 +38,6 @@ class ApplicationController < ActionController::Base
   end
 
   def latest_news
-    @latest_news ||= News.published.order(published_at: :desc).limit(5)
+    @latest_news ||= News.for_domain_id(@domain.id).published.order(published_at: :desc).limit(5)
   end
 end
