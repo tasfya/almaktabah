@@ -1,30 +1,23 @@
 <section class="relative w-full overflow-hidden">
-  <!-- Background Image -->
   <div class="absolute inset-0">
     <%= image_tag "background.jpg", height: 600, class: "absolute inset-0 w-full h-full object-cover object-center z-[-1]" %>
     <div class="absolute inset-0 bg-black/20"></div>
   </div>
-  <!-- Content -->
   <div class="relative container mx-auto h-full flex flex-col justify-center p-6 md:p-12 z-10">
-    <div class="max-w-3xl">
-      <!-- Category & Date -->
+    <div class="max-w-3xl text-white">
       <div class="flex items-center text-sm mb-3 gap-2">
-        <span class="bg-gray-800 text-white text-xs font-medium px-3 py-1 rounded-full">
+        <span class="badge badge-primary">
           <%= lesson.category %>
         </span>
-        <span class="text-white"><%= format_date(lesson.published_at) %></span>
       </div>
-      <!-- Title -->
-      <h1 class="text-3xl md:text-5xl font-bold mb-6 text-white">
+      <h1 class="text-3xl md:text-5xl font-bold mb-6">
         <%= lesson.title %>
       </h1>
-      <!-- Description -->
-      <p class="text-sm md:text-base mb-8 leading-relaxed text-white">
+      <p class="text-sm md:text-base mb-8 leading-relaxed">
         <%= lesson.description %>
       </p>
-      <!-- Buttons -->
       <div class="flex gap-4">
-        <%= play_button(resource: lesson, path: play_lesson_path(lesson))%>
+        <%= play_button(resource: lesson)%>
         <% if lesson.youtube_url.present? %>
           <%= link_to youtube_embed_url(lesson.youtube_url), class: "btn btn-primary gap-2 w-fit youtube_url.present?", target: "_blank" do %>
             <%= icon "youtube", library: "lucide", class: "size-5" %>
@@ -33,7 +26,7 @@
             </span>
           <% end %>
         <% end %>
-        <%= link_to lesson_path(lesson), class: "btn btn-secondary w-fit"  do %>
+        <%= link_to lesson_path(lesson), class: "btn btn-secondary w-fit" do %>
           <%= icon "eye", class: "size-5" %>
           <span class="text-sm whitespace-nowrap">
             <%= t('buttons.view') %>

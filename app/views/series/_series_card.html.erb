@@ -1,13 +1,13 @@
-<%= link_to series_path(series), class: "block w-full bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow" do %>
-  <h3 class="text-lg font-semibold text-gray-700 mb-2 hover:text-gray-900">
+<%= link_to series_path(series), class: "block bg-card hover:bg-card-hover text-card-contrast w-full border border-background-contrast rounded-lg p-6 hover:shadow-md transition-shadow" do %>
+  <h3 class="text-lg font-semibold  mb-2 hover:text-primary-500">
     <%= series.title %>
   </h3>
-  <span class="inline-flex items-center gap-2 text-sm text-gray-500 mb-3">
+  <span class="inline-flex items-center gap-2 text-sm ">
     <%= pluralize(series.lessons.count, 'درس') %>
-    <%= icon "book-open", class: "size-5"%>
+    <%= icon "book-open", class: "size-5 text-primary-500" %>
   </span>
-  <p class="text-gray-600 text-sm mb-4"><%= truncate(series.description, length: 150) %></p>
-  <div class="flex items-center justify-between text-sm text-gray-500">
+  <p class="text-sm mb-4"><%= truncate(series.description, length: 150) %></p>
+  <div class="flex items-center justify-between text-sm ">
     <button class="btn btn-secondary w-fit">
       <%= t("buttons.view_series")%>
       <%= icon "arrow-left", class: "size-5" %>

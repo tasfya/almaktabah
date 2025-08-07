@@ -1,5 +1,6 @@
 class Domain < ApplicationRecord
   has_one_attached :logo, service: Rails.application.config.public_storage
+  has_one_attached :art_work, service: Rails.application.config.public_storage
   has_many :domain_assignments, dependent: :destroy
 
   def self.find_by_host(host)
@@ -8,5 +9,9 @@ class Domain < ApplicationRecord
 
   def assigned_items
     domain_assignments.includes(:assignable)
+  end
+
+  def has_custom_css?
+    custom_css.present?
   end
 end

@@ -1,0 +1,40 @@
+@theme {
+  /* ========= Fonts ========= */
+  --font-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+  --font-arabic: Amiri, Times New Roman, serif;
+
+  --color-primary: #111827;
+  --color-primary-contrast: #dbdcde;
+  --color-primary-hover: #111827;
+  --color-secondary: #FFFFFF;
+  --color-secondary-contrast: #0a0a0a;
+  --color-secondary-hover: #f1f5f9;
+
+  --color-primary-link: #FFFFFF;
+  --color-primary-link-hover: #FFFFFF;
+  --color-primary-link-active: #FFFFFF;
+
+  --color-secondary-link: #333333;
+  --color-secondary-link-hover: #333333;
+  --color-secondary-link-active: #333333;
+
+
+  --color-background: #f8fafc;
+  --color-main-text: #333333;
+  --color-navbar: #111827;
+  --color-navbar-contrast: #FFFFFF;
+  --color-newsbar: #111827;
+  --color-newsbar-contrast: #FFFFFF;
+  --color-footer: #0a0a0a;
+  --color-footer-contrast: #FFFFFF;
+
+  --color-card: #ffffff;
+  --color-card-hover: #f1f5f9;
+  --color-card-contrast: #3b3b3b;
+
+  --color-input: #FFFFFF;
+  --color-input-contrast: #1F2937;
+
+  --color-background-contrast: #e4e4e7;
+  --color-background-contrast-text: #FFFFFF;
+}

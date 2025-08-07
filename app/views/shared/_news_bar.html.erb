@@ -1,15 +1,15 @@
 <% if @latest_news.present? %>
-  <div class="bg-gray-900 text-white px-3 py-2">
+  <div class="bg-newsbar text-newsbar-contrast px-3 py-2">
     <div class="flex items-center gap-4">
       <div class="flex items-center gap-2 flex-shrink-0">
-        <%= link_to news_index_path, class: "flex items-center gap-2 hover:text-gray-300" do %>
+        <%= link_to news_index_path, class: "primary-link" do %>
           <%= icon "megaphone", class: "size-5"%>
           <%= t('news_bar.latest_news') %>
         <% end %>
       </div>
-      
+
       <div class="flex-1 overflow-hidden h-6 relative">
-        <div 
+        <div
           data-controller="news-ticker"
           data-news-ticker-speed-value="4000"
           data-news-ticker-pause-on-hover-value="true"
@@ -17,10 +17,10 @@
           data-action="mouseenter->news-ticker#pauseAnimation mouseleave->news-ticker#resumeAnimation"
         >
           <% @latest_news.each_with_index do |news, index| %>
-            <div class="absolute inset-0 flex items-center hidden" 
+            <div class="absolute inset-0 flex items-center hidden"
                  data-news-ticker-target="item"
                  data-news-ticker-index="<%= index %>">
-              <%= link_to news_path(news), class: "text-white hover:text-gray-300 transition-colors text-sm truncate" do %>
+              <%= link_to news_path(news), class: "primary-link text-sm truncate" do %>
                 <%= news.title %>
               <% end %>
             </div>

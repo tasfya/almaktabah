@@ -1,35 +1,26 @@
 <% content_for :title, @book.title %>
-<div class="bg-gray-50 min-h-screen py-8">
+<div class="min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
-      <!-- Main Content -->
       <div class="lg:col-span-2">
-        <article class="bg-white rounded-lg shadow-md p-8">
+        <article class="border border-background-contrast rounded-lg shadow-md p-8">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <!-- Book Cover -->
             <div class="md:col-span-1">
-              <% if @book.cover_image.present? %>
-                <%= image_tag @book.cover_image, class: "w-full h-auto rounded-lg shadow-md", alt: @book.title %>
-              <% else %>
-                <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                  <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
+              <% if @book.cover_image.present?%>
+                <%= image_tag @book.cover_image, class: "w-full h-full rounded-lg shadow-md", alt: @book.title %>
               <% end %>
             </div>
-            <!-- Book Info -->
             <div class="md:col-span-2">
               <header>
-                <h1 class="text-3xl font-bold text-gray-900 mb-4">
+                <h1 class="text-3xl font-bold mb-4">
                   <%= @book.title %>
                 </h1>
                 <% if @book.author.present? %>
-                  <p class="text-xl text-gray-700 mb-4">
+                  <p class="text-xl mb-4">
                     <%= @book.author.name %>
                   </p>
                 <% end %>
-                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
+                <div class="flex flex-wrap items-center gap-4 text-sm mb-6">
                   <% if @book.category.present? %>
                     <span class="badge badge-primary">
                       <%= @book.category %>
@@ -38,13 +29,12 @@
                 </div>
                 <% if @book.description.present? %>
                   <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.book_description') %></h2>
+                    <h2 class="text-2xl font-bold mb-4"><%= t('.book_description') %></h2>
                     <div class="prose prose-lg max-w-none">
                       <%= simple_format(@book.description) %>
                     </div>
                   </section>
                 <% end %>
-                <!-- Download Button -->
                 <% if @book.file.present? %>
                   <div class="mb-6">
                     <%= link_to @book.file, target: "_blank",
@@ -57,11 +47,9 @@
               </header>
             </div>
           </div>
-          <!-- Book Description -->
-          <!-- Author Bio -->
           <% if @book.author.respond_to?(:bio) && @book.author.bio.present? %>
             <section class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4">
+              <h2 class="text-2xl font-bold mb-4">
                 <%= t(".about_author")%>
               </h2>
               <div class="prose prose-lg max-w-none">
@@ -69,39 +57,35 @@
               </div>
             </section>
           <% end %>
-          <!-- Related Books -->
           <% if @related_books.any? %>
             <section class="mt-12">
-              <h2 class="text-2xl font-bold text-gray-900 mb-6">
+              <h2 class="text-2xl font-bold mb-6">
                 <%= t(".related_books")%>
               </h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% @related_books.each do |related_book| %>
-                  <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                  <div class="bg-card hover:bg-card-hover text-card-contrast border border-background-contrast rounded-lg p-6 hover:shadow-md transition-shadow">
                     <div class="flex gap-4">
                       <% if related_book.cover_image.present? %>
                         <%= image_tag related_book.cover_image, class: "w-16 h-20 object-cover rounded", alt: related_book.title %>
                       <% else %>
-                        <div class="w-16 h-20 bg-gray-200 rounded flex items-center justify-center">
-                          <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="w-16 h-20 rounded flex items-center justify-center">
+                          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                           </svg>
                         </div>
                       <% end %>
                       <div class="flex-1">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-1">
-                          <%= link_to related_book.title, book_path(related_book), class: "hover:text-gray-600" %>
+                        <h3 class="text-lg font-semibold mb-1">
+                          <%= link_to related_book.title, book_path(related_book), class: "hover:text-primary-500" %>
                         </h3>
                         <% if related_book.author.present? %>
-                          <p class="text-sm text-gray-600 mb-2">
+                          <p class="text-sm mb-2">
                             <%= related_book.author.respond_to?(:name) ? related_book.author.name : related_book.author %>
                           </p>
                         <% end %>
-                        <div class="flex items-center justify-between text-sm text-gray-500">
-                          <span class="bg-gray-100 px-2 py-1 rounded"><%= related_book.category %></span>
-                          <% if false && related_book.respond_to?(:downloads) %>
-                            <span><%= related_book.downloads %> تحميل</span>
-                          <% end %>
+                        <div class="flex items-center justify-between text-sm">
+                          <span class="px-2 py-1 rounded"><%= related_book.category %></span>
                         </div>
                       </div>
                     </div>
@@ -112,7 +96,6 @@
           <% end %>
         </article>
       </div>
-      <!-- Sidebar -->
-    </div>
+      </div>
   </div>
 </div>

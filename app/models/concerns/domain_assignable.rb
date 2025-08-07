@@ -2,10 +2,10 @@ module DomainAssignable
   extend ActiveSupport::Concern
 
   included do
-  has_many :domain_assignments, as: :assignable, dependent: :destroy
+    has_many :domain_assignments, as: :assignable, dependent: :destroy
     has_many :domains, through: :domain_assignments
-    scope :for_domain, ->(domain) {
-      joins(:domain_assignments).where(domain_assignments: { domain: domain })
+    scope :for_domain_id, ->(domain_id) {
+      joins(:domain_assignments).where(domain_assignments: { domain_id: domain_id })
     }
   end
 

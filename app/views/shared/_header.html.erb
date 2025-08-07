@@ -1,64 +1,62 @@
-<header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 left-0 right-0 z-50 "
-        data-controller="navigation"
-        data-action="click@window->navigation#clickOutside">
-  <div class="bg-gray-900 text-white">
+<header class="bg-background shadow-sm sticky top-0 left-0 right-0 z-50" data-controller="navigation" data-action="click@window->navigation#clickOutside">
+  <div class="bg-navbar text-navbar-contrast ">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
       <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto" do %>
         <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
       <% end %>
       <div class="hidden md:flex flex-row-reverse gap-2 items-center w-full flex-1 mr-auto">
         <div class="hidden md:flex items-center">
-          <%= link_to site_info[:youtube_url], class: "btn btn-link text-white btn-sm btn-sm p-0" do %>
+          <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm btn-sm p-0" do %>
             <%= icon "youtube", library: "lucide", class: "size-5" %>
           <% end %>
-          <%= link_to site_info[:twitter_url], class: "btn btn-link text-white btn-sm btn-sm p-0" do %>
+          <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm btn-sm p-0" do %>
             <%= icon "twitter", library: "lucide", class: "size-5" %>
           <% end %>
         </div>
-        <%= link_to search_path, class: "btn btn-primary w-fit rounded-md btn-sm" do %>
+        <%= link_to search_path, class: "btn btn-secondary w-fit btn-sm" do %>
           <%= icon "magnifying-glass", class: "size-4" %>
           <span><%= t('buttons.search_button') %></span>
         <% end %>
       </div>
       <div class="flex md:hidden items-center flex-row-reverse">
-        <%= link_to site_info[:youtube_url], class: "btn btn-link text-white btn-sm p-0" do %>
+        <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm p-0" do %>
           <%= icon "youtube", library: "lucide", class: "size-5" %>
         <% end %>
-        <%= link_to site_info[:twitter_url], class: "btn btn-link text-white btn-sm p-0" do %>
+        <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm p-0" do %>
           <%= icon "twitter", library: "lucide", class: "size-5" %>
         <% end %>
-        <button data-action="click->navigation#toggleMobileMenu" class="md:hidden text-white focus:outline-none">
+        <button data-action="click->navigation#toggleMobileMenu" class="md:hidden btn btn-link btn-sm focus:outline-none">
           <%= icon "bars-3", class: "size-5"%>
         </button>
       </div>
     </div>
   </div>
-  <nav class="hidden md:flex border-t border-gray-200 py-3">
+  <nav class="hidden md:flex border-t py-3">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex gap-6 text-sm">
-      <%= link_to t('navigation.home'), root_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.scientific_series'), series_index_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.lectures'), lectures_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.books'), books_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.news'), news_index_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.fatwas'), fatwas_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.benefits'), benefits_path, class: "text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.about_sheikh'), about_path, class: "text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.home'), root_path, class: "secondary-link" %>
+      <%= link_to t('navigation.scientific_series'), series_index_path, class: "secondary-link" %>
+      <%= link_to t('navigation.lectures'), lectures_path, class: "secondary-link" %>
+      <%= link_to t('navigation.books'), books_path, class: "secondary-link" %>
+      <%= link_to t('navigation.news'), news_index_path, class: "secondary-link" %>
+      <%= link_to t('navigation.fatwas'), fatwas_path, class: "secondary-link" %>
+      <%= link_to t('navigation.benefits'), benefits_path, class: "secondary-link" %>
+      <%= link_to t('navigation.about_sheikh'), about_path, class: "secondary-link" %>
     </div>
   </nav>
-  <div data-navigation-target="menu" class="hidden md:hidden border-t bg-white">
+  <div data-navigation-target="menu" class="hidden md:hidden border-t">
     <div class="px-4 py-2 space-y-2">
-      <%= link_to search_path, class: "btn btn-secondary rounded-md btn-sm" do %>
+      <%= link_to search_path, class: "btn btn-secondary btn-sm" do %>
         <%= icon "magnifying-glass", class: "size-4" %>
         <span><%= t('buttons.search_button') %></span>
       <% end %>
-      <%= link_to t('navigation.home'), root_path, class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.scientific_series'), series_index_path, class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.lectures'), lectures_path, class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.books'), books_path, class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.news'), news_index_path, class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.fatwas'), fatwas_path, class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.benefits'), benefits_path, class: "block py-2 text-gray-700 hover:text-gray-900" %>
-      <%= link_to t('navigation.about_sheikh'), about_path, class: "block py-2 text-gray-700 hover:text-gray-900" %>
+      <%= link_to t('navigation.home'), root_path, class: "block py-2 link" %>
+      <%= link_to t('navigation.scientific_series'), series_index_path, class: "block py-2 link" %>
+      <%= link_to t('navigation.lectures'), lectures_path, class: "block py-2 link" %>
+      <%= link_to t('navigation.books'), books_path, class: "block py-2 link" %>
+      <%= link_to t('navigation.news'), news_index_path, class: "block py-2 link" %>
+      <%= link_to t('navigation.fatwas'), fatwas_path, class: "block py-2 link" %>
+      <%= link_to t('navigation.benefits'), benefits_path, class: "block py-2 link" %>
+      <%= link_to t('navigation.about_sheikh'), about_path, class: "block py-2 link" %>
     </div>
   </div>
 </header>

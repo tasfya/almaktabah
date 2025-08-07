@@ -1,20 +1,5 @@
 @import 'tailwindcss';
-
-@theme {
-  --font-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
-  --font-arabic: Amiri, Times New Roman, serif;
-
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
-}
+@import "./theme.css";
 
 @utility container {
   margin-inline: auto;
@@ -47,94 +32,99 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--color-background-subtle, currentcolor);
   }
 
   input {
-    color: black;
+    color: var(--color-foreground);
   }
 }
+@utility search-input {
+  @apply w-full px-3 py-2 border rounded-md shadow-sm bg-input text-input-contrast;
+}
 
+@utility select-primary {
+  @apply w-full px-3 py-2 border rounded-md shadow-sm bg-input text-input-contrast;
+}
 
-
-/* Custom component styles */
 @utility btn {
   @apply px-4 py-2 rounded-xs w-full font-medium transition-colors duration-200 flex items-center justify-center gap-1;
 }
+
 @utility btn-primary {
-  @apply bg-gray-800 text-white hover:bg-gray-700 cursor-pointer;
+  @apply bg-primary text-primary-contrast hover:bg-primary-hover cursor-pointer border border-background-contrast;
 }
+
 @utility btn-secondary {
-  @apply bg-white text-gray-900 hover:bg-gray-100 border border-gray-300 cursor-pointer;
+  @apply bg-secondary text-secondary-contrast hover:bg-secondary-hover border border-background-contrast cursor-pointer;
 }
+
 @utility btn-link {
-  @apply w-fit hover:underline cursor-pointer;
+  @apply w-fit text-primary-link hover:text-primary-link-hover hover:underline cursor-pointer;
 }
+
+@utility btn-secondary-link {
+  @apply w-fit text-secondary-link hover:text-secondary-link-hover hover:underline cursor-pointer;
+}
+
 @utility btn-sm {
   @apply px-3 py-1.5 text-sm;
 }
+
+@utility secondary-link {
+  @apply text-secondary-link hover:text-secondary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center ;
+}
+@utility secondary-link-active {
+  @apply text-secondary-link-active hover:text-secondary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center;
+}
+
+@utility primary-link {
+  @apply text-primary-link hover:text-primary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center ;
+}
+@utility primary-link-active {
+  @apply text-primary-link-active hover:text-primary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center;
+}
+
 @utility badge {
   @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
 }
+
 @utility badge-primary {
-  @apply bg-gray-900 text-white;
+  @apply bg-primary text-primary-contrast hover:bg-primary-hover border border-background-contrast;
 }
+
 @utility badge-secondary {
-  @apply bg-gray-200 text-gray-800;
+  @apply bg-secondary text-secondary-contrast hover:bg-secondary-hover border border-background-contrast;
 }
+
 @utility badge-sm {
   @apply px-2 py-1 text-xs;
 }
-@utility card {
-  @apply bg-white rounded-xs shadow-md border;
-}
-@utility card-header {
-  @apply p-6 border-b border-gray-200;
-}
-@utility card-body {
-  @apply p-6;
-}
-@utility card-footer {
-  @apply p-6 border-t border-gray-200;
-}
+
+
+
 @utility audio-player {
-  @apply bg-white border-t border-gray-200 shadow-lg;
+  @apply bg-primary border-t  shadow-lg;
 }
+
 @utility audio-progress {
-  @apply h-1 bg-blue-600 transition-all duration-100;
+  @apply h-1 bg-primary transition-all duration-100;
 }
-@utility search-modal {
-  backdrop-filter: blur(4px);
-}
+
+
 @utility flash-message {
   animation: slideInDown 0.3s ease-out;
 }
 
-/* Custom utility styles */
 @utility text-balance {
   text-wrap: balance;
 }
+
 @utility rtl-space-x-reverse {
   & > :not([hidden]) ~ :not([hidden]) {
     --tw-space-x-reverse: 1;
     margin-right: calc(var(--tw-space-x) * var(--tw-space-x-reverse));
     margin-left: calc(var(--tw-space-x) * calc(1 - var(--tw-space-x-reverse)));
-  }
-}
-
-/* Custom base styles */
-@layer base {
-  html {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-  body {
-    direction: rtl;
-    text-align: right;
-  }
-
-  .container {
-    @apply mx-auto px-4;
   }
 }
 

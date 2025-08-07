@@ -4,13 +4,13 @@ class SeriesController < ApplicationController
   before_action :setup_series_breadcrumbs
 
   def index
-    @q = Series.for_domain(@domain).published.order(published_at: :desc).includes(:lessons).ransack(params[:q])
+    @q = Series.for_domain_id(@domain.id).published.order(published_at: :desc).includes(:lessons).ransack(params[:q])
     @pagy, @series = pagy(@q.result(distinct: true), limit: 12)
   end
 
   def show
-    @lessons = @series.lessons.for_domain(@domain).published.ordered_by_lesson_number
-    @related_series = Series.for_domain(@domain).published.by_category(@series.category)
+    @lessons = @series.lessons.for_domain_id(@domain.id).published.ordered_by_lesson_number
+    @related_series = Series.for_domain_id(@domain.id).published.by_category(@series.category)
                            .where.not(id: @series.id)
                            .recent
                            .limit(4)
@@ -29,7 +29,7 @@ class SeriesController < ApplicationController
   end
 
   def set_series
-    @series = Series.for_domain(@domain).published.find(params[:id])
+    @series = Series.for_domain_id(@domain.id).published.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to series_index_path, alert: t("messages.series_not_found")
   end

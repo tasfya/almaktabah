@@ -1,9 +1,8 @@
-<div class="bg-gray-50 min-h-screen py-8">
+<div class="min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
-      <!-- Main Content -->
       <div class="lg:col-span-2">
-        <article class="bg-white rounded-lg shadow-md p-8">
+        <article class="border border-background-contrast rounded-lg shadow-md p-8">
           <header class="mb-8">
             <% if @benefit.video? %>
               <section class="mb-8">
@@ -15,24 +14,21 @@
                 <% end %>
               </section>
             <% end %>
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">
+            <h1 class="text-3xl font-bold mb-4">
               <%= @benefit.title %>
             </h1>
-            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
+            <div class="flex flex-wrap items-center gap-4 text-sm mb-6">
               <% if @benefit.category.present? %>
                 <span class="badge badge-primary">
                   <%= @benefit.category %>
                 </span>
               <% end %>
-              <% if false && @benefit.published_at %>
-                <time><%= @benefit.published_at.strftime("%Y/%m/%d") %></time>
-              <% end %>
             </div>
           </header>
           <% if @benefit.optimized_audio? || @benefit.video? %>
             <section class="mb-8">
-              <div class="bg-gray-50 rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              <div class="rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">
                   <%= t(".download_options")%>
                 </h3>
                 <div class="flex flex-wrap gap-4">
@@ -41,7 +37,7 @@
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       <%= t("buttons.download_audio")%>
                     <% end %>
-                    <%= play_button(resource: @benefit, path: play_benefit_path(@benefit)) %>
+                          <%= play_button(resource: @benefit, klass: "btn btn-lg btn-secondary group") %>
                   <% end %>
                   <% if @benefit.video? %>
                     <%= link_to rails_blob_url(@benefit.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary w-fit" do %>
@@ -55,7 +51,6 @@
           <% end %>
         </article>
       </div>
-      <!-- Sidebar -->
     </div>
   </div>
 </div>

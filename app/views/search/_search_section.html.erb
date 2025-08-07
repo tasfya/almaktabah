@@ -1,59 +1,49 @@
-<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-  <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
-    <h3 class="text-lg font-semibold text-gray-900">
+<div class="rounded-lg shadow-md border border-background-contrast overflow-hidden">
+  <div class="bg-background-subtle px-6 py-4 border-b border-background-contrast">
+    <h3 class="text-lg font-semibold">
       <%= t("navigation.#{model_name}") %>
-      <span class="text-sm font-normal text-gray-600">
+      <span class="text-sm font-normal">
         (<%= results.count %> <%= t(".result_count", count: results.count) %>)
       </span>
     </h3>
   </div>
-  
   <div class="p-6">
     <div class="space-y-4">
       <% results.each do |result| %>
-        <div class="flex items-start gap-4 p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors">
+        <div class="bg-card hover:bg-card-hover text-card-contrast flex items-start gap-4 p-4 border  border-background-contrast rounded-lg transition-colors">
           <div class="flex-shrink-0">
             <% case model_name %>
             <% when :books %>
-              <%= icon "book-open", class: "size-6 text-gray-600" %>
+              <%= icon "book-open", class: "size-6 " %>
             <% when :lectures %>
-              <%= icon "play", class: "size-6 text-green-600" %>
+              <%= icon "play", class: "size-6 text-secondary-500" %>
             <% when :lessons %>
-              <%= icon "graduation-cap", library: "lucide", class: "size-6 text-gray-600" %>
+              <%= icon "graduation-cap", library: "lucide", class: "size-6 " %>
             <% when :series %>
-              <%= icon "folder", class: "size-6 text-gray-600" %>
+              <%= icon "folder", class: "size-6 " %>
             <% when :news %>
-              <%= icon "newspaper", class: "size-6 text-gray-600" %>
+              <%= icon "newspaper", class: "size-6 " %>
             <% when :benefits %>
-              <%= icon "star", class: "size-6 text-gray-600" %>
+              <%= icon "star", class: "size-6 " %>
             <% when :fatwas %>
-              <%= icon "scale", class: "size-6 text-gray-600" %>
+              <%= icon "scale", class: "size-6 " %>
             <% when :scholars %>
-              <%= icon "user", class: "size-6 text-gray-600" %>
+              <%= icon "user", class: "size-6 " %>
             <% end %>
           </div>
-          
+
           <div class="flex-1 min-w-0">
-            <h4 class="text-lg font-medium text-gray-900 mb-2">
-              <%= link_to result.title, send("#{model_name.to_s.singularize}_path", result), class: "hover:text-gray-600 transition-colors" %>
+            <h4 class="text-lg font-medium mb-2">
+              <%= link_to result.title, send("#{model_name.to_s.singularize}_path", result), class: "transition-colors" %>
             </h4>
-            
+
             <% if result.respond_to?(:description) && result.description.present? %>
-              <p class="text-gray-600 text-sm line-clamp-2">
+              <p class="text-sm line-clamp-2">
                 <%= truncate(strip_tags(result.description), length: 150) %>
               </p>
             <% end %>
-            
-            <div class="flex items-center gap-4 mt-3 text-xs text-gray-500">
-              <% if false && result.respond_to?(:published_at) && result.published_at.present? %>
-                <span class="flex items-center gap-1">
-                  <%= icon "calendar", class: "size-3" %>
-                  <%= l(result.published_at, format: :long) %>
-                </span>
-              <% end %>
-            </div>
           </div>
-          
+
           <div class="flex-shrink-0">
             <%= link_to send("#{model_name.to_s.singularize}_path", result), class: "btn btn-secondary btn-sm" do %>
               <%= t('.view') %>
@@ -63,11 +53,10 @@
         </div>
       <% end %>
     </div>
-    
+
     <% if results.count >= 5 %>
       <div class="mt-6 text-center">
-        <%= link_to send("#{model_name}_path", q: { title_or_description_cont: @query }),
-            class: "btn btn-link text-gray-600 hover:text-gray-800" do %>
+        <%= link_to send("#{model_name}_path", q: { title_or_description_cont: @query }), class: "btn btn-link" do %>
           <%= t('.view_all_in', type: t("navigation.#{model_name}")) %>
           <%= icon "arrow-left", class: "size-4" %>
         <% end %>

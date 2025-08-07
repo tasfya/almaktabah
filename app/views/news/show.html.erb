@@ -1,24 +1,13 @@
 <% content_for :title, @news.title %>
-<div class="bg-gray-50 min-h-screen py-8">
+<div class="min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
-      <!-- Main Content -->
       <div class="lg:col-span-2">
-        <article class="bg-white rounded-lg shadow-md p-8">
+        <article class="border border-background-contrast rounded-lg shadow-md p-8">
           <header class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">
+            <h1 class="text-3xl font-bold mb-4">
               <%= @news.title %>
             </h1>
-            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
-              <% if false %>
-                <time class="flex items-center gap-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                  </svg>
-                  <%= @news.published_at.strftime("%Y/%m/%d - %H:%M") %>
-                </time>
-              <% end %>
-            </div>
           </header>
           <% if @news.thumbnail.present? %>
             <section class="mb-8">
@@ -29,25 +18,19 @@
           <% end %>
           <section class="mb-8">
             <% if @news.content.present? %>
-              <div class="prose prose-lg max-w-none leading-relaxed">
+              <div class="prose prose-lg max-w-none leading-relaxed ">
                 <%= @news.content %>
               </div>
             <% else %>
-              <div class="text-gray-600">
-                <p>
-                  <%= t(".will_be_available") %>
-                </p>
-              </div>
+              <div class=""><%= t(".will_be_available") %></div>
             <% end %>
           </section>
-          <!-- Share Section -->
           <section class="mb-8">
-            <div class="border-t border-gray-200 pt-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            <div class="border-t border-background-contrast pt-6">
+              <h3 class="text-lg font-semibold  mb-4">
                 <%= t('.share_news') %>
               </h3>
               <div class="flex items-center gap-4">
-                <!-- Social sharing buttons -->
                 <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape(@news.title) %>&url=<%= CGI.escape(request.original_url) %>"
                    target="_blank" rel="noopener"
                    class="btn btn-primary">
@@ -72,49 +55,8 @@
               </div>
             </div>
           </section>
-          <!-- Related News -->
-          <section class="mt-12">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">
-              <%= t('.related_news') %>
-            </h2>
-            <%
-              # Get related news (latest news excluding current one)
-              related_news = News.where.not(id: @news.id)
-                                .order(published_at: :desc)
-                                .limit(4)
-            %>
-            <% if related_news.any? %>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <% related_news.each do |related_item| %>
-                  <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                    <% if related_item.thumbnail.present? %>
-                      <div class="h-48 overflow-hidden">
-                        <%= image_tag related_item.thumbnail, class: "w-full h-full object-cover", alt: related_item.title %>
-                      </div>
-                    <% end %>
-                    <div class="p-6">
-                      <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                        <%= link_to related_item.title, news_path(related_item), class: "hover:text-gray-600" %>
-                      </h3>
-                      <% if related_item.content.present? %>
-                        <p class="text-gray-600 text-sm mb-4">
-                          <%= truncate(strip_tags(related_item.content.to_s), length: 100) %>
-                        </p>
-                      <% end %>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <div class="text-center text-gray-500 py-8">
-                <p><%= t('common.no_related_items', items: t('activerecord.model_names.news')) %></p>
-              </div>
-            <% end %>
-          </section>
         </article>
       </div>
-      <!-- Sidebar -->
-    </div>
+      </div>
   </div>
 </div>
-

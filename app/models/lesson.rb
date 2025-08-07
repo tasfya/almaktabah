@@ -2,6 +2,8 @@ class Lesson < ApplicationRecord
   include MediaHandler
   include Publishable
   include DomainAssignable
+  include ArabicSluggable
+
 
   belongs_to :series
 
@@ -18,6 +20,8 @@ class Lesson < ApplicationRecord
   scope :recent, -> { order(published_at: :desc) }
   scope :by_category, ->(category) { where(category: category) if category.present? }
   scope :by_series, ->(series_id) { where(series_id: series_id) if series_id.present? }
+  scope :with_audio, -> { joins(:audio_attachment) }
+  scope :without_audio, -> { where.missing(:audio_attachment) }
 
   scope :ordered_by_lesson_number, -> { order(Arel.sql("COALESCE(position, 999999)")) }
 
@@ -45,6 +49,16 @@ class Lesson < ApplicationRecord
     Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
   end
 
+  def audio_file_size
+    return nil unless audio.attached?
+
+    audio.blob.byte_size
+  end
+
+  def podcast_title
+    "#{position} - #{series.title} - #{title}"
+  end
+
   def series_title
     series.title
   end
@@ -52,5 +66,18 @@ class Lesson < ApplicationRecord
   def extract_lesson_number
     match = title.match(/(\d+)/)
     match ? match[1].to_i : Float::INFINITY
+  end
+
+  def summary
+    description
+  end
+
+  def generate_bucket_key
+    series_slug = slugify_arabic_advanced(series.title)
+    scholar_slug = slugify_arabic_advanced(series.scholar.name)
+
+    ext = audio.attachment.blob.filename.extension
+    name = position ? position.to_s : slugify_arabic_advanced(title)
+    "scholars/#{scholar_slug}/series/#{series_slug}/#{name}.#{ext}"
   end
 end

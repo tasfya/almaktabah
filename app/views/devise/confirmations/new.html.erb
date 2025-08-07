@@ -1,16 +1,56 @@
-<h2>Resend confirmation instructions</h2>
+<% content_for :title, t('auth.resend_confirmation') %>
 
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div class="rounded-sm border border-background-contrast bg-white text-gray-900 shadow-2xl overflow-hidden">
+      <div class="flex flex-col space-y-1.5 p-8 text-center bg-gray-900 text-white">
+        <div class="mx-auto mb-4">
+          <svg class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold tracking-tight">
+          <%= t('auth.resend_confirmation') %>
+        </h3>
+        <p class="text-gray-100 mt-2">أدخل بريدك الإلكتروني لإعادة إرسال رابط التأكيد</p>
+      </div>
+      
+      <div class="p-8">
+        <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, class: "space-y-6" }) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+          <div>
+            <%= f.label :email, t('auth.email'), class: "block text-sm font-semibold text-gray-700 mb-2" %>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                </svg>
+              </div>
+              <%= f.email_field :email, 
+                placeholder: t('auth.email_placeholder'),
+                autofocus: true, 
+                autocomplete: "email", 
+                value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email),
+                class: "select-primary" %>
+            </div>
+          </div>
+
+          <div>
+            <%= f.submit t('auth.resend_confirmation'), 
+                class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="px-8 py-6 bg-gray-50 border-t border-background-contrast text-center">
+        <%= link_to t('auth.back_to_login'), new_session_path(resource_name), 
+            class: "btn btn-primary btn-sm" %>
+      </div>
+    </div>
+    
+    <div class="text-center text-sm text-gray-600">
+      <%= t('site.copyright') %>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>

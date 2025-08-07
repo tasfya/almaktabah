@@ -1,22 +1,19 @@
 class LecturesController < ApplicationController
   include Filterable
-  before_action :set_lecture, only: [ :show, :play ]
+  before_action :set_lecture, only: [ :show ]
   before_action :setup_lectures_breadcrumbs
 
   def index
-    @q = Lecture.for_domain(@domain).published.order(published_at: :desc).ransack(params[:q])
+    @q = Lecture.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
     @pagy, @lectures = pagy(@q.result(distinct: true), limit: 12)
   end
 
   def show
-    @related_lectures = Lecture.for_domain(@domain)
+    @related_lectures = Lecture.for_domain_id(@domain.id)
                                .published.by_category(@lecture.category)
                                .where.not(id: @lecture.id)
                                .recent
                                .limit(4)
-  end
-
-  def play
   end
 
   private
@@ -32,7 +29,7 @@ class LecturesController < ApplicationController
   end
 
   def set_lecture
-    @lecture = Lecture.for_domain(@domain).published.find(params[:id])
+    @lecture = Lecture.for_domain_id(@domain.id).published.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to lectures_path, alert: t("messages.lecture_not_found")
   end

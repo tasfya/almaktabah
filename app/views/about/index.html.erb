@@ -1,49 +1,42 @@
 <% content_for :title, t('.title') %>
 
-<div class="bg-gradient-to-br from-gray-50 to-blue-50 py-16">
-  <div class="container mx-auto px-4">
-    <!-- Hero Section -->
+<div class="py-16">
+  <div class="container mx-auto px-4 border-background-contrast">
     <div class="text-center mb-16">
       <div class="mb-8">
-        <!-- Islamic Geometric Pattern -->
         <div class="inline-flex items-center justify-center w-24 h-24 mx-auto mb-6">
-          <div class="w-20 h-20 border-4 border-gray-600 transform rotate-45 flex items-center justify-center">
-            <div class="w-12 h-12 border-2 border-gray-400 transform -rotate-45 flex items-center justify-center">
-              <div class="w-6 h-6 bg-gray-600 transform rotate-45"></div>
+          <div class="w-20 h-20 border-4 border-background-contrast transform rotate-45 flex items-center justify-center">
+            <div class="w-12 h-12 border-2 border-background-contrast transform -rotate-45 flex items-center justify-center">
+              <div class="w-6 h-6 bg-foreground transform rotate-45"></div>
             </div>
           </div>
         </div>
       </div>
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4"><%= t('.title') %></h1>
-      <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+      <h1 class="text-4xl md:text-5xl font-bold  mb-4"><%= t('.title') %></h1>
+      <p class="text-xl  max-w-3xl mx-auto leading-relaxed">
         <%= t('.subtitle') %>
       </p>
     </div>
 
-    <!-- Main Content -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-      <!-- Scholar Profile -->
       <div class="lg:col-span-2">
-        <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <!-- Scholar Image and Basic Info -->
+        <div class="border border-background-contrast rounded-lg shadow-lg p-8 mb-8">
           <div class="flex flex-col md:flex-row gap-8 mb-8">
             <div class="flex-shrink-0">
-              <div class="w-48 h-48 mx-auto md:mx-0 bg-gradient-to-br from-gray-100 to-blue-100 rounded-lg flex items-center justify-center">
-                <!-- Islamic Star Pattern -->
-                <svg class="w-24 h-24 text-gray-600" viewBox="0 0 100 100" fill="currentColor">
+              <div class="w-48 h-48 mx-auto md:mx-0 bg-gradient-to-br from-background-subtle to-primary-100 rounded-lg flex items-center justify-center">
+                <svg class="w-24 h-24 " viewBox="0 0 100 100" fill="currentColor">
                   <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35"/>
                 </svg>
               </div>
             </div>
             <div class="flex-1 text-right">
-              <h2 class="text-3xl font-bold text-gray-900 mb-4"><%= t('.scholar.name') %></h2>
-              <div class="space-y-2 text-gray-600">
+              <h2 class="text-3xl font-bold  mb-4"><%= t('.scholar.name') %></h2>
+              <div class="space-y-2 ">
                 <p><span class="font-semibold"><%= t('.scholar.place') %>:</span> <%= t('.scholar.place') %></p>
                 <p><span class="font-semibold"><%= t('.scholar.birth_year') %>:</span> <%= t('.scholar.birth_year') %></p>
               </div>
-              
-              <!-- Scholar Badge -->
-              <div class="mt-4 inline-flex items-center px-4 py-2 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
+
+              <div class="mt-4 inline-flex items-center px-4 py-2  rounded-full text-sm font-medium">
                 <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                 </svg>
@@ -52,64 +45,58 @@
             </div>
           </div>
 
-          <!-- Biography -->
-          <div class="prose prose-lg max-w-none text-right">
-            <p class="text-gray-700 leading-relaxed mb-6"><%= t('.scholar.biography.intro_1') %></p>
-            <p class="text-gray-700 leading-relaxed mb-6"><%= t('.scholar.biography.intro_2') %></p>
+          <div class="prose prose-lg max-w-none text-right ">
+            <p class="leading-relaxed mb-6"><%= t('.scholar.biography.intro_1') %></p>
+            <p class="leading-relaxed mb-6"><%= t('.scholar.biography.intro_2') %></p>
 
-            <!-- Education Section -->
-            <h3 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.scholar.education_title') %></h3>
-            <p class="text-gray-700 leading-relaxed mb-6"><%= t('.scholar.education_text') %></p>
+            <h3 class="text-2xl font-bold  mb-4"><%= t('.scholar.education_title') %></h3>
+            <p class="leading-relaxed mb-6"><%= t('.scholar.education_text') %></p>
 
-            <!-- Activities Section -->
-            <h3 class="text-2xl font-bold text-gray-900 mb-4"><%= t('.scholar.activities_title') %></h3>
-            <p class="text-gray-700 leading-relaxed mb-6"><%= t('.scholar.activities_text_1') %></p>
-            <p class="text-gray-700 leading-relaxed"><%= t('.scholar.activities_text_2') %></p>
+            <h3 class="text-2xl font-bold  mb-4"><%= t('.scholar.activities_title') %></h3>
+            <p class="leading-relaxed mb-6"><%= t('.scholar.activities_text_1') %></p>
+            <p class="leading-relaxed"><%= t('.scholar.activities_text_2') %></p>
           </div>
         </div>
       </div>
 
-      <!-- Sidebar -->
       <div class="lg:col-span-1">
-        <!-- Quick Stats -->
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h3 class="text-xl font-bold text-gray-900 mb-4 text-right"><%= t('.quick_stats.title') %></h3>
+        <div class="border border-background-contrast rounded-lg shadow-lg p-6 mb-8">
+          <h3 class="text-xl font-bold  mb-4 text-right"><%= t('.quick_stats.title') %></h3>
           <div class="space-y-4">
             <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold text-gray-600"><%= @stats&.dig(:lessons_count) || Lesson.count %></span>
-              <span class="text-gray-600"><%= t('.quick_stats.lessons') %></span>
+              <span class="text-2xl font-bold text-primary-500"><%= @stats&.dig(:lessons_count) || Lesson.count %></span>
+              <span class=""><%= t('.quick_stats.lessons') %></span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold text-gray-600"><%= @stats&.dig(:lectures_count) || Lecture.count %></span>
-              <span class="text-gray-600"><%= t('.quick_stats.lectures') %></span>
+              <span class="text-2xl font-bold text-primary-500"><%= @stats&.dig(:lectures_count) || Lecture.count %></span>
+              <span class=""><%= t('.quick_stats.lectures') %></span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold text-gray-600"><%= @stats&.dig(:series_count) || Series.count %></span>
-              <span class="text-gray-600"><%= t('.quick_stats.series') %></span>
+              <span class="text-2xl font-bold text-primary-500"><%= @stats&.dig(:series_count) || Series.count %></span>
+              <span class=""><%= t('.quick_stats.series') %></span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold text-gray-600"><%= @stats&.dig(:books_count) || Book.count %></span>
-              <span class="text-gray-600"><%= t('.quick_stats.books') %></span>
+              <span class="text-2xl font-bold text-primary-500"><%= @stats&.dig(:books_count) || Book.count %></span>
+              <span class=""><%= t('.quick_stats.books') %></span>
             </div>
           </div>
         </div>
 
-        <!-- Contact Information -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-          <h3 class="text-xl font-bold text-gray-900 mb-4 text-right"><%= t('.contact_info.title') %></h3>
+        <div class="border border-background-contrast rounded-lg shadow-lg p-6">
+          <h3 class="text-xl font-bold  mb-4 text-right"><%= t('.contact_info.title') %></h3>
           <div class="space-y-3 text-right">
             <div class="flex items-center gap-3 flex-row-reverse">
-              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
-              <span class="text-gray-600"><%= t('.contact_info.location') %></span>
+              <span class=""><%= t('.contact_info.location') %></span>
             </div>
             <div class="flex items-center gap-3 flex-row-reverse">
-              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
               </svg>
-              <span class="text-gray-600"><%= t('.contact_info.birth_year') %></span>
+              <span class=""><%= t('.contact_info.birth_year') %></span>
             </div>
           </div>
         </div>

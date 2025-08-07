@@ -1,24 +1,20 @@
 <% content_for :title, @series.title %>
-<div class="bg-gray-50 min-h-screen py-8">
+<div class="min-h-screen py-8"> 
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
-      <!-- Main Content -->
       <div class="lg:col-span-2">
-        <article class="bg-white rounded-lg shadow-md p-8">
+        <article class="border border-background-contrast rounded-lg shadow-md p-8">
           <header class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">
+            <h1 class="text-3xl font-bold mb-4">
               <%= @series.title %>
             </h1>
-            <div class="flex items-center gap-4 text-sm text-gray-600 mb-6">
+            <div class="flex items-center gap-4 text-sm mb-6">
               <% if @series.category.present? %>
                 <span class="badge badge-primary rounded-full">
                   <%= @series.category %>
                 </span>
               <% end %>
-              <% if false %>
-                <time><%= @series.published_at.strftime("%Y/%m/%d") %></time>
-              <% end %>
-              <span class="flex items-center gap-2">
+              <span class="badge badge-primary">
                 <%= icon "book-open", class: "size-5"%>
                 <%= pluralize(@series.lessons.published.count, 'درس') %>
                 <%# TODO: fix pluralize for this %>
@@ -31,7 +27,7 @@
             </div>
           <% end %>
           <section class="mt-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">
+            <h2 class="text-2xl font-bold mb-6">
               <%= t('.lessons_in_series') %>
             </h2>
             <% if @lessons.any? %>
@@ -41,31 +37,28 @@
                 <% end %>
               </div>
             <% else %>
-              <div class="text-center text-gray-500 py-8">
-                <p>
-                  <%= t('.no_lessons_in_series') %>
-                </p>
+              <div class="text-center py-8">
+                <%= t('.no_lessons_in_series') %>
               </div>
             <% end %>
           </section>
-          <!-- Related Series -->
           <% if @related_series.any? %>
             <section class="mt-12">
-              <h2 class="text-2xl font-bold text-gray-900 mb-6">
-              <%= t('.related_series') %>
+              <h2 class="text-2xl font-bold mb-6">
+                <%= t('.related_series') %>
               </h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% @related_series.each do |related_series| %>
-                  <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                      <%= link_to related_series.title, series_path(related_series), class: "hover:text-gray-600" %>
+                  <div class="bg-card hover:bg-card-hover text-card-contrast border border-background-contrast rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <h3 class="text-lg font-semibold mb-2">
+                      <%= link_to related_series.title, series_path(related_series), class: "secondary-link" %>
                     </h3>
-                    <p class="text-gray-600 text-sm mb-4">
+                    <p class="text-sm mb-4">
                       <%= truncate(related_series.description, length: 100) %>
                     </p>
-                    <div class="flex items-center justify-between text-sm text-gray-500">
-                      <span class="bg-gray-100 px-2 py-1 rounded"><%= related_series.category %></span>
-                      <span><%= pluralize(related_series.lessons.count, 'درس') %></span>
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="badge badge-secondary"><%= related_series.category %></span>
+                      <span class="badge badge-primary"><%= pluralize(related_series.lessons.count, 'درس') %></span>
                       <%# TODO fix pluralize %>
                     </div>
                   </div>

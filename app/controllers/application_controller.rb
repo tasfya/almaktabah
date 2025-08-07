@@ -4,12 +4,10 @@ class ApplicationController < ActionController::Base
   include BreadcrumbHelper
   include Pagy::Backend
 
-  before_action :most_downloaded_books
-  before_action :most_viewed_books
-  before_action :latest_news
   before_action :setup_breadcrumbs
   before_action :set_domain
   layout :determine_layout
+  before_action :latest_news
 
   protected
 
@@ -33,20 +31,14 @@ class ApplicationController < ActionController::Base
     set_breadcrumb_limits(8) # Keep max 8 breadcrumbs
 
     # Reset breadcrumbs on home page
-    if controller_name == "home" && action_name == "index"
+    if (controller_name == "home" && action_name == "index") || controller_path.start_with?("devise/")
       reset_breadcrumbs
     end
   end
 
-  def most_downloaded_books
-    @most_downloaded_books ||= Book.published.order(downloads: :desc).limit(5)
-  end
-
-  def most_viewed_books
-    @most_viewed_books ||= Book.published.order(published_at: :desc).limit(5)
-  end
-
   def latest_news
-    @latest_news ||= News.published.order(published_at: :desc).limit(5)
+    return unless @domain
+
+    @latest_news ||= News.for_domain_id(@domain.id).published.order(published_at: :desc).limit(5)
   end
 end

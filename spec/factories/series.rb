@@ -4,6 +4,7 @@ FactoryBot.define do
     description { Faker::Lorem.paragraph }
     published_at { Faker::Date.between(from: 2.days.ago, to: Date.today) }
     category { Faker::Book.genre }
+    scholar { association(:scholar) }
 
     trait :with_lessons do
       lessons { build_list(:lesson, 5) }

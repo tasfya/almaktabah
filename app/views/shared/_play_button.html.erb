@@ -1,0 +1,32 @@
+<%= form_with url: play_path(resource_type: resource.class.name.downcase, id: resource.id), 
+                local: false, 
+                data: { 
+                  turbo_stream: true,
+                  controller: "play-button",
+                  action: "submit->play-button#handleSubmit"
+                } do |form| %>
+  <%= form.button type: "submit",
+                  class: klass,
+                  data: { 
+                    play_button_target: "button",
+                    disable_with: "Loading..."
+                  } do %>
+    <span data-play-button-target="icon">
+      <%= icon("play", class: "size-4") %>
+    </span>
+    <span data-play-button-target="loadingIcon" class="hidden">
+      <%= icon("arrow-path", class: "size-4 animate-spin") %>
+    </span>
+    <span class="ml-3" aria-hidden="true" data-play-button-target="text" data-loading-text="<%= t("buttons.loading_audio") %>"><%= t("buttons.listen") %></span>
+  <% end %>
+  
+  <!-- Loading template for audio player -->
+  <template data-play-button-target="template">
+    <div class="bg-white border-t border-gray-200 shadow-lg p-4">
+      <div class="flex items-center justify-center space-x-3">
+        <%= icon("arrow-path", class: "w-5 h-5 animate-spin text-gray-600") %>
+        <span class="text-gray-700"><%= t("buttons.loading_audio") %></span>
+      </div>
+    </div>
+  </template>
+<% end %>
