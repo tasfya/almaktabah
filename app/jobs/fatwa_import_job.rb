@@ -3,11 +3,10 @@
 class FatwaImportJob < ApplicationJob
   queue_as :default
 
-
   def perform(row_data, domain_id, line_number = nil)
     Rails.logger.info "Processing fatwa import for line #{line_number}"
 
-    row = OpenStruct.new(row_data)
+    row = ::OpenStruct.new(row_data)
     published_at = parse_datetime(row.published_at)
 
     fatwa = Fatwa.find_or_create_by!(

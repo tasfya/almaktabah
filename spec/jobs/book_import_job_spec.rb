@@ -1,7 +1,5 @@
 require 'rails_helper'
 
-require 'ostruct'
-
 RSpec.describe BookImportJob, type: :job do
   let(:domain) { create(:domain) }
   let(:row_data) do
@@ -90,15 +88,14 @@ RSpec.describe BookImportJob, type: :job do
       expect(book.pages).to be_nil
     end
 
-    it 'raises error when author cannot be created' do
-      empty_author_data = row_data.merge(
-        'author_first_name' => '',
-        'author_last_name' => ''
-      )
+    it 'raises error when author information is missing' do
+      empty_author_data = {
+        'title' => 'Book Without Author'
+      }
 
       expect {
         described_class.new.perform(empty_author_data, domain.id, 2)
-      }.to raise_error("Could not create/find author")
+      }.to raise_error(ArgumentError, "Author information (author_first_name and/or author_last_name) is required")
     end
   end
 end

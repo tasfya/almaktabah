@@ -1,17 +1,22 @@
 # frozen_string_literal: true
 
-require "ostruct"
-
 class LessonImportJob < ApplicationJob
   queue_as :default
-
 
   def perform(row_data, domain_id, line_number = nil)
     Rails.logger.info "Processing lesson import for line #{line_number}"
 
-    row = OpenStruct.new(row_data)
+    row = ::OpenStruct.new(row_data)
 
-    series = find_series(row.series_title) if row.series_title.present?
+    # Validate required scholar information
+    if row.author_first_name.blank? && row.author_last_name.blank?
+      raise ArgumentError, "Scholar information (author_first_name and/or author_last_name) is required"
+    end
+
+    # Find or create scholar
+    scholar = find_or_create_scholar(row.author_first_name, row.author_last_name)
+
+    series = find_series(row.series_title, scholar) if row.series_title.present?
     published_at = parse_datetime(row.published_at)
 
     lesson = Lesson.find_or_create_by!(title: row.title) do |l|
@@ -41,9 +46,22 @@ class LessonImportJob < ApplicationJob
 
   private
 
-  def find_series(title)
-    return nil if title.blank?
+  def find_or_create_scholar(first_name, last_name)
+    return nil if first_name.blank? && last_name.blank?
+
+    Scholar.find_or_create_by!(
+      first_name: first_name&.strip,
+      last_name: last_name&.strip
+    ) do |s|
+      s.published = true
+      s.published_at = Time.current
+    end
+  end
+
+  def find_series(title, scholar)
+    return nil if title.blank? || scholar.nil?
     Series.find_or_create_by!(title: title.strip) do |s|
+      s.scholar = scholar
       s.published = true
       s.published_at = Time.current
     end

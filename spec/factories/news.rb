@@ -6,8 +6,18 @@ FactoryBot.define do
     description { Faker::Lorem.sentence(word_count: 10) }
     thumbnail { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'thumbnail.jpg'), 'image/jpeg') }
 
-    after(:build) do |news|
-      news.domains = [ Domain.find_or_create_by(host: "localhost") ]
+    transient do
+      assign_domain { true }
+    end
+
+    after(:build) do |news, evaluator|
+      if evaluator.assign_domain
+        news.domains = [ Domain.find_or_create_by(host: "localhost") ]
+      end
+    end
+
+    trait :without_domain do
+      assign_domain { false }
     end
   end
 end

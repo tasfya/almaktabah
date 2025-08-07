@@ -3,15 +3,18 @@
 class BookImportJob < ApplicationJob
   queue_as :default
 
-
   def perform(row_data, domain_id, line_number = nil)
     Rails.logger.info "Processing book import for line #{line_number}"
 
-    row = OpenStruct.new(row_data)
+    row = ::OpenStruct.new(row_data)
+
+    # Validate required author information
+    if row.author_first_name.blank? && row.author_last_name.blank?
+      raise ArgumentError, "Author information (author_first_name and/or author_last_name) is required"
+    end
 
     # Find or create author
     author = find_or_create_author(row.author_first_name, row.author_last_name)
-    raise "Could not create/find author" unless author
 
     published_at = parse_datetime(row.published_at)
 

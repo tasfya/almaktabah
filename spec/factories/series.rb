@@ -10,8 +10,18 @@ FactoryBot.define do
       lessons { build_list(:lesson, 5) }
     end
 
-    after(:create) do |serie|
-      serie.domains = [ Domain.find_or_create_by(host: "localhost") ]
+    transient do
+      assign_domain { true }
+    end
+
+    after(:create) do |serie, evaluator|
+      if evaluator.assign_domain
+        serie.domains = [ Domain.find_or_create_by(host: "localhost") ]
+      end
+    end
+
+    trait :without_domain do
+      assign_domain { false }
     end
   end
 end

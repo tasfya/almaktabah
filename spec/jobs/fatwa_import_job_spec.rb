@@ -1,7 +1,5 @@
 require 'rails_helper'
 
-require 'ostruct'
-
 RSpec.describe FatwaImportJob, type: :job do
   let(:domain) { create(:domain) }
   let(:row_data) do

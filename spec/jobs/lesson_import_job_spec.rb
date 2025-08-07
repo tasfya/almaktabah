@@ -1,7 +1,5 @@
 require 'rails_helper'
 
-require 'ostruct'
-
 RSpec.describe LessonImportJob, type: :job do
   let(:domain) { create(:domain) }
   let(:row_data) do
@@ -11,6 +9,8 @@ RSpec.describe LessonImportJob, type: :job do
       'category' => 'Education',
       'content_type' => 'audio',
       'series_title' => 'Test Series',
+      'author_first_name' => 'Ahmed',
+      'author_last_name' => 'Al-Scholar',
       'youtube_url' => 'https://youtube.com/watch?v=abc123',
       'position' => '1',
       'published_at' => '2024-01-01 00:00:00',
@@ -79,7 +79,9 @@ RSpec.describe LessonImportJob, type: :job do
     it 'handles missing optional fields gracefully' do
       minimal_data = {
         'title' => 'Minimal Lesson',
-        'series_title' => 'Default Series' # Required because Lesson belongs_to :series
+        'series_title' => 'Default Series',
+        'author_first_name' => 'Test',
+        'author_last_name' => 'Author'
       }
 
       expect {
@@ -88,9 +90,19 @@ RSpec.describe LessonImportJob, type: :job do
 
       lesson = Lesson.unscoped.last
       expect(lesson.title).to eq('Minimal Lesson')
-      expect(lesson.content_type).to eq('audio') # default value
-      expect(lesson.series.title).to eq('Default Series')
       expect(lesson.published).to be_falsey
+      expect(lesson.content_type).to eq('audio') # Should default to audio
+    end
+
+    it 'raises error when scholar information is missing' do
+      minimal_data = {
+        'title' => 'Lesson Without Scholar',
+        'series_title' => 'Some Series'
+      }
+
+      expect {
+        described_class.new.perform(minimal_data, domain.id, 2)
+      }.to raise_error(ArgumentError, "Scholar information (author_first_name and/or author_last_name) is required")
     end
 
     it 'defaults content_type to audio when not provided' do

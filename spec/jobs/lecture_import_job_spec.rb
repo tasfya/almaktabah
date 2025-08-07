@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-require 'ostruct'
 RSpec.describe LectureImportJob, type: :job do
   let(:domain) { create(:domain) }
   let(:row_data) do
@@ -8,6 +7,8 @@ RSpec.describe LectureImportJob, type: :job do
       'title' => 'Test Lecture',
       'description' => 'A test lecture description',
       'category' => 'Religious',
+      'author_first_name' => 'Ahmed',
+      'author_last_name' => 'Al-Scholar',
       'youtube_url' => 'https://youtube.com/watch?v=abc123',
       'published_at' => '2024-01-01 00:00:00',
       'thumbnail_url' => 'https://example.com/thumb.jpg',
@@ -49,7 +50,9 @@ RSpec.describe LectureImportJob, type: :job do
 
     it 'handles missing optional fields gracefully' do
       minimal_data = {
-        'title' => 'Minimal Lecture'
+        'title' => 'Minimal Lecture',
+        'author_first_name' => 'Test',
+        'author_last_name' => 'Author'
       }
 
       expect {
@@ -59,6 +62,16 @@ RSpec.describe LectureImportJob, type: :job do
       lecture = Lecture.last
       expect(lecture.title).to eq('Minimal Lecture')
       expect(lecture.published).to be_falsey
+    end
+
+    it 'raises error when scholar information is missing' do
+      minimal_data = {
+        'title' => 'Lecture Without Scholar'
+      }
+
+      expect {
+        described_class.new.perform(minimal_data, domain.id, 2)
+      }.to raise_error(ArgumentError, "Scholar information (author_first_name and/or author_last_name) is required")
     end
 
     it 'finds or creates lecture by title' do
