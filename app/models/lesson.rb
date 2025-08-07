@@ -78,6 +78,6 @@ class Lesson < ApplicationRecord
 
     ext = audio.attachment.blob.filename.extension
     name = position ? position.to_s : slugify_arabic_advanced(title)
-    "#{scholar_slug}/#{series_slug}/#{name}.#{ext}"
+    "scholars/#{scholar_slug}/series/#{series_slug}/#{name}.#{ext}"
   end
 end

@@ -34,6 +34,6 @@ class Benefit < ApplicationRecord
       slug = slugify_arabic_advanced(title)
       scholar_slug = slugify_arabic_advanced(scholar.name)
       ext = audio.attachment.blob.filename.extension
-      "#{scholar_slug}/benefits/#{slug}.#{ext}"
+      "scholars/#{scholar_slug}/benefits/#{slug}.#{ext}"
     end
 end
