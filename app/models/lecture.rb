@@ -44,10 +44,31 @@ class Lecture < ApplicationRecord
     Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
   end
 
-  def generate_bucket_key
+  def generate_bucket_key(prefix: nil)
     slug = slugify_arabic_advanced(title)
     scholar_slug = slugify_arabic_advanced(scholar.name)
     ext = audio.attachment.blob.filename.extension
-    "scholars/#{scholar_slug}/lectures/#{slug}.#{ext}"
+
+    base_key = if prefix
+      "#{prefix}/scholars/#{scholar_slug}/lectures/#{slug}.#{ext}"
+    else
+      "scholars/#{scholar_slug}/lectures/#{slug}.#{ext}"
+    end
+
+    ensure_unique_key(base_key)
+  end
+
+  private
+
+  def ensure_unique_key(key)
+    return key unless ActiveStorage::Blob.exists?(key: key)
+
+    counter = 1
+    loop do
+      name_part, extension = key.rsplit(".", 2)
+      new_key = "#{name_part}_#{counter}.#{extension}"
+      return new_key unless ActiveStorage::Blob.exists?(key: new_key)
+      counter += 1
+    end
   end
 end
