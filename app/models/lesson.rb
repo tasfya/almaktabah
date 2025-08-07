@@ -80,7 +80,7 @@ class Lesson < ApplicationRecord
     name = position ? position.to_s : slugify_arabic_advanced(title)
 
     base_key = if prefix
-      "#{prefix}/scholars/#{scholar_slug}/series/#{series_slug}/#{name}.#{ext}"
+      "scholars/#{scholar_slug}/series/#{series_slug}/#{name}#{prefix}.#{ext}"
     else
       "scholars/#{scholar_slug}/series/#{series_slug}/#{name}.#{ext}"
     end

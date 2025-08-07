@@ -32,7 +32,7 @@ class Benefit < ApplicationRecord
       ext = audio.attachment.blob.filename.extension
 
       base_key = if prefix
-        "#{prefix}/scholars/#{scholar_slug}/benefits/#{slug}.#{ext}"
+        "scholars/#{scholar_slug}/benefits/#{slug}#{prefix}.#{ext}"
       else
         "scholars/#{scholar_slug}/benefits/#{slug}.#{ext}"
       end
