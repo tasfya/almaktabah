@@ -2,7 +2,7 @@ class Lecture < ApplicationRecord
   include MediaHandler
   include DomainAssignable
   include Publishable
-  include ArabicHelper
+  include ArabicSluggable
 
   validates :title, presence: true
 
@@ -45,8 +45,9 @@ class Lecture < ApplicationRecord
   end
 
   def generate_bucket_key
+    slug = slugify_arabic_advanced(title)
+    scholar_slug = slugify_arabic_advanced(scholar.name)
     ext = audio.attachment.blob.filename.extension
-    bucket_key = "#{scholar.first_name} #{scholar.last_name}/#{title}.#{ext}"
-    transliterate_arabic(bucket_key)
+    "scholars/#{scholar_slug}/lectures/#{slug}.#{ext}"
   end
 end

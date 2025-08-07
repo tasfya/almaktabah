@@ -197,4 +197,45 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
     end
   end
+
+  describe "#slugify_arabic" do
+    context "with valid Arabic text" do
+      it "converts Arabic text to lowercase slug" do
+        result = helper.slugify_arabic('النص العربي')
+        expect(result).to eq('النص-العربي')
+      end
+
+      it "handles mixed Arabic and numbers" do
+        result = helper.slugify_arabic('الدرس 123')
+        expect(result).to eq('الدرس-123')
+      end
+
+      it "removes non-Arabic characters" do
+        result = helper.slugify_arabic('النص! @#$%')
+        expect(result).to eq('النص-') # The helper leaves a trailing hyphen
+      end
+
+      it "handles multiple spaces" do
+        result = helper.slugify_arabic('النص   مع   مسافات')
+        expect(result).to eq('النص-مع-مسافات')
+      end
+    end
+
+    context "with invalid or edge cases" do
+      it "returns nil for nil input" do
+        result = helper.slugify_arabic(nil)
+        expect(result).to be_nil
+      end
+
+      it "returns nil for empty string" do
+        result = helper.slugify_arabic('')
+        expect(result).to be_nil
+      end
+
+      it "returns nil for blank string" do
+        result = helper.slugify_arabic('   ')
+        expect(result).to be_nil
+      end
+    end
+  end
 end

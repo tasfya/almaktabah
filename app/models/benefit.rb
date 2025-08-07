@@ -2,6 +2,9 @@ class Benefit < ApplicationRecord
     include Publishable
     include MediaHandler
     include DomainAssignable
+    include ArabicSluggable
+
+    belongs_to :scholar, optional: true
 
     has_one_attached :thumbnail, service: Rails.application.config.public_storage
     has_one_attached :audio, service: Rails.application.config.public_storage
@@ -21,6 +24,13 @@ class Benefit < ApplicationRecord
 
     def self.ransackable_associations(auth_object = nil)
       [ "scholar" ]
+    end
+
+    def generate_bucket_key
+      slug = slugify_arabic_advanced(title)
+      scholar_slug = scholar&.name ? slugify_arabic_advanced(scholar.name) : "unknown-scholar"
+      ext = audio.attachment.blob.filename.extension
+      "scholars/#{scholar_slug}/benefits/#{slug}.#{ext}"
     end
 
     private

@@ -2,6 +2,8 @@ class Lesson < ApplicationRecord
   include MediaHandler
   include Publishable
   include DomainAssignable
+  include ArabicSluggable
+
 
   belongs_to :series
 
@@ -71,8 +73,11 @@ class Lesson < ApplicationRecord
   end
 
   def generate_bucket_key
-    ext = audio.attachment.blob.filename.ext
-    structure = "#{series.scholar.first_name} #{series.scholar.last_name}"
-    structure += "/#{series.title}/#{position}-#{title}.#{ext}"
+    series_slug = slugify_arabic_advanced(series.title)
+    scholar_slug = slugify_arabic_advanced(series.scholar.name)
+
+    ext = audio.attachment.blob.filename.extension
+    name = position ? position.to_s : slugify_arabic_advanced(title)
+    "scholars/#{scholar_slug}/series/#{series_slug}/#{name}.#{ext}"
   end
 end

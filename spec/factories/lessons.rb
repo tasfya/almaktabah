@@ -14,6 +14,10 @@ FactoryBot.define do
             lesson.series ||= create(:series) if lesson.series.nil?
         end
 
+        trait :without_audio do
+            audio { nil }
+        end
+
         after(:create) do |lesson|
             lesson.domains = [ Domain.find_or_create_by(host: "localhost") ]
         end
