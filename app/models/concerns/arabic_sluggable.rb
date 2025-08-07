@@ -1,22 +1,25 @@
 module ArabicSluggable
   extend ActiveSupport::Concern
 
-  def slugify_arabic(text)
-    return unless text.present?
-
-    text.downcase.gsub(/[^ا-ي0-9\s]/i, "").gsub(/\s+/, "-")
-  end
-
   def slugify_arabic_advanced(text)
     return unless text.present?
 
-    # Remove special characters except Arabic letters, numbers, and spaces
-    # Then replace spaces with hyphens and remove any consecutive hyphens
-    text.strip
-        .gsub(/[^\p{Arabic}\w\s\-]/u, "") # Keep Arabic chars, word chars, spaces, hyphens
-        .gsub(/\s+/, "-")                  # Replace spaces with hyphens
-        .gsub(/-+/, "-")                   # Remove consecutive hyphens
-        .gsub(/^-|-$/, "")                 # Remove leading/trailing hyphens
-        .downcase
+    # Remove diacritics and normalize Arabic text
+    text = text.to_s.strip
+
+    # Remove English punctuation and special characters, keep Arabic letters and numbers
+    text = text.gsub(/[^\p{Arabic}\p{N}\s\-_]/, "")
+
+    # Replace spaces and underscores with hyphens
+    text = text.gsub(/[\s_]+/, "-")
+
+    # Remove consecutive hyphens
+    text = text.gsub(/-+/, "-")
+
+    # Remove leading and trailing hyphens
+    text = text.gsub(/^-+|-+$/, "")
+
+    # Return the slug, fallback to random string if empty
+    text.present? ? text : SecureRandom.hex(8)
   end
 end
