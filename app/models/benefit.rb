@@ -47,7 +47,7 @@ class Benefit < ApplicationRecord
 
       counter = 1
       loop do
-        name_part, extension = key.rsplit(".", 2)
+        name_part, dot, extension = key.rpartition(".")
         new_key = "#{name_part}_#{counter}.#{extension}"
         return new_key unless ActiveStorage::Blob.exists?(key: new_key)
         counter += 1
