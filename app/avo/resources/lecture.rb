@@ -12,6 +12,7 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :category, as: :text
     field :content, as: :trix
     field :published, as: :boolean
+    field :scholar, as: :belongs_to
     field :youtube_url, as: :text, help: "YouTube URL for video lessons"
     field :video_url, as: :text, help: "URL for video lessons"
     field :published_at, as: :date_time, help: "The date and time when this lecture was published", hide_on: [ :new, :edit ]
