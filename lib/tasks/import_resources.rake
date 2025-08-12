@@ -13,7 +13,7 @@ namespace :import_resources do
     puts "Domain ID: #{domain_id}"
 
     processor = CsvImportProcessor.new(file_path, "BookImportJob", domain_id.to_i)
-    success = processor.process
+    processor.process
 
     summary = processor.summary
     puts "CSV processing completed!"
@@ -24,10 +24,6 @@ namespace :import_resources do
     if summary[:errors].any?
       puts "\nError details:"
       summary[:errors].each { |error| puts "- Line #{error[:line]}: #{error[:message]}" }
-    end
-
-    unless success
-      exit 1
     end
   end
 
