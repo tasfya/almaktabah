@@ -2,7 +2,7 @@
 
 class LectureImportJob < ApplicationJob
   queue_as :default
-
+  include ApplicationHelper
   def perform(row_data, domain_id, line_number = nil)
     Rails.logger.info "Processing lecture import for line #{line_number}"
 

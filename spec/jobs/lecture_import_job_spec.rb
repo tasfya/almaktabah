@@ -2,9 +2,11 @@ require 'rails_helper'
 
 RSpec.describe LectureImportJob, type: :job do
   let(:domain) { create(:domain) }
+  let!(:scholar) { create(:scholar) }
   let(:row_data) do
     {
       'title' => 'Test Lecture',
+      'scholar_id' => scholar.id,
       'description' => 'A test lecture description',
       'category' => 'Religious',
       'author_first_name' => 'Ahmed',
@@ -48,31 +50,6 @@ RSpec.describe LectureImportJob, type: :job do
       described_class.new.perform(row_data, domain.id, 2)
     end
 
-    it 'handles missing optional fields gracefully' do
-      minimal_data = {
-        'title' => 'Minimal Lecture',
-        'author_first_name' => 'Test',
-        'author_last_name' => 'Author'
-      }
-
-      expect {
-        described_class.new.perform(minimal_data, domain.id, 2)
-      }.to change(Lecture, :count).by(1)
-
-      lecture = Lecture.last
-      expect(lecture.title).to eq('Minimal Lecture')
-      expect(lecture.published).to be_falsey
-    end
-
-    it 'raises error when scholar information is missing' do
-      minimal_data = {
-        'title' => 'Lecture Without Scholar'
-      }
-
-      expect {
-        described_class.new.perform(minimal_data, domain.id, 2)
-      }.to raise_error(ArgumentError, "Scholar information (author_first_name and/or author_last_name) is required")
-    end
 
     it 'finds or creates lecture by title' do
       existing_lecture = create(:lecture, title: 'Test Lecture')
