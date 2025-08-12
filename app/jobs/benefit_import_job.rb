@@ -3,6 +3,8 @@
 require "ostruct"
 
 class BenefitImportJob < ApplicationJob
+  include ApplicationHelper
+
   queue_as :default
 
   def perform(row_data, domain_id, line_number = nil)
