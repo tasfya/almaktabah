@@ -19,7 +19,7 @@ gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
 
 # Pagination
-gem "pagy", "~> 9.3"
+gem "pagy", "~> 9.4"
 
 # Filtering and searching
 gem "ransack", "~> 4.0"
