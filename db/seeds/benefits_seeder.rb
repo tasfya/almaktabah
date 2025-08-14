@@ -27,10 +27,7 @@ module Seeds
 
         if benefit.save
           processed += 1
-          if domain_id
-            domain = Domain.find_by(id: domain_id)
-            benefit.assign_to(domain) if domain
-          end
+          assign_to_domain(benefit, domain_id)
         end
         print "." if processed % 5 == 0
       end

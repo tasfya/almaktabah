@@ -56,5 +56,12 @@ module Seeds
         last_name: "بن رمزان الهاجري"
       )
     end
+
+    def self.assign_to_domain(record, domain_id)
+      return unless domain_id
+
+      # Directly create the domain assignment without querying the domain
+      record.domain_assignments.find_or_create_by!(domain_id: domain_id)
+    end
   end
 end

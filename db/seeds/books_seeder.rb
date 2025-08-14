@@ -36,10 +36,7 @@ module Seeds
 
         if book.save
           processed += 1
-          if domain_id
-            domain = Domain.find_by(id: domain_id)
-            book.assign_to(domain) if domain
-          end
+          assign_to_domain(book, domain_id)
         end
         print "." if processed % 5 == 0
       end

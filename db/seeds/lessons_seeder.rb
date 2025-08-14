@@ -35,6 +35,8 @@ module Seeds
             puts "❌ Failed to save series: #{series.title}"
             puts "Errors: #{series.errors.full_messages.join(', ')}"
             next
+          else
+            assign_to_domain(series, domain_id)
           end
         end
 
@@ -53,10 +55,7 @@ module Seeds
         begin
           lesson.save!
           processed << lesson
-          if domain_id
-            domain = Domain.find_by(id: domain_id)
-            lesson.assign_to(domain) if domain
-          end
+          assign_to_domain(lesson, domain_id)
           puts "✅ Successfully saved lesson: #{lesson.title} (ID: #{lesson.id})"
         rescue ActiveRecord::RecordInvalid
           puts "❌ Failed to save lesson: #{lesson.title}"
