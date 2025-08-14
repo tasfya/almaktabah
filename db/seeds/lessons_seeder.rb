@@ -30,7 +30,7 @@ module Seeds
           series.description = "مجموعة #{data['series_name']} للشيخ محمد بن رمزان الهاجري"
           series.category = data["series_name"]
           # Assign a scholar to satisfy validation
-          series.scholar = Scholar.find_or_create_by(first_name: "محمد", last_name: "بن رمزان الهاجري")
+          series.scholar = default_scholar
           unless series.save
             puts "❌ Failed to save series: #{series.title}"
             puts "Errors: #{series.errors.full_messages.join(', ')}"

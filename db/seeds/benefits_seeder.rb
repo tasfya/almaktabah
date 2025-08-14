@@ -4,7 +4,7 @@ module Seeds
   class BenefitsSeeder < Base
     def self.seed(from: nil, domain_id: nil)
       puts "Seeding benefits..."
-      scholar = Scholar.find_or_create_by(first_name: "محمد", last_name: "بن رمزان الهاجري")
+      scholar = default_scholar
       benefits_data = load_json('data/benefits.json')
       processed = 0
 

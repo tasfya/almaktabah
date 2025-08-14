@@ -49,5 +49,12 @@ module Seeds
     def self.load_json(file_path)
       JSON.parse(File.read(Rails.root.join(file_path)))
     end
+
+    def self.default_scholar
+      @default_scholar ||= Scholar.find_or_create_by(
+        first_name: "محمد",
+        last_name: "بن رمزان الهاجري"
+      )
+    end
   end
 end
