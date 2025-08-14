@@ -31,6 +31,8 @@ module Seeds
           series.category = data["series_name"]
           # Assign a scholar to satisfy validation
           series.scholar = default_scholar
+          series.published_at = Date.today
+          series.published = true
           unless series.save
             puts "❌ Failed to save series: #{series.title}"
             puts "Errors: #{series.errors.full_messages.join(', ')}"
@@ -49,6 +51,7 @@ module Seeds
           lesson.youtube_url = data['youtube_url']
           lesson.position = data['position'].to_i
           lesson.old_id = data['id']
+          lesson.published_at = Date.today
           lesson.published = true
         end
 
