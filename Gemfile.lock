@@ -398,6 +398,8 @@ GEM
     rspec-expectations (3.13.5)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
+    rspec-github (3.0.0)
+      rspec-core (~> 3.0)
     rspec-instafail (1.0.0)
       rspec
     rspec-mocks (3.13.5)
@@ -593,6 +595,7 @@ DEPENDENCIES
   rails-controller-testing
   rails_icons (~> 1.4)
   ransack (~> 4.0)
+  rspec-github
   rspec-instafail
   rspec-rails
   rubocop

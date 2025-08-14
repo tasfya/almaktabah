@@ -82,6 +82,7 @@ group :development, :test do
   gem "rspec-instafail", require: false
   gem "fuubar", require: false
   gem "rails-controller-testing"
+  gem "rspec-github", require: false
 end
 
 group :development do
