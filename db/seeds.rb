@@ -1,6 +1,7 @@
 Dir[Rails.root.join("db/seeds/*.rb")].each { |file| require file unless file.end_with?("seeds.rb") }
 
 SEEDERS = {
+  "users" => Seeds::UsersSeeder,
   "books" => Seeds::BooksSeeder,
   "benefits" => Seeds::BenefitsSeeder,
   "lessons" => Seeds::LessonsSeeder,
