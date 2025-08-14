@@ -343,6 +343,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_07_134952) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "scholars", column: "author_id"
+  add_foreign_key "benefits", "scholars"
   add_foreign_key "books", "scholars", column: "author_id"
   add_foreign_key "domain_assignments", "domains"
   add_foreign_key "lectures", "scholars"

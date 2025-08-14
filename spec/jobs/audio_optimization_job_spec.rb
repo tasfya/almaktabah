@@ -135,10 +135,10 @@ RSpec.describe AudioOptimizationJob, type: :job do
       end
 
       context 'when item responds to generate_bucket_key' do
-        it 'uses custom bucket key' do
+        it 'uses custom bucket key with _op prefix' do
           allow(benefit).to receive(:respond_to?).and_call_original
           allow(benefit).to receive(:respond_to?).with(:generate_bucket_key).and_return(true)
-          allow(benefit).to receive(:generate_bucket_key).and_return('custom/bucket/key.mp3')
+          allow(benefit).to receive(:generate_bucket_key).with(prefix: '_op').and_return('_op/custom/bucket/key.mp3')
 
           output_tempfile = Tempfile.new([ 'optimized', '.mp3' ])
           output_tempfile.write('optimized audio content')
@@ -148,6 +148,7 @@ RSpec.describe AudioOptimizationJob, type: :job do
 
           benefit.reload
           expect(benefit.optimized_audio).to be_attached
+          expect(benefit).to have_received(:generate_bucket_key).with(prefix: '_op')
 
           output_tempfile.close
           output_tempfile.unlink
