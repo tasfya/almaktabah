@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   resources :books, only: [ :index, :show ]
   resources :lectures, only: [ :index, :show ]
-  resources :lessons, only: [ :show ]
+  resources :lessons, only: [ :index,:show ]
   resources :series, only: [ :index, :show ]
   resources :news, only: [ :index, :show ]
   resources :benefits, only: [ :index, :show ]
