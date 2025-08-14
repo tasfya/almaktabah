@@ -29,6 +29,8 @@ module Seeds
         if series.new_record?
           series.description = "مجموعة #{data['series_name']} للشيخ محمد بن رمزان الهاجري"
           series.category = data["series_name"]
+          # Assign a scholar to satisfy validation
+          series.scholar = Scholar.find_or_create_by(first_name: "محمد", last_name: "بن رمزان الهاجري")
           unless series.save
             puts "❌ Failed to save series: #{series.title}"
             puts "Errors: #{series.errors.full_messages.join(', ')}"
@@ -45,11 +47,16 @@ module Seeds
           lesson.youtube_url = data['youtube_url']
           lesson.position = data['position'].to_i
           lesson.old_id = data['id']
+          lesson.published = true
         end
 
         begin
           lesson.save!
           processed << lesson
+          if domain_id
+            domain = Domain.find_by(id: domain_id)
+            lesson.assign_to(domain) if domain
+          end
           puts "✅ Successfully saved lesson: #{lesson.title} (ID: #{lesson.id})"
         rescue ActiveRecord::RecordInvalid
           puts "❌ Failed to save lesson: #{lesson.title}"

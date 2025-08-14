@@ -16,6 +16,7 @@ module Seeds
           b.description = "كتاب #{data['name']} للشيخ محمد بن رمزان الهاجري"
           b.category = "الكتب"
           b.published_at = Date.today
+          b.published = true
         end
 
         book.downloads ||= 0
@@ -33,7 +34,13 @@ module Seeds
           book.file.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
         end
 
-        processed += 1 if book.save
+        if book.save
+          processed += 1
+          if domain_id
+            domain = Domain.find_by(id: domain_id)
+            book.assign_to(domain) if domain
+          end
+        end
         print "." if processed % 5 == 0
       end
 

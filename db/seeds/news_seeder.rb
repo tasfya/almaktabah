@@ -22,6 +22,7 @@ module Seeds
           news.description ||= title
           news.published_at ||= Date.today
           news.content = content_text if news.content.blank?
+          news.published = true
 
           # Attach thumbnail if provided
           if data['url'].present? && !news.thumbnail.attached?
@@ -36,6 +37,10 @@ module Seeds
 
           if news.save
             processed += 1
+            if domain_id
+              domain = Domain.find_by(id: domain_id)
+              news.assign_to(domain) if domain
+            end
             print "." if processed % 10 == 0
           else
             errors << "❌ Failed to save news: #{title} — #{news.errors.full_messages.join(', ')}"
