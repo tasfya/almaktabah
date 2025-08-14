@@ -4,7 +4,6 @@ module Seeds
   class BenefitsSeeder < Base
     def self.seed(from: nil, domain_id: nil)
       puts "Seeding benefits..."
-      scholar = default_scholar
       benefits_data = load_json('data/benefits.json')
       processed = 0
 
@@ -12,9 +11,10 @@ module Seeds
         next if data['name'].blank?
 
         benefit = Benefit.find_or_initialize_by(title: data['name']) do |b|
-          b.scholar = scholar
+          b.scholar = default_scholar
           b.description = data['name']
           b.category = data['series_name'] || "المنافع"
+          b.published_at = Date.today
           b.published = true
         end
 

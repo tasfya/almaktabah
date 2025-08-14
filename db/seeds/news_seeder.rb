@@ -22,6 +22,7 @@ module Seeds
           news.description ||= title
           news.published_at ||= Date.today
           news.content = content_text if news.content.blank?
+          news.published_at = Date.today
           news.published = true
 
           # Attach thumbnail if provided
