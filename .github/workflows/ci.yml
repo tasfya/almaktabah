@@ -65,7 +65,7 @@ jobs:
         run: bin/rails db:create db:migrate RAILS_ENV=test
 
       - name: Run tests
-        run: bundle exec rspec --format RSpec::Github::Formatter
+        run: bundle exec rspec  --format progress  --format RSpec::Github::Formatter  --profile 10  --order defined
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
