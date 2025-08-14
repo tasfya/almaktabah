@@ -15,7 +15,7 @@ module Seeds
           b.author = scholar
           b.description = "كتاب #{data['name']} للشيخ محمد بن رمزان الهاجري"
           b.category = "الكتب"
-          b.published_date = Date.today
+          b.published_at = Date.today
         end
 
         book.downloads ||= 0
