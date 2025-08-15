@@ -97,5 +97,5 @@ gem "importmap-rails"
 
 group :video_services do
   gem "cairo", "~> 1.18"
-  gem "pango", "~> 4.2"
+  gem "pango", "~> 4.3"
 end
