@@ -63,11 +63,11 @@ jobs:
 
       - name: migrate database
         run: bin/rails db:create db:migrate RAILS_ENV=test
+
       - name: Run tests
-        run: |
-          bundle exec rspec --format progress --format RSpec::Github::Formatter --profile 10 --order defined
-          echo "RSpec exited with code $?"
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v5
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
+        run: bundle exec rspec --format documentation --color --profile --order defined
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
