@@ -351,7 +351,7 @@ ar:
   date:
     formats:
       default: "%d/%m/%Y"
-      long: "%-d %B %Y"     
+      long: "%-d %B %Y"
       short: "%d %b"
     day_names: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"]
     abbr_day_names: ["أحد", "اثن", "ثلث", "أرب", "خمي", "جمع", "سبت"]
@@ -363,6 +363,7 @@ ar:
   activerecord:
     errors:
       messages:
+        required: "يجب اختيار الشيخ"
         record_invalid: "حدث خطأ أثناء معالجة النموذج. يرجى التحقق من المدخلات وإعادة المحاولة."
     models:
       lesson: "درس"

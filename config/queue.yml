@@ -1,17 +1,17 @@
 default: &default
   dispatchers:
-    - polling_interval: 2  # Check for "important" jobs every 2s
-      batch_size: 100      # Smaller batches for quick processing
+    - polling_interval: 2 # Check for "important" jobs every 2s
+      batch_size: 100 # Smaller batches for quick processing
       queues: ["important"]
-    - polling_interval: 5  # Check for "default" jobs every 5s
-      batch_size: 500      # Larger batch size for efficiency
+    - polling_interval: 5 # Check for "default" jobs every 5s
+      batch_size: 500 # Larger batch size for efficiency
       queues: ["default"]
     - polling_interval: 30 # Check for "low" jobs every 30s (less frequent for non-priority)
-      batch_size: 1000     # Even larger batch size if jobs are quick and numerous
-      queues: [ "low" ]      # New low priority queue
+      batch_size: 1000 # Even larger batch size if jobs are quick and numerous
+      queues: ["low"] # New low priority queue
 
   workers:
-    - queues: ["important"]    # Dedicated for important jobs
+    - queues: ["important"] # Dedicated for important jobs
       threads: <%= (ENV.fetch("RAILS_MAX_THREADS") { 5 }).to_i - 2 %>
       processes: <%= ENV.fetch("JOB_CONCURRENCY") { 1 } %>
       polling_interval: 0.5 # Reduced frequency (every 0.5s)
@@ -21,32 +21,3 @@ default: &default
       processes: <%= ENV.fetch("JOB_CONCURRENCY") { 1 } %>
       polling_interval: 1.0 # Reduced frequency (every 1s)
 
-development:
-  primary:
-    <<: *default
-  queue:
-    <<: *default
-    adapter: sqlite3
-    timeout: 10000
-    database: storage/development_queue
-    migrations_paths: db/queue_migrate
-
-test:
-  primary:
-    <<: *default
-  queue:
-    <<: *default
-    adapter: sqlite3
-    timeout: 10000
-    database: storage/test_queue
-    migrations_paths: db/queue_migrate
-
-production:
-  primary:
-    <<: *default
-  queue:
-    <<: *default
-    adapter: sqlite3
-    timeout: 10000
-    database: storage/production_queue
-    migrations_paths: db/queue_migrate
