@@ -13,5 +13,6 @@ class Avo::Resources::Series < Avo::BaseResource
     field :published, as: :boolean
     field :published_at, as: :date_time, help: "The date and time when this series was published", hide_on: [ :new, :edit ]
     field :lessons, as: :has_many
+    field :scholar, as: :belongs_to
   end
 end

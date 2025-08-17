@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class LectureImportJob < ApplicationJob
+  include ApplicationHelper
+
   queue_as :default
 
   def perform(row_data, domain_id, line_number = nil)
@@ -8,13 +10,8 @@ class LectureImportJob < ApplicationJob
 
     row = ::OpenStruct.new(row_data)
 
-    # Validate required scholar information
-    if row.author_first_name.blank? && row.author_last_name.blank?
-      raise ArgumentError, "Scholar information (author_first_name and/or author_last_name) is required"
-    end
-
     # Find or create scholar
-    scholar = find_or_create_scholar(row.author_first_name, row.author_last_name)
+    scholar = Scholar.find(row_data["scholar_id"])
 
     published_at = parse_datetime(row.published_at)
 

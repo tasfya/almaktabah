@@ -82,6 +82,7 @@ group :development, :test do
   gem "rspec-instafail", require: false
   gem "fuubar", require: false
   gem "rails-controller-testing"
+  gem "rspec-github", require: false
 end
 
 group :development do
@@ -92,7 +93,7 @@ end
 
 gem "ruby-progressbar"
 gem "avo", ">= 3.2"
-gem "rails_icons", "~> 1.3"
+gem "rails_icons", "~> 1.4"
 gem "nice_partials", "~> 0.10.1"
 gem "importmap-rails"
 

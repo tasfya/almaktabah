@@ -46,13 +46,6 @@ class CsvImportProcessor
     end
 
     Rails.logger.info "CSV processing completed: #{@enqueued_count} jobs enqueued, #{@skipped_count} rows skipped"
-    true
-
-  rescue => e
-    error_msg = "Failed to process CSV file: #{e.message}"
-    @errors << { line: nil, message: error_msg }
-    Rails.logger.error error_msg
-    false
   end
 
   def summary
