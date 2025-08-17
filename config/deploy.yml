@@ -20,7 +20,7 @@ servers:
 proxy:
   ssl: true
   hosts:
-   - binramzan.hachimy.com
+   - www.binramzan.net
    - ilm.hachimy.com
    - suhayimi.hachimy.com
 
