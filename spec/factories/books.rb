@@ -23,5 +23,12 @@ FactoryBot.define do
 
       book.domains = [ Domain.find_or_create_by(host: "localhost") ]
     end
+
+    trait :without_domain do
+      after(:build) do |book|
+        # Override the default domain assignment
+        book.domains = []
+      end
+    end
   end
 end

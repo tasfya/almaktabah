@@ -1,5 +1,101 @@
 require 'rails_helper'
 
 RSpec.describe Series, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  subject(:series) { build(:series) }
+
+  describe 'associations' do
+    it { should have_many(:lessons).dependent(:destroy) }
+    it { should belong_to(:scholar) }
+  end
+
+  describe 'included modules' do
+    it 'includes Publishable' do
+      expect(Series.included_modules).to include(Publishable)
+    end
+
+    it 'includes DomainAssignable' do
+      expect(Series.included_modules).to include(DomainAssignable)
+    end
+  end
+
+  describe 'scopes' do
+    describe '.recent' do
+      let!(:old_series) { create(:series, published_at: 2.weeks.ago) }
+      let!(:new_series) { create(:series, published_at: 1.week.ago) }
+
+      it 'orders series by published_at descending' do
+        expect(Series.recent).to eq([ new_series, old_series ])
+      end
+    end
+
+    describe '.by_category' do
+      let!(:series1) { create(:series, category: 'Education') }
+      let!(:series2) { create(:series, category: 'Religious') }
+
+      it 'filters by category when provided' do
+        expect(Series.by_category('Education')).to include(series1)
+        expect(Series.by_category('Education')).not_to include(series2)
+      end
+
+      it 'returns all when category is blank' do
+        expect(Series.by_category('')).to include(series1, series2)
+      end
+    end
+
+    describe '.with_lessons' do
+      let!(:series_with_lessons) { create(:series) }
+      let!(:series_without_lessons) { create(:series) }
+
+      before do
+        create(:lesson, series: series_with_lessons)
+      end
+
+      it 'returns only series with lessons' do
+        expect(Series.with_lessons).to include(series_with_lessons)
+        expect(Series.with_lessons).not_to include(series_without_lessons)
+      end
+    end
+  end
+
+  describe 'scopes and ransack' do
+    describe '.ransackable_attributes' do
+      it 'includes expected attributes' do
+        expected_attributes = [ "category", "created_at", "description", "id", "published", "published_at", "scholar_id", "title", "updated_at" ]
+        expect(Series.ransackable_attributes).to match_array(expected_attributes)
+      end
+    end
+
+    describe '.ransackable_associations' do
+      it 'includes expected associations' do
+        expected_associations = [ "lessons", "scholar" ]
+        expect(Series.ransackable_associations).to match_array(expected_associations)
+      end
+    end
+  end
+
+  describe 'domain assignment' do
+    let!(:domain) { create(:domain) }
+    let!(:test_series) { create(:series, :without_domain) }
+
+    before do
+      test_series.assign_to(domain)
+    end
+
+    it 'assigns series to domain' do
+      expect(test_series.domains).to include(domain)
+    end
+
+    it 'checks if series is assigned to domain' do
+      expect(test_series.assigned_to?(domain)).to be_truthy
+    end
+
+    it 'unassigns series from domain' do
+      test_series.unassign_from(domain)
+      expect(test_series.domains).not_to include(domain)
+    end
+
+    it 'returns assigned domains' do
+      expect(test_series.assigned_domains).to include(domain)
+    end
+  end
 end

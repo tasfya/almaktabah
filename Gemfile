@@ -67,6 +67,7 @@ group :development, :test do
   gem "brakeman", require: false
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
+  gem "rubocop"
   gem "rubocop-rails-omakase", require: false
 
   gem "rspec-rails"
@@ -81,6 +82,7 @@ group :development, :test do
   gem "rspec-instafail", require: false
   gem "fuubar", require: false
   gem "rails-controller-testing"
+  gem "rspec-github", require: false
 end
 
 group :development do

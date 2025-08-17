@@ -1,38 +1,36 @@
+# frozen_string_literal: true
+
 class BenefitImportJob < ApplicationJob
+  include ApplicationHelper
+
   queue_as :default
 
-  def perform(benefit_data, domain_id: nil)
-    return if benefit_data["name"].blank?
-    domain = Domain.find_by(id: domain_id) if domain_id
+  def perform(row_data, domain_id, line_number = nil)
+    Rails.logger.info "Processing benefit import for line #{line_number}"
 
-    benefit = Benefit.for_domain_id(domain.id).find_or_initialize_by(title: benefit_data["name"])
+    row = OpenStruct.new(row_data)
+    published_at = parse_datetime(row.published_at)
 
-    if benefit.new_record?
-      benefit.category = benefit_data["series_name"]
-      benefit.description = benefit_data["name"]
-      benefit.published = true
+    benefit = Benefit.find_or_create_by!(
+      title: row.title
+    ) do |b|
+      b.description  = row.description
+      b.category     = row.category
+      b.published    = published_at.present?
+      b.published_at = published_at
     end
 
-    begin
-      benefit.save!
-      Rails.logger.info "✅ Successfully saved benefit: #{benefit.title} (ID: #{benefit.id})"
-      benefit.assign_to(domain) if domain
+    benefit.assign_to(Domain.find(domain_id))
 
-      process_media_files(benefit, benefit_data)
+    # Handle file attachments
+    attach_from_url(benefit, :thumbnail, row.thumbnail_url) if row.thumbnail_url.present?
+    attach_from_url(benefit, :audio, row.audio_file_url) if row.audio_file_url.present?
+    attach_from_url(benefit, :video, row.video_file_url) if row.video_file_url.present?
 
-    rescue ActiveRecord::RecordInvalid => e
-      Rails.logger.error "❌ Failed to save benefit: #{benefit.title}"
-      Rails.logger.error "Errors: #{benefit.errors.full_messages.join(', ')}"
-      raise e
-    end
-  end
-
-  private
-
-  def process_media_files(benefit, benefit_data)
-    if benefit_data["image"].present? && benefit_data["image"].end_with?(".mp3")
-      audio_url = benefit_data["image"]
-      MediaDownloadJob.perform_later(benefit, audio_url, "audio", "audio/mpeg")
-    end
+    Rails.logger.info "Successfully created/updated benefit: #{benefit.title}"
+    benefit
+  rescue => e
+    Rails.logger.error "Failed to process benefit import for line #{line_number}: #{e.message}"
+    raise e
   end
 end

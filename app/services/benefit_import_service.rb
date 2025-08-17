@@ -37,7 +37,7 @@ class BenefitImportService
       if batch.size >= batch_size || index == benefit_array.size - 1
         # Queue jobs with a slight delay to prevent overwhelming the queue
         batch.each_with_index do |data, batch_index|
-          BenefitImportJob.set(wait: batch_index.seconds).perform_later(data, domain_id: domain_id)
+          BenefitsSeedImportJob.set(wait: batch_index.seconds).perform_later(data, domain_id: domain_id)
           queued_count += 1
         end
 
