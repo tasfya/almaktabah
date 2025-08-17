@@ -21,7 +21,7 @@ proxy:
   ssl: true
   hosts:
    - www.binramzan.net
-   - ilm.hachimy.com
+   - 3ilm.org
    - suhayimi.hachimy.com
 
 # Credentials for your image host.
