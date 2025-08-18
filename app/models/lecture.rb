@@ -4,7 +4,7 @@ class Lecture < ApplicationRecord
   include Publishable
   include ArabicSluggable
 
-  enum :kind, { sermon: 1  }
+  enum :kind, { sermon: 1, conference: 2 }
   validates :title, presence: true
   validates :source_url, uniqueness: true, allow_blank: true
 
@@ -52,9 +52,9 @@ class Lecture < ApplicationRecord
     ext = audio.attachment.blob.filename.extension
 
     base_key = if prefix
-      "scholars/#{scholar_slug}/lectures/#{slug}#{prefix}.#{ext}"
+      "scholars/#{scholar_slug}/lectures/#{kind}/#{slug}#{prefix}.#{ext}"
     else
-      "scholars/#{scholar_slug}/lectures/#{slug}.#{ext}"
+      "scholars/#{scholar_slug}/lectures/#{kind}/#{slug}.#{ext}"
     end
 
     ensure_unique_key(base_key)
