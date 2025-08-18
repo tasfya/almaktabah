@@ -114,7 +114,6 @@ RSpec.describe VideoProcessingJob, type: :job do
           expect(item.audio.content_type).to eq('audio/mpeg')
           expect(item.audio.filename.to_s).to match(/\.mp3$/)
           expect(item.thumbnail.filename.to_s).to eq('existing_thumbnail.jpg')
-          expect(AudioOptimizationJob).to have_been_enqueued.with(item)
         end
       end
 

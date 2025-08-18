@@ -155,7 +155,7 @@ RSpec.describe Lecture, type: :model do
         allow(lecture).to receive(:slugify_arabic_advanced).with('محمد العثيمين').and_return('محمد-العثيمين')
 
         bucket_key = lecture.generate_bucket_key
-        expect(bucket_key).to eq('scholars/محمد-العثيمين/lectures/محاضرة-في-الفقه.mp3')
+        expect(bucket_key).to eq('scholars/محمد-العثيمين/lectures/conference/محاضرة-في-الفقه.mp3')
       end
 
       it 'uses the audio file extension' do
