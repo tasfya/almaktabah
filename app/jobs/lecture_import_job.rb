@@ -24,6 +24,7 @@ class LectureImportJob < ApplicationJob
       l.category     = row.category
       l.scholar      = scholar
       l.youtube_url  = row.youtube_url
+      l.source_url  = row.source_url
       l.published    = published_at.present?
       l.published_at = published_at
     end
