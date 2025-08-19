@@ -54,6 +54,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+
       - name: Kamal Deploy
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
@@ -63,9 +64,6 @@ jobs:
             echo "Deploying to staging"
             kamal deploy -c kamal_config/deploy.staging.yml
           fi
-      - name: Kamal boot accessories
-        run: |
-          kamal accessory boot all
         env:
           DOCKER_BUILDKIT: 1
           RAILS_ENV: production
