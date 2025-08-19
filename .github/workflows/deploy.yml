@@ -55,7 +55,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Kamal boot accessories
         run: |
-          kamal boot all
+          kamal accessory boot all
 
       - name: Kamal Deploy
         run: |
