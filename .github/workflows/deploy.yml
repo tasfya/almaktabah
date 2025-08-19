@@ -53,7 +53,9 @@ jobs:
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
+      - name: Kamal boot accessories
+        run: |
+          kamal boot all
 
       - name: Kamal Deploy
         run: |
