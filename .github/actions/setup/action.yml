@@ -4,7 +4,6 @@ inputs:
   ruby-version:
     description: "Ruby version"
     required: false
-    default: .ruby-version
   system-deps:
     description: "Install system dependencies"
     required: false
@@ -51,4 +50,5 @@ runs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ inputs.ruby-version }}
+        ruby-file: .ruby-version
         bundler-cache: true
