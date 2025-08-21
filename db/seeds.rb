@@ -17,7 +17,7 @@ if domain_id
   Domain.find(domain_id) || raise("Domain with ID #{domain_id} not found")
 else
   # Ensure a default domain for "localhost" exists
-  default_domain = Domain.find_or_create_by!(host: "localhost") do |domain|
+  default_domain = Domain.find_or_create_by!(host: "127.0.0.1", name: "localhost") do |domain|
     domain.name = "localhost"
   end
   domain_id = default_domain.id
