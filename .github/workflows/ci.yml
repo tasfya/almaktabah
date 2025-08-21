@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   scan_ruby:
@@ -13,15 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential git libyaml-dev node-gyp pkg-config python-is-python3 libglib2.0-dev libcairo2-dev libgirepository1.0-dev libpango1.0-dev ffmpeg
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+      - name: Setup Ruby and dependencies
+        uses: ./.github/actions/setup
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
@@ -31,16 +24,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential git libyaml-dev node-gyp pkg-config python-is-python3 libglib2.0-dev libcairo2-dev libgirepository1.0-dev libpango1.0-dev ffmpeg
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+      - name: Setup Ruby and dependencies
+        uses: ./.github/actions/setup
 
       - name: Lint code for consistent style
         run: bin/rubocop -f github
@@ -50,16 +36,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential git libyaml-dev node-gyp pkg-config python-is-python3 libglib2.0-dev libcairo2-dev libgirepository1.0-dev libpango1.0-dev ffmpeg
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+      - name: Setup Ruby and dependencies
+        uses: ./.github/actions/setup
 
       - name: migrate database
         run: bin/rails db:create db:migrate RAILS_ENV=test
