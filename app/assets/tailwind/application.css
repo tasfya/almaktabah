@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @import "./theme.css";
 
 @utility container {
@@ -38,6 +38,11 @@
   input {
     color: var(--color-foreground);
   }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-title);
+  }
 }
 @utility search-input {
   @apply w-full px-3 py-2 border rounded-md shadow-sm bg-input text-input-contrast;
@@ -72,14 +77,14 @@
 }
 
 @utility secondary-link {
-  @apply text-secondary-link hover:text-secondary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center ;
+  @apply text-secondary-link hover:text-secondary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center;
 }
 @utility secondary-link-active {
   @apply text-secondary-link-active hover:text-secondary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center;
 }
 
 @utility primary-link {
-  @apply text-primary-link hover:text-primary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center ;
+  @apply text-primary-link hover:text-primary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center;
 }
 @utility primary-link-active {
   @apply text-primary-link-active hover:text-primary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center;
@@ -101,8 +106,6 @@
   @apply px-2 py-1 text-xs;
 }
 
-
-
 @utility audio-player {
   @apply bg-primary border-t  shadow-lg;
 }
@@ -110,7 +113,6 @@
 @utility audio-progress {
   @apply h-1 bg-primary transition-all duration-100;
 }
-
 
 @utility flash-message {
   animation: slideInDown 0.3s ease-out;
