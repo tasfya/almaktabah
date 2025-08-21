@@ -13,21 +13,27 @@ inputs:
 runs:
   using: composite
   steps:
+    # Cache based on the actual system dependencies we need
     - name: Cache system dependencies
       uses: actions/cache@v4
       id: cache-system-deps
       with:
         path: |
-          /var/cache/apt
-          /var/lib/apt
-        key: ${{ runner.os }}-system-deps-${{ hashFiles('.github/workflows/ci.yml') }}
+          ~/.cache/apt
+          /var/cache/apt/archives
+        key: ${{ runner.os }}-system-deps-v2-${{ hashFiles('.github/actions/setup/action.yml', 'Gemfile.lock') }}
         restore-keys: |
+          ${{ runner.os }}-system-deps-v2-
           ${{ runner.os }}-system-deps-
+
+    - name: Update package lists
+      if: inputs.system-deps == 'true'
+      run: sudo apt-get update -y
+      shell: bash
 
     - name: Install system dependencies
       if: inputs.system-deps == 'true' && steps.cache-system-deps.outputs.cache-hit != 'true'
       run: |
-        sudo apt-get update -y
         sudo apt-get install -y --no-install-recommends \
           build-essential \
           git \
@@ -45,5 +51,5 @@ runs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: .ruby-version
+        ruby-version: ${{ inputs.ruby-version }}
         bundler-cache: true
