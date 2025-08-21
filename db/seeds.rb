@@ -5,6 +5,7 @@ SEEDERS = {
   "books" => Seeds::BooksSeeder,
   "benefits" => Seeds::BenefitsSeeder,
   "lessons" => Seeds::LessonsSeeder,
+  "lectures" => Seeds::LecturesSeeder,
   "news" => Seeds::NewsSeeder
 }
 
