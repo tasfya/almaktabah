@@ -21,10 +21,9 @@ runs:
         path: |
           ~/.cache/apt
           /var/cache/apt/archives
-        key: ${{ runner.os }}-system-deps-v2-${{ hashFiles('.github/actions/setup/action.yml', 'Gemfile.lock') }}
+        key: ${{ runner.os }}-system-deps-v2-${{ hashFiles('.github/actions/setup/action.yml') }}
         restore-keys: |
           ${{ runner.os }}-system-deps-v2-
-          ${{ runner.os }}-system-deps-
 
     - name: Update package lists
       if: inputs.system-deps == 'true'
