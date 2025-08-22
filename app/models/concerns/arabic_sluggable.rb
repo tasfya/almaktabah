@@ -7,9 +7,6 @@ module ArabicSluggable
     # Remove diacritics and normalize Arabic text
     text = text.to_s.strip
 
-    # Remove English punctuation and special characters, keep Arabic letters and numbers
-    text = text.gsub(/[^\p{Arabic}\p{N}\s\-_]/, "")
-
     # Replace spaces and underscores with hyphens
     text = text.gsub(/[\s_]+/, "-")
 
@@ -18,6 +15,9 @@ module ArabicSluggable
 
     # Remove leading and trailing hyphens
     text = text.gsub(/^-+|-+$/, "")
+
+    arabic_diacritics = /[\u0610-\u061A\u064B-\u065F\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06ED]/
+    text = text.gsub(arabic_diacritics, "")
 
     # Return the slug, fallback to random string if empty
     text.present? ? text : SecureRandom.hex(8)
