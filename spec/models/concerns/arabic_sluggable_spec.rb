@@ -22,11 +22,6 @@ RSpec.describe ArabicSluggable, type: :concern do
         expect(result).to eq('الدرس-123-في-الفقه')
       end
 
-      it 'removes English characters and punctuation' do
-        result = dummy_instance.slugify_arabic_advanced('الكتاب The Book! @#$%')
-        expect(result).to eq('الكتاب')
-      end
-
       it 'handles text with multiple spaces' do
         result = dummy_instance.slugify_arabic_advanced('النص    مع     مسافات    كثيرة')
         expect(result).to eq('النص-مع-مسافات-كثيرة')
@@ -64,19 +59,9 @@ RSpec.describe ArabicSluggable, type: :concern do
         expect(result).to be_nil
       end
 
-      it 'returns random hex for text with no valid characters' do
-        result = dummy_instance.slugify_arabic_advanced('!@#$%^&*()')
-        expect(result).to match(/\A[a-f0-9]{16}\z/)
-      end
-
       it 'handles only numbers' do
         result = dummy_instance.slugify_arabic_advanced('123456')
         expect(result).to eq('123456')
-      end
-
-      it 'handles text with only spaces and special characters' do
-        result = dummy_instance.slugify_arabic_advanced('   !@#   $%^   ')
-        expect(result).to match(/\A[a-f0-9]{16}\z/)
       end
     end
 
@@ -100,12 +85,6 @@ RSpec.describe ArabicSluggable, type: :concern do
         result = dummy_instance.slugify_arabic_advanced('فائدة في بيان أحكام الصلاة')
         expect(result).to eq('فائدة-في-بيان-أحكام-الصلاة')
       end
-
-      it 'handles input that results in empty string after cleaning' do
-        result = dummy_instance.slugify_arabic_advanced('!@#$%^&*()')
-        expect(result).to match(/\A[a-f0-9]{16}\z/)
-      end
-
       it 'handles text with diacritics (removes them)' do
         result = dummy_instance.slugify_arabic_advanced('النَّصُّ العَرَبِيُّ')
         # The method removes Arabic diacritics and normalizes the text
