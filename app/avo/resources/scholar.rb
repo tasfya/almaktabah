@@ -8,6 +8,8 @@ class Avo::Resources::Scholar < Avo::BaseResource
   def fields
     field :id, as: :id
     field :first_name, as: :text
+    field :full_name, as: :text
+    field :full_name_alias, as: :text
     field :last_name, as: :text
     field :bio, as: :trix
     field :published, as: :boolean
