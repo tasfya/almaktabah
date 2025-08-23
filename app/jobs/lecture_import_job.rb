@@ -7,13 +7,17 @@ class LectureImportJob < ApplicationJob
 
   queue_as :default
 
-  def perform(row_data, domain_id, line_number = nil)
+  def perform(row_data, domain_id = nil, line_number = nil)
     Rails.logger.info "Processing lecture import for line #{line_number}"
 
     row = ::OpenStruct.new(row_data)
 
     # Find or create scholar
-    scholar = Scholar.find(row_data["scholar_id"])
+    if row_data["scholar_id"]
+      scholar = Scholar.find(row_data["scholar_id"])
+    elsif row_data["scholar_full_name"].present?
+      scholar = find_or_create_scholar_by_full_name(row_data["scholar_full_name"])
+    end
 
     published_at = parse_datetime(row.published_at)
 
@@ -30,7 +34,9 @@ class LectureImportJob < ApplicationJob
       l.published_at = published_at
     end
 
-    lecture.assign_to(Domain.find(domain_id))
+    if domain_id.present?
+      lecture.assign_to(Domain.find(domain_id))
+    end
 
     # Handle file attachments
     attach_from_url(lecture, :thumbnail, row.thumbnail_url, content_type: "image/jpeg") if row.thumbnail_url.present?
@@ -46,7 +52,16 @@ class LectureImportJob < ApplicationJob
 
   private
 
-  def find_or_create_scholar(first_name, last_name)
+  def find_or_create_scholar_by_full_name(full_name)
+    return nil if full_name.blank?
+
+    Scholar.find_or_create_by!(full_name: full_name.strip) do |s|
+      s.published = true
+      s.published_at = Time.current
+    end
+  end
+
+  def find_or_create_scholar_by_first_last_name(first_name, last_name)
     return nil if first_name.blank? && last_name.blank?
 
     Scholar.find_or_create_by!(
