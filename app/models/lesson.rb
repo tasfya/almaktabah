@@ -6,6 +6,7 @@ class Lesson < ApplicationRecord
 
 
   belongs_to :series
+  delegate :scholar, to: :series
 
   validates :title, presence: true
 
@@ -29,11 +30,11 @@ class Lesson < ApplicationRecord
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "category", "created_at", "description", "duration", "id", "published", "published_at", "scholar_id", "series_id", "title", "updated_at" ]
+    [ "category", "created_at", "description", "duration", "id", "published", "published_at", "series_id", "title", "updated_at" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    [ "series", "scholar" ]
+    [ "series" ]
   end
 
   def media_type
