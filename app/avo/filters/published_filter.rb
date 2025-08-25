@@ -1,4 +1,4 @@
-class Avo::Filters::PublishedFilter < Avo::Filters::BooleanFilter
+class Avo::Filters::PublishedFilter < Avo::Filters::SelectFilter
   self.name = "Published status"
   self.visible = -> do
     true
@@ -7,9 +7,10 @@ class Avo::Filters::PublishedFilter < Avo::Filters::BooleanFilter
   def apply(request, query, value)
     return query if value.blank?
 
-    if value["published"] == "1"
+    case value
+    when "published"
       query.where(published: true)
-    elsif value["unpublished"] == "1"
+    when "unpublished"
       query.where(published: false)
     else
       query
