@@ -9,15 +9,18 @@ class Avo::Actions::PublishBook < Avo::BaseAction
   end
 
   def handle(**args)
-    books = Book.where(id: args[:records])
+    books       = Book.where(id: args[:records])
+    published_at = args.dig(:fields, :published_at) || Time.current
 
-    books.each do |book|
-      book.update!(
-        published: true,
-        published_at: args[:fields][:published_at]
-      )
+    Book.transaction do
+      books.each do |book|
+        book.update!(
+          published:     true,
+          published_at: published_at
+        )
+      end
     end
 
-    succeed "Successfully published #{books.count} book(s)"
+    succeed "Successfully published #{books.size} book(s)"
   end
 end
