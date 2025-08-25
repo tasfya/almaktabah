@@ -1,18 +1,34 @@
 class Avo::Resources::Series < Avo::BaseResource
-  # self.includes = []
-  # self.attachments = []
-  # self.search = {
-  #   query: -> { query.ransack(id_eq: params[:q], m: "or").result(distinct: false) }
-  # }
+  self.title = :title
+  self.includes = [ :scholar ]
+  self.search = {
+    query: -> { query.ransack(id_eq: params[:q], title_cont: params[:q], description_cont: params[:q], m: "or").result(distinct: false) }
+  }
+  self.default_view_type = :table
+  self.visible_on_sidebar = true
+
+  def filters
+    filter Avo::Filters::AutoFilter
+    filter Avo::Filters::ScholarFilter
+    filter Avo::Filters::PublishedFilter
+    filter Avo::Filters::CategoryFilter
+    filter Avo::Filters::DateRangeFilter
+  end
 
   def fields
-    field :id, as: :id
-    field :title, as: :text
-    field :description, as: :textarea
-    field :category, as: :text
-    field :published, as: :boolean
-    field :published_at, as: :date_time, help: "The date and time when this series was published", hide_on: [ :new, :edit ]
-    field :lessons, as: :has_many
-    field :scholar, as: :belongs_to
+    field :id, as: :id, sortable: true
+    field :title, as: :text, sortable: true, searchable: true
+    field :description, as: :textarea, searchable: true
+    field :category, as: :text, sortable: true, searchable: true
+    field :published, as: :boolean, sortable: true
+    field :scholar, as: :belongs_to, sortable: true, searchable: true
+    field :lessons_count, as: :text, only_on: [ :index, :show ], sortable: true
+    field :created_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
+    field :updated_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
+  end
+
+  def actions
+    action Avo::Actions::PublishSeries
+    action Avo::Actions::UnpublishSeries
   end
 end
