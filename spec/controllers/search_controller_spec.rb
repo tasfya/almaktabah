@@ -8,7 +8,7 @@ RSpec.describe SearchController, type: :controller do
   let(:domain) { create(:domain, host: "localhost") }
   describe "GET #index" do
     let!(:book) { create(:book, title: "Test Book Title", description: "Test book description", published: true, published_at: DateTime.new) }
-    let!(:lecture) { create(:lecture, title: "Test Lecture", description: "Test lecture description", published: true, published_at: DateTime.new) }
+    let!(:lecture) { create(:lecture, :with_domain, title: "Test Lecture", description: "Test lecture description", published: true, published_at: DateTime.new) }
     let!(:lesson) { create(:lesson, title: "Test Lesson", description: "Test lesson description", published: true, published_at: DateTime.new) }
     let!(:series) { create(:series, title: "Test Series", description: "Test series description", published: true, published_at: DateTime.new) }
     let!(:news) { create(:news, title: "Test News", description: "Test news description", published: true, published_at: DateTime.new) }
