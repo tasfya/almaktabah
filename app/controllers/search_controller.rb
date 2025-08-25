@@ -33,7 +33,7 @@
     end
 
     def search_books
-      Book.includes(:author).for_domain_id(@domain).published.published.ransack(
+      Book.includes(:author).published.for_domain_id(@domain).ransack(
         title_or_description_cont: @query
       ).result(distinct: true).recent.limit(5)
     end
@@ -45,19 +45,19 @@
     end
 
     def search_lessons
-      Lesson.includes(:series).for_domain_id(@domain).published.published.ransack(
+      Lesson.includes(:series).published.for_domain_id(@domain).ransack(
         title_or_description_cont: @query
       ).result(distinct: true).limit(5)
     end
 
     def search_series
-      Series.published.for_domain_id(@domain).published.ransack(
+      Series.published.for_domain_id(@domain).ransack(
         title_or_description_cont: @query
       ).result(distinct: true).recent.limit(5)
     end
 
     def search_news
-      News.published.for_domain_id(@domain).published.ransack(
+      News.published.for_domain_id(@domain).ransack(
         title_or_description_cont: @query
       ).result(distinct: true).recent.limit(5)
     end
