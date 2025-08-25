@@ -21,14 +21,14 @@ module FaviconHelper
 
   def favicon_link_tags
     content_tag_string = ""
-    
+
     content_tag_string += tag.link(rel: "icon", href: favicon_ico_url, type: "image/x-icon")
     content_tag_string += tag.link(rel: "icon", href: favicon_png_url, type: "image/png")
     content_tag_string += tag.link(rel: "icon", href: favicon_svg_url, type: "image/svg+xml")
-    
+
     # Apple touch icon for iOS (critical for iPhone lock screen display)
     content_tag_string += tag.link(rel: "apple-touch-icon", href: apple_touch_icon_url, sizes: "180x180")
-    
+
     # Additional iOS optimizations for lock screen display
     content_tag_string += tag.link(rel: "apple-touch-icon", href: apple_touch_icon_url, sizes: "152x152")
     content_tag_string += tag.link(rel: "apple-touch-icon", href: apple_touch_icon_url, sizes: "144x144")
@@ -38,17 +38,17 @@ module FaviconHelper
     content_tag_string += tag.link(rel: "apple-touch-icon", href: apple_touch_icon_url, sizes: "72x72")
     content_tag_string += tag.link(rel: "apple-touch-icon", href: apple_touch_icon_url, sizes: "60x60")
     content_tag_string += tag.link(rel: "apple-touch-icon", href: apple_touch_icon_url, sizes: "57x57")
-    
+
     # Android Chrome icons
     content_tag_string += tag.link(rel: "icon", href: favicon_png_url, sizes: "192x192", type: "image/png")
     content_tag_string += tag.link(rel: "icon", href: favicon_png_url, sizes: "32x32", type: "image/png")
     content_tag_string += tag.link(rel: "icon", href: favicon_png_url, sizes: "16x16", type: "image/png")
-    
+
     # Web app manifest support for PWA
     content_tag_string += tag.meta(name: "apple-mobile-web-app-capable", content: "yes")
     content_tag_string += tag.meta(name: "apple-mobile-web-app-status-bar-style", content: "default")
     content_tag_string += tag.meta(name: "apple-mobile-web-app-title", content: site_info[:name])
-    
+
     content_tag_string.html_safe
   end
 end
