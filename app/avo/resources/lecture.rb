@@ -5,6 +5,10 @@ class Avo::Resources::Lecture < Avo::BaseResource
   #   query: -> { query.ransack(id_eq: params[:q], m: "or").result(distinct: false) }
   # }
 
+  def filters
+    filter Avo::Filters::ScholarFilter
+  end
+
   def fields
     field :id, as: :id
     field :title, as: :text
