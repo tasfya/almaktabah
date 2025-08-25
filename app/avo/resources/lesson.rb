@@ -1,8 +1,15 @@
 class Avo::Resources::Lesson < Avo::BaseResource
   self.title = :title
-  self.includes = [ :series, :scholar ]
+  self.includes = [ :series ]
   self.search = {
-    query: -> { query.ransack(id_eq: params[:q], title_cont: params[:q], description_cont: params[:q], m: "or").result(distinct: false) }
+    query: -> {
+      query.ransack(
+        id_eq: params[:q],
+        title_cont: params[:q],
+        description_cont: params[:q],
+        m: "or"
+      ).result(distinct: false)
+    }
   }
   self.default_view_type = :table
   self.visible_on_sidebar = true
@@ -30,8 +37,7 @@ class Avo::Resources::Lesson < Avo::BaseResource
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes
     field :optimized_audio, as: :file, accept: "audio/*", max_size: 10.megabytes, hide_on: [ :new, :edit ], readonly: true
-    field :series, as: :belongs_to, resource: "Series", searchable: true, sortable: true
-    field :scholar, as: :belongs_to, searchable: true, sortable: true
+
     field :created_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
     field :updated_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
   end

@@ -6,6 +6,7 @@ class Lesson < ApplicationRecord
 
 
   belongs_to :series
+  delegate :scholar, to: :series
 
   validates :title, presence: true
 
