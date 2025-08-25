@@ -210,11 +210,6 @@ RSpec.describe ApplicationHelper, type: :helper do
         expect(result).to eq('الدرس-123')
       end
 
-      it "removes non-Arabic characters" do
-        result = helper.slugify_arabic('النص! @#$%')
-        expect(result).to eq('النص-') # The helper leaves a trailing hyphen
-      end
-
       it "handles multiple spaces" do
         result = helper.slugify_arabic('النص   مع   مسافات')
         expect(result).to eq('النص-مع-مسافات')

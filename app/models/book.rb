@@ -1,4 +1,5 @@
 class Book < ApplicationRecord
+  include ApplicationHelper
   include Publishable
   include DomainAssignable
 
@@ -21,5 +22,16 @@ class Book < ApplicationRecord
 
   def self.ransackable_associations(auth_object = nil)
     [ "author" ]
+  end
+
+  def generate_bucket_key(prefix: nil, attachment_name: nil, extension: nil)
+    scholar_slug = author&.name ? slugify_arabic(author.name) : "unknown-scholar"
+    key = "scholars/#{scholar_slug}/books/#{slugify_arabic(title)}"
+
+    if prefix
+      key += "#{prefix}"
+    end
+
+    "#{key}#{extension}"
   end
 end

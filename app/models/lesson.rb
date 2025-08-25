@@ -2,18 +2,9 @@ class Lesson < ApplicationRecord
   include MediaHandler
   include Publishable
   include DomainAssignable
-  include ArabicSluggable
-
 
   belongs_to :series
-
   validates :title, presence: true
-
-  has_one_attached :thumbnail, service: Rails.application.config.public_storage
-  has_one_attached :audio, service: Rails.application.config.public_storage
-  has_one_attached :video, service: Rails.application.config.public_storage
-  has_one_attached :optimized_audio, service: Rails.application.config.public_storage
-
   has_rich_text :content
 
   # Scopes
@@ -26,6 +17,8 @@ class Lesson < ApplicationRecord
   scope :ordered_by_lesson_number, -> { order(Arel.sql("COALESCE(position, 999999)")) }
 
   default_scope { ordered_by_lesson_number }
+
+  delegate :scholar, to: :series
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
@@ -63,42 +56,7 @@ class Lesson < ApplicationRecord
     series.title
   end
 
-  def extract_lesson_number
-    match = title.match(/(\d+)/)
-    match ? match[1].to_i : Float::INFINITY
-  end
-
   def summary
     description
-  end
-
-  def generate_bucket_key(prefix: nil)
-    series_slug = slugify_arabic_advanced(series.title)
-    scholar_slug = slugify_arabic_advanced(series.scholar.name)
-
-    ext = audio.attachment.blob.filename.extension
-    name = position ? position.to_s : slugify_arabic_advanced(title)
-
-    base_key = if prefix
-      "scholars/#{scholar_slug}/series/#{series_slug}/#{name}#{prefix}.#{ext}"
-    else
-      "scholars/#{scholar_slug}/series/#{series_slug}/#{name}.#{ext}"
-    end
-
-    ensure_unique_key(base_key)
-  end
-
-  private
-
-  def ensure_unique_key(key)
-    return key unless ActiveStorage::Blob.exists?(key: key)
-
-    counter = 1
-    loop do
-      name_part, dot, extension = key.rpartition(".")
-      new_key = "#{name_part}_#{counter}.#{extension}"
-      return new_key unless ActiveStorage::Blob.exists?(key: new_key)
-      counter += 1
-    end
   end
 end
