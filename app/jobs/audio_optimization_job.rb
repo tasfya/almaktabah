@@ -50,12 +50,10 @@ class AudioOptimizationJob < ApplicationJob
 
   def attach_optimized_audio(item, output_tempfile)
     output_tempfile.rewind
-    key = item.respond_to?(:generate_bucket_key) ? item.generate_bucket_key(prefix: "_op") : "#{item.class.name.underscore}/#{SecureRandom.hex(10)}.mp3"
 
     item.optimized_audio.attach(
       io: output_tempfile,
       filename: item.audio.filename.to_s,
-      key:,
       content_type: "audio/mpeg"
     )
   end

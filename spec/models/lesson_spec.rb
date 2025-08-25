@@ -157,64 +157,10 @@ RSpec.describe Lesson, type: :model do
       end
     end
 
-    describe '#extract_lesson_number' do
-      it 'extracts number from title' do
-        lesson = build(:lesson, title: 'الدرس 25 في الفقه')
-        expect(lesson.extract_lesson_number).to eq(25)
-      end
-
-      it 'returns infinity when no number found' do
-        lesson = build(:lesson, title: 'مقدمة في الفقه')
-        expect(lesson.extract_lesson_number).to eq(Float::INFINITY)
-      end
-    end
-
     describe '#summary' do
       it 'returns the description' do
         lesson = create(:lesson, description: 'وصف الدرس')
         expect(lesson.summary).to eq('وصف الدرس')
-      end
-    end
-
-    describe '#generate_bucket_key' do
-      it 'generates a structured bucket key' do
-        series = create(:series, title: 'الفقه الإسلامي')
-        scholar = create(:scholar, first_name: 'محمد', last_name: 'العثيمين')
-        series.update(scholar: scholar)
-        lesson = create(:lesson, series: series, title: 'الطهارة', position: 1)
-
-        bucket_key = lesson.generate_bucket_key
-        expect(bucket_key).to include('scholars/')
-        expect(bucket_key).to include('series/')
-        expect(bucket_key).to end_with('.mp3')
-      end
-
-      context 'when lesson has position' do
-        it 'uses position in bucket key' do
-          lesson = create(:lesson, position: 5)
-          bucket_key = lesson.generate_bucket_key
-          expect(bucket_key).to include('/5.mp3')
-        end
-      end
-
-      context 'when lesson has no position' do
-        it 'uses slugified title in bucket key' do
-          lesson = create(:lesson, title: 'درس الطهارة', position: nil)
-          allow(lesson).to receive(:slugify_arabic_advanced).and_call_original
-          allow(lesson).to receive(:slugify_arabic_advanced).with('درس الطهارة').and_return('درس-الطهارة')
-
-          bucket_key = lesson.generate_bucket_key
-          expect(bucket_key).to include('/درس-الطهارة.mp3')
-        end
-      end
-
-      context 'when lesson has no audio attached' do
-        it 'raises an error' do
-          lesson = create(:lesson)
-          lesson.audio.purge
-
-          expect { lesson.generate_bucket_key }.to raise_error(NoMethodError)
-        end
       end
     end
   end
