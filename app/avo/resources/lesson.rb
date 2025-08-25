@@ -15,12 +15,14 @@ class Avo::Resources::Lesson < Avo::BaseResource
   self.visible_on_sidebar = true
 
   def filters
-    filter Avo::Filters::AutoFilter
-    filter Avo::Filters::ScholarFilter
-    filter Avo::Filters::PublishedFilter
-    filter Avo::Filters::CategoryFilter
-    filter Avo::Filters::DateRangeFilter
+    filter  Avo::Filters::AutoFilter
+    filter  Avo::Filters::ScholarFilter
+    filter  Avo::Filters::SeriesTitleFilter
+    filter  Avo::Filters::PublishedFilter
+    filter  Avo::Filters::CategoryFilter
+    filter  Avo::Filters::DateRangeFilter
   end
+
 
   def fields
     field :id, as: :id, sortable: true
