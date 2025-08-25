@@ -13,5 +13,14 @@ class Avo::Resources::Domain < Avo::BaseResource
     field :logo, as: :file, accept: "image/*", max_size: 5.megabytes
     field :description, as: :textarea
     field :custom_css, as: :code, language: :css, help: "Custom CSS that will be applied to this domain only"
+    
+    field :favicon_ico, as: :file, accept: "image/x-icon,.ico", max_size: 1.megabytes, 
+          help: "ICO format favicon (optional - auto-generated from logo if not provided)"
+    field :favicon_png, as: :file, accept: "image/png", max_size: 1.megabytes, 
+          help: "PNG format favicon (optional - auto-generated from logo if not provided)"
+    field :favicon_svg, as: :file, accept: "image/svg+xml", max_size: 1.megabytes, 
+          help: "SVG format favicon (optional - auto-generated from logo if not provided)"
+    field :apple_touch_icon, as: :file, accept: "image/png", max_size: 1.megabytes, 
+          help: "Apple touch icon for iOS devices (optional - auto-generated from logo if not provided) - Important for iPhone lock screen display"
   end
 end

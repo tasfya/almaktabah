@@ -1,5 +1,6 @@
 module ApplicationHelper
   include Pagy::Frontend
+  include FaviconHelper
 
   def parse_integer(value)
     Integer(value) rescue nil
