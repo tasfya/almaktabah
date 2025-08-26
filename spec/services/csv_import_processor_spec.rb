@@ -152,14 +152,6 @@ RSpec.describe CsvImportProcessor, type: :service do
       processor.process
     end
 
-    it 'works with BenefitImportJob' do
-      processor = CsvImportProcessor.new(test_csv_path, 'BenefitImportJob', domain.id)
-
-      expect(BenefitImportJob).to receive(:perform_later).exactly(3).times
-
-      processor.process
-    end
-
     it 'works with FatwaImportJob' do
       processor = CsvImportProcessor.new(test_csv_path, 'FatwaImportJob', domain.id)
 

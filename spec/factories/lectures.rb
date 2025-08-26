@@ -17,5 +17,11 @@ FactoryBot.define do
         lecture.domains = [ Domain.find_or_create_by(host: "localhost") ]
       end
     end
+
+    trait :without_audio do
+      after(:build) do |lecture|
+        lecture.audio.purge if lecture.audio.attached?
+      end
+    end
   end
 end

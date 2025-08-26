@@ -8,7 +8,6 @@ Rails.application.routes.draw do
   resources :lessons, only: [ :index, :show ]
   resources :series, only: [ :index, :show ]
   resources :news, only: [ :index, :show ]
-  resources :benefits, only: [ :index, :show ]
   resources :articles, only: [ :index, :show ]
   resources :scholars, only: [ :index, :show ]
   resources :fatwas, only: [ :index, :show ]

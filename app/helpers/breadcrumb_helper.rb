@@ -148,7 +148,6 @@ module BreadcrumbHelper
       "series" => "السلاسل العلمية",
       "fatwas" => "الفتاوى",
       "news" => "الأخبار",
-      "benefits" => "الفوائد",
       "search" => "البحث",
       "profile" => "الملف الشخصي",
       "bookmarks" => "المفضلة"

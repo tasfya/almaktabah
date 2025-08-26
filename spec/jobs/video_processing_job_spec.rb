@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe VideoProcessingJob, type: :job do
   subject(:job) { described_class.new }
 
-  let(:item) { create(:benefit) }
+  let(:item) { create(:lecture) }
   let(:test_video_content) { 'fake_video_content_for_testing' }
 
   def create_test_video_file

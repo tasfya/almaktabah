@@ -4,7 +4,7 @@ class Lecture < ApplicationRecord
   include Publishable
   include ArabicSluggable
 
-  enum :kind, { sermon: 1, conference: 2 }
+  enum :kind, { sermon: 1, conference: 2, benefit: 3 }
   validates :title, presence: true
   validates :source_url, uniqueness: true, allow_blank: true
 

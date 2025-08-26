@@ -20,15 +20,14 @@ class AddPublishedToAllResources < ActiveRecord::Migration[8.0]
     add_index :series,    :published
     add_index :scholars,  :published
 
-    Article.update_all(published: true)
-    Benefit.update_all(published: true)
-    Book.update_all(published: true)
-    Fatwa.update_all(published: true)
-    Lecture.update_all(published: true)
-    Lesson.update_all(published: true)
-    News.update_all(published: true)
-    Series.update_all(published: true)
-    Scholar.update_all(published: true)
+    execute "UPDATE articles  SET published = TRUE"
+    execute "UPDATE books     SET published = TRUE"
+    execute "UPDATE fatwas    SET published = TRUE"
+    execute "UPDATE lectures  SET published = TRUE"
+    execute "UPDATE lessons   SET published = TRUE"
+    execute "UPDATE news      SET published = TRUE"
+    execute "UPDATE series    SET published = TRUE"
+    execute "UPDATE scholars  SET published = TRUE"
   end
 
   def down
