@@ -4,7 +4,6 @@ RSpec.describe AudioPlayerHelper, type: :helper do
   describe "#play_button" do
     let(:lesson) { create(:lesson, published: true) }
     let(:lecture) { create(:lecture, published: true) }
-    let(:benefit) { create(:benefit, published: true) }
 
     context "when resource has optimized_audio" do
       before do
@@ -39,29 +38,6 @@ RSpec.describe AudioPlayerHelper, type: :helper do
           klass: custom_class,
           icon_class: custom_icon_class
         )
-      end
-
-      it "accepts different resource types with optimized_audio" do
-        allow(lecture).to receive(:optimized_audio).and_return(double(present?: true))
-        allow(benefit).to receive(:optimized_audio).and_return(double(present?: true))
-
-        expect(helper).to receive(:render).with(
-          "shared/play_button",
-          resource: lecture,
-          klass: "btn btn-secondary w-fit whitespace-nowrap",
-          icon_class: "size-4"
-        )
-
-        helper.play_button(resource: lecture)
-
-        expect(helper).to receive(:render).with(
-          "shared/play_button",
-          resource: benefit,
-          klass: "btn btn-secondary w-fit whitespace-nowrap",
-          icon_class: "size-4"
-        )
-
-        helper.play_button(resource: benefit)
       end
     end
 

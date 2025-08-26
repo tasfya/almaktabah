@@ -10,11 +10,12 @@ module Seeds
       benefits_data.each do |data|
         next if data['name'].blank?
 
-        benefit = Benefit.find_or_initialize_by(title: data['name']) do |b|
+        benefit = Lecture.find_or_initialize_by(title: data['name']) do |b|
           b.scholar = default_scholar
           b.description = data['name']
           b.category = data['series_name'] || "المنافع"
           b.published_at = Date.today
+          b.kind = :benefit
           b.published = true
         end
 

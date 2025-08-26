@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_23_152112) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_26_150948) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -66,20 +66,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_23_152112) do
     t.boolean "published", default: false, null: false
     t.index ["author_id"], name: "index_articles_on_author_id"
     t.index ["published"], name: "index_articles_on_published"
-  end
-
-  create_table "benefits", force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.string "category"
-    t.integer "duration", default: 0
-    t.datetime "published_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "published", default: false, null: false
-    t.integer "scholar_id"
-    t.index ["published"], name: "index_benefits_on_published"
-    t.index ["scholar_id"], name: "index_benefits_on_scholar_id"
   end
 
   create_table "books", force: :cascade do |t|
@@ -227,7 +213,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_23_152112) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "scholars", column: "author_id"
-  add_foreign_key "benefits", "scholars"
   add_foreign_key "books", "scholars", column: "author_id"
   add_foreign_key "domain_assignments", "domains"
   add_foreign_key "lectures", "scholars"

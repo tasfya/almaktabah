@@ -80,11 +80,6 @@ RSpec.describe ArabicSluggable, type: :concern do
         result = dummy_instance.slugify_arabic_advanced('الدرس الأول - الفقه الإسلامي')
         expect(result).to eq('الدرس-الأول-الفقه-الإسلامي')
       end
-
-      it 'handles benefit titles' do
-        result = dummy_instance.slugify_arabic_advanced('فائدة في بيان أحكام الصلاة')
-        expect(result).to eq('فائدة-في-بيان-أحكام-الصلاة')
-      end
       it 'handles text with diacritics (removes them)' do
         result = dummy_instance.slugify_arabic_advanced('النَّصُّ العَرَبِيُّ')
         # The method removes Arabic diacritics and normalizes the text

@@ -84,38 +84,6 @@ RSpec.describe PlayController, type: :controller do
       end
     end
 
-    context "with a benefit" do
-      let!(:published_benefit) { create(:benefit, published: true, published_at: 1.day.ago) }
-      let!(:unpublished_benefit) { create(:benefit, published: false) }
-
-      before do
-        create(:domain_assignment, domain: domain, assignable: published_benefit)
-        create(:domain_assignment, domain: domain, assignable: unpublished_benefit)
-      end
-
-      it "returns a successful response for published benefit" do
-        post :show, params: { resource_type: "benefit", id: published_benefit.id }
-        expect(response).to be_successful
-      end
-
-      it "assigns the requested benefit" do
-        post :show, params: { resource_type: "benefit", id: published_benefit.id }
-        expect(assigns(:resource)).to eq(published_benefit)
-      end
-
-      it "redirects to root_path when benefit is not published" do
-        post :show, params: { resource_type: "benefit", id: unpublished_benefit.id }
-        expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.benefit_not_found"))
-      end
-
-      it "redirects to root_path when benefit not found" do
-        post :show, params: { resource_type: "benefit", id: 99999 }
-        expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.benefit_not_found"))
-      end
-    end
-
     context "with invalid resource type" do
       it "redirects to root_path with invalid resource alert" do
         post :show, params: { resource_type: "invalid_type", id: 1 }
@@ -152,10 +120,6 @@ RSpec.describe PlayController, type: :controller do
 
       it "returns Lecture for 'Lecture'" do
         expect(controller.send(:resource_class, "Lecture")).to eq(Lecture)
-      end
-
-      it "returns Benefit for 'Benefit'" do
-        expect(controller.send(:resource_class, "Benefit")).to eq(Benefit)
       end
 
       it "raises error for invalid resource type" do

@@ -19,16 +19,6 @@ class AddPublishedToAllResources < ActiveRecord::Migration[8.0]
     add_index :news,      :published
     add_index :series,    :published
     add_index :scholars,  :published
-
-    Article.update_all(published: true)
-    Benefit.update_all(published: true)
-    Book.update_all(published: true)
-    Fatwa.update_all(published: true)
-    Lecture.update_all(published: true)
-    Lesson.update_all(published: true)
-    News.update_all(published: true)
-    Series.update_all(published: true)
-    Scholar.update_all(published: true)
   end
 
   def down
