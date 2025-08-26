@@ -6,8 +6,8 @@ class ApplicationController < ActionController::Base
 
   before_action :setup_breadcrumbs
   before_action :set_domain
-  layout :determine_layout
   before_action :latest_news
+  include DomainViewResolver
 
   protected
 
@@ -18,11 +18,6 @@ class ApplicationController < ActionController::Base
     else
       @logo_url = ActionController::Base.helpers.asset_path("logo.png")
     end
-  end
-
-  def determine_layout
-    return @domain.layout_name if @domain&.layout_name.present?
-    "application"
   end
 
   def setup_breadcrumbs

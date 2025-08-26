@@ -26,4 +26,24 @@ class Domain < ApplicationRecord
   def should_auto_generate_favicons?
     logo.attached? && !has_custom_favicons?
   end
+
+  # Get available templates from the view directories
+  def self.available_templates
+    template_dirs = []
+
+    # Look for template directories in app/views/
+    templates_path = Rails.root.join("app", "views", "templates")
+    if Dir.exist?(templates_path)
+      template_dirs = Dir.glob("#{templates_path}/*").select { |f| File.directory?(f) }
+                         .map { |dir| File.basename(dir) }
+    end
+
+    # Add default template
+    ([ "default" ] + template_dirs).uniq.sort
+  end
+
+  def template_path
+    return "templates/#{template_name}" if template_name.present? && template_name != "default"
+    nil
+  end
 end
