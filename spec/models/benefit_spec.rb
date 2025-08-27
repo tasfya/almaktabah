@@ -109,6 +109,7 @@ RSpec.describe Benefit, type: :model do
         let(:benefit_without_scholar) { create(:benefit, title: 'فائدة في الصلاة') }
 
         before do
+          benefit_without_scholar.scholar = nil
           benefit_without_scholar.audio.attach(
             io: StringIO.new("audio content"),
             filename: "test.mp3",
