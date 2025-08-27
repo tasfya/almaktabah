@@ -157,45 +157,16 @@ RSpec.describe Lesson, type: :model do
       end
     end
 
-    describe '#generate_bucket_key' do
+    describe '#generate_optimize_audio_bucket_key' do
       it 'generates a structured bucket key' do
         series = create(:series, title: 'الفقه الإسلامي')
         scholar = create(:scholar, first_name: 'محمد', last_name: 'العثيمين')
         series.update(scholar: scholar)
         lesson = create(:lesson, series: series, title: 'الطهارة', position: 1)
 
-        bucket_key = lesson.generate_bucket_key
-        expect(bucket_key).to include('scholars/')
-        expect(bucket_key).to include('series/')
-        expect(bucket_key).to end_with('.mp3')
-      end
+        bucket_key = lesson.generate_optimize_audio_bucket_key
 
-      context 'when lesson has position' do
-        it 'uses position in bucket key' do
-          lesson = create(:lesson, position: 5)
-          bucket_key = lesson.generate_bucket_key
-          expect(bucket_key).to include('/5.mp3')
-        end
-      end
-
-      context 'when lesson has no position' do
-        it 'uses slugified title in bucket key' do
-          lesson = create(:lesson, title: 'درس الطهارة', position: nil)
-          allow(lesson).to receive(:slugify_arabic_advanced).and_call_original
-          allow(lesson).to receive(:slugify_arabic_advanced).with('درس الطهارة').and_return('درس-الطهارة')
-
-          bucket_key = lesson.generate_bucket_key
-          expect(bucket_key).to include('/درس-الطهارة.mp3')
-        end
-      end
-
-      context 'when lesson has no audio attached' do
-        it 'raises an error' do
-          lesson = create(:lesson)
-          lesson.audio.purge
-
-          expect { lesson.generate_bucket_key }.to raise_error(NoMethodError)
-        end
+        expect(bucket_key).to eq("all-audios/#{scholar.full_name}/series/#{series.title}/#{lesson.title}.mp3")
       end
     end
   end

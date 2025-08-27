@@ -138,7 +138,7 @@ RSpec.describe Lecture, type: :model do
       end
     end
 
-    describe '#generate_bucket_key' do
+    describe '#generate_optimize_audio_bucket_key' do
       let(:scholar) { create(:scholar, first_name: 'محمد', last_name: 'العثيمين') }
       let(:lecture) { create(:lecture, title: 'محاضرة في الفقه', scholar: scholar) }
 
@@ -151,19 +151,9 @@ RSpec.describe Lecture, type: :model do
       end
 
       it 'generates a structured bucket key' do
-        allow(lecture).to receive(:slugify_arabic_advanced).with('محاضرة في الفقه').and_return('محاضرة-في-الفقه')
-        allow(lecture).to receive(:slugify_arabic_advanced).with('محمد العثيمين').and_return('محمد-العثيمين')
-
-        bucket_key = lecture.generate_bucket_key
-        expect(bucket_key).to eq('scholars/محمد-العثيمين/lectures/conference/محاضرة-في-الفقه.mp3')
-      end
-
-      it 'uses the audio file extension' do
-        lecture.audio.blob.update(filename: 'test.wav')
-        allow(lecture).to receive(:slugify_arabic_advanced).and_return('test-slug')
-
-        bucket_key = lecture.generate_bucket_key
-        expect(bucket_key).to end_with('.wav')
+        lecture = create(:lecture, title: 'الطهارة')
+        bucket_key = lecture.generate_optimize_audio_bucket_key
+        expect(bucket_key).to eq("all-audio/#{lecture.scholar.name}/lectures/#{lecture.kind}/#{lecture.title}.mp3")
       end
     end
   end
@@ -247,18 +237,6 @@ RSpec.describe Lecture, type: :model do
           lecture.audio.purge
           expect(lecture.audio_url).to be_nil
         end
-      end
-    end
-
-    describe "#generate_bucket_key" do
-      it "generates a structured bucket key" do
-        scholar = create(:scholar, first_name: 'محمد', last_name: 'العثيمين')
-        lecture = create(:lecture, title: 'محاضرة في الفقه', scholar: scholar)
-
-        bucket_key = lecture.generate_bucket_key
-        expect(bucket_key).to include('scholars/')
-        expect(bucket_key).to include('lectures/')
-        expect(bucket_key).to end_with('.mp3')
       end
     end
   end
