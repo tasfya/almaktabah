@@ -13,10 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential git libyaml-dev node-gyp pkg-config python-is-python3 libglib2.0-dev libcairo2-dev libgirepository1.0-dev libpango1.0-dev ffmpeg
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -31,10 +27,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential git libyaml-dev node-gyp pkg-config python-is-python3 libglib2.0-dev libcairo2-dev libgirepository1.0-dev libpango1.0-dev ffmpeg
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
