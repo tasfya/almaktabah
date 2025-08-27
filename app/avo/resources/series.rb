@@ -11,7 +11,6 @@ class Avo::Resources::Series < Avo::BaseResource
     filter Avo::Filters::AutoFilter
     filter Avo::Filters::ScholarFilter
     filter Avo::Filters::PublishedFilter
-    filter Avo::Filters::CategoryFilter
     filter Avo::Filters::DateRangeFilter
   end
 
@@ -19,9 +18,9 @@ class Avo::Resources::Series < Avo::BaseResource
     field :id, as: :id, sortable: true
     field :title, as: :text, sortable: true, searchable: true
     field :description, as: :textarea, searchable: true
-    field :category, as: :text, sortable: true, searchable: true
     field :published, as: :boolean, sortable: true
     field :scholar, as: :belongs_to, sortable: true, searchable: true
+    field :explainable, as: :file, accept: "pdf/*", max_size: 5.megabytes
     field :lessons_count, as: :text, only_on: [ :index, :show ], sortable: true
     field :created_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
     field :updated_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
