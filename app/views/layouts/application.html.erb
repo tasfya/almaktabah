@@ -16,9 +16,9 @@
     <%# Includes built stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%# Include domain custom CSS %>
-    <% if content = custom_css_tag %>
+    <% if custom_css_tag %>
       <style nonce="<%= content_security_policy_nonce %>">
-        <%= content %>
+        <%= custom_css_tag %>
       </style>
     <% end %>
     <%= javascript_importmap_tags %>

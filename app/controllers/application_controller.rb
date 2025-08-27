@@ -1,13 +1,12 @@
 class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
-  include BreadcrumbHelper
-  include Pagy::Backend
-
   before_action :setup_breadcrumbs
   before_action :set_domain
   before_action :latest_news
-  include DomainViewResolver
+  include BreadcrumbHelper
+  include Pagy::Backend
+  include ViewResolver
 
   protected
 
@@ -21,11 +20,9 @@ class ApplicationController < ActionController::Base
   end
 
   def setup_breadcrumbs
-    # Cleanup old breadcrumbs and set limits
     cleanup_old_breadcrumbs(24) # Remove breadcrumbs older than 24 hours
     set_breadcrumb_limits(8) # Keep max 8 breadcrumbs
 
-    # Reset breadcrumbs on home page
     if (controller_name == "home" && action_name == "index") || controller_path.start_with?("devise/")
       reset_breadcrumbs
     end
