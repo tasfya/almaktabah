@@ -17,7 +17,7 @@ class Avo::Filters::CategoryFilter < Avo::Filters::SelectFilter
     series_categories = Series.distinct.pluck(:category).compact
 
     # Combine all categories and sort
-    all_categories = (lesson_categories + lecture_categories + book_categories + series_categories).uniq.sort
+    all_categories = (lecture_categories + book_categories + series_categories).uniq.sort
 
     all_categories.map { |category| [ category, category ] }.to_h
   end
