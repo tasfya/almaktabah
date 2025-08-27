@@ -8,12 +8,11 @@
         <% end %>
       </div>
 
-      <div class="flex-1 overflow-hidden h-6 relative">
         <div
           data-controller="news-ticker"
           data-news-ticker-speed-value="4000"
           data-news-ticker-pause-on-hover-value="true"
-          class="relative overflow-hidden w-[2rem] flex items-center"
+          class="flex-1 overflow-hidden h-6 relative overflow-hidden w-[2rem] flex items-center"
           data-action="mouseenter->news-ticker#pauseAnimation mouseleave->news-ticker#resumeAnimation"
         >
           <% @latest_news.each_with_index do |news, index| %>
@@ -26,7 +25,6 @@
             </div>
           <% end %>
         </div>
-      </div>
     </div>
   </div>
 <% end %>

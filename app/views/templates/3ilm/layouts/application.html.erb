@@ -15,10 +15,16 @@
     <%= favicon_link_tags %>
     <%# Includes built stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%# Include domain custom CSS %>
+    <% if content = custom_css_tag %>
+      <style nonce="<%= content_security_policy_nonce %>">
+        <%= content %>
+      </style>
+    <% end %>
     <%= javascript_importmap_tags %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
-  <body class="bg-background">
+  <body class="bg-background text-main-text">
     <%= render 'shared/header' %>
     <%= render 'shared/news_bar' %>
     <main class="min-h-screen w-full">

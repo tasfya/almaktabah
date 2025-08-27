@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe BenefitsController, type: :controller do
-   before(:each) do
+  before(:each) do
     request.host = "localhost"
   end
   let!(:domain) { create(:domain, host: "localhost") }
