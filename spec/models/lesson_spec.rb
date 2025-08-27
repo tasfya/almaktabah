@@ -166,7 +166,9 @@ RSpec.describe Lesson, type: :model do
 
         bucket_key = lesson.generate_optimize_audio_bucket_key
 
-        expect(bucket_key).to eq("all-audios/#{scholar.full_name}/series/#{series.title}/#{lesson.title}.mp3")
+
+
+        expect(bucket_key).to eq("all-audios/#{scholar.full_name}/series/#{series.title}/#{lesson.position}.mp3")
       end
     end
   end

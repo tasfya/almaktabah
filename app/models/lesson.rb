@@ -72,6 +72,7 @@ class Lesson < ApplicationRecord
   end
 
   def generate_optimize_audio_bucket_key
-    "all-audios/#{scholar.full_name}/series/#{series_title}/#{title}.mp3"
+    key = position? ? position : title
+    "all-audios/#{scholar.full_name}/series/#{series_title}/#{key}.mp3"
   end
 end
