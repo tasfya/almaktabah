@@ -2,6 +2,7 @@ class Series < ApplicationRecord
     include Publishable
     include DomainAssignable
 
+    has_one_attached :explainable, service: Rails.application.config.public_storage
     has_many :lessons, dependent: :destroy
     belongs_to :scholar
     # Scopes
