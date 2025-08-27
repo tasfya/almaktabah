@@ -21,6 +21,7 @@ class LessonImportJob < ApplicationJob
 
     lesson = Lesson.find_or_create_by!(title: row.title) do |l|
       l.description = row.description
+      l.title = row.title
       l.content_type = row.content_type.presence || "audio"
       l.series = series
       l.youtube_url = row.youtube_url
