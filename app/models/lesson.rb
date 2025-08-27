@@ -19,7 +19,6 @@ class Lesson < ApplicationRecord
 
   # Scopes
   scope :recent, -> { order(published_at: :desc) }
-  scope :by_category, ->(category) { where(category: category) if category.present? }
   scope :by_series, ->(series_id) { where(series_id: series_id) if series_id.present? }
   scope :with_audio, -> { joins(:audio_attachment) }
   scope :without_audio, -> { where.missing(:audio_attachment) }
@@ -30,7 +29,7 @@ class Lesson < ApplicationRecord
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "category", "created_at", "description", "duration", "id", "published", "published_at", "series_id", "title", "updated_at" ]
+    [ "created_at", "description", "duration", "id", "published", "published_at", "series_id", "title", "updated_at" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
