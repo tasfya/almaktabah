@@ -12,7 +12,6 @@ class Avo::Filters::CategoryFilter < Avo::Filters::SelectFilter
 
   def options
     # Get categories from all relevant models
-    lesson_categories = Lesson.distinct.pluck(:category).compact
     lecture_categories = Lecture.distinct.pluck(:category).compact
     book_categories = Book.distinct.pluck(:category).compact
     series_categories = Series.distinct.pluck(:category).compact
