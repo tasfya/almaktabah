@@ -47,6 +47,6 @@ class Lecture < ApplicationRecord
   end
 
   def generate_optimize_audio_bucket_key
-    "all-audio/#{scholar.name}/lectures/#{kind}/#{title}.mp3"
+    "all-audios/#{scholar.name}/lectures/#{kind}/#{title}.mp3"
   end
 end
