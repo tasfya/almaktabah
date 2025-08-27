@@ -2,7 +2,6 @@ class Benefit < ApplicationRecord
     include Publishable
     include MediaHandler
     include DomainAssignable
-    include ArabicSluggable
 
     belongs_to :scholar, optional: true
 
@@ -26,32 +25,8 @@ class Benefit < ApplicationRecord
       [ "scholar" ]
     end
 
-    def generate_bucket_key(prefix: nil)
-      slug = slugify_arabic_advanced(title)
-      scholar_slug = scholar&.name ? slugify_arabic_advanced(scholar.name) : "unknown-scholar"
-      ext = audio.attachment.blob.filename.extension
-
-      base_key = if prefix
-        "scholars/#{scholar_slug}/benefits/#{slug}#{prefix}.#{ext}"
-      else
-        "scholars/#{scholar_slug}/benefits/#{slug}.#{ext}"
-      end
-
-      ensure_unique_key(base_key)
-    end
-
-    private
-
-    def ensure_unique_key(key)
-      return key unless ActiveStorage::Blob.exists?(key: key)
-
-      counter = 1
-      loop do
-        name_part, dot, extension = key.rpartition(".")
-        new_key = "#{name_part}_#{counter}.#{extension}"
-        return new_key unless ActiveStorage::Blob.exists?(key: new_key)
-        counter += 1
-      end
+    def generate_optimize_audio_bucket_key
+      "all-audios/#{scholar.full_name}/benefits/#{title}.mp3"
     end
 
     private
