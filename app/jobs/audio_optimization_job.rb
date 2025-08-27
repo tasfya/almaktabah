@@ -1,5 +1,5 @@
 class AudioOptimizationJob < ApplicationJob
-  queue_as :optimization
+  queue_as :default
 
   def perform(item)
     return unless item.audio?

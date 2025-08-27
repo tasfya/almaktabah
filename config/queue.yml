@@ -16,11 +16,6 @@ default: &default
       processes: <%= ENV.fetch("JOB_CONCURRENCY") { 1 } %>
       polling_interval: 0.5 # Reduced frequency (every 0.5s)
 
-    - queues: ["optimization"] # Dedicated for optimization jobs
-      threads: <%= (ENV.fetch("RAILS_MAX_THREADS") { 5 }).to_i - 2 %>
-      processes: <%= ENV.fetch("JOB_CONCURRENCY") { 1 } %>
-      polling_interval: 0.5 # Reduced frequency (every 0.5s)
-
     - queues: ["default"]
       threads: <%= (ENV.fetch("RAILS_MAX_THREADS") { 5 }).to_i - 2 %>
       processes: <%= ENV.fetch("JOB_CONCURRENCY") { 1 } %>
