@@ -5,12 +5,21 @@ namespace :copy_benefits_to_lectures do
 
     Benefit.find_each do |benefit|
       ActiveRecord::Base.transaction do
+        # Skip any Benefit with no associated Scholar (Lecture requires scholar)
+        if benefit.scholar_id.blank?
+          puts "Skipping Benefit ID #{benefit.id} (no scholar associated)"
+          next
+        end
+
         if Lecture.exists?(title: benefit.title, scholar_id: benefit.scholar_id, kind: :benefit)
           puts "Skipping Benefit ID #{benefit.id} (already copied)"
           next
         end
 
         puts "Copying Benefit ID #{benefit.id} - #{benefit.title}"
+        # …rest of the copy logic…
+      end
+    end
 
         lecture = Lecture.new(
           title:        benefit.title,
