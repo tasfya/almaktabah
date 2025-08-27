@@ -45,7 +45,6 @@ module Seeds
         lesson = Lesson.find_or_initialize_by(title: name)
         if lesson.new_record?
           lesson.series = series
-          lesson.category = data["series_name"]
           lesson.description = name
           lesson.video_url = data['video_url']
           lesson.youtube_url = data['youtube_url']
