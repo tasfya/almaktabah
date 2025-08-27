@@ -9,7 +9,6 @@ namespace :copy_benefits_to_lectures do
 
         lecture = Lecture.new(
           title:        benefit.title,
-          content:      benefit.content,
           duration:     benefit.duration,
           category:     benefit.category,
           kind:         :benefit,
