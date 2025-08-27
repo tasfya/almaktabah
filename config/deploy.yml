@@ -22,7 +22,7 @@ proxy:
   hosts:
    - www.binramzan.net
    - 3ilm.org
-   - suhayimi.hachimy.com
+   - suhai.me
 
 # Credentials for your image host.
 registry:
