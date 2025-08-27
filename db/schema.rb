@@ -10,15 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_26_140417) do
-  create_table "_litestream_lock", id: false, force: :cascade do |t|
-    t.integer "id"
-  end
 
-  create_table "_litestream_seq", force: :cascade do |t|
-    t.integer "seq"
-  end
-
+ActiveRecord::Schema[8.0].define(version: 2025_08_27_064112) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -184,7 +177,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_26_140417) do
   create_table "lessons", force: :cascade do |t|
     t.string "title", null: false
     t.datetime "published_at"
-    t.string "category"
     t.integer "duration"
     t.text "description"
     t.datetime "created_at", null: false
@@ -196,7 +188,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_26_140417) do
     t.string "youtube_url"
     t.integer "position"
     t.boolean "published", default: false, null: false
-    t.string "slug"
+    t.string "source_url"
     t.index ["old_id"], name: "index_lessons_on_old_id"
     t.index ["position"], name: "index_lessons_on_position"
     t.index ["published"], name: "index_lessons_on_published"

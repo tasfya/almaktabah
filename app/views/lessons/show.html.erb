@@ -29,17 +29,10 @@
             </h1>
             <% if @lesson.series.present? %>
               <div class="mb-4">
-                <%= link_to @lesson.series.title, series_path(@lesson.series), 
+                <%= link_to @lesson.series.title, series_path(@lesson.series),
                     class: "text-primary-500 hover:text-primary-600 font-medium text-md" %>
               </div>
             <% end %>
-            <div class="flex flex-wrap items-center gap-4 text-sm mb-6">
-              <% if @lesson.category.present? %>
-                <span class="badge badge-primary">
-                  <%= @lesson.category %>
-                </span>
-              <% end %>
-            </div>
           </header>
           <% if @lesson.respond_to?(:content) && @lesson.content.present? %>
             <section class="mb-8">

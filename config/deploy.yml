@@ -20,9 +20,9 @@ servers:
 proxy:
   ssl: true
   hosts:
-   - www.binramzan.net
+   - binramzan.net
    - 3ilm.org
-   - suhayimi.hachimy.com
+   - suhai.me
 
 # Credentials for your image host.
 registry:

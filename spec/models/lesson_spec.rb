@@ -24,25 +24,6 @@ RSpec.describe Lesson, type: :model do
       end
     end
 
-    describe '.by_category' do
-      it 'filters lessons by category when category is present' do
-        lesson1 = create(:lesson, category: 'fiqh')
-        lesson2 = create(:lesson, category: 'aqeedah')
-
-        fiqh_lessons = Lesson.by_category('fiqh')
-        expect(fiqh_lessons).to include(lesson1)
-        expect(fiqh_lessons).not_to include(lesson2)
-      end
-
-      it 'returns all lessons when category is blank' do
-        lesson1 = create(:lesson, category: 'fiqh')
-        lesson2 = create(:lesson, category: 'aqeedah')
-
-        all_lessons = Lesson.by_category('')
-        expect(all_lessons).to include(lesson1, lesson2)
-      end
-    end
-
     describe '.by_series' do
       it 'filters lessons by series_id when present' do
         series1 = create(:series)
