@@ -20,7 +20,7 @@ servers:
 proxy:
   ssl: true
   hosts:
-   - www.binramzan.net
+   - binramzan.net
    - 3ilm.org
    - suhai.me
 
