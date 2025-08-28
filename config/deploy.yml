@@ -22,6 +22,9 @@ proxy:
   hosts:
    - binramzan.net
    - 3ilm.org
+   - zayd.3ilm.org
+   - ubayd.3ilm.org
+   - fawzan.3ilm.org
    - suhai.me
 
 # Credentials for your image host.
