@@ -12,10 +12,12 @@
           </p>
           <%= render 'shared/filters' %>
           <% if @benefits.any? %>
-            <div class="grid grid-cols-1 gap-6">
-              <% @benefits.each do |benefit| %>
-                <%= render partial: "benefit_card", locals: { benefit: benefit }%>
-              <% end %>
+            <div class="bg-card rounded-lg shadow overflow-hidden w-full">
+              <div class="divide-y divide-gray-200">
+                <% @benefits.each_with_index do |benefit, index| %>
+                  <%= render "shared/playlist_card", resource: benefit, with_icon: true, index: index %>
+                <% end %>
+              </div>
             </div>
           <% else %>
             <div class="text-center py-8">

@@ -1,72 +1,41 @@
 <% content_for :title, @series.title %>
-<div class="min-h-screen py-8"> 
-  <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 gap-8">
-      <div class="lg:col-span-2">
-        <article class="border border-background-contrast rounded-lg shadow-md p-8">
-          <header class="mb-8">
-            <h1 class="text-3xl font-bold mb-4">
-              <%= @series.title %>
-            </h1>
-            <div class="flex items-center gap-4 text-sm mb-6">
-              <% if @series.category.present? %>
-                <span class="badge badge-primary rounded-full">
-                  <%= @series.category %>
-                </span>
-              <% end %>
-              <span class="badge badge-primary">
-                <%= icon "book-open", class: "size-5"%>
-                <%= pluralize(@series.lessons.published.count, 'درس') %>
-                <%# TODO: fix pluralize for this %>
-              </span>
-            </div>
-          </header>
-          <% if @series.description.present? %>
-            <div class="prose prose-lg max-w-none mb-8">
-              <%= simple_format(@series.description) %>
-            </div>
+
+<div class="min-h-screen bg-background">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row items-center lg:items-end gap-6 mb-10">
+      <div class="w-40 h-40 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+          <%= image_tag("background.jpg", class: "w-full h-full object-cover") %>
+      </div>
+
+      <div class="flex-1 text-center lg:text-right">
+        <p class="uppercase tracking-wide text-lg text-gray-400 mb-2">
+          <%= t('.series_label') %>
+        </p>
+        <h1 class="text-4xl font-bold mb-3"><%= @series.title %></h1>
+
+        <div class="flex items-center justify-center lg:justify-start gap-4 text-sm text-gray-500 mb-4">
+          <% if @series.category.present? %>
+            <span class="badge badge-primary rounded-full"><%= @series.category %></span>
           <% end %>
-          <section class="mt-8">
-            <h2 class="text-2xl font-bold mb-6">
-              <%= t('.lessons_in_series') %>
-            </h2>
-            <% if @lessons.any? %>
-              <div class="space-y-4">
-                <% @lessons.each_with_index do |lesson, index| %>
-                  <%= render partial: "lesson_card", locals: { lesson:, index: }%>
-                <% end %>
-              </div>
-            <% else %>
-              <div class="text-center py-8">
-                <%= t('.no_lessons_in_series') %>
-              </div>
-            <% end %>
-          </section>
-          <% if @related_series.any? %>
-            <section class="mt-12">
-              <h2 class="text-2xl font-bold mb-6">
-                <%= t('.related_series') %>
-              </h2>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <% @related_series.each do |related_series| %>
-                  <div class="bg-card hover:bg-card-hover text-card-contrast border border-background-contrast rounded-lg p-6 hover:shadow-md transition-shadow">
-                    <h3 class="text-lg font-semibold mb-2">
-                      <%= link_to related_series.title, series_path(related_series), class: "secondary-link" %>
-                    </h3>
-                    <p class="text-sm mb-4">
-                      <%= truncate(related_series.description, length: 100) %>
-                    </p>
-                    <div class="flex items-center justify-between text-sm">
-                      <span class="badge badge-secondary"><%= related_series.category %></span>
-                      <span class="badge badge-primary"><%= pluralize(related_series.lessons.count, 'درس') %></span>
-                      <%# TODO fix pluralize %>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-            </section>
-          <% end %>
-        </article>
+          <span class="badge badge-secondary">
+            <%= pluralize(@series.lessons.published.count, 'درس') %>
+          </span>
+        </div>
+
+        <% if @series.description.present? %>
+          <p class="text-gray-600 max-w-2xl mx-auto lg:mx-0">
+            <%= truncate(@series.description, length: 180) %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Lessons List -->
+    <div class="bg-card rounded-lg shadow overflow-hidden">
+      <div class="divide-y divide-gray-200">
+        <% @lessons.each_with_index do |lesson, index| %>
+          <%= render "shared/playlist_card", resource: lesson, with_icon: true, index: %>
+        <% end %>
       </div>
     </div>
   </div>

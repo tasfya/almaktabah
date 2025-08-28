@@ -6,10 +6,12 @@
         <div class="bg-background rounded-lg shadow-md p-6">
           <h1 class="text-2xl font-bold text-foreground mb-6"><%= t('.title') %></h1>
           <% if @lectures.any? %>
-            <div class="grid grid-cols-1 gap-6">
-              <% @lectures.each do |lecture| %>
-                <%= render partial: "lecture_card", locals: { lecture: lecture }%>
-              <% end %>
+            <div class="bg-card rounded-lg shadow overflow-hidden w-full">
+              <div class="divide-y divide-gray-200">
+                <% @lectures.each_with_index do |lecture, index| %>
+                  <%= render "shared/playlist_card", resource: lecture, with_icon: true, index: index %>
+                <% end %>
+              </div>
             </div>
           <% else %>
             <div class="text-center text-foreground py-8">
