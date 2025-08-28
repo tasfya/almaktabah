@@ -77,22 +77,13 @@ ar:
       share_news: "شارك الخبر"
       related_news: "أخبار ذات صلة"
       will_be_available: "محتوى الخبر سيكون متاحاً قريباً."
-  lessons:
-    index:
-      title: "الدروس العلمية"
-      description: "استكشف مجموعة متنوعة من الدروس العلمية في مختلف العلوم الشرعية"
-      no_lessons: "لا توجد دروس متاحة حالياً"
-    show:
-      download_options: "خيارات التحميل"
-      other_series_lessons: "دروس في سلاسل أخرى"
-      current_lesson: "الدرس الحالي"
   series:
     index:
       title: "السلاسل العلمية"
       description: "استكشف السلاسل العلمية المتنوعة في مختلف العلوم الشرعية"
       no_series: "لا توجد سلاسل متاحة حالياً"
     show:
-      related_series: "سلاسل ذات صلة"
+      series_label: "سلسلة"
       lessons_in_series: "دروس في هذه السلسلة"
       no_lessons_in_series: "لا توجد دروس في هذه السلسلة حالياً"
   contacts:
