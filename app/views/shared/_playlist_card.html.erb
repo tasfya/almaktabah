@@ -21,8 +21,10 @@
   </div>
   <div class="flex items-center gap-2">
     <%= play_button(resource: resource, klass: "btn btn-secondary btn-sm") %>
-    <%= resource.respond_to?(:optimized_audio) && resource.optimized_audio.attached? && link_to(rails_blob_url(resource.optimized_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
-      <%= icon "arrow-down-tray", class: "size-3 sm:size-5" %>
+    <%= if resource.respond_to?(:optimized_audio) && resource.optimized_audio.attached? %>
+      <%= link_to(rails_blob_url(resource.optimized_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
+        <%= icon "arrow-down-tray", class: "size-3 sm:size-5" %>
+      <% end %>
     <% end %>
     <button class="btn btn-secondary btn-sm w-fit"
               data-controller="clipboard"
