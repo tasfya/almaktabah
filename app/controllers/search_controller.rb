@@ -24,7 +24,6 @@
     def search_all_models
       @results[:books] = search_books
       @results[:lectures] = search_lectures
-      @results[:lessons] = search_lessons
       @results[:series] = search_series
       @results[:news] = search_news
       @results[:benefits] = search_benefits
@@ -42,12 +41,6 @@
       Lecture.published.for_domain_id(@domain).published.ransack(
         title_or_description_cont: @query
       ).result(distinct: true).recent.limit(5)
-    end
-
-    def search_lessons
-      Lesson.includes(:series).published.for_domain_id(@domain).ransack(
-        title_or_description_cont: @query
-      ).result(distinct: true).limit(5)
     end
 
     def search_series
