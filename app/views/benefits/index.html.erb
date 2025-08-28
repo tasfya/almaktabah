@@ -14,8 +14,8 @@
           <% if @benefits.any? %>
             <div class="bg-card rounded-lg shadow overflow-hidden w-full">
               <div class="divide-y divide-gray-200">
-                <% @benefits.each_with_index do |benefit, index| %>
-                  <%= render "shared/playlist_card", resource: benefit, with_icon: true, index: index %>
+                <% @benefits.each_with_index do |benefit, idx| %>
+                  <%= render "shared/playlist_card", resource: benefit, with_icon: true, index: idx + 1 %>
                 <% end %>
               </div>
             </div>

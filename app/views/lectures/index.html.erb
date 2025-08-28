@@ -8,8 +8,8 @@
           <% if @lectures.any? %>
             <div class="bg-card rounded-lg shadow overflow-hidden w-full">
               <div class="divide-y divide-gray-200">
-                <% @lectures.each_with_index do |lecture, index| %>
-                  <%= render "shared/playlist_card", resource: lecture, with_icon: true, index: index %>
+                <% @lectures.each_with_index do |lecture, idx| %>
+                  <%= render "shared/playlist_card", resource: lecture, with_icon: true, index: idx + 1 %>
                 <% end %>
               </div>
             </div>
