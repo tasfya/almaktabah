@@ -11,12 +11,16 @@
                     play_button_target: "button",
                     disable_with: "Loading..."
                   } do %>
-    <span data-play-button-target="icon">
-      <%= icon("play", class: "size-3 sm:size-5") %>
-    </span>
-    <span data-play-button-target="loadingIcon" class="hidden">
-      <%= icon("arrow-path", class: "size-3 sm:size-5 animate-spin") %>
-    </span>
+    <% if local_assigns[:custom_content].present? %>
+      <%= custom_content %>
+    <% else %>
+      <span data-play-button-target="icon">
+        <%= icon("play", class: icon_class) %>
+      </span>
+      <span data-play-button-target="loadingIcon" class="hidden">
+        <%= icon("arrow-path", class: "#{icon_class} animate-spin") %>
+      </span>
+    <% end %>
   <% end %>
   
   <template data-play-button-target="template">
