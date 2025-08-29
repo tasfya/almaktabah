@@ -19,21 +19,15 @@ class LectureImportJob < ApplicationJob
       scholar = find_or_create_scholar_by_full_name(row_data["scholar_full_name"])
     end
 
-    published_at = parse_datetime(row.published_at)
-
     lecture = Lecture.find_or_create_by!(
-      title: row.title
-    ) do |l|
-      l.description  = row.description
-      l.category     = row.category
-      l.scholar      = scholar
-      l.youtube_url  = row.youtube_url
-      l.source_url  = row.source_url
-      l.kind  = row.kind
-      l.published    = published_at.present?
-      l.published_at = published_at
-    end
-
+      title: row.title,
+      description: row.description,
+      category: row.category,
+      Scholar: scholar,
+      youtube_url: row.youtube_url,
+      source_url: row.source_url,
+      kind: row.kind
+    )
     if domain_id.present?
       lecture.assign_to(Domain.find(domain_id))
     end

@@ -17,17 +17,17 @@ class LessonImportJob < ApplicationJob
       scholar = find_or_create_scholar_by_full_name(row_data["scholar_full_name"])
     end
 
-    series = find_or_create_series(row.series_title, scholar) if row.series_title.present?
+    series = find_or_create_series(row.series_title, scholar,) if row.series_title.present?
 
-    lesson = Lesson.find_or_create_by!(title: row.title) do |l|
-      l.description = row.description
-      l.title = row.title
-      l.content_type = row.content_type.presence || "audio"
-      l.series = series
-      l.youtube_url = row.youtube_url
-      l.source_url = row.source_url
-      l.position = parse_integer(row.position)
-    end
+    lesson = Lesson.find_or_create_by!(
+      title: row.title,
+      description: row.description,
+      content_type: row.content_type.presence || "audio",
+      series: series,
+      youtube_url: row.youtube_url,
+      source_url: row.source_url,
+      position: parse_integer(row.position)
+    )
 
     lesson.assign_to(Domain.find(domain_id))
 
