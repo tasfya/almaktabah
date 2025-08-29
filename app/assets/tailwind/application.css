@@ -52,30 +52,6 @@
   @apply w-full px-3 py-2 border rounded-md shadow-sm bg-input text-input-contrast;
 }
 
-@utility btn {
-  @apply px-4 py-2 rounded-xs w-full font-medium transition-colors duration-200 flex items-center justify-center gap-1;
-}
-
-@utility btn-primary {
-  @apply bg-primary text-primary-contrast hover:bg-primary-hover cursor-pointer border border-background-contrast;
-}
-
-@utility btn-secondary {
-  @apply bg-secondary text-secondary-contrast hover:bg-secondary-hover border border-background-contrast cursor-pointer;
-}
-
-@utility btn-link {
-  @apply w-fit text-primary-link hover:text-primary-link-hover hover:underline cursor-pointer;
-}
-
-@utility btn-secondary-link {
-  @apply w-fit text-secondary-link hover:text-secondary-link-hover hover:underline cursor-pointer;
-}
-
-@utility btn-sm {
-  @apply px-3 py-1.5 text-sm;
-}
-
 @utility secondary-link {
   @apply text-secondary-link hover:text-secondary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center;
 }
@@ -88,22 +64,6 @@
 }
 @utility primary-link-active {
   @apply text-primary-link-active hover:text-primary-link-hover hover:underline cursor-pointer whitespace-nowrap flex gap-1 items-center;
-}
-
-@utility badge {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-}
-
-@utility badge-primary {
-  @apply bg-primary text-primary-contrast hover:bg-primary-hover border border-background-contrast;
-}
-
-@utility badge-secondary {
-  @apply bg-secondary text-secondary-contrast hover:bg-secondary-hover border border-background-contrast;
-}
-
-@utility badge-sm {
-  @apply px-2 py-1 text-xs;
 }
 
 @utility audio-player {
