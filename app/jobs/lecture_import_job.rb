@@ -21,10 +21,8 @@ class LectureImportJob < ApplicationJob
 
     lecture = Lecture.find_or_create_by!(
       title: row.title,
-      description: row.description,
       category: row.category,
-      Scholar: scholar,
-      youtube_url: row.youtube_url,
+      scholar_id: scholar.id,
       source_url: row.source_url,
       kind: row.kind
     )
