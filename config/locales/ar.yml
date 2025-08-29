@@ -29,14 +29,7 @@ ar:
     contact_title: "تواصل معنا"
     contact_description: "للاستفسارات والتواصل"
     email_label: "البريد الإلكتروني"
-    copyright: "جميع الحقوق محفوظة © %{year}"
-    copyright_3ilm: "جميع الحقوق محفوظة © %{year}"
-    newsletter_title: "النشرة البريدية"
-    newsletter_description: "اشترك في النشرة البريدية لتصلك أحدث الدروس والمحاضرات والكتب فور نشرها على الموقع."
-    developed_by: "تم التطوير بواسطة فريق %{site_name} التقني"
-    follow_us: "تابعونا على:"
-    about_description: "منصة علمية شرعية تهدف إلى نشر العلم النافع والمحتوى الإسلامي الأصيل من خلال الدروس والمحاضرات والكتب النافعة."
-    platform_description: "منصة علمية شرعية لنشر العلم النافع"
+    copyright: "جميع الحقوق محفوظة - موقع فضيلة الشيخ محمد بن رمزان الهاجري"
   benefits:
     index:
       title: "الفوائد"
@@ -191,18 +184,17 @@ ar:
     next: "التالي"
     close: "إغلاق"
     search_button: "بحث"
-    subscribe: "اشترك الآن"
   news_bar:
     latest_news: "آخر الأخبار"
   site:
-    name: "٣علم"
-    tagline: "منصة علمية شرعية"
+    name: "مكتبة الشيخ محمد بن رمزان الهاجري"
+    tagline: "موقع فضيلة الشيخ محمد بن رمزان الهاجري"
     welcome: "مرحباً بكم في المكتبة"
     description: "مجموعة شاملة من الكتب والمحاضرات والدروس والفتاوى في العلوم الشرعية"
-    copyright: "جميع الحقوق محفوظة © %{year}"
+    copyright: "جميع الحقوق محفوظة - موقع فضيلة الشيخ محمد بن رمزان الهاجري"
     for_inquiries: "للاستفسارات والتواصل"
     email_label: "البريد الإلكتروني"
-    audio_library: "المكتبة الصوتية"
+    audio_library: "المكتبة الصوتية للشيخ"
     choose_audio: "اختر مقطع صوتي"
     library: "المكتبة"
   navigation:
@@ -427,43 +419,3 @@ ar:
     news: "الأخبار"
     about: "حول"
     contact: "اتصل بنا"
-  social:
-    twitter: "تويتر"
-    youtube: "يوتيوب"
-    facebook: "فيسبوك"
-    instagram: "انستغرام"
-  
-  content_card:
-    series_label: "السلسلة:"
-    scholar_label: "الشيخ:"
-    author_label: "المؤلف:"
-    lesson_number: "الدرس %{number}"
-    lesson_count: "%{count} درس"
-    actions:
-      play: "تشغيل"
-      download: "تحميل"
-      share: "مشاركة"
-      share_success: "تم النسخ بنجاح"
-      share_error: "فشل في النسخ"
-  
-  home:
-    sections:
-      more_lessons: "المزيد من الدروس"
-      more_lectures: "المزيد من المحاضرات"
-      more_books: "المزيد من الكتب"
-      more_series: "المزيد من السلاسل"
-      more_fatwas: "المزيد من الفتاوى"
-      no_lessons: "لا توجد دروس متاحة حالياً"
-      no_lectures: "لا توجد محاضرات متاحة حالياً"
-      no_books: "لا توجد كتب متاحة حالياً"
-      no_series: "لا توجد سلاسل متاحة حالياً"
-      no_fatwas: "لا توجد فتاوى متاحة حالياً"
-  
-  stats_card:
-    default_title: "إحصائيات الموقع"
-    labels:
-      lesson: "درس"
-      lecture: "محاضرة"
-      book: "كتاب"
-      series: "سلسلة"
-    last_updated: "آخر تحديث: %{date}"
