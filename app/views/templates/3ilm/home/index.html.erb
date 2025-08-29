@@ -1,3 +1,326 @@
-<div class="container p-4">
-    <h1> 3ilm.org template </h1>
+<% content_for :title, t('navigation.home') %>
+
+<div class="bg-background min-h-screen">
+  <% if @featured_lesson.present? %>
+    <section class="bg-primary text-primary-contrast py-12">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+          <h1 class="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+            <%= link_to @featured_lesson.title, series_path(@featured_lesson.series), class: "hover:opacity-90 transition-opacity cursor-pointer" %>
+          </h1>
+          <% if @featured_lesson.description.present? %>
+            <p class="opacity-90 mb-6 text-lg leading-relaxed max-w-2xl mx-auto">
+              <%= truncate(strip_tags(@featured_lesson.description.to_s), length: 200) %>
+            </p>
+          <% end %>
+          <div class="flex items-center justify-center gap-4">
+            <%= play_button(resource: @featured_lesson, klass: "btn btn-secondary") do %>
+              <%= icon "play", class: "size-5" %>
+              <span>استمع الآن</span>
+            <% end %>
+            <%= link_to series_path(@featured_lesson.series), class: "btn btn-primary border-2 border-primary-contrast w-fit" do %>
+              <%= icon "folder", class: "size-5" %>
+              <span>السلسلة كاملة</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </section>
+  <% end %>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div class="lg:col-span-3 space-y-8">
+        <section class="bg-card rounded-lg shadow-sm border border-background-contrast">
+          <div class="border-b border-background-contrast p-6 pb-4">
+            <div class="flex items-center gap-3">
+              <h2 class="text-2xl font-bold text-main-text"><%= t('3ilm.index.recent_lessons') %></h2>
+            </div>
+          </div>
+          
+          <div class="p-6">
+            <% if @recent_lessons&.any? %>
+              <div class="space-y-6">
+                <% @recent_lessons.limit(5).each_with_index do |lesson, index| %>
+                  <%= render 'templates/3ilm/shared/content_card', 
+                             item: lesson, 
+                             type: :lesson,
+                             show_date: true,
+                             show_category: false,
+                             show_description: true,
+                             show_actions: true %>
+                  <% unless index == 4 %>
+                    <hr class="border-background-contrast">
+                  <% end %>
+                <% end %>
+              </div>
+              
+              <div class="text-center pt-6 border-t border-background-contrast">
+                <%= link_to series_index_path, class: "secondary-link font-semibold" do %>
+                  <span><%= t('3ilm.index.more_lessons') %></span>
+                  <%= icon "arrow-left", class: "size-4" %>
+                <% end %>
+              </div>
+            <% else %>
+              <p class="text-center text-card-contrast py-8"><%= t('3ilm.index.no_lessons') %></p>
+            <% end %>
+          </div>
+        </section>
+
+        <% if @recent_fatwas&.any? %>
+          <section class="bg-card rounded-lg shadow-sm border border-background-contrast">
+            <div class="border-b border-background-contrast p-6 pb-4">
+              <div class="flex items-center gap-3">
+                <h2 class="text-2xl font-bold text-main-text">جديد الفتاوى</h2>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <div class="space-y-6">
+                <% @recent_fatwas.limit(3).each_with_index do |fatwa, index| %>
+                  <article class="flex items-start gap-4 pb-6 <%= 'border-b border-background-contrast' unless index == 2 %>">
+                    <div class="flex-1 min-w-0">
+                      <h3 class="text-lg font-semibold text-main-text mb-2 hover:text-primary transition-colors cursor-pointer">
+                        <%= link_to fatwa.title, fatwa_path(fatwa) %>
+                      </h3>
+                      <% if fatwa.description.present? %>
+                        <p class="text-card-contrast text-sm leading-relaxed mb-3">
+                          <%= truncate(strip_tags(fatwa.description.to_s), length: 200) %>
+                        </p>
+                      <% end %>
+                      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex items-center gap-2 text-xs text-card-contrast">
+                          <% if fatwa.created_at.present? %>
+                            <time><%= fatwa.created_at.strftime("%Y/%m/%d") %></time>
+                          <% end %>
+                        </div>
+                        <div class="flex items-center gap-2">
+                          <button class="btn btn-secondary btn-sm"
+                                  data-controller="clipboard"
+                                  data-clipboard-text-value="<%= request.original_url %>"
+                                  data-clipboard-success-message-value="تم النسخ بنجاح"
+                                  data-clipboard-error-message-value="فشل في النسخ"
+                                  data-action="click->clipboard#copy"
+                                  title="مشاركة">
+                            <%= icon "share", class: "size-4 md:size-5" %>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                <% end %>
+              </div>
+              
+              <div class="text-center pt-6 border-t border-background-contrast">
+                <%= link_to fatwas_path, class: "secondary-link font-semibold" do %>
+                  <span>المزيد من الفتاوى</span>
+                  <%= icon "arrow-left", class: "size-4" %>
+                <% end %>
+              </div>
+            </div>
+          </section>
+        <% end %>
+
+        <% if @recent_lectures&.any? %>
+          <section class="bg-card rounded-lg shadow-sm border border-background-contrast">
+            <div class="border-b border-background-contrast p-6 pb-4">
+              <div class="flex items-center gap-3">
+                <%= icon "microphone", class: "size-6 text-primary" %>
+                <h2 class="text-2xl font-bold text-main-text"><%= t('3ilm.index.recent_lectures') %></h2>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <div class="space-y-6">
+                <% @recent_lectures.limit(4).each_with_index do |lecture, index| %>
+                  <%= render 'templates/3ilm/shared/content_card', 
+                             item: lecture, 
+                             type: :lecture,
+                             show_date: true,
+                             show_category: true,
+                             show_description: true,
+                             show_actions: true %>
+                  <% unless index == 3 %>
+                    <hr class="border-background-contrast">
+                  <% end %>
+                <% end %>
+              </div>
+              
+              <div class="text-center pt-6 border-t border-background-contrast">
+                <%= link_to lectures_path, class: "secondary-link font-semibold" do %>
+                  <span><%= t('3ilm.index.more_lectures') %></span>
+                  <%= icon "arrow-left", class: "size-4" %>
+                <% end %>
+              </div>
+            </div>
+          </section>
+        <% end %>
+
+        <% if @recent_books&.any? %>
+          <section class="bg-card rounded-lg shadow-sm border border-background-contrast">
+            <div class="border-b border-background-contrast p-6 pb-4">
+              <div class="flex items-center gap-3">
+                <%= icon "book-open", class: "size-6 text-primary" %>
+                <h2 class="text-2xl font-bold text-main-text"><%= t('3ilm.index.recent_books') %></h2>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <% @recent_books.limit(4).each do |book| %>
+                  <%= render 'templates/3ilm/shared/content_card', 
+                             item: book, 
+                             type: :book,
+                             show_date: true,
+                             show_category: false,
+                             show_description: true,
+                             show_actions: true,
+                             compact: false,
+                             grid_layout: true %>
+                <% end %>
+              </div>
+              
+              <div class="text-center pt-6 border-t border-background-contrast">
+                <%= link_to books_path, class: "secondary-link font-semibold" do %>
+                  <span><%= t('3ilm.index.more_books') %></span>
+                  <%= icon "arrow-left", class: "size-4" %>
+                <% end %>
+              </div>
+            </div>
+          </section>
+        <% end %>
+
+        <% if @featured_series&.any? %>
+          <section class="bg-card rounded-lg shadow-sm border border-background-contrast">
+            <div class="border-b border-background-contrast p-6 pb-4">
+              <div class="flex items-center gap-3">
+                <%= icon "folder", class: "size-6 text-primary" %>
+                <h2 class="text-2xl font-bold text-main-text"><%= t('3ilm.index.featured_series') %></h2>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <% @featured_series.limit(4).each do |series| %>
+                  <div class="p-4 border border-background-contrast rounded-lg hover:border-primary hover:shadow-md transition-all">
+                    <%= render 'templates/3ilm/shared/content_card', 
+                               item: series, 
+                               type: :series,
+                               show_date: false,
+                               show_category: true,
+                               show_description: true,
+                               show_actions: true,
+                               compact: true,
+                               grid_layout: false %>
+                  </div>
+                <% end %>
+              </div>
+              
+              <div class="text-center pt-6 border-background-contrast">
+                <%= link_to series_index_path, class: "secondary-link font-semibold" do %>
+                  <span><%= t('3ilm.index.more_series') %></span>
+                  <%= icon "arrow-left", class: "size-4" %>
+                <% end %>
+              </div>
+            </div>
+          </section>
+        <% end %>
+      </div>
+
+      <div class="space-y-6">
+        <section class="bg-card rounded-lg shadow-sm border border-background-contrast">
+          <div class="border-b border-background-contrast p-4">
+            <div class="flex items-center gap-2">
+              <h3 class="font-bold text-main-text">شجرة التصنيفات</h3>
+            </div>
+          </div>
+          
+          <div class="p-4">
+            <div class="space-y-2">
+              <%= link_to series_index_path, class: "flex items-center justify-between p-3 rounded-lg hover:bg-card-hover transition-colors group cursor-pointer" do %>
+                <div class="flex items-center gap-3">
+                  <%= icon "folder", class: "size-4 text-primary" %>
+                  <span class="text-card-contrast group-hover:text-primary font-medium">السلاسل العلمية</span>
+                </div>
+                <span class="text-xs text-card-contrast bg-background px-2 py-1 rounded">
+                  <%= @stats&.dig(:series_count) || 0 %>
+                </span>
+              <% end %>
+              
+              <%= link_to lectures_path, class: "flex items-center justify-between p-3 rounded-lg hover:bg-card-hover transition-colors group cursor-pointer" do %>
+                <div class="flex items-center gap-3">
+                  <%= icon "play", class: "size-4 text-primary" %>
+                  <span class="text-card-contrast group-hover:text-primary font-medium">المحاضرات</span>
+                </div>
+                <span class="text-xs text-card-contrast bg-background px-2 py-1 rounded">
+                  <%= @stats&.dig(:lectures_count) || 0 %>
+                </span>
+              <% end %>
+              
+              <%= link_to books_path, class: "flex items-center justify-between p-3 rounded-lg hover:bg-card-hover transition-colors group cursor-pointer" do %>
+                <div class="flex items-center gap-3">
+                  <%= icon "book-open", class: "size-4 text-primary" %>
+                  <span class="text-card-contrast group-hover:text-primary font-medium">الكتب</span>
+                </div>
+                <span class="text-xs text-card-contrast bg-background px-2 py-1 rounded">
+                  <%= @stats&.dig(:books_count) || 0 %>
+                </span>
+              <% end %>
+
+                <%= link_to fatwas_path, class: "flex items-center justify-between p-3 rounded-lg hover:bg-card-hover transition-colors group cursor-pointer" do %>
+                    <div class="flex items-center gap-3">
+                    <%= icon "scale", class: "size-4 text-primary" %>
+                    <span class="text-card-contrast group-hover:text-primary font-medium">الفتاوى</span>
+                    </div>
+                    <span class="text-xs text-card-contrast bg-background px-2 py-1 rounded">
+                    <%= Fatwa.count %>
+                    </span>
+                <% end %>
+            </div>
+          </div>
+        </section>
+
+        <%= render 'templates/3ilm/shared/stats_card', 
+                   stats: @stats,
+                   icon: "chart-bar",
+                   compact: false %>
+
+        <% if @recent_books&.any? %>
+          <section class="bg-card rounded-lg shadow-sm border border-background-contrast">
+            <div class="border-b border-background-contrast p-4">
+              <div class="flex items-center gap-2">
+                <h3 class="font-bold text-main-text">الكتب</h3>
+              </div>
+            </div>
+            
+            <div class="p-4">
+              <div class="space-y-3">
+                <% @recent_books.limit(4).each do |book| %>
+                  <div class="flex items-start gap-3 p-3 rounded-lg hover:bg-card-hover transition-colors cursor-pointer">
+                    <div class="w-8 h-8 bg-background rounded flex items-center justify-center flex-shrink-0">
+                      <%= icon "book-open", class: "size-4 text-primary" %>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <h4 class="font-medium text-main-text text-sm leading-snug hover:text-primary transition-colors cursor-pointer">
+                        <%= link_to book.title, book_path(book) %>
+                      </h4>
+                      <% if book.respond_to?(:author) && book.author.present? %>
+                        <p class="text-xs text-card-contrast mt-1"><%= book.author %></p>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              
+              <div class="text-center pt-4 border-t border-background-contrast mt-4">
+                <%= link_to books_path, class: "secondary-link font-medium" do %>
+                  المزيد
+                <% end %>
+              </div>
+            </div>
+          </section>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,106 @@
+<%
+  # Set defaults
+  show_date = local_assigns.fetch(:show_date, true)
+  show_category = local_assigns.fetch(:show_category, true)
+  show_description = local_assigns.fetch(:show_description, true)
+  show_actions = local_assigns.fetch(:show_actions, true)
+  compact = local_assigns.fetch(:compact, false)
+  grid_layout = local_assigns.fetch(:grid_layout, false)
+  wrapper_classes = "flex items-start gap-4 p-4 rounded-lg hover:bg-card-hover transition-colors"  
+  title_size = compact ? "text-base" : "text-lg"
+  desc_size = compact ? "text-xs" : "text-sm"
+  desc_length = compact ? 100 : (type == :book ? 100 : 150)
+%>
+
+<article class="<%= wrapper_classes %>">
+  <div class="flex-1 min-w-0">
+    <h3 class="<%= title_size %> font-semibold text-main-text mb-2 leading-snug">
+      <% 
+        path = case type
+        when :lesson
+          item.try(:series).present? ? polymorphic_path(item.series) : polymorphic_path(item)
+        else
+          polymorphic_path(item)
+        end
+      %>
+      <%= link_to item.title, path, class: "hover:text-primary transition-colors" %>
+    </h3>
+
+    <% if item.respond_to?(:series) && item.series.present? %>
+      <p class="text-sm text-card-contrast mb-2">
+        <%= link_to item.series.title, item.series, class: "secondary-link" %>
+      </p>
+    <% elsif item.respond_to?(:scholar) && item.scholar.present? %>
+      <p class="text-sm text-card-contrast mb-2">
+        <%= link_to item.scholar.name, item.scholar, class: "secondary-link" %>
+      </p>
+    <% elsif item.respond_to?(:author) && item.author.present? %>
+      <p class="text-sm text-card-contrast mb-2">
+        <span class="font-medium"><%= t('3ilm.content_card.author') %></span> <%= item.author %>
+      </p>
+    <% end %>
+
+    <% if show_description %>
+      <% content = item.try(:description) || item.try(:content) %>
+      <% if content.present? %>
+        <p class="text-card-contrast <%= desc_size %> mb-3 leading-relaxed">
+          <%= truncate(strip_tags(content.to_s), length: desc_length) %>
+        </p>
+      <% end %>
+    <% end %>
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-2 text-xs text-card-contrast">
+        <% meta_items = [] %>
+        
+        <% if item.try(:position) %>
+          <% meta_items << t('3ilm.content_card.lesson_number', position: item.position) %>
+        <% end %>
+        
+        <% if show_category && item.try(:category) %>
+          <% meta_items << item.category %>
+        <% end %>
+        
+        <% if item.try(:lessons) %>
+          <% count = item.lessons.try(:published)&.count || item.lessons.count %>
+          <% meta_items << content_tag(:span, t('3ilm.content_card.lesson_count', count: count), class: "bg-background text-primary px-2 py-1 rounded") %>
+        <% end %>
+        
+        <%= safe_join(meta_items, content_tag(:span, " • ")) %>
+      </div>
+
+      <% if show_actions %>
+        <div class="flex items-center gap-2 <%= 'mt-1' if compact %>">
+          <% if item.try(:optimized_audio) || [:lesson, :lecture].include?(type) %>
+            <%= play_button(resource: item, klass: "btn btn-secondary btn-sm") do %>
+              <%= icon "play", class: "size-4 md:size-5" %>
+              <span class="sr-only"><%= t('3ilm.content_card.play') %></span>
+            <% end %>
+          <% end %>
+          
+          <% if item.try(:optimized_audio)&.attached? %>
+            <%= link_to(rails_blob_url(item.optimized_audio, disposition: "attachment"), 
+                        download: true, target: "_blank", 
+                        class: "btn btn-secondary btn-sm", title: t('3ilm.content_card.download')) do %>
+              <%= icon "arrow-down-tray", class: "size-4 md:size-5" %>
+            <% end %>
+          <% elsif type == :book %>
+            <button class="btn btn-secondary btn-sm" title="<%= t('3ilm.content_card.download') %>">
+              <%= icon "arrow-down-tray", class: "size-4 md:size-5" %>
+            </button>
+          <% end %>
+          
+          <button class="btn btn-secondary btn-sm"
+                  data-controller="clipboard"
+                  data-clipboard-text-value="<%= request.original_url %>"
+                  data-clipboard-success-message-value="<%= t('3ilm.content_card.copy_success') %>"
+                  data-clipboard-error-message-value="<%= t('3ilm.content_card.copy_error') %>"
+                  data-action="click->clipboard#copy"
+                  title="<%= t('3ilm.content_card.share') %>">
+            <%= icon "share", class: "size-4 md:size-5" %>
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,29 @@
+<% 
+  # Locals expected:
+  # - title: section title
+  # - icon: icon name (optional)
+  # - icon_library: icon library (default: "heroicons")
+  # - more_url: URL for "المزيد" link (optional)
+  # - more_text: text for more link (default: "المزيد")
+  
+  icon_library = local_assigns.fetch(:icon_library, "heroicons")
+  more_text = local_assigns.fetch(:more_text, "المزيد")
+%>
+
+<div class="flex items-center justify-between mb-6">
+  <div class="flex items-center gap-3">
+    <% if local_assigns[:icon] %>
+      <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+        <%= icon local_assigns[:icon], library: icon_library, class: "size-4 text-emerald-600" %>
+      </div>
+    <% end %>
+    <h2 class="text-xl font-bold text-gray-900"><%= title %></h2>
+  </div>
+  
+  <% if local_assigns[:more_url] %>
+    <%= link_to more_url, class: "text-emerald-600 hover:text-emerald-700 text-sm font-medium flex items-center gap-1 transition-colors" do %>
+      <span><%= more_text %></span>
+      <%= icon "chevron-left", class: "size-4" %>
+    <% end %>
+  <% end %>
+</div>

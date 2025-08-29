@@ -1,0 +1,73 @@
+<header class="bg-card shadow-md border-b border-background-contrast" data-controller="navigation" data-action="click@window->navigation#clickOutside">
+  <div class="bg-primary text-primary-contrast">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14 sm:h-16">
+      <%= link_to root_path, class: "flex items-center gap-2 sm:gap-3 flex-row-reverse h-auto cursor-pointer" do %>
+        <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="120" height="80" class="w-[100px] h-[60px] sm:w-[120px] sm:h-[80px] md:w-[150px] md:h-[100px] object-contain" />
+      <% end %>
+      
+      <div class="hidden md:flex flex-row-reverse gap-4 items-center">
+        <div class="flex items-center gap-2">
+          <%= link_to site_info[:youtube_url], class: "text-primary-contrast hover:opacity-80 transition-opacity cursor-pointer p-2 rounded-lg hover:bg-white/10" do %>
+            <%= icon "youtube", library: "lucide", class: "size-5" %>
+          <% end %>
+          <%= link_to site_info[:twitter_url], class: "text-primary-contrast hover:opacity-80 transition-opacity cursor-pointer p-2 rounded-lg hover:bg-white/10" do %>
+            <%= icon "twitter", library:"lucide", class: "size-5" %>
+          <% end %>
+        </div>
+        
+        <%= link_to search_path, class: "btn btn-secondary" do %>
+          <%= icon "magnifying-glass", class: "size-4" %>
+          <span><%= t('buttons.search_button') %></span>
+        <% end %>
+      </div>
+
+      <div class="flex md:hidden items-center flex-row-reverse gap-1">
+        <%= link_to site_info[:youtube_url], class: "text-primary-contrast hover:opacity-80 cursor-pointer p-2 rounded-lg hover:bg-white/10 min-h-[44px] min-w-[44px] flex items-center justify-center" do %>
+          <%= icon "youtube", library: "lucide", class: "size-5" %>
+        <% end %>
+        <%= link_to site_info[:twitter_url], class: "text-primary-contrast hover:opacity-80 cursor-pointer p-2 rounded-lg hover:bg-white/10 min-h-[44px] min-w-[44px] flex items-center justify-center" do %>
+          <%= icon "twitter", library:"lucide", class: "size-5" %>
+        <% end %>
+
+        <button data-action="click->navigation#toggleMobileMenu" class="md:hidden text-primary-contrast hover:opacity-80 focus:outline-none cursor-pointer p-2 rounded-lg hover:bg-white/10 min-h-[44px] min-w-[44px] flex items-center justify-center">
+          <%= icon "bars-3", class: "size-6"%>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <%# Main Navigation %>
+  <nav class="hidden md:flex bg-card border-b border-background-contrast py-3">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex gap-8 text-sm">
+      <%= link_to t('navigation.home'), root_path, class: "secondary-link font-medium" %>
+      <%= link_to t('navigation.scientific_series'), series_index_path, class: "secondary-link font-medium" %>
+      <%= link_to t('navigation.lectures'), lectures_path, class: "secondary-link font-medium" %>
+      <%= link_to t('navigation.books'), books_path, class: "secondary-link font-medium" %>
+      <%= link_to t('navigation.news'), news_index_path, class: "secondary-link font-medium" %>
+      <%= link_to t('navigation.fatwas'), fatwas_path, class: "secondary-link font-medium" %>
+      <%= link_to t('navigation.benefits'), benefits_path, class: "secondary-link font-medium" %>
+      <%= link_to t('navigation.about_sheikh'), about_path, class: "secondary-link font-medium" %>
+    </div>
+  </nav>
+
+  <%# Mobile Menu %>
+  <div data-navigation-target="menu" class="hidden md:hidden bg-card border-t border-background-contrast shadow-lg">
+    <div class="px-4 py-4 space-y-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
+      <%= link_to search_path, class: "btn btn-primary w-full text-center justify-center min-h-[48px]" do %>
+        <%= icon "magnifying-glass", class: "size-4" %>
+        <span><%= t('buttons.search_button') %></span>
+      <% end %>
+      
+      <div class="border-t border-background-contrast pt-4 space-y-1">
+        <%= link_to t('navigation.home'), root_path, class: "block py-3 px-2 secondary-link font-medium text-base rounded-lg hover:bg-background/50 transition-colors min-h-[48px] flex items-center" %>
+        <%= link_to t('navigation.scientific_series'), series_index_path, class: "block py-3 px-2 secondary-link font-medium text-base rounded-lg hover:bg-background/50 transition-colors min-h-[48px] flex items-center" %>
+        <%= link_to t('navigation.lectures'), lectures_path, class: "block py-3 px-2 secondary-link font-medium text-base rounded-lg hover:bg-background/50 transition-colors min-h-[48px] flex items-center" %>
+        <%= link_to t('navigation.books'), books_path, class: "block py-3 px-2 secondary-link font-medium text-base rounded-lg hover:bg-background/50 transition-colors min-h-[48px] flex items-center" %>
+        <%= link_to t('navigation.news'), news_index_path, class: "block py-3 px-2 secondary-link font-medium text-base rounded-lg hover:bg-background/50 transition-colors min-h-[48px] flex items-center" %>
+        <%= link_to t('navigation.fatwas'), fatwas_path, class: "block py-3 px-2 secondary-link font-medium text-base rounded-lg hover:bg-background/50 transition-colors min-h-[48px] flex items-center" %>
+        <%= link_to t('navigation.benefits'), benefits_path, class: "block py-3 px-2 secondary-link font-medium text-base rounded-lg hover:bg-background/50 transition-colors min-h-[48px] flex items-center" %>
+        <%= link_to t('navigation.about_sheikh'), about_path, class: "block py-3 px-2 secondary-link font-medium text-base rounded-lg hover:bg-background/50 transition-colors min-h-[48px] flex items-center" %>
+      </div>
+    </div>
+  </div>
+</header>

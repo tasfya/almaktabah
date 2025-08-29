@@ -1,0 +1,55 @@
+ar:
+  3ilm:
+    # Content Card Component
+    content_card:
+      series: "السلسلة:"
+      scholar: "الشيخ:"
+      author: "المؤلف:"
+      lesson_number: "الدرس %{position}"
+      lesson_count: "%{count} درس"
+      play: "تشغيل"
+      download: "تحميل"
+      share: "مشاركة"
+      copy_success: "تم النسخ بنجاح"
+      copy_error: "فشل في النسخ"
+
+    # Stats Card Component
+    stats:
+      title: "إحصائيات الموقع"
+      lesson: "درس"
+      lecture: "محاضرة"
+      book: "كتاب"
+      series: "سلسلة"
+      last_updated: "آخر تحديث: %{date}"
+
+    # Index Page Sections
+    index:
+      recent_lessons: "جديد الدروس"
+      recent_lectures: "جديد المحاضرات" 
+      recent_books: "جديد الكتب"
+      featured_series: "السلاسل المميزة"
+      
+      more_lessons: "المزيد من الدروس"
+      more_lectures: "المزيد من المحاضرات"
+      more_books: "المزيد من الكتب"
+      more_series: "المزيد من السلاسل"
+      
+      no_lessons: "لا توجد دروس متاحة حالياً"
+      no_lectures: "لا توجد محاضرات متاحة حالياً"
+      no_books: "لا توجد كتب متاحة حالياً"
+      no_series: "لا توجد سلاسل متاحة حالياً"
+
+    # Navigation & Categories
+    navigation:
+      categories_tree: "شجرة التصنيفات"
+      scientific_series: "السلاسل العلمية"
+      lectures: "المحاضرات"
+      books: "الكتب"
+      fatwas: "الفتاوى"
+
+    # Common Terms
+    common:
+      welcome: "مرحباً بكم"
+      site_stats: "إحصائيات الموقع"
+      browse_content: "تصفح المحتوى"
+      latest_content: "أحدث المحتوى"
