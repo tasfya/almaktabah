@@ -19,7 +19,6 @@ class Avo::Resources::Lesson < Avo::BaseResource
     filter  Avo::Filters::ScholarFilter
     filter  Avo::Filters::SeriesTitleFilter
     filter  Avo::Filters::PublishedFilter
-    filter  Avo::Filters::CategoryFilter
     filter  Avo::Filters::DateRangeFilter
   end
 
@@ -29,7 +28,6 @@ class Avo::Resources::Lesson < Avo::BaseResource
     field :title, as: :text, sortable: true, searchable: true
     field :description, as: :textarea, searchable: true
     field :content, as: :trix
-    field :category, as: :text, sortable: true, searchable: true
     field :published, as: :boolean, sortable: true
     field :published_at, as: :date_time, help: "The date and time when this lesson was published", hide_on: [ :new, :edit ], sortable: true
     field :youtube_url, as: :text, help: "YouTube URL for video lessons"

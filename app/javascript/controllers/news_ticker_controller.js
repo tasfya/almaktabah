@@ -8,7 +8,6 @@ export default class extends Controller {
   }
 
   connect() {
-    
     if (this.itemTargets.length === 0) return
     
     this.currentIndex = 0
@@ -26,19 +25,29 @@ export default class extends Controller {
   showCurrentItem() {
     this.itemTargets.forEach((item, index) => {
       if (index === this.currentIndex) {
-        item.style.display = 'flex'
+        item.classList.remove('hidden')
+        item.classList.add('flex')
       } else {
-        item.style.display = 'none'
+        item.classList.add('hidden')
+        item.classList.remove('flex')
       }
     })
   }
 
   nextItem() {
     if (this.itemTargets.length === 0) return
-    
-    this.itemTargets[this.currentIndex].style.display = 'none'
-    this.currentIndex = (this.currentIndex + 1) % this.itemTargets.length
-    this.itemTargets[this.currentIndex].style.display = 'flex'
+
+    this.nextIndex = (this.currentIndex + 1) % this.itemTargets.length
+    const nextElement = this.itemTargets[this.nextIndex]
+    const currentElement = this.itemTargets[this.currentIndex]
+
+    currentElement.classList.remove('flex')
+    currentElement.classList.add('hidden')
+
+    nextElement.classList.remove('hidden')
+    nextElement.classList.add('flex')
+
+    this.currentIndex = this.nextIndex
   }
 
   startAnimation() {

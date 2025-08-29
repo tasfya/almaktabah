@@ -2,7 +2,6 @@ class Lesson < ApplicationRecord
   include MediaHandler
   include Publishable
   include DomainAssignable
-  include ArabicSluggable
 
 
   belongs_to :series
@@ -19,7 +18,6 @@ class Lesson < ApplicationRecord
 
   # Scopes
   scope :recent, -> { order(published_at: :desc) }
-  scope :by_category, ->(category) { where(category: category) if category.present? }
   scope :by_series, ->(series_id) { where(series_id: series_id) if series_id.present? }
   scope :with_audio, -> { joins(:audio_attachment) }
   scope :without_audio, -> { where.missing(:audio_attachment) }
@@ -30,7 +28,7 @@ class Lesson < ApplicationRecord
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "category", "created_at", "description", "duration", "id", "published", "published_at", "series_id", "title", "updated_at" ]
+    [ "created_at", "description", "duration", "id", "published", "published_at", "series_id", "title", "updated_at" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
@@ -73,33 +71,8 @@ class Lesson < ApplicationRecord
     description
   end
 
-  def generate_bucket_key(prefix: nil)
-    series_slug = slugify_arabic_advanced(series.title)
-    scholar_slug = slugify_arabic_advanced(series.scholar.name)
-
-    ext = audio.attachment.blob.filename.extension
-    name = position ? position.to_s : slugify_arabic_advanced(title)
-
-    base_key = if prefix
-      "scholars/#{scholar_slug}/series/#{series_slug}/#{name}#{prefix}.#{ext}"
-    else
-      "scholars/#{scholar_slug}/series/#{series_slug}/#{name}.#{ext}"
-    end
-
-    ensure_unique_key(base_key)
-  end
-
-  private
-
-  def ensure_unique_key(key)
-    return key unless ActiveStorage::Blob.exists?(key: key)
-
-    counter = 1
-    loop do
-      name_part, dot, extension = key.rpartition(".")
-      new_key = "#{name_part}_#{counter}.#{extension}"
-      return new_key unless ActiveStorage::Blob.exists?(key: new_key)
-      counter += 1
-    end
+  def generate_optimize_audio_bucket_key
+    key = position? ? position : title
+    "all-audios/#{scholar.full_name}/series/#{series_title}/#{key}.mp3"
   end
 end

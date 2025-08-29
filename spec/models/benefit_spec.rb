@@ -76,54 +76,6 @@ RSpec.describe Benefit, type: :model do
         end
       end
     end
-
-    describe '#generate_bucket_key' do
-      let(:scholar) { create(:scholar, first_name: 'محمد', last_name: 'العثيمين') }
-      let(:benefit) { create(:benefit, :with_scholar, title: 'فائدة في الصلاة', scholar: scholar) }
-
-      before do
-        benefit.audio.attach(
-          io: StringIO.new("audio content"),
-          filename: "test.mp3",
-          content_type: "audio/mpeg"
-        )
-      end
-
-      it 'generates a structured bucket key' do
-        allow(benefit).to receive(:slugify_arabic_advanced).with('فائدة في الصلاة').and_return('فائدة-في-الصلاة')
-        allow(benefit).to receive(:slugify_arabic_advanced).with('محمد العثيمين').and_return('محمد-العثيمين')
-
-        bucket_key = benefit.generate_bucket_key
-        expect(bucket_key).to eq('scholars/محمد-العثيمين/benefits/فائدة-في-الصلاة.mp3')
-      end
-
-      it 'uses the audio file extension' do
-        benefit.audio.blob.update(filename: 'test.wav')
-        allow(benefit).to receive(:slugify_arabic_advanced).and_return('test-slug')
-
-        bucket_key = benefit.generate_bucket_key
-        expect(bucket_key).to end_with('.wav')
-      end
-
-      context 'when benefit has no scholar' do
-        let(:benefit_without_scholar) { create(:benefit, title: 'فائدة في الصلاة') }
-
-        before do
-          benefit_without_scholar.audio.attach(
-            io: StringIO.new("audio content"),
-            filename: "test.mp3",
-            content_type: "audio/mpeg"
-          )
-        end
-
-        it 'uses unknown-scholar as default' do
-          allow(benefit_without_scholar).to receive(:slugify_arabic_advanced).with('فائدة في الصلاة').and_return('فائدة-في-الصلاة')
-
-          bucket_key = benefit_without_scholar.generate_bucket_key
-          expect(bucket_key).to include('scholars/unknown-scholar/benefits/')
-        end
-      end
-    end
   end
 
   describe 'domain assignment' do

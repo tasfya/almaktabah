@@ -10,10 +10,6 @@ class SeriesController < ApplicationController
 
   def show
     @lessons = @series.lessons.for_domain_id(@domain.id).published.ordered_by_lesson_number
-    @related_series = Series.for_domain_id(@domain.id).published.by_category(@series.category)
-                           .where.not(id: @series.id)
-                           .recent
-                           .limit(4)
   end
 
   private

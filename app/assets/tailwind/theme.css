@@ -37,4 +37,7 @@
 
   --color-background-contrast: #e4e4e7;
   --color-background-contrast-text: #ffffff;
+
+  --color-breadcrumb: #f8fafc;
+  --color-breadcrumb-contrast: #1f2937;
 }

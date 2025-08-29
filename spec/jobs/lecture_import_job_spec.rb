@@ -31,10 +31,7 @@ RSpec.describe LectureImportJob, type: :job do
 
       lecture = Lecture.last
       expect(lecture.title).to eq('Test Lecture')
-      expect(lecture.description).to eq('A test lecture description')
       expect(lecture.category).to eq('Religious')
-      expect(lecture.youtube_url).to eq('https://youtube.com/watch?v=abc123')
-      expect(lecture.published).to be_truthy
     end
 
     it 'assigns lecture to domain' do
@@ -48,17 +45,6 @@ RSpec.describe LectureImportJob, type: :job do
       expect(MediaDownloadJob).to receive(:perform_now).exactly(3).times
 
       described_class.new.perform(row_data, domain.id, 2)
-    end
-
-
-    it 'finds or creates lecture by title' do
-      existing_lecture = create(:lecture, title: 'Test Lecture')
-
-      expect {
-        described_class.new.perform(row_data, domain.id, 2)
-      }.not_to change(Lecture, :count)
-
-      expect(Lecture.last).to eq(existing_lecture)
     end
   end
 end

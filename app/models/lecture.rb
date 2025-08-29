@@ -2,9 +2,9 @@ class Lecture < ApplicationRecord
   include MediaHandler
   include DomainAssignable
   include Publishable
-  include ArabicSluggable
 
-  enum :kind, { sermon: 1, conference: 2 }
+  enum :kind, { seremon: 1, conference: 2, benefit: 3 }
+
   validates :title, presence: true
   validates :source_url, uniqueness: true, allow_blank: true
 
@@ -46,31 +46,7 @@ class Lecture < ApplicationRecord
     Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
   end
 
-  def generate_bucket_key(prefix: nil)
-    slug = slugify_arabic_advanced(title)
-    scholar_slug = slugify_arabic_advanced(scholar.name)
-    ext = audio.attachment.blob.filename.extension
-
-    base_key = if prefix
-      "scholars/#{scholar_slug}/lectures/#{kind}/#{slug}#{prefix}.#{ext}"
-    else
-      "scholars/#{scholar_slug}/lectures/#{kind}/#{slug}.#{ext}"
-    end
-
-    ensure_unique_key(base_key)
-  end
-
-  private
-
-  def ensure_unique_key(key)
-    return key unless ActiveStorage::Blob.exists?(key: key)
-
-    counter = 1
-    loop do
-      name_part, dot, extension = key.rpartition(".")
-      new_key = "#{name_part}_#{counter}.#{extension}"
-      return new_key unless ActiveStorage::Blob.exists?(key: new_key)
-      counter += 1
-    end
+  def generate_optimize_audio_bucket_key
+    "all-audios/#{scholar.name}/lectures/#{kind}/#{title}.mp3"
   end
 end

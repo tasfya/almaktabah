@@ -7,7 +7,7 @@ FactoryBot.define do
     scholar { association(:scholar) }
 
     trait :with_lessons do
-      lessons { build_list(:lesson, 5) }
+      lessons { create_list(:lesson, 5) }
     end
 
     transient do

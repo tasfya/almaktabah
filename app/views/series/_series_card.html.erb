@@ -3,7 +3,7 @@
     <%= series.title %>
   </h3>
   <span class="inline-flex items-center gap-2 text-sm ">
-    <%= pluralize(series.lessons.count, 'درس') %>
+    <%= pluralize(series.lessons.for_domain_id(@domain.id).count, 'درس') %>
     <%= icon "book-open", class: "size-5 text-primary-500" %>
   </span>
   <p class="text-sm mb-4"><%= truncate(series.description, length: 150) %></p>
