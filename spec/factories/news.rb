@@ -16,6 +16,10 @@ FactoryBot.define do
       end
     end
 
+    trait :published do
+      published { true }
+    end
+
     trait :without_domain do
       assign_domain { false }
     end

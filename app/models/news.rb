@@ -26,6 +26,18 @@ class News < ApplicationRecord
     []
   end
 
+  def as_json(options = {})
+    {
+      id: id,
+      title: title,
+      description: description,
+      slug: slug,
+      published_at: published_at,
+      content_excerpt: content.to_plain_text.truncate(200),
+      thumbnail_url: thumbnail.attached? ? Rails.application.routes.url_helpers.rails_blob_url(thumbnail, only_path: true) : nil
+    }
+  end
+
   private
 
   def generate_slug
