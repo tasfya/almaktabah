@@ -23,6 +23,7 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :content, as: :trix
     field :published, as: :boolean, sortable: true
     field :scholar, as: :belongs_to, sortable: true, searchable: true
+    field :kind, as: :select, options: { sermon: "Sermon", conference: "Conference" }, sortable: true
     field :youtube_url, as: :text, help: "YouTube URL for video lessons"
     field :video_url, as: :text, help: "URL for video lessons"
     field :published_at, as: :date_time, help: "The date and time when this lecture was published", hide_on: [ :new, :edit ], sortable: true
