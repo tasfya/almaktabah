@@ -151,7 +151,7 @@ RSpec.describe "Benefits API", type: :request do
     end
 
     context "with media attachments" do
-      let!(:benefit_with_attachments) { create(:benefit, published: true, scholar: scholar) }
+      let!(:benefit_with_attachments) { create(:benefit, :with_video, published: true, scholar: scholar) }
 
       before do
         benefit_with_attachments.assign_to(domain)
