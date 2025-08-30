@@ -18,4 +18,18 @@ class Series < ApplicationRecord
     def self.ransackable_associations(auth_object = nil)
         [ "lessons", "scholar" ]
     end
-end
+
+    def as_json(options = {})
+      {
+        id: id,
+        title: title,
+        description: description,
+        category: category,
+        published: published,
+        published_at: published_at,
+        scholar: scholar.present? ? { id: scholar.id, name: scholar.name } : nil,
+        explainable_url: explainable.attached? ? Rails.application.routes.url_helpers.rails_blob_url(explainable, only_path: true) : nil,
+        lessons_count: lessons.count
+      }
+    end
+  end
