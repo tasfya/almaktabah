@@ -158,7 +158,7 @@ RSpec.describe "Lessons API", type: :request do
     end
 
     context "with media attachments" do
-      let!(:lesson_with_attachments) { create(:lesson, published: true, series: series) }
+      let!(:lesson_with_attachments) { create(:lesson, :with_video, published: true, series: series) }
 
       before do
         lesson_with_attachments.assign_to(domain)
