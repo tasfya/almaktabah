@@ -3,7 +3,7 @@ class Lecture < ApplicationRecord
   include DomainAssignable
   include Publishable
 
-  enum :kind, { seremon: 1, conference: 2, benefit: 3 }
+  enum :kind, { sermon: 1, conference: 2, benefit: 3 }
 
   validates :title, presence: true
   validates :source_url, uniqueness: true, allow_blank: true

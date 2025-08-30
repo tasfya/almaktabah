@@ -7,7 +7,7 @@ RSpec.describe "Lectures API", type: :request do
 
   describe "GET /lectures.json" do
     context "with published lectures" do
-      let!(:lecture1) { create(:lecture, published: true, scholar: scholar, kind: :seremon) }
+      let!(:lecture1) { create(:lecture, published: true, scholar: scholar, kind: :sermon) }
       let!(:lecture2) { create(:lecture, published: true, scholar: scholar, kind: :conference) }
 
       before do
@@ -60,7 +60,7 @@ RSpec.describe "Lectures API", type: :request do
         json_response = JSON.parse(response.body)
 
         kinds = json_response.map { |l| l["kind"] }
-        expect(kinds).to include("seremon")
+        expect(kinds).to include("sermon")
         expect(kinds).to include("conference")
       end
     end
@@ -179,12 +179,12 @@ RSpec.describe "Lectures API", type: :request do
     end
 
     context "with different kinds" do
-      let!(:seremon_lecture) { create(:lecture, published: true, scholar: scholar, kind: :seremon) }
+      let!(:sermon_lecture) { create(:lecture, published: true, scholar: scholar, kind: :sermon) }
       let!(:conference_lecture) { create(:lecture, published: true, scholar: scholar, kind: :conference) }
       let!(:benefit_lecture) { create(:lecture, published: true, scholar: scholar, kind: :benefit) }
 
       before do
-        seremon_lecture.assign_to(domain)
+        sermon_lecture.assign_to(domain)
         conference_lecture.assign_to(domain)
         benefit_lecture.assign_to(domain)
         host! "localhost"
@@ -196,7 +196,7 @@ RSpec.describe "Lectures API", type: :request do
 
         expect(json_response.length).to eq(3)
         kinds = json_response.map { |l| l["kind"] }
-        expect(kinds).to include("seremon")
+        expect(kinds).to include("sermon")
         expect(kinds).to include("conference")
         expect(kinds).to include("benefit")
       end
