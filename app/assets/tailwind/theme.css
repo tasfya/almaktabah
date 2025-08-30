@@ -4,13 +4,6 @@
   --font-title: "Noto Kufi Arabic", var(--font-fallback);
   --font-sans: DroidNask, "Noto Kufi Arabic", var(--font-fallback);
 
-  --color-primary: #111827;
-  --color-primary-contrast: #dbdcde;
-  --color-primary-hover: #111827;
-  --color-secondary: #ffffff;
-  --color-secondary-contrast: #0a0a0a;
-  --color-secondary-hover: #f1f5f9;
-
   --color-primary-link: #ffffff;
   --color-primary-link-hover: #ffffff;
   --color-primary-link-active: #ffffff;
@@ -40,4 +33,42 @@
 
   --color-breadcrumb: #f8fafc;
   --color-breadcrumb-contrast: #1f2937;
+}
+
+@plugin "./daisyui.js" {
+  themes: bumblebee --default;
+}
+@plugin "./daisyui-theme.js" {
+  name: "bumblebee";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(97% 0 0);
+  --color-base-300: oklch(92% 0 0);
+  --color-base-content: oklch(20% 0 0);
+  --color-primary: oklch(14% 0.005 285.823);
+  --color-primary-content: oklch(92% 0.003 48.717);
+  --color-secondary: oklch(100% 0 0);
+  --color-secondary-content: oklch(14% 0.005 285.823);
+  --color-accent: oklch(0% 0 0);
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: oklch(37% 0.01 67.558);
+  --color-neutral-content: oklch(92% 0.003 48.717);
+  --color-info: oklch(74% 0.16 232.661);
+  --color-info-content: oklch(39% 0.09 240.876);
+  --color-success: oklch(76% 0.177 163.223);
+  --color-success-content: oklch(37% 0.077 168.94);
+  --color-warning: oklch(82% 0.189 84.429);
+  --color-warning-content: oklch(41% 0.112 45.904);
+  --color-error: oklch(70% 0.191 22.216);
+  --color-error-content: oklch(39% 0.141 25.723);
+  --radius-selector: 2rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
 }
