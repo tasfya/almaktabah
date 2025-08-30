@@ -37,7 +37,7 @@ bin/rake users:list_admins
 
 ## Styling Framework
 
-This application uses **Tailwind CSS 4** with **daisyUI** for styling and UI components. Propshaft will automatically handle the asset pipeline for these files. If the changes are not reflected, remove the assets folder `rm -rf public/assets/`.
+This application uses **Tailwind CSS 4** with **daisyUI** for styling and UI components. Propshaft will automatically handle the asset pipeline for these files. If the changes are not reflected, run `bin/rails assets:clobber` to clear compiled assets.
 
 ### Upgrading daisyUI
 
