@@ -32,4 +32,4 @@ class Series < ApplicationRecord
         lessons_count: lessons.count
       }
     end
-  end
+end
