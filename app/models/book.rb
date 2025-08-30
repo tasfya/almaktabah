@@ -22,4 +22,21 @@ class Book < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     [ "author" ]
   end
+
+  def as_json(options = {})
+    {
+      id: id,
+      title: title,
+      description: description,
+      category: category,
+      published_at: published_at,
+      downloads: downloads,
+      author: {
+        id: author.id,
+        name: author.name
+      },
+      file_url: file.attached? ? Rails.application.routes.url_helpers.rails_blob_url(file, only_path: true) : nil,
+      cover_image_url: cover_image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(cover_image, only_path: true) : nil
+    }
+  end
 end

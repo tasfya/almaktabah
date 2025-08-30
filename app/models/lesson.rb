@@ -76,4 +76,23 @@ class Lesson < ApplicationRecord
     key = position? ? position : title
     "all-audios/#{scholar.full_name}/series/#{series_title}/#{key}.mp3"
   end
+
+  def as_json(options = {})
+    {
+      id: id,
+      title: title,
+      description: description,
+      position: position,
+      published_at: published_at,
+      duration: duration,
+      series: {
+        id: series.id,
+        title: series.title
+      },
+      scholar_name: scholar.name,
+      thumbnail_url: thumbnail.attached? ? Rails.application.routes.url_helpers.rails_blob_url(thumbnail, only_path: true) : nil,
+      audio_url: audio.attached? ? Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true) : nil,
+      video_url: video.attached? ? Rails.application.routes.url_helpers.rails_blob_url(video, only_path: true) : nil
+    }
+  end
 end

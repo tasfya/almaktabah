@@ -8,6 +8,7 @@ FactoryBot.define do
     content { Faker::Lorem.paragraphs(number: 3).join("\n\n") }
     audio { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
     thumbnail { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'thumbnail.jpg'), 'image/jpeg') }
+    video { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'test_video.mp4'), 'video/mp4') }
     scholar { association(:scholar) }
 
     trait :with_scholar do
@@ -24,6 +25,16 @@ FactoryBot.define do
 
     trait :without_thumbnail do
       thumbnail { nil }
+    end
+
+    trait :published do
+      published { true }
+    end
+
+    trait :without_domain do
+      after(:create) do |benefit|
+        benefit.domains = []
+      end
     end
 
     after(:create) do |benefit|

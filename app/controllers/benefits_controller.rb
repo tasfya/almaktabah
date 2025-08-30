@@ -6,6 +6,11 @@ class BenefitsController < ApplicationController
   def index
     @q = Benefit.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
     @pagy, @benefits = pagy(@q.result(distinct: true), limit: 12)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @benefits }
+    end
   end
 
   def show; end

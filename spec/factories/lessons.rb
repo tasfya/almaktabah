@@ -17,6 +17,12 @@ FactoryBot.define do
             audio { nil }
         end
 
+        trait :without_domain do
+            after(:create) do |lesson|
+                lesson.domains = []
+            end
+        end
+
         after(:create) do |lesson|
             lesson.domains = [ Domain.find_or_create_by(host: "localhost") ]
         end
