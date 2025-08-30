@@ -136,7 +136,6 @@ RSpec.describe "News API", type: :request do
       end
     end
 
-
     context "with thumbnail attachment" do
       let!(:news_with_thumbnail) { create(:news, published: true) }
 

@@ -139,7 +139,6 @@ RSpec.describe "Series API", type: :request do
       end
     end
 
-
     context "with ordering by published_at" do
       let!(:older_series) { create(:series, published: true, scholar: scholar, published_at: 2.days.ago) }
       let!(:newer_series) { create(:series, published: true, scholar: scholar, published_at: 1.day.ago) }
