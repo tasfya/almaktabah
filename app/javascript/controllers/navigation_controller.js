@@ -23,9 +23,8 @@ export default class extends Controller {
     this.menuTarget.classList.remove("hidden");
     this.menuTarget.classList.add("block");
     this.menuButtonTarget.setAttribute("aria-expanded", "true");
-    if (this.hasOverlayTarget) {
-      this.overlayTarget.classList.remove("hidden");
-    }
+
+    this.overlayTarget.classList.remove("hidden");
     document.body.classList.add("overflow-hidden");
   }
 
@@ -34,9 +33,7 @@ export default class extends Controller {
     this.menuTarget.classList.add("hidden");
     this.menuTarget.classList.remove("block");
     this.menuButtonTarget.setAttribute("aria-expanded", "false");
-    if (this.hasOverlayTarget) {
-      this.overlayTarget.classList.add("hidden");
-    }
+    this.overlayTarget.classList.add("hidden");
     document.body.classList.remove("overflow-hidden");
   }
 
@@ -52,11 +49,7 @@ export default class extends Controller {
 
   // Close menus when clicking outside
   clickOutside(event) {
-    if (
-      this.menuOpen &&
-      this.hasOverlayTarget &&
-      event.target === this.overlayTarget
-    ) {
+    if (this.menuOpen && event.target === this.overlayTarget) {
       this.closeMobileMenu();
     }
   }
