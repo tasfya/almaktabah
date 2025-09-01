@@ -1,7 +1,5 @@
 class HomeController < ApplicationController
   def index
-    @recent_news = News.for_domain_id(@domain.id).published.recent.limit(3)
-
     @featured_series = Series.for_domain_id(@domain.id).published.recent.first
     @top_series = Series.for_domain_id(@domain.id).published.recent.limit(5)
     @top_lectures = Lecture.for_domain_id(@domain.id).published.recent.limit(10)

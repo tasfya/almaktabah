@@ -2,19 +2,17 @@
 
 <%= render partial: "featured_series", locals: { series: @featured_series } if @featured_series.present? %>
 
-<div class="mobile-section">
-  <div class="container mx-auto">
-    
-    <% if @top_series.any? %>
-      <section class="mb-4 sm:mb-6 lg:mb-8">
-        <div class="bg-background border border-background-contrast rounded-lg shadow-sm mobile-card">
-          <div class="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
-            <h2 class="text-2xl font-bold"><%= t('navigation.series') %></h2>
-            <%= link_to series_index_path, class: "btn btn-outline btn-xs sm:btn-sm" do %>
-              عرض الكل
-              <%= icon "arrow-left", class: "size-3 sm:size-4" %>
-            <% end %>
-          </div>
+<div class="container mx-auto">
+  <% if @top_series.any? %>
+    <section class="mb-4 sm:mb-6 lg:mb-8">
+      <div class="mobile-card">
+        <div class="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
+          <h2 class="text-2xl font-bold"><%= t('navigation.series') %></h2>
+          <%= link_to series_index_path, class: "btn btn-outline btn-xs sm:btn-sm" do %>
+            عرض الكل
+            <%= icon "arrow-left", class: "size-3 sm:size-4" %>
+          <% end %>
+        </div>
           
           <div class="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 mobile-gap">
             <% @top_series.each do |series| %>
@@ -27,69 +25,26 @@
       </section>
     <% end %>
 
-    <% if @top_lectures.any? %>
-      <section class="mb-4 sm:mb-6 lg:mb-8">
-        <div class="bg-background border border-background-contrast rounded-lg shadow-sm mobile-card">
-          <div class="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
-            <h2 class="text-2xl font-bold"><%= t('navigation.lectures') %></h2>
-            <%= link_to lectures_path, class: "btn btn-outline btn-xs sm:btn-sm" do %>
-              عرض الكل
-              <%= icon "arrow-left", class: "size-3 sm:size-4" %>
-            <% end %>
-          </div>
-          
-          <div class="bg-card rounded-lg shadow overflow-hidden">
-            <div class="divide-y divide-background-contrast">
-              <% @top_lectures.each_with_index do |lecture, index| %>
-                <%= render "shared/playlist_card", resource: lecture, with_icon: false, index: index %>
+      <% if @top_lectures.any? %>
+        <section class="mb-4 sm:mb-6 lg:mb-8">
+          <div class="mobile-card">
+            <div class="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
+              <h2 class="text-2xl font-bold"><%= t('navigation.lectures') %></h2>
+              <%= link_to lectures_path, class: "btn btn-outline btn-xs sm:btn-sm" do %>
+                عرض الكل
+                <%= icon "arrow-left", class: "size-3 sm:size-4" %>
               <% end %>
             </div>
-          </div>
-        </div>
-      </section>
-    <% end %>
-
-    <% if @recent_news.any? %>
-      <section class="mb-4 sm:mb-6 lg:mb-8">
-        <div class="bg-background border border-background-contrast rounded-lg shadow-sm mobile-card">
-          <div class="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
-            <h2 class="text-2xl font-bold"><%= t('navigation.recent_news') %></h2>
-            <%= link_to news_index_path, class: "btn btn-outline btn-xs sm:btn-sm" do %>
-              عرض الكل
-            <% end %>
-          </div>
-          
-          <div class="space-y-3">
-            <% @recent_news.each do |news_item| %>
-              <div class="border border-background-contrast rounded-lg mobile-card bg-card hover:shadow-md transition-shadow">
-                <div class="flex flex-col sm:flex-row mobile-gap">
-                  <% if news_item.thumbnail.present? %>
-                    <div class="w-full sm:w-20 h-32 sm:h-16 flex-shrink-0">
-                      <%= image_tag news_item.thumbnail, class: "w-full h-full object-cover rounded sm:rounded-md" %>
-                    </div>
-                  <% end %>
-                  <div class="flex-1 min-w-0">
-                    <h3 class="font-medium text-sm sm:text-base mb-1 line-clamp-2">
-                      <%= link_to news_item.title, news_path(news_item), class: "hover:text-primary" %>
-                    </h3>
-                    <p class="text-xs sm:text-sm text-gray-600 line-clamp-2 mb-2">
-                      <%= truncate(news_item.description, length: 80) if news_item.respond_to?(:description) %>
-                    </p>
-                    <div class="flex items-center justify-between">
-                      <span class="text-xs text-gray-500">
-                        <%= time_ago_in_words(news_item.created_at) %>
-                      </span>
-                      <%= link_to news_path(news_item), class: "btn btn-outline btn-xs" do %>
-                        <%= t('buttons.read_more') %>
-                      <% end %>
-                    </div>
-                  </div>
-                </div>
+            
+            <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
+              <div class="divide-y divide-gray-100">
+                <% @top_lectures.each_with_index do |lecture, index| %>
+                  <%= render "shared/playlist_card", resource: lecture, with_icon: false, index: index %>
+                <% end %>
               </div>
-            <% end %>
+            </div>
           </div>
-        </div>
-      </section>
-    <% end %>
-  </div>
+        </section>
+      <% end %>
+
 </div>
