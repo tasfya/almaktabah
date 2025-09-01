@@ -20,7 +20,6 @@ export default class extends Controller {
     this.menuOpen = true;
     this.menuTarget.classList.remove("hidden");
     this.menuTarget.classList.add("block");
-    this.menuTarget.setAttribute("aria-hidden", "false");
     this.menuButtonTarget.setAttribute("aria-expanded", "true");
     if (this.hasOverlayTarget) {
       this.overlayTarget.classList.remove("hidden");
@@ -32,7 +31,6 @@ export default class extends Controller {
     this.menuOpen = false;
     this.menuTarget.classList.add("hidden");
     this.menuTarget.classList.remove("block");
-    this.menuTarget.setAttribute("aria-hidden", "true");
     this.menuButtonTarget.setAttribute("aria-expanded", "false");
     if (this.hasOverlayTarget) {
       this.overlayTarget.classList.add("hidden");
