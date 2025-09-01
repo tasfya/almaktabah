@@ -14,10 +14,10 @@
           <span><%= t('buttons.search_button') %></span>
         <% end %>
         <div class="flex items-center gap-2">
-          <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm p-2", target: "_blank" do %>
+          <%= link_to site_info[:youtube_url], class: "link link-hover p-2", target: "_blank" do %>
             <%= icon "youtube", library: "lucide", class: "size-5" %>
           <% end %>
-          <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm p-2", target: "_blank" do %>
+          <%= link_to site_info[:twitter_url], class: "link link-hover p-2", target: "_blank" do %>
             <%= icon "twitter", library: "lucide", class: "size-5" %>
           <% end %>
         </div>
@@ -25,10 +25,10 @@
       
       <!-- Mobile Social Links Only -->
       <div class="flex md:hidden items-center gap-2">
-        <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm p-2", target: "_blank" do %>
+        <%= link_to site_info[:youtube_url], class: "link link-hover p-2", target: "_blank" do %>
           <%= icon "youtube", library: "lucide", class: "size-5" %>
         <% end %>
-        <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm p-2", target: "_blank" do %>
+        <%= link_to site_info[:twitter_url], class: "link link-hover p-2", target: "_blank" do %>
           <%= icon "twitter", library: "lucide", class: "size-5" %>
         <% end %>
       </div>
