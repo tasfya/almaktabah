@@ -6,6 +6,8 @@ export default class extends Controller {
 
   connect() {
     this.menuOpen = false;
+    this._onKeydown = this._onKeydown.bind(this);
+    document.addEventListener("keydown", this._onKeydown);
   }
 
   toggleMobileMenu() {
@@ -38,6 +40,16 @@ export default class extends Controller {
     document.body.classList.remove("overflow-hidden");
   }
 
+  _onKeydown(event) {
+    if (event.key === "Escape" && this.menuOpen) {
+      if (!this.menuOpen) return;
+      if (e.key === "Escape" || e.key === "Esc") {
+        this.closeMobileMenu();
+        this.menuButtonTarget.focus();
+      }
+    }
+  }
+
   // Close menus when clicking outside
   clickOutside(event) {
     if (
@@ -46,6 +58,13 @@ export default class extends Controller {
       event.target === this.overlayTarget
     ) {
       this.closeMobileMenu();
+    }
+  }
+
+  disconnect() {
+    document.removeEventListener("keydown", this._onKeydown);
+    if (this.menuOpen) {
+      document.body.classList.remove("overflow-hidden");
     }
   }
 }
