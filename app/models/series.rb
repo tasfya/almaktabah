@@ -1,4 +1,5 @@
 class Series < ApplicationRecord
+    include UniversalSlug
     include Publishable
     include DomainAssignable
 
