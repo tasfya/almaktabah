@@ -46,10 +46,23 @@ class Lecture < ApplicationRecord
     Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
   end
 
+  ##
+  # Builds the storage key used for the optimized audio file for this lecture.
+  # The returned key follows the format: "all-audios/{scholar.name}/lectures/{kind}/{title}.mp3".
+  # @return [String] The generated bucket/key path for the lecture's optimized audio.
   def generate_optimize_audio_bucket_key
     "all-audios/#{scholar.name}/lectures/#{kind}/#{title}.mp3"
   end
 
+  ##
+  # Serializes the Lecture to a simple Hash suitable for JSON responses.
+  #
+  # Returns a hash with core attributes (id, title, description, category, kind, published_at, duration),
+  # a nested scholar object (id and name), and media URL fields (thumbnail_url, audio_url, video_url).
+  # Media URL values are the Rails blob path (only_path: true) when the corresponding Active Storage
+  # attachment is present, otherwise nil.
+  # @param [Hash] options (unused) Serialization options (accepted for compatibility but not applied).
+  # @return [Hash] A JSON-ready representation of the lecture.
   def as_json(options = {})
     {
       id: id,

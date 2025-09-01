@@ -25,10 +25,29 @@ class Benefit < ApplicationRecord
     [ "scholar" ]
   end
 
+  ##
+  # Builds the storage bucket key for the optimized audio file for this benefit.
+  # The key is formed from the scholar's full name and the benefit title, e.g.
+  # "all-audios/Scholar Name/benefits/Benefit Title.mp3".
+  # @return [String] The bucket key for the optimized audio file.
+  # @raise [NoMethodError] If `scholar` is nil (the method calls `scholar.full_name`).
   def generate_optimize_audio_bucket_key
     "all-audios/#{scholar.full_name}/benefits/#{title}.mp3"
   end
 
+  ##
+  # Returns a JSON-ready Hash representation of the Benefit suitable for API responses.
+  #
+  # The hash includes top-level attributes (id, title, description, category, published_at, duration),
+  # a minimal scholar object ({ id, name }) when a scholar is present, and URLs for attached media
+  # (thumbnail_url, audio_url, video_url) only when the corresponding ActiveStorage attachment exists.
+  # content_excerpt contains the plain-text content truncated to 200 characters.
+  #
+  # The optional `options` parameter is accepted for compatibility with callers that pass serialization
+  # options but is not used by this implementation.
+  #
+  # @param [Hash] options - (optional) compatibility parameter; currently ignored.
+  # @return [Hash] JSON-serializable representation of the Benefit.
   def as_json(options = {})
     {
       id: id,
@@ -47,7 +66,11 @@ class Benefit < ApplicationRecord
 
   private
 
-  def set_duration
+  ##
+    # Enqueues a background job to extract and persist this benefit's media duration.
+    # Schedules MediaDurationExtractionJob.perform_later(self) so duration extraction runs asynchronously;
+    # intended to be invoked from an after_commit callback (e.g., on create/update).
+    def set_duration
     MediaDurationExtractionJob.perform_later(self)
     end
 end

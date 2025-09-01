@@ -19,6 +19,11 @@ class Series < ApplicationRecord
         [ "lessons", "scholar" ]
     end
 
+    ##
+    # Returns a compact JSON-ready hash representation of the Series.
+    # Includes core attributes, nested scholar info when present, a relative URL for the attached `explainable` blob (or nil), and a count of associated lessons.
+    # @param [Hash] options - Unused; accepted for compatibility with ActiveModel#as_json.
+    # @return [Hash] A hash with keys :id, :title, :description, :category, :published, :published_at, :scholar, :explainable_url, and :lessons_count.
     def as_json(options = {})
       {
         id: id,

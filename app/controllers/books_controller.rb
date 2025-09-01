@@ -3,6 +3,13 @@ class BooksController < ApplicationController
   before_action :set_book, only: [ :show ]
   before_action :setup_books_breadcrumbs
 
+  ##
+  # Lists books for the current domain with search and pagination.
+  #
+  # Builds a domain-scoped, published Book search (Ransack), eager-loads authors,
+  # and paginates results (12 per page). Exposes @q (Ransack search), @pagy
+  # (pagination metadata) and @books (paged result set). Responds to HTML (default)
+  # and JSON (renders @books as JSON).
   def index
     @q = Book.for_domain_id(@domain.id).published.includes(:author).ransack(params[:q])
     @pagy, @books = pagy(@q.result(distinct: true), limit: 12)
@@ -13,6 +20,12 @@ class BooksController < ApplicationController
     end
   end
 
+  ##
+  # Displays the requested book and prepares related books for the view.
+  #
+  # Sets @related_books to up to four published books in the same category as
+  # the current book, scoped to the controller's domain, excluding the current
+  # book and ordered by recency.
   def show
     @related_books = Book.for_domain_id(@domain.id)
                          .published.by_category(@book.category)

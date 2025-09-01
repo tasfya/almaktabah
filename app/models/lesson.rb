@@ -71,11 +71,26 @@ class Lesson < ApplicationRecord
     description
   end
 
+  ##
+  # Builds a storage bucket key for the lesson's optimized audio file.
+  # Uses the lesson's `position` if present, otherwise falls back to the lesson `title`,
+  # and embeds the scholar's full name and series title into the path.
+  # @return [String] A relative bucket key like `"all-audios/Scholar Name/series/Series Title/<position|title>.mp3"`.
   def generate_optimize_audio_bucket_key
     key = position? ? position : title
     "all-audios/#{scholar.full_name}/series/#{series_title}/#{key}.mp3"
   end
 
+  ##
+  # Return a JSON-serializable Hash representation of the lesson.
+  #
+  # The hash includes basic attributes (id, title, description, position, published_at, duration),
+  # a nested `series` object with its `id` and `title`, the `scholar_name`, and media URL fields
+  # (`thumbnail_url`, `audio_url`, `video_url`). Media URL fields are `nil` when the corresponding
+  # attachment is not present; when present they are generated with `rails_blob_url(..., only_path: true)`.
+  #
+  # @param [Hash] options - Optional serialization options (currently ignored).
+  # @return [Hash] A Hash suitable for JSON serialization containing the lesson's public representation.
   def as_json(options = {})
     {
       id: id,

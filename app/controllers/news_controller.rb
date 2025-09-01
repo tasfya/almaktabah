@@ -3,6 +3,18 @@ class NewsController < ApplicationController
   before_action :set_news, only: [ :show ]
   before_action :setup_news_breadcrumbs
 
+  ##
+  # Prepares a paginated, domain-scoped list of published news for the index view.
+  #
+  # Builds a Ransack search object scoped to the current domain and published items,
+  # ordered by `published_at` descending, sets `@pagy` and `@news` for pagination,
+  # and responds to HTML and JSON (JSON renders the `@news` collection).
+  # The search parameters are taken from `params[:q]`.
+  #
+  # Instance variables set:
+  # - @q    : Ransack search object
+  # - @pagy : Pagination metadata
+  # - @news : Paginated collection of news records
   def index
     @q = News.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
     @pagy, @news = pagy(@q.result(distinct: true), limit: 12)
@@ -13,6 +25,12 @@ class NewsController < ApplicationController
     end
   end
 
+  ##
+  # Renders the news show view for a single news item.
+  #
+  # Relies on the before_action `set_news` to load `@news` (by slug or numeric id) and
+  # `setup_news_breadcrumbs` to add appropriate breadcrumbs; the action itself only
+  # renders the default `show` template (or responds with the configured formats).
   def show
   end
 

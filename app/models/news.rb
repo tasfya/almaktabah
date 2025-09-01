@@ -26,6 +26,11 @@ class News < ApplicationRecord
     []
   end
 
+  ##
+  # Returns a JSON-serializable Hash representation of the News record.
+  # Includes: id, title, description, slug, published_at, a 200-character plain-text excerpt of `content`, and `thumbnail_url` (only_path URL when a thumbnail is attached, otherwise `nil`).
+  # @param [Hash] options - Optional serialization options (accepted for API compatibility but currently ignored).
+  # @return [Hash] The serialized attributes suitable for `to_json`.
   def as_json(options = {})
     {
       id: id,
@@ -40,6 +45,20 @@ class News < ApplicationRecord
 
   private
 
+  ##
+  # Generates and assigns a URL-safe, unique slug for the record based on its title.
+  #
+  # The slug is created by trimming whitespace, replacing internal spaces with dashes,
+  # and removing characters except Arabic letters, word characters, and dashes.
+  # If that produces an empty string, the method falls back to the first eight characters
+  # of the MD5 digest of the title.
+  #
+  # The resulting slug is assigned to `self.slug`. If another News record already uses
+  # the same slug, a numeric suffix (`-1`, `-2`, ...) is appended and incremented until
+  # a unique slug is found (excluding the current record).
+  #
+  # This method is intended to be run before validation when `slug` is blank and `title`
+  # is present.
   def generate_slug
     base_slug = title.to_s.strip.gsub(/\s+/, "-").gsub(/[^\p{Arabic}\w\-]/, "") # Keep Arabic, Latin, numbers, dashes
     base_slug = base_slug.presence || Digest::MD5.hexdigest(title.to_s)[0..7]   # Fallback if empty

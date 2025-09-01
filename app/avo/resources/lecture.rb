@@ -15,6 +15,15 @@ class Avo::Resources::Lecture < Avo::BaseResource
     filter Avo::Filters::DateRangeFilter
   end
 
+  ##
+  # Defines the fields and their admin UI configuration for the Lecture resource in Avo.
+  # This method registers each attribute shown in the admin (types, sorting/searchability, visibility, file constraints, and select options).
+  # Notable configurations:
+  # - :kind is a select with options { sermon: "Sermon", conference: "Conference" }.
+  # - :published_at and timestamp fields are hidden on new/edit and are sortable.
+  # - :optimized_audio is readonly and hidden on new/edit.
+  # - File fields specify accepted MIME types and maximum sizes (thumbnail: image/*, 5 MB; audio/optimized_audio: audio/*, 10 MB; video: video/*, 100 MB).
+  # - Several fields are marked searchable or sortable to control list/search behavior in the admin interface.
   def fields
     field :id, as: :id, sortable: true
     field :title, as: :text, sortable: true, searchable: true

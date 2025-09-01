@@ -23,6 +23,16 @@ class Book < ApplicationRecord
     [ "author" ]
   end
 
+  ##
+  # Returns a Hash representation of the Book suitable for JSON serialization.
+  #
+  # Includes basic attributes (id, title, description, category, published_at, downloads),
+  # a nested `author` object containing the author's `id` and `name`, and attachment URLs
+  # for `file` and `cover_image` when those attachments are present.
+  #
+  # @param [Hash] options (unused) Optional options hash for compatibility with callers that pass options.
+  # @return [Hash] The serializable representation. `file_url` and `cover_image_url` are `nil`
+  #   when the corresponding attachment is not present. URLs are generated with `only_path: true`.
   def as_json(options = {})
     {
       id: id,
