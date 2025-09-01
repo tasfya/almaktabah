@@ -29,8 +29,8 @@
     <%= render 'shared/news_bar' %>
     <main class="min-h-screen w-full pb-16 md:pb-0">
       <% unless controller_name == 'home' %>
-        <div class="container mx-auto px-3 py-2">
-          <%= render_breadcrumbs(classes: "mt-2 mb-3 md:mb-4 lg:mb-6") if current_breadcrumbs.any? %>
+        <div class="container">
+          <%= render_breadcrumbs(classes: "mt-2 ml-2 mb-3 md:mb-4 lg:mb-6 ") if current_breadcrumbs.any? %>
         </div>
       <% end %>
       <%= yield %>

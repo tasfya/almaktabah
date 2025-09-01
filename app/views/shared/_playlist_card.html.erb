@@ -29,11 +29,12 @@
         <% end %>
       <% end %>
       <button class="btn btn-secondary btn-sm"
-                data-controller="clipboard"
-                data-clipboard-text-value="<%= request.original_url %>"
-                data-clipboard-success-message-value="<%= t('common.copy_success') %>"
-                data-clipboard-error-message-value="<%= t('common.copy_error') %>"
-                data-action="click->clipboard#copy">
+              data-controller="clipboard"
+              data-clipboard-text-value="<%= resource.is_a?(Lesson) ? polymorphic_url(resource.series) : polymorphic_url(resource) %>"
+              data-clipboard-success-message-value="<%= t('common.copy_success') %>"
+              data-clipboard-error-message-value="<%= t('common.copy_error') %>"
+              data-action="click->clipboard#copy">
+
         <%= icon "share", class: "size-4"%>
       </button>
     </div>
