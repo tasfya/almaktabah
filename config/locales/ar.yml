@@ -184,6 +184,7 @@ ar:
     next: "التالي"
     close: "إغلاق"
     search_button: "بحث"
+    menu: "القائمة"
   news_bar:
     latest_news: "آخر الأخبار"
   site:
@@ -217,6 +218,7 @@ ar:
     recent_lessons: "أحدث الدروس"
     about_sheikh_alt: "عن الشيخ"
     contact_us: "اتصل بنا"
+    mobile_menu: "القائمة الجانبية"
   common:
     no_media_available: "لا توجد وسائط متاحة حالياً"
     video: "فيديو"

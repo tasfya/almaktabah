@@ -19,7 +19,14 @@
         <% end %>
       </div>
       <div class="flex md:hidden items-center flex-row-reverse gap-1">
-        <button data-action="click->navigation#toggleMobileMenu" class="md:hidden btn btn-ghost focus:outline-none">
+        <button
+          type="button"
+          data-navigation-target="menuButton"
+          data-action="click->navigation#toggleMobileMenu"
+          class="btn btn-ghost focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+          aria-label="<%= t('buttons.menu', default: 'Menu') %>">
           <%= icon "bars-3", class: "size-5"%>
         </button>
       </div>
@@ -37,7 +44,12 @@
       <%= link_to t('navigation.about_sheikh'), about_path, class: "secondary-link" %>
     </div>
   </nav>
-  <div data-navigation-target="menu" class="hidden md:hidden border-t">
+  <div
+    id="mobile-menu"
+    data-navigation-target="menu"
+    class="hidden md:hidden border-t"
+    role="navigation"
+    aria-label="<%= t('navigation.mobile_menu', default: 'Mobile menu') %>">
     <div class="px-4 py-2 space-y-2">
       <%= link_to search_path, class: "btn btn-secondary btn-sm" do %>
         <%= icon "magnifying-glass", class: "size-4" %>
