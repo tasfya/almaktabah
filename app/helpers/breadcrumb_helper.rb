@@ -44,39 +44,18 @@ module BreadcrumbHelper
   def render_breadcrumbs(options = {})
     breadcrumbs = current_breadcrumbs
 
-    default_classes = {
-      container: "mb-6 bg-white rounded-lg shadow-sm border border-background-contrast p-4",
-      list: "flex items-center space-x-2 rtl:space-x-reverse text-sm",
-      item: "flex items-center",
-      link: "link",
-      separator: "mx-3 text-main-text",
-      current: "font-semibold"
-    }
-
-    classes = default_classes.merge(options[:classes] || {})
-
-    content_tag :nav, class: classes[:container], "aria-label": "breadcrumb" do
-      content_tag :ol, class: classes[:list] do
+    content_tag :div, class: "breadcrumbs text-sm" do
+      content_tag :ul do
         breadcrumbs.map.with_index do |crumb, index|
           is_last = index == breadcrumbs.length - 1
           is_current = crumb[:path].nil? || is_last
 
-          content_tag :li, class: classes[:item] do
-            content = if is_current
-              content_tag :span, crumb[:name], class: classes[:current]
+          content_tag :li do
+            if is_current
+              content_tag :span, crumb[:name]
             else
-              link_to crumb[:name], crumb[:path], class: classes[:link]
+              link_to crumb[:name], crumb[:path]
             end
-
-            unless is_last
-              content += content_tag(:span, class: classes[:separator]) do
-                content_tag(:svg, class: "w-3 h-3 rotate-180", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24") do
-                  content_tag(:path, "", "stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M9 5l7 7-7 7")
-                end
-              end
-            end
-
-            content
           end
         end.join.html_safe
       end

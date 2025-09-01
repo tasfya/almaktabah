@@ -1,45 +1,37 @@
 <% content_for :title, t('navigation.news') %>
-<div class="min-h-screen py-8">
-  <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 gap-8">
-      <div class="lg:col-span-2">
-        <div class="border border-background-contrast rounded-lg shadow-md p-6">
-          <h1 class="text-2xl font-bold  mb-6"><%= t('.title') %></h1>
-          <p class=" mb-6"><%= t('.description') %></p>
-          <%= render 'shared/filters' %>
-          <% if @news.any? %>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <% @news.each do |news_item| %>
-                <div class="border border-background-contrast rounded-lg hover:shadow-md transition-shadow">
-                  <div class="flex flex-col gap-1 p-2">
-                    <% if news_item.thumbnail.present? %>
-                      <%= image_tag news_item.thumbnail, class: "max-h-md object-cover rounded cursor-pointer" %>
-                    <% end %>
-                    <div class="flex-1 p-6">
-                      <h3 class="text-lg font-semibold  mb-2">
-                        <%= link_to news_item.title, news_path(news_item), class: "secondary-link" %>
-                      </h3>
-                      <% if news_item.description %>
-                        <p class=" text-sm mb-4"><%= truncate(news_item.description, length: 200) %></p>
-                      <% end %>
-                      <div class="flex items-center justify-between text-sm ">
-                        <div class="flex space-x-4 rtl:space-x-reverse">
-                        </div>
-                        <%= link_to news_path(news_item), class: "btn btn-link" do %>
-                          <%= t('common.read_more_arrow') %>
-                        <% end %>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+<div class="mobile-section">
+  <div class="mobile-card">
+    <h1 class="text-2xl font-bold mb-4"><%= t('.title') %></h1>
+    <p class="text-sm text-gray-600 mb-4"><%= t('.description') %></p>
+    <%= render 'shared/filters' %>
+    <% if @news.any? %>
+      <div class="mobile-grid-responsive mobile-gap">
+        <% @news.each do |news_item| %>
+          <div class="bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+            <% if news_item.thumbnail.present? %>
+              <%= image_tag news_item.thumbnail, class: "w-full h-48 object-cover rounded-t-lg" %>
+            <% end %>
+            <div class="p-4">
+              <h3 class="text-lg font-semibold mb-2">
+                <%= link_to news_item.title, news_path(news_item), class: "text-blue-600 hover:text-blue-800" %>
+              </h3>
+              <% if news_item.description %>
+                <p class="text-gray-600 text-sm mb-4"><%= truncate(news_item.description, length: 200) %></p>
               <% end %>
+              <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-500">
+                </div>
+                <%= link_to news_path(news_item), class: "btn btn-link text-sm" do %>
+                  <%= t('common.read_more_arrow') %>
+                <% end %>
+              </div>
             </div>
-          <% else %>
-            <div class="text-center  py-8"><%= t('.no_news') %></div>
-          <% end %>
-          <%= render 'shared/pagination' %>
-        </div>
+          </div>
+        <% end %>
       </div>
-    </div>
+    <% else %>
+      <div class="text-center text-gray-500 py-8"><%= t('.no_news') %></div>
+    <% end %>
+    <%= render 'shared/pagination' %>
   </div>
 </div>

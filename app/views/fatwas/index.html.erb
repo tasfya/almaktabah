@@ -1,37 +1,28 @@
 <% content_for :title, t('navigation.fatwas') %>
-<div class="min-h-screen py-8">
-  <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 gap-8">
-      <div class="lg:col-span-2">
-        <div class="rounded-lg shadow-md p-6">
-          <h1 class="text-2xl font-bold mb-6"> <%= t('.title') %> </h1>
-          <p class="mb-6"> <%= t('.description') %> </p>
-          <%= render 'shared/filters' %>
-          <% if @fatwas.any? %>
-            <div class="grid grid-cols-1 gap-6">
-              <% @fatwas.each do |fatwa| %>
-                <div class="bg-card hover:bg-card-hover text-card-contrast border border-background-contrast rounded-lg p-6 hover:shadow-md transition-shadow">
-                  <h3 class="text-lg font-semibold mb-2">
-                    <%= link_to fatwa.title, fatwa_path(fatwa), class: "hover:text-primary-500" %>
-                  </h3>
-
-                  <div class="flex items-center justify-between text-sm text-foreground">
-                    <span class="px-2 py-1 rounded text-foreground">
-                      <%= fatwa.category %>
-                    </span>
-                    <div class="flex space-x-4 rtl:space-x-reverse">
-                      <span><%= fatwa.created_at.strftime("%Y/%m/%d") %></span>
-                    </div>
-                  </div>
-                </div>
-              <% end %>
+<div class="mobile-section">
+  <div class="mobile-card">
+    <h1 class="text-2xl font-bold mb-4"> <%= t('.title') %> </h1>
+    <p class="text-sm text-gray-600 mb-4"> <%= t('.description') %> </p>
+    <%= render 'shared/filters' %>
+    <% if @fatwas.any? %>
+      <div class="space-y-3">
+        <% @fatwas.each do |fatwa| %>
+          <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <h3 class="text-lg font-semibold mb-2">
+              <%= link_to fatwa.title, fatwa_path(fatwa), class: "text-blue-600 hover:text-blue-800" %>
+            </h3>
+            <div class="flex items-center justify-between text-sm text-gray-600">
+              <span class="px-2 py-1 bg-gray-100 rounded text-gray-700">
+                <%= fatwa.category %>
+              </span>
+              <span><%= fatwa.created_at.strftime("%Y/%m/%d") %></span>
             </div>
-          <% else %>
-            <div class="text-center py-8"><%= t('.no_fatwas') %></div>
-          <% end %>
-          <%= render 'shared/pagination' %>
-        </div>
+          </div>
+        <% end %>
       </div>
-      </div>
+    <% else %>
+      <div class="text-center text-gray-500 py-8"><%= t('.no_fatwas') %></div>
+    <% end %>
+    <%= render 'shared/pagination' %>
   </div>
 </div>
