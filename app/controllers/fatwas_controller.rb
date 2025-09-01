@@ -13,7 +13,7 @@ class FatwasController < ApplicationController
   private
 
   def set_fatwa
-    @fatwa = Fatwa.for_domain_id(@domain.id).find(params[:id])
+    @fatwa = Fatwa.friendly.for_domain_id(@domain.id).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to fatwas_path, alert: t("messages.fatwa_not_found")
   end
