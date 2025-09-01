@@ -41,6 +41,10 @@ export default class extends ApplicationController {
     this.setupMediaSession()
     this.setupMediaSessionHandlers()
     this.trackUserInteraction()
+    // update the position
+    this.updatePlayerPosition()
+    // Update position on window resize
+    window.addEventListener('resize', this.updatePlayerPosition.bind(this))
   }
 
   trackUserInteraction() {
@@ -57,7 +61,35 @@ export default class extends ApplicationController {
 
   disconnect() {
     this.clearMediaSession()
+    window.removeEventListener('resize', this.updatePlayerPosition.bind(this))
   }
+
+  updatePlayerPosition() {
+    const playerContainer = document.getElementById('audio-player-container');
+    if (!playerContainer) return;
+
+    // Remove any previously applied bottom classes
+    playerContainer.classList.remove('bottom-0', 'bottom-[var(--dock-height)]');
+
+    if (window.innerWidth >= 768) {
+      // Desktop: stick to bottom
+      playerContainer.classList.add('bottom-0');
+      return;
+    }
+
+    const mobileDock = document.getElementById("mobile-dock");
+    if (mobileDock) {
+      const dockHeight = mobileDock.offsetHeight;
+      // Set custom property for Tailwind to use
+      playerContainer.style.setProperty('--dock-height', `${dockHeight}px`);
+      // Add a Tailwind arbitrary value class using the CSS variable
+      playerContainer.classList.add('bottom-[var(--dock-height)]');
+    } else {
+      playerContainer.classList.add('bottom-0');
+    }
+  }
+
+
 
   toggle() {
     if (this.element.paused) this.play()
