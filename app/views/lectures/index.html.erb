@@ -4,7 +4,7 @@
     <h1 class="text-2xl font-bold mb-4"><%= t('.title') %></h1>
     <%= render 'shared/filters' %>
     <% if @lectures.any? %>
-      <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="bg-base-100 rounded-lg shadow-sm overflow-hidden">
       <div class="divide-y divide-gray-200">
           <% @lectures.each_with_index do |lecture, idx| %>
             <%= render "shared/playlist_card", resource: lecture, with_icon: true, index: idx %>
