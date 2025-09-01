@@ -25,6 +25,7 @@ export default class extends Controller {
     if (this.hasOverlayTarget) {
       this.overlayTarget.classList.remove("hidden");
     }
+    document.body.classList.add("overflow-hidden");
   }
 
   closeMobileMenu() {
@@ -36,6 +37,7 @@ export default class extends Controller {
     if (this.hasOverlayTarget) {
       this.overlayTarget.classList.add("hidden");
     }
+    document.body.classList.remove("overflow-hidden");
   }
 
   // Close menus when clicking outside

@@ -44,10 +44,16 @@
       <%= link_to t('navigation.about_sheikh'), about_path, class: "secondary-link" %>
     </div>
   </nav>
+  <!-- Overlay for mobile menu -->
+  <div
+    data-navigation-target="overlay"
+    class="fixed top-20 left-0 right-0 bottom-0 bg-black/50 backdrop-blur-sm hidden z-40 pointer-events-auto"
+    data-action="click->navigation#clickOutside">
+  </div>
   <div
     id="mobile-menu"
     data-navigation-target="menu"
-    class="hidden md:hidden border-t"
+    class="hidden md:hidden fixed top-20 left-0 right-0 bg-white shadow-lg border-t z-50"
     role="navigation"
     aria-label="<%= t('navigation.mobile_menu', default: 'Mobile menu') %>">
     <div class="px-4 py-2 space-y-2">
