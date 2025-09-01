@@ -34,3 +34,18 @@ bin/rake users:make_admin[user@example.com]
 # List all admin users
 bin/rake users:list_admins
 ```
+
+## Styling Framework
+
+This application uses **Tailwind CSS 4** with **daisyUI** for styling and UI components. Propshaft will automatically handle the asset pipeline for these files. If the changes are not reflected, run `bin/rails assets:clobber` to clear compiled assets.
+
+### Upgrading daisyUI
+
+For upgrading daisyUI, we use the bundle file method. Follow these steps from the [daisyUI Rails installation guide](https://daisyui.com/docs/install/rails/):
+
+1. Download the latest daisyUI bundle files:
+
+   ```bash
+   curl -sLo app/assets/tailwind/daisyui.js https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js
+   curl -sLo app/assets/tailwind/daisyui-theme.js https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js
+   ```
