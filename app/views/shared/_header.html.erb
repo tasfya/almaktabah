@@ -5,27 +5,21 @@
         <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
       <% end %>
       <div class="hidden md:flex flex-row-reverse gap-2 items-center w-full flex-1 mr-auto">
-        <div class="hidden md:flex items-center">
-          <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm btn-sm p-0" do %>
+        <div class="hidden md:flex items-center gap-1">
+          <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-sm p-1" do %>
             <%= icon "youtube", library: "lucide", class: "size-5" %>
           <% end %>
-          <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm btn-sm p-0" do %>
+          <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-sm p-1" do %>
             <%= icon "twitter", library: "lucide", class: "size-5" %>
           <% end %>
         </div>
-        <%= link_to search_path, class: "btn btn-secondary w-fit btn-sm" do %>
+        <%= link_to search_path, class: "btn btn-secondary btn-sm" do %>
           <%= icon "magnifying-glass", class: "size-4" %>
           <span><%= t('buttons.search_button') %></span>
         <% end %>
       </div>
-      <div class="flex md:hidden items-center flex-row-reverse">
-        <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm p-0" do %>
-          <%= icon "youtube", library: "lucide", class: "size-5" %>
-        <% end %>
-        <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm p-0" do %>
-          <%= icon "twitter", library: "lucide", class: "size-5" %>
-        <% end %>
-        <button data-action="click->navigation#toggleMobileMenu" class="md:hidden btn btn-link btn-sm focus:outline-none">
+      <div class="flex md:hidden items-center flex-row-reverse gap-1">
+        <button data-action="click->navigation#toggleMobileMenu" class="md:hidden btn btn-ghost focus:outline-none">
           <%= icon "bars-3", class: "size-5"%>
         </button>
       </div>
