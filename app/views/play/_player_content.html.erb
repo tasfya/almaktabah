@@ -1,67 +1,68 @@
 <div data-controller="collapsible" 
-     class="audio-player fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-background-contrast shadow-lg">
+     class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-lg max-h-[70vh] overflow-y-auto">
     
     <!-- Header Row: Close, Title, Collapse -->
-    <div class="flex items-center justify-between px-4 py-2">
+    <div class="flex items-center justify-between px-3 py-2 border-b border-gray-100 sticky top-0 bg-white">
       <%= button_to stop_play_path, method: :delete, 
           form: { data: { turbo_stream: true } },
-          class: "p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded",
+          class: "flex items-center justify-center w-8 h-8 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors",
           title: t('buttons.close') do %>
-        <%= icon "x-mark", class: "w-5 h-5" %>
+        <%= icon "x-mark", class: "w-4 h-4" %>
       <% end %>
 
-      <h1 class="text-lg font-medium text-gray-800 truncate flex-1 text-right px-2">
+      <h1 class="text-base font-medium text-gray-800 truncate flex-1 text-center px-2">
         <%= resource.title %>
       </h1>
 
       <button data-action="click->collapsible#toggle" 
               data-collapsible-target="toggleButton"
-              class="p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded">
-        <%= icon "minus", class: "w-5 h-5", data: { collapsible_target: "minimizeIcon" } %>
-        <%= icon "plus", class: "w-5 h-5 hidden", data: { collapsible_target: "maximizeIcon" } %>
+              class="flex items-center justify-center w-8 h-8 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors">
+        <%= icon "minus", class: "w-4 h-4", data: { collapsible_target: "minimizeIcon" } %>
+        <%= icon "plus", class: "w-4 h-4 hidden", data: { collapsible_target: "maximizeIcon" } %>
       </button>
     </div>
 
     <!-- Collapsible Info -->
-    <div data-collapsible-target="content" class="px-4 py-3">
-      <div class="flex flex-wrap gap-2 mb-2">
+    <div data-collapsible-target="content" class="px-3 py-2">
+      <div class="flex flex-wrap gap-2 mb-3">
         <% if resource.respond_to?(:category) && resource.category.present? %>
-          <span class="badge badge-primary badge-sm">
+          <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
             <%= resource.category %>
           </span>
         <% end %>
         <% if resource.respond_to?(:media_type) && resource.media_type.present? %>
-          <span class="badge badge-secondary badge-sm">
+          <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
             <%= resource.media_type %>
           </span>
         <% end %>
         <% if resource.respond_to?(:series) && resource.series.present? %>
-          <span class="badge badge-primary badge-sm">
+          <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
             <%= resource.series.title %>
           </span>
         <% end %>
       </div>
       
       <% if resource.respond_to?(:description) && resource.description.present? %>
-        <p class="text-gray-600 text-xs leading-relaxed mb-3">
-          <%= resource.description %>
+        <p class="text-gray-600 text-sm leading-relaxed mb-3">
+          <%= truncate(resource.description, length: 200) %>
         </p>
       <% end %>
 
-      <div class="flex gap-2">
+      <div class="flex gap-2 flex-wrap">
         <% if resource&.optimized_audio? %>
           <%= link_to rails_blob_url(resource.optimized_audio, disposition: "attachment"), 
               download: true, target: "_blank", 
-              class: "btn btn-primary btn-sm w-fit" do %>
-            <%= icon "arrow-down-tray", class: "w-3 h-3" %>
-          <%= t("buttons.download") %>
+              class: "btn btn-primary btn-sm" do %>
+            <%= icon "arrow-down-tray", class: "w-4 h-4" %>
+            <%= t("buttons.download") %>
           <% end %>
         <% end %>
 
         <% if resource.respond_to?(:youtube_url) && resource.youtube_url.present? %>
           <%= link_to youtube_embed_url(resource.youtube_url), 
-              class: "btn btn-secondary btn-sm w-fit", 
+              class: "btn btn-secondary btn-sm", 
               target: "_blank" do %>
+            <%= icon "youtube", library: "lucide", class: "w-4 h-4" %>
             YouTube
           <% end %>
         <% end %>
@@ -69,21 +70,25 @@
     </div>
 
     <!-- Audio Player -->
-    <div class="px-4 py-3">
+    <div class="px-3 py-3 bg-gray-50 sticky bottom-0">
       <% if resource.respond_to?(:optimized_audio) && resource.optimized_audio.attached? %>
         <%= audio_tag resource.optimized_audio, 
             id: dom_id(resource, :optimized_audio), 
-            class: "w-full mb-4", 
+            class: "w-full h-10 rounded-lg", 
             controls: true, 
+            preload: "metadata",
             muted: Rails.env.test?, 
             data: {
               controller: "player", 
-              action: "loadeddata->player#play",
+              action: "canplay->player#attemptPlay loadedmetadata->player#setupPlayer",
               player_title_value: resource.title,
               player_artist_value: resource.respond_to?(:series) && resource.series.present? ? resource.series.title : site_info[:name],
               player_artwork_value: resource.respond_to?(:thumbnail) && resource.thumbnail.attached? ? url_for(resource.thumbnail) : apple_touch_icon_url,
               player_domain_value: site_info[:name]
             } %>
+        <p class="text-xs text-gray-500 mt-2 text-center">
+          انقر على زر التشغيل لبدء الاستماع
+        </p>
       <% end %>
     </div>
   </div>

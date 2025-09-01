@@ -9,13 +9,50 @@ export default class extends ApplicationController {
   }
 
   play() {
-    this.element.play()
+    this.element.play().catch(error => {
+      console.log("Autoplay prevented:", error)
+      // Autoplay was prevented, which is normal on mobile
+      // User will need to manually start playback
+    })
+  }
+
+  attemptPlay() {
+    // Only attempt autoplay if user interaction has occurred
+    if (this.hasUserInteracted()) {
+      this.play()
+    }
+  }
+
+  setupPlayer() {
+    // Setup without attempting autoplay
+    this.setupMediaSession()
+    this.setupMediaSessionHandlers()
+  }
+
+  hasUserInteracted() {
+    // Check if there has been user interaction on the page
+    return document.hasStoredGesture || 
+           document.hasStoredUserActivation ||
+           sessionStorage.getItem('userInteracted') === 'true'
   }
 
   connect() {
     console.log("Connected player controller")
     this.setupMediaSession()
     this.setupMediaSessionHandlers()
+    this.trackUserInteraction()
+  }
+
+  trackUserInteraction() {
+    // Track user interaction for autoplay policies
+    const trackInteraction = () => {
+      sessionStorage.setItem('userInteracted', 'true')
+      document.removeEventListener('click', trackInteraction)
+      document.removeEventListener('touchstart', trackInteraction)
+    }
+    
+    document.addEventListener('click', trackInteraction)
+    document.addEventListener('touchstart', trackInteraction)
   }
 
   disconnect() {
