@@ -38,10 +38,10 @@ export default class extends Controller {
   }
 
   _onKeydown(event) {
-    if (event.key === "Escape" && this.menuOpen) {
-      if (!this.menuOpen) return;
-      if (e.key === "Escape" || e.key === "Esc") {
-        this.closeMobileMenu();
+    if (!this.menuOpen) return;
+    if (event.key === "Escape" || event.key === "Esc") {
+      this.closeMobileMenu();
+      if (this.hasMenuButtonTarget && this.menuButtonTarget.focus) {
         this.menuButtonTarget.focus();
       }
     }
