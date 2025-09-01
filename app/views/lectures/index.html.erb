@@ -5,7 +5,7 @@
     <%= render 'shared/filters' %>
     <% if @lectures.any? %>
       <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-        <div class="">
+      <div class="divide-y divide-gray-200">
           <% @lectures.each_with_index do |lecture, idx| %>
             <%= render "shared/playlist_card", resource: lecture, with_icon: true, index: idx %>
           <% end %>
