@@ -1,6 +1,6 @@
 <header class="bg-background shadow-sm sticky top-0 left-0 right-0 z-50" data-controller="navigation" data-action="click@window->navigation#clickOutside">
   <div class="bg-navbar text-navbar-contrast ">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-(--header-height)">
       <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto" do %>
         <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
       <% end %>
@@ -19,7 +19,14 @@
         <% end %>
       </div>
       <div class="flex md:hidden items-center flex-row-reverse gap-1">
-        <button data-action="click->navigation#toggleMobileMenu" class="md:hidden btn btn-ghost focus:outline-none">
+        <button
+          type="button"
+          data-navigation-target="menuButton"
+          data-action="click->navigation#toggleMobileMenu"
+          class="btn btn-ghost focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+          aria-label="<%= t('buttons.menu', default: 'Menu') %>">
           <%= icon "bars-3", class: "size-5"%>
         </button>
       </div>
@@ -36,7 +43,17 @@
       <%= link_to t('navigation.benefits'), benefits_path, class: "secondary-link" %>
     </div>
   </nav>
-  <div data-navigation-target="menu" class="hidden md:hidden border-t">
+  <!-- Overlay for mobile menu -->
+  <div
+    data-navigation-target="overlay"
+    class="fixed top-(--header-height) left-0 right-0 bottom-0 bg-black/50 backdrop-blur-sm hidden md:hidden z-40 pointer-events-auto">
+  </div>
+  <div
+    id="mobile-menu"
+    data-navigation-target="menu"
+    class="hidden md:hidden fixed top-(--header-height) left-0 right-0 bg-white shadow-lg border-t z-50"
+    role="navigation"
+    aria-label="<%= t('navigation.mobile_menu', default: 'Mobile menu') %>">
     <div class="px-4 py-2 space-y-2">
       <%= link_to search_path, class: "btn btn-secondary btn-sm" do %>
         <%= icon "magnifying-glass", class: "size-4" %>

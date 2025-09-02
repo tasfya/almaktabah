@@ -1,70 +1,63 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 // Navigation controller for mobile menu and user menu
 export default class extends Controller {
-  static targets = ["menu", "overlay", "userMenu"]
-  
+  static targets = ["menu", "overlay", "menuButton"];
+
   connect() {
-    this.menuOpen = false
-    this.userMenuOpen = false
+    this.menuOpen = false;
+    this._onKeydown = this._onKeydown.bind(this);
+    document.addEventListener("keydown", this._onKeydown);
   }
-  
+
   toggleMobileMenu() {
-    this.menuOpen = !this.menuOpen
-    
-    if (this.hasMenuTarget) {
-      if (this.menuOpen) {
-        this.menuTarget.classList.remove('hidden')
-        this.menuTarget.classList.add('block')
-      } else {
-        this.menuTarget.classList.add('hidden')
-        this.menuTarget.classList.remove('block')
-      }
-    }
-    
-    if (this.hasOverlayTarget) {
-      if (this.menuOpen) {
-        this.overlayTarget.classList.remove('hidden')
-      } else {
-        this.overlayTarget.classList.add('hidden')
-      }
+    if (this.menuOpen) {
+      this.closeMobileMenu();
+    } else {
+      this.openMobileMenu();
     }
   }
-  
-  toggleUserMenu() {
-    this.userMenuOpen = !this.userMenuOpen
-    
-    if (this.hasUserMenuTarget) {
-      if (this.userMenuOpen) {
-        this.userMenuTarget.classList.remove('hidden')
-      } else {
-        this.userMenuTarget.classList.add('hidden')
-      }
-    }
+
+  openMobileMenu() {
+    this.menuOpen = true;
+    this.menuTarget.classList.remove("hidden");
+    this.menuTarget.classList.add("block");
+    this.menuButtonTarget.setAttribute("aria-expanded", "true");
+
+    this.overlayTarget.classList.remove("hidden");
+    document.body.classList.add("overflow-hidden");
   }
-  
+
   closeMobileMenu() {
-    this.menuOpen = false
-    if (this.hasMenuTarget) {
-      this.menuTarget.classList.add('hidden')
-      this.menuTarget.classList.remove('block')
-    }
-    if (this.hasOverlayTarget) {
-      this.overlayTarget.classList.add('hidden')
+    this.menuOpen = false;
+    this.menuTarget.classList.add("hidden");
+    this.menuTarget.classList.remove("block");
+    this.menuButtonTarget.setAttribute("aria-expanded", "false");
+    this.overlayTarget.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  _onKeydown(event) {
+    if (!this.menuOpen) return;
+    if (event.key === "Escape" || event.key === "Esc") {
+      this.closeMobileMenu();
+      if (this.hasMenuButtonTarget && this.menuButtonTarget.focus) {
+        this.menuButtonTarget.focus();
+      }
     }
   }
-  
-  closeUserMenu() {
-    this.userMenuOpen = false
-    if (this.hasUserMenuTarget) {
-      this.userMenuTarget.classList.add('hidden')
-    }
-  }
-  
+
   // Close menus when clicking outside
   clickOutside(event) {
-    if (this.menuOpen && this.hasOverlayTarget && event.target === this.overlayTarget) {
-      this.closeMobileMenu()
+    if (this.menuOpen && event.target === this.overlayTarget) {
+      this.closeMobileMenu();
+    }
+  }
+
+  disconnect() {
+    document.removeEventListener("keydown", this._onKeydown);
+    if (this.menuOpen) {
+      document.body.classList.remove("overflow-hidden");
     }
   }
 }
