@@ -26,6 +26,7 @@ namespace :db do
     Series.delete_all
     Book.delete_all
     Scholar.delete_all
+    FriendlyId::Slug.delete_all
 
     puts "✅ Seeded content cleared successfully!"
   end
@@ -55,6 +56,7 @@ namespace :db do
       Series.delete_all
       Book.delete_all
       Scholar.delete_all
+      FriendlyId::Slug.delete_all
 
       puts "✅ Existing content cleared"
     end

@@ -38,7 +38,7 @@ RSpec.describe Fatwa, type: :model do
     context 'when title is in Arabic' do
       it 'generates slug from Arabic title' do
         arabic_fatwa = create(:fatwa, title: 'ما حكم الصلاة في المسجد؟')
-        expect(arabic_fatwa.slug).to eq('ما-حكم-الصلاة-في-المسجد؟')
+        expect(arabic_fatwa.slug).to eq('ما-حكم-الصلاة-في-المسجد')
       end
 
       it 'can be found using friendly finder' do

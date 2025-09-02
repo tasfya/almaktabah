@@ -11,8 +11,12 @@ module Sluggable
       # Remove tashkeel
       str.gsub!(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06ED]/, "")
 
+      # Remove all punctuation (Arabic + Latin)
+      str.gsub!(/[[:punct:]\p{P}]+/u, " ")
+
       # Keep Arabic letters, digits, and ASCII letters; replace others with separator
       str.gsub!(/[^0-9A-Za-z\u0600-\u06FF]+/, sep)
+
 
       # Collapse repeated separators
       str.gsub!(/#{Regexp.escape(sep)}{2,}/, sep)
