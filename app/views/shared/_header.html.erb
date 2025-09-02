@@ -55,17 +55,17 @@
     role="navigation"
     aria-label="<%= t('navigation.mobile_menu', default: 'Mobile menu') %>">
     <div class="px-4 py-2 space-y-2">
-      <%= link_to search_path, class: "btn btn-secondary btn-sm" do %>
+      <%= link_to search_path, class: "btn btn-secondary btn-sm w-full" do %>
         <%= icon "magnifying-glass", class: "size-4" %>
         <span><%= t('buttons.search_button') %></span>
       <% end %>
-      <%= link_to t('navigation.home'), root_path, class: "block py-2 link" %>
-      <%= link_to t('navigation.scientific_series'), series_index_path, class: "block py-2 link" %>
-      <%= link_to t('navigation.lectures'), lectures_path, class: "block py-2 link" %>
-      <%= link_to t('navigation.books'), books_path, class: "block py-2 link" %>
-      <%= link_to t('navigation.news'), news_index_path, class: "block py-2 link" %>
-      <%= link_to t('navigation.fatwas'), fatwas_path, class: "block py-2 link" %>
-      <%= link_to t('navigation.benefits'), benefits_path, class: "block py-2 link" %>
+      <%= link_to t('navigation.home'), root_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.scientific_series'), series_index_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.lectures'), lectures_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.books'), books_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.news'), news_index_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.fatwas'), fatwas_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.benefits'), benefits_path, class: "block py-2 hover:link" %>
     </div>
   </div>
 </header>

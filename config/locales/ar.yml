@@ -184,7 +184,7 @@ ar:
     next: "التالي"
     close: "إغلاق"
     search_button: "بحث"
-    menu: "القائمة"
+    view_all: "عرض الكل"
   news_bar:
     latest_news: "آخر الأخبار"
   site:
@@ -421,3 +421,58 @@ ar:
     news: "الأخبار"
     about: "حول"
     contact: "اتصل بنا"
+  
+  datetime:
+    distance_in_words:
+      half_a_minute: "نصف دقيقة"
+      less_than_x_seconds:
+        one: "أقل من ثانية واحدة"
+        other: "أقل من %{count} ثواني"
+      x_seconds:
+        one: "ثانية واحدة"
+        other: "%{count} ثواني"
+      less_than_x_minutes:
+        one: "أقل من دقيقة واحدة"
+        other: "أقل من %{count} دقائق"
+      x_minutes:
+        one: "دقيقة واحدة"
+        other: "%{count} دقائق"
+      about_x_hours:
+        one: "حوالي ساعة واحدة"
+        other: "حوالي %{count} ساعات"
+      x_days:
+        one: "يوم واحد"
+        two: "يومان"
+        few: "%{count} أيام"
+        many: "%{count} يوماً"
+        other: "%{count} أيام"
+      about_x_months:
+        one: "حوالي شهر واحد"
+        two: "حوالي شهران"
+        few: "حوالي %{count} أشهر"
+        many: "حوالي %{count} شهراً"
+        other: "حوالي %{count} أشهر"
+      x_months:
+        one: "شهر واحد"
+        two: "شهران"
+        few: "%{count} أشهر"
+        many: "%{count} شهراً"
+        other: "%{count} أشهر"
+      about_x_years:
+        one: "حوالي سنة واحدة"
+        two: "حوالي سنتان"
+        few: "حوالي %{count} سنوات"
+        many: "حوالي %{count} سنة"
+        other: "حوالي %{count} سنوات"
+      over_x_years:
+        one: "أكثر من سنة واحدة"
+        two: "أكثر من سنتان"
+        few: "أكثر من %{count} سنوات"
+        many: "أكثر من %{count} سنة"
+        other: "أكثر من %{count} سنوات"
+      almost_x_years:
+        one: "تقريباً سنة واحدة"
+        two: "تقريباً سنتان"
+        few: "تقريباً %{count} سنوات"
+        many: "تقريباً %{count} سنة"
+        other: "تقريباً %{count} سنوات"

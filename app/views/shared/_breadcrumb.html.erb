@@ -1,37 +1,22 @@
-<nav 
-  class="mt-2 bg-breadcrumb text-breadcrumb-contrast mb-4 md:mb-6 rounded-lg shadow-sm border border-background-contrast p-2 sm:p-3 md:p-4"
-  aria-label="breadcrumb"
-  dir="rtl"
->
-  <ol class="flex flex-nowrap md:flex-wrap items-center overflow-x-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent space-x-1 rtl:space-x-reverse text-xs sm:text-sm">
+<div class="breadcrumbs text-sm" dir="rtl">
+  <ul>
     <% current_breadcrumbs.each_with_index do |crumb, index| %>
       <% is_last = index == current_breadcrumbs.length - 1 %>
       <% is_current = crumb[:path].nil? %>
 
-      <li class="flex items-center shrink-0 max-w-[5rem] sm:max-w-[8rem] md:max-w-none">
+      <li>
         <% if is_current || is_last %>
-          <span class="text-secondary-link font-semibold truncate block"><%= crumb[:name] %></span>
+          <span><%= crumb[:name] %></span>
         <% else %>
-          <%= link_to crumb[:name], crumb[:path], class: "secondary-link truncate block" %>
-        <% end %>
-
-        <% unless is_last %>
-          <svg class="mx-1 sm:mx-2 md:mx-3 w-2.5 h-2.5 md:w-3 md:h-3 text-main-text rotate-180 flex-shrink-0"
-               fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
+          <%= link_to crumb[:name], crumb[:path] %>
         <% end %>
       </li>
     <% end %>
 
     <% if local_assigns[:current_page] %>
-      <li class="flex items-center shrink-0 max-w-[5rem] sm:max-w-[8rem] md:max-w-none cursor-pointer">
-        <svg class="mx-1 sm:mx-2 md:mx-3 w-2.5 h-2.5 md:w-3 md:h-3 text-main-text rotate-180 flex-shrink-0"
-             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-        <span class="text-secondary font-semibold truncate block"><%= current_page %></span>
+      <li>
+        <span><%= current_page %></span>
       </li>
     <% end %>
-  </ol>
-</nav>
+  </ul>
+</div>
