@@ -1,5 +1,7 @@
 <% content_for :title, t('navigation.home') %>
 
+<% if @series.present? %>
+
 <section class="hero relative min-h-[600px] overflow-hidden">
   <img src="<%= asset_path("background.jpg") %>" alt="" class="absolute inset-0 w-full h-full object-cover" />
   <div class="absolute inset-0 bg-black/30"></div>
@@ -28,6 +30,7 @@
     </div>
   </div>
 </section>
+<% end %>
 
 <div class="container mx-auto mt-4">
   <% if @top_series.any? %>
