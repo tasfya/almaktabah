@@ -24,7 +24,7 @@ module Sluggable
     end
 
     def to_param
-      slug
+      slug || super
     end
 
     protected
