@@ -23,21 +23,20 @@
     </div>
   </div>
   <div class="flex items-center gap-2 flex-shrink-0 justify-end">
-    <%= play_button(resource: resource, klass: "btn btn-secondary btn-sm") %>
     <% if resource.has_any_audio? %>
+      <%= play_button(resource: resource, klass: "btn btn-secondary btn-sm") %>
       <%= link_to(rails_blob_url(resource.best_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
         <%= icon "arrow-down-tray", class: "size-3 sm:size-5" %>
       <% end %>
+    <% end %>
       <button class="btn btn-secondary btn-sm"
               data-controller="clipboard"
               data-clipboard-text-value="<%= resource.is_a?(Lesson) ? polymorphic_url(resource.series) : polymorphic_url(resource) %>"
               data-clipboard-success-message-value="<%= t('common.copy_success') %>"
               data-clipboard-error-message-value="<%= t('common.copy_error') %>"
               data-action="click->clipboard#copy">
-
         <%= icon "share", class: "size-4"%>
       </button>
     </div>
-    
   </div>
 </div>
