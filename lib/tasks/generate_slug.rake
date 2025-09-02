@@ -1,3 +1,6 @@
+# Generate slugs for existing records using FriendlyId
+# Run with: rake friendly_id:generate_slugs
+
 namespace :friendly_id do
   desc "Generate slugs for existing records"
   task generate_slugs: :environment do
