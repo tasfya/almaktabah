@@ -38,7 +38,7 @@ RSpec.describe News, type: :model do
   describe 'scopes and ransack' do
     describe '.ransackable_attributes' do
       it 'includes expected attributes' do
-        expected_attributes = [ "created_at", "id", "published_at", "slug", "title", "description", "updated_at" ]
+        expected_attributes = [ "created_at", "id", "published_at", "title", "description", "updated_at" ]
         expect(News.ransackable_attributes).to match_array(expected_attributes)
       end
     end
@@ -74,21 +74,6 @@ RSpec.describe News, type: :model do
 
     it 'returns assigned domains' do
       expect(test_news.assigned_domains).to include(domain)
-    end
-  end
-
-  describe 'slug generation' do
-    it 'generates slug from title on validation' do
-      news = build(:news, title: 'Test News Article', slug: nil)
-      news.valid?
-      expect(news.slug).to eq('Test-News-Article')
-    end
-
-    it 'handles duplicate slugs' do
-      create(:news, title: 'Test', slug: 'Test')
-      news = build(:news, title: 'Test', slug: nil)
-      news.valid?
-      expect(news.slug).to eq('Test-1')
     end
   end
 end
