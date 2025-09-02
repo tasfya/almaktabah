@@ -33,6 +33,8 @@
 
   --color-breadcrumb: #f8fafc;
   --color-breadcrumb-contrast: #1f2937;
+
+  --header-height: 5rem;
 }
 
 @plugin "./daisyui.js" {
