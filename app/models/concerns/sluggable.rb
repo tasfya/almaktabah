@@ -7,16 +7,19 @@ module Sluggable
 
     def normalize_friendly_id(value, sep: "-")
       str = value.to_s.strip
-      # Remove Arabic tashkeel
+
+      # Remove tashkeel
       str.gsub!(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06ED]/, "")
-      # Transliterate diacritics to ASCII
-      str = I18n.transliterate(str)
-      # Replace non-word chars with separator
+
+      # Keep Arabic letters, digits, and ASCII letters; replace others with separator
       str.gsub!(/[^0-9A-Za-z\u0600-\u06FF]+/, sep)
+
       # Collapse repeated separators
       str.gsub!(/#{Regexp.escape(sep)}{2,}/, sep)
+
       # Strip leading/trailing separator
       str.gsub!(/^#{Regexp.escape(sep)}|#{Regexp.escape(sep)}$/, "")
+
       str.downcase
     end
 
