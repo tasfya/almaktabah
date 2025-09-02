@@ -17,11 +17,13 @@ class Lecture < ApplicationRecord
 
   scope :recent, -> { order(published_at: :desc) }
   scope :by_category, ->(category) { where(category: category) if category.present? }
+  scope :with_audio, -> { joins(:audio_attachment) }
+  scope :without_audio, -> { where.missing(:audio_attachment) }
+
+
   def self.ransackable_attributes(auth_object = nil)
     [ "category", "created_at", "description", "duration", "id", "published", "published_at", "scholar_id", "title", "updated_at" ]
   end
-  scope :with_audio, -> { joins(:audio_attachment) }
-  scope :without_audio, -> { where.missing(:audio_attachment) }
 
   def self.ransackable_associations(auth_object = nil)
     [ "scholar" ]
@@ -30,6 +32,7 @@ class Lecture < ApplicationRecord
   def podcast_title
     title
   end
+
   def audio_file_size
     return nil unless audio.attached?
 
