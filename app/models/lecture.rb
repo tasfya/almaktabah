@@ -2,6 +2,7 @@ class Lecture < ApplicationRecord
   include MediaHandler
   include DomainAssignable
   include Publishable
+  include AudioFallback
 
   enum :kind, { seremon: 1, conference: 2, benefit: 3 }
 
