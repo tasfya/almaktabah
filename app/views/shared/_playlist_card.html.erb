@@ -1,38 +1,43 @@
-<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between px-4 py-3 hover:bg-gray-50 transition">
-  <div class="flex items-center gap-4">
-    <% if local_assigns[:with_icon].present? %>
-      <div class="p-2 rounded-lg border w-fit border-background-contrast">
-        <%= icon "book-open", class: "size-4 sm:size-5" %>
+<div class="p-4 hover:bg-gray-50 transition">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div class="flex items-center gap-4 flex-1 min-w-0">
+      <% if local_assigns[:with_icon].present? %>
+        <div class="p-2 rounded border border-background-contrast flex-shrink-0">
+          <%= icon "book-open", class: "size-5" %>
+        </div>
+      <% else %>
+        <% if local_assigns[:index].present? %>
+        <span class="text-gray-500 w-8 text-center text-base font-medium flex-shrink-0"><%= local_assigns[:index] + 1 %></span>
+        <% end %>
+      <% end %>
+      <div class="flex-1 min-w-0">
+        <h3 class="font-medium text-base mb-1 truncate"><%= resource.title %></h3>
+        <% if resource.respond_to?(:youtube_url) && resource.youtube_url.present? %>
+          <a href="<%= youtube_embed_url(resource.youtube_url) %>" target="_blank"
+              class="text-sm text-gray-500 hover:underline flex items-center gap-2">
+            <%= icon "youtube", library: "lucide", class: "size-4" %>
+            <span>YouTube</span>
+          </a>
+        <% end %>
       </div>
-    <% else %>
-      <% if local_assigns[:index].present? %>
-      <span class="text-gray-500 w-6 text-center"><%= local_assigns[:index] + 1 %></span>
-      <% end %>
-    <% end %>
-    <div>
-      <h3 class="font-medium"><%= resource.title %></h3>
-      <% if resource.respond_to?(:youtube_url) && resource.youtube_url.present? %>
-        <a href="<%= youtube_embed_url(resource.youtube_url) %>" target="_blank"
-            class="text-xs text-gray-500 hover:underline flex items-center gap-1">
-          <%= icon "youtube", library: "lucide", class: "size-4" %>
-        </a>
-      <% end %>
     </div>
-  </div>
-  <div class="flex items-center gap-2">
-    <%= play_button(resource: resource, klass: "btn btn-secondary btn-sm") %>
-    <% if resource.respond_to?(:optimized_audio) && resource.optimized_audio.attached? %>
-      <%= link_to(rails_blob_url(resource.optimized_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
-        <%= icon "arrow-down-tray", class: "size-3 sm:size-5" %>
+    <div class="flex items-center gap-2 flex-shrink-0 justify-end">
+      <%= play_button(resource: resource, klass: "btn btn-secondary btn-sm") %>
+      <% if resource.respond_to?(:optimized_audio) && resource.optimized_audio.attached? %>
+        <%= link_to(rails_blob_url(resource.optimized_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm") do %>
+          <%= icon "arrow-down-tray", class: "size-4" %>
+        <% end %>
       <% end %>
-    <% end %>
-    <button class="btn btn-secondary btn-sm w-fit"
+      <button class="btn btn-secondary btn-sm"
               data-controller="clipboard"
-              data-clipboard-text-value="<%= request.original_url %>"
+              data-clipboard-text-value="<%= resource.is_a?(Lesson) ? polymorphic_url(resource.series) : polymorphic_url(resource) %>"
               data-clipboard-success-message-value="<%= t('common.copy_success') %>"
               data-clipboard-error-message-value="<%= t('common.copy_error') %>"
               data-action="click->clipboard#copy">
-      <%= icon "share", class: "size-3 sm:size-5"%>
-    </button>
+
+        <%= icon "share", class: "size-4"%>
+      </button>
+    </div>
+    
   </div>
 </div>

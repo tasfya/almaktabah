@@ -1,30 +1,29 @@
 <% if @latest_news.present? %>
   <div class="bg-newsbar text-newsbar-contrast px-3 py-2">
-    <div class="flex items-center gap-4">
+    <div class="container mx-auto flex items-center gap-4">
       <div class="flex items-center gap-2 flex-shrink-0">
         <%= link_to news_index_path, class: "primary-link" do %>
           <%= icon "megaphone", class: "size-5"%>
           <%= t('news_bar.latest_news') %>
         <% end %>
       </div>
-
-        <div
-          data-controller="news-ticker"
-          data-news-ticker-speed-value="4000"
-          data-news-ticker-pause-on-hover-value="true"
-          class="flex-1 overflow-hidden h-6 relative overflow-hidden w-[2rem] flex items-center"
-          data-action="mouseenter->news-ticker#pauseAnimation mouseleave->news-ticker#resumeAnimation"
-        >
-          <% @latest_news.each_with_index do |news, index| %>
-            <div class="absolute inset-0 flex items-center hidden"
-                 data-news-ticker-target="item"
-                 data-news-ticker-index="<%= index %>">
-              <%= link_to news_path(news), class: "primary-link text-sm truncate" do %>
-                <%= news.title %>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
+      <div
+        data-controller="news-ticker"
+        data-news-ticker-speed-value="4000"
+        data-news-ticker-pause-on-hover-value="true"
+        class="flex-1 overflow-hidden h-6 relative overflow-hidden w-[2rem] flex items-center"
+        data-action="mouseenter->news-ticker#pauseAnimation mouseleave->news-ticker#resumeAnimation"
+      >
+      <% @latest_news.each_with_index do |news, index| %>
+          <div class="absolute inset-0 flex items-center hidden"
+                data-news-ticker-target="item"
+                data-news-ticker-index="<%= index %>">
+            <%= link_to news_path(news), class: "primary-link text-sm truncate" do %>
+              <%= news.title %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 <% end %>

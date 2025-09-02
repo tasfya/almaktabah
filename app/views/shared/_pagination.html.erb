@@ -1,71 +1,55 @@
-<%# Shared pagination component using Pagy %>
 <% if defined?(@pagy) && @pagy %>
   <div class="flex items-center justify-between border-t border-background-contrast px-4 py-3 sm:px-6 mt-8">
-
-    <!-- Mobile pagination -->
     <div class="flex flex-1 justify-between sm:hidden">
       <% ['prev', 'next'].each do |dir| %>
         <% page = @pagy.public_send(dir) %>
         <% label = t("buttons.#{dir}") %>
         <% if page %>
-          <%= link_to label, pagy_url_for(@pagy, page), class: "btn btn-sm btn-secondary-link" %>
+          <%= link_to label, pagy_url_for(@pagy, page), class: "btn btn-sm join-item" %>
         <% else %>
-          <span class="btn btn-sm btn-secondary-link disabled"><%= label %></span>
+          <span class="btn btn-sm join-item btn-disabled"><%= label %></span>
         <% end %>
       <% end %>
     </div>
-
-    <!-- Desktop pagination -->
     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
       <p class="text-sm">
         <%= t('common.pagination_showing', from: @pagy.from, to: @pagy.to, count: @pagy.count) %>
       </p>
 
-      <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-        <%# Previous button %>
+      <nav class="join" aria-label="Pagination">
         <% if @pagy.prev %>
-          <%= link_to pagy_url_for(@pagy, @pagy.prev), class: "btn btn-sm btn-secondary-link" do %>
+          <%= link_to pagy_url_for(@pagy, @pagy.prev), class: "btn btn-sm join-item" do %>
             <span class="sr-only"><%= t('buttons.previous') %></span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-            </svg>
+            ‹
           <% end %>
         <% else %>
-          <span class="btn btn-sm btn-secondary-link disabled" aria-disabled="true">
+          <span class="btn btn-sm join-item btn-disabled" aria-disabled="true">
+            ‹
             <span class="sr-only"><%= t('buttons.previous') %></span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-            </svg>
           </span>
         <% end %>
 
-        <%# Page number links %>
         <% @pagy.series.each do |item| %>
           <% if item.is_a?(Integer) %>
             <% if item == @pagy.page %>
-              <span aria-current="page" class="primary-link-active"><%= item %></span>
+              <span aria-current="page" class="btn btn-sm join-item btn-active"><%= item %></span>
             <% else %>
-              <%= link_to item, pagy_url_for(@pagy, item), class: "btn btn-sm btn-secondary-link" %>
+              <%= link_to item, pagy_url_for(@pagy, item), class: "btn btn-sm join-item" %>
             <% end %>
           <% else %>
-            <span class="btn btn-sm btn-secondary-link"><%= item %></span>
+            <span class="btn btn-sm join-item btn-disabled"><%= item %></span>
           <% end %>
         <% end %>
 
-        <%# Next button %>
         <% if @pagy.next %>
-          <%= link_to pagy_url_for(@pagy, @pagy.next), class: "btn btn-sm btn-secondary-link" do %>
+          <%= link_to pagy_url_for(@pagy, @pagy.next), class: "btn btn-sm join-item" do %>
             <span class="sr-only"><%= t('buttons.next') %></span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-            </svg>
+            ›
           <% end %>
         <% else %>
-          <span class="btn btn-sm btn-secondary-link disabled" aria-disabled="true">
+          <span class="btn btn-sm join-item btn-disabled" aria-disabled="true">
+            ›
             <span class="sr-only"><%= t('buttons.next') %></span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-            </svg>
           </span>
         <% end %>
       </nav>
