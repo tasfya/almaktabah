@@ -16,6 +16,35 @@ RSpec.describe Series, type: :model do
     it 'includes DomainAssignable' do
       expect(Series.included_modules).to include(DomainAssignable)
     end
+
+    it 'includes Sluggable' do
+      expect(Series.included_modules).to include(Sluggable)
+    end
+  end
+
+  describe 'slug functionality' do
+    let(:series_item) { create(:series, title: 'سلسلة دروس الفقه') }
+
+    it 'generates a slug from the title' do
+      expect(series_item.slug).to eq('سلسلة-دروس-الفقه')
+    end
+
+    it 'can be found by slug' do
+      expect(Series.friendly.find(series_item.slug)).to eq(series_item)
+    end
+
+    it 'maintains slug history when title changes' do
+      old_slug = series_item.slug
+      series_item.update!(title: 'سلسلة دروس التفسير')
+
+      expect(series_item.slug).to eq('سلسلة-دروس-التفسير')
+      expect(Series.friendly.find(old_slug)).to eq(series_item)
+    end
+
+    it 'works with English titles' do
+      english_series = create(:series, title: 'Islamic Studies Series')
+      expect(english_series.slug).to eq('islamic-studies-series')
+    end
   end
 
   describe 'scopes' do

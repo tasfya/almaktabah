@@ -22,6 +22,35 @@ RSpec.describe News, type: :model do
     it 'includes DomainAssignable' do
       expect(News.included_modules).to include(DomainAssignable)
     end
+
+    it 'includes Sluggable' do
+      expect(News.included_modules).to include(Sluggable)
+    end
+  end
+
+  describe 'slug functionality' do
+    let(:news_item) { create(:news, title: 'أخبار المسجد الجديد') }
+
+    it 'generates a slug from the title' do
+      expect(news_item.slug).to eq('أخبار-المسجد-الجديد')
+    end
+
+    it 'can be found by slug' do
+      expect(News.friendly.find(news_item.slug)).to eq(news_item)
+    end
+
+    it 'maintains slug history when title changes' do
+      old_slug = news_item.slug
+      news_item.update!(title: 'عنوان جديد للخبر')
+
+      expect(news_item.slug).to eq('عنوان-جديد-للخبر')
+      expect(News.friendly.find(old_slug)).to eq(news_item)
+    end
+
+    it 'works with English titles' do
+      english_news = create(:news, title: 'Important News Update')
+      expect(english_news.slug).to eq('important-news-update')
+    end
   end
 
   describe 'scopes' do
@@ -38,7 +67,7 @@ RSpec.describe News, type: :model do
   describe 'scopes and ransack' do
     describe '.ransackable_attributes' do
       it 'includes expected attributes' do
-        expected_attributes = [ "created_at", "id", "published_at", "title", "description", "updated_at" ]
+        expected_attributes = [ "created_at", "id", "published_at", "title", "description", "slug", "updated_at" ]
         expect(News.ransackable_attributes).to match_array(expected_attributes)
       end
     end
