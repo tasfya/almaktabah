@@ -57,7 +57,6 @@ export default class extends ApplicationController {
 
   disconnect() {
     this.clearMediaSession()
-    window.removeEventListener('resize', this.updatePlayerPosition.bind(this))
   }
 
   toggle() {
