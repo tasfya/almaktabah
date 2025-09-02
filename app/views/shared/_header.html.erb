@@ -1,43 +1,39 @@
-<header class="bg-background shadow-sm sticky top-0 left-0 right-0 z-50">
-  <div class="bg-navbar text-navbar-contrast">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-18 lg:h-20">
-      <%= link_to root_path, class: "flex items-center flex-row-reverse" do %>
-        <img src="<%= @logo_url %>" 
-             alt="<%= t('site.name') %> Logo" 
-             class="h-10 sm:h-12 lg:h-14 w-auto object-contain" />
+<header class="bg-background shadow-sm sticky top-0 left-0 right-0 z-50" data-controller="navigation" data-action="click@window->navigation#clickOutside">
+  <div class="bg-navbar text-navbar-contrast ">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-(--header-height)">
+      <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto" do %>
+        <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
       <% end %>
-      
-      <!-- Desktop Navigation -->
-      <div class="hidden md:flex items-center gap-4">
+      <div class="hidden md:flex flex-row-reverse gap-2 items-center w-full flex-1 mr-auto">
+        <div class="hidden md:flex items-center gap-1">
+          <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-sm p-1" do %>
+            <%= icon "youtube", library: "lucide", class: "size-5" %>
+          <% end %>
+          <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-sm p-1" do %>
+            <%= icon "twitter", library: "lucide", class: "size-5" %>
+          <% end %>
+        </div>
         <%= link_to search_path, class: "btn btn-secondary btn-sm" do %>
           <%= icon "magnifying-glass", class: "size-4" %>
           <span><%= t('buttons.search_button') %></span>
         <% end %>
-        <div class="flex items-center gap-2">
-          <%= link_to site_info[:youtube_url], class: "link link-hover p-2", target: "_blank" do %>
-            <%= icon "youtube", library: "lucide", class: "size-5" %>
-          <% end %>
-          <%= link_to site_info[:twitter_url], class: "link link-hover p-2", target: "_blank" do %>
-            <%= icon "twitter", library: "lucide", class: "size-5" %>
-          <% end %>
-        </div>
       </div>
-      
-      <!-- Mobile Social Links Only -->
-      <div class="flex md:hidden items-center gap-2">
-        <%= link_to site_info[:youtube_url], class: "link link-hover p-2", target: "_blank" do %>
-          <%= icon "youtube", library: "lucide", class: "size-5" %>
-        <% end %>
-        <%= link_to site_info[:twitter_url], class: "link link-hover p-2", target: "_blank" do %>
-          <%= icon "twitter", library: "lucide", class: "size-5" %>
-        <% end %>
+      <div class="flex md:hidden items-center flex-row-reverse gap-1">
+        <button
+          type="button"
+          data-navigation-target="menuButton"
+          data-action="click->navigation#toggleMobileMenu"
+          class="btn btn-ghost focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+          aria-label="<%= t('buttons.menu', default: 'Menu') %>">
+          <%= icon "bars-3", class: "size-5"%>
+        </button>
       </div>
     </div>
   </div>
-  
-  <!-- Desktop Navigation Menu -->
   <nav class="hidden md:flex border-t py-3">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex gap-6 text-sm">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex gap-6 text-sm">
       <%= link_to t('navigation.home'), root_path, class: "secondary-link" %>
       <%= link_to t('navigation.scientific_series'), series_index_path, class: "secondary-link" %>
       <%= link_to t('navigation.lectures'), lectures_path, class: "secondary-link" %>
@@ -47,29 +43,29 @@
       <%= link_to t('navigation.benefits'), benefits_path, class: "secondary-link" %>
     </div>
   </nav>
-</header>
-
-<!-- Mobile Dock Navigation -->
-<div  class="md:hidden sticky  bottom-0 left-0 right-0 z-[60] bg-white border-t shadow-lg">
-  <div id="mobile-dock" class="dock dock-sm justify-center p-2">
-    <%= link_to root_path, class: "#{current_page?(root_path) ? 'dock-active' : ''}", title: t('navigation.home') do %>
-      <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt"><polyline points="1 11 12 2 23 11" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></polyline><path d="m5,13v7c0,1.105.895,2,2,2h10c1.105,0,2-.895,2-2v-7" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></path><line x1="12" y1="22" x2="12" y2="18" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></line></g></svg>
-    <% end %>
-    
-    <%= link_to series_index_path, class: "#{current_page?(series_index_path) ? 'dock-active' : ''}", title: t('navigation.scientific_series') do %>
-      <%= icon "folder", class: "size-[1.2em]" %>
-    <% end %>
-    
-    <%= link_to lectures_path, class: "#{current_page?(lectures_path) ? 'dock-active' : ''}", title: t('navigation.lectures') do %>
-      <%= icon "graduation-cap", library: "lucide", class: "size-[1.2em]" %>
-    <% end %>
-    
-    <%= link_to books_path, class: "#{current_page?(books_path) ? 'dock-active' : ''}", title: t('navigation.books') do %>
-      <%= icon "book-open", class: "size-[1.2em]" %>
-    <% end %>
-    
-    <%= link_to search_path, class: "#{current_page?(search_path) ? 'dock-active' : ''}", title: t('buttons.search_button') do %>
-      <%= icon "magnifying-glass", class: "size-[1.2em]" %>
-    <% end %>
+  <!-- Overlay for mobile menu -->
+  <div
+    data-navigation-target="overlay"
+    class="fixed top-(--header-height) left-0 right-0 bottom-0 bg-black/50 backdrop-blur-sm hidden md:hidden z-40 pointer-events-auto">
   </div>
-</div>
+  <div
+    id="mobile-menu"
+    data-navigation-target="menu"
+    class="hidden md:hidden fixed top-(--header-height) left-0 right-0 bg-white shadow-lg border-t z-50"
+    role="navigation"
+    aria-label="<%= t('navigation.mobile_menu', default: 'Mobile menu') %>">
+    <div class="px-4 py-2 space-y-2">
+      <%= link_to search_path, class: "btn btn-secondary btn-sm w-full" do %>
+        <%= icon "magnifying-glass", class: "size-4" %>
+        <span><%= t('buttons.search_button') %></span>
+      <% end %>
+      <%= link_to t('navigation.home'), root_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.scientific_series'), series_index_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.lectures'), lectures_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.books'), books_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.news'), news_index_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.fatwas'), fatwas_path, class: "block py-2 hover:link" %>
+      <%= link_to t('navigation.benefits'), benefits_path, class: "block py-2 hover:link" %>
+    </div>
+  </div>
+</header>
