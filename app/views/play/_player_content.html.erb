@@ -49,8 +49,8 @@
       <% end %>
 
       <div class="flex gap-2">
-        <% if resource&.optimized_audio? %>
-          <%= link_to rails_blob_url(resource.optimized_audio, disposition: "attachment"), 
+        <% if resource.has_any_audio? %>
+          <%= link_to rails_blob_url(resource.best_audio, disposition: "attachment"), 
               download: true, target: "_blank", 
               class: "btn btn-primary btn-sm w-fit" do %>
             <%= icon "arrow-down-tray", class: "w-3 h-3" %>
@@ -70,9 +70,9 @@
 
     <!-- Audio Player -->
     <div class="px-4 py-3">
-      <% if resource.respond_to?(:optimized_audio) && resource.optimized_audio.attached? %>
-        <%= audio_tag resource.optimized_audio, 
-            id: dom_id(resource, :optimized_audio), 
+      <% if resource.has_any_audio? %>
+        <%= audio_tag resource.best_audio, 
+            id: resource.best_audio_dom_id, 
             class: "w-full mb-4", 
             controls: true, 
             muted: Rails.env.test?, 
