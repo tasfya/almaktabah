@@ -6,6 +6,6 @@ class AboutController < ApplicationController
   private
 
   def setup_breadcrumbs
-      breadcrumb_for(t("breadcrumbs.about"), about_path)
+    breadcrumb_for(t("breadcrumbs.about"), about_path)
   end
 end

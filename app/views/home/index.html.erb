@@ -1,19 +1,74 @@
 <% content_for :title, t('navigation.home') %>
-<%= render partial: "featured_lesson", locals: { lesson: @featured_lesson } if @featured_lesson.present?%>
-<section class="py-16">
-  <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 gap-8">
-      <div class="lg:col-span-2">
-        <div class="border border-background-contrast w-full rounded-lg shadow-md flex items-center gap-1 flex-wrap p-6">
-          <h3 class="text-xl font-bold mb-6 text-right"><%= t('navigation.recent_lessons') %></h3>
-          <div class="bg-card rounded-lg shadow overflow-hidden w-full">
-            <div class="divide-y divide-gray-200">
-              <% @recent_lessons.each_with_index do |lesson, index| %>
-                <%= render "shared/playlist_card", resource: lesson, with_icon: true, index: index %>
-              <% end %>
-            </div>
+
+<section class="hero relative min-h-[600px] overflow-hidden">
+  <img src="<%= asset_path("background.jpg") %>" alt="" class="absolute inset-0 w-full h-full object-cover" />
+  <div class="absolute inset-0 bg-black/30"></div>
+  <div class="hero-content relative z-10 text-neutral-content">
+    <div class="max-w-3xl">
+      <h1 class="text-3xl lg:text-5xl font-bold mb-4">
+        <%= @series.title %>
+      </h1>
+      <p class="mb-6 leading-relaxed">
+        <%= @series.description %>
+      </p>
+
+      <div class="mb-6">
+        <div class="badge badge-lg gap-2 bg-white/20 text-white border-0 backdrop-blur-sm">
+          <%= pluralize(@series.lessons.for_domain_id(@domain.id).count, 'درس') %>
+          <%= icon "book-open", class: "w-5 h-5" %>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <%= link_to series_path(@series), class: "btn btn-secondary w-full sm:w-auto gap-2" do %>
+          <%= icon "play", library: "lucide", class: "w-5 h-5" %>
+          <span><%= t('buttons.view_series') %></span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container mx-auto mt-4">
+  <% if @top_series.any? %>
+    <section class="mb-4 sm:mb-6 lg:mb-8">
+      <div class="mobile-card">
+        <div class="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
+          <h2 class="text-2xl font-bold"><%= t('navigation.series') %></h2>
+          <%= link_to series_index_path, class: "btn btn-outline btn-xs sm:btn-sm" do %>
+            <%= t("buttons.view_all") %>
+            <%= icon "arrow-left", class: "size-3 sm:size-4" %>
+          <% end %>
+        </div>
+
+        <div class="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 mobile-gap">
+          <% @top_series.each do |series| %>
+            <%= render partial: "series/series_card", locals: { series: series } %>
+          <% end %>
+        </div>
+      </div>
+    </section>
+  <% end %>
+
+  <% if @top_lectures.any? %>
+    <section class="mb-4 sm:mb-6 lg:mb-8">
+      <div class="mobile-card">
+        <div class="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
+          <h2 class="text-2xl font-bold"><%= t('navigation.lectures') %></h2>
+          <%= link_to lectures_path, class: "btn btn-outline btn-xs sm:btn-sm" do %>
+    
+            <%= icon "arrow-left", class: "size-3 sm:size-4" %>
+          <% end %>
+        </div>
+
+        <div class="rounded-lg shadow-sm overflow-hidden">
+          <div class="divide-y divide-gray-100">
+            <% @top_lectures.each do |lecture| %>
+              <%= render "shared/playlist_card", resource: lecture, with_icon: true %>
+            <% end %>
           </div>
         </div>
       </div>
-    </div>
-</section>
+    </section>
+  <% end %>
+</div>

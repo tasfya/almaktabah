@@ -1,4 +1,4 @@
-<footer class="bg-footer text-footer-contrast">
+<footer class="bg-footer text-footer-contrast pb-16 sm:pb-0">
   <div class="container mx-auto px-4 py-12">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <div class="md:col-span-1">
@@ -25,7 +25,7 @@
         <ul class="space-y-2">
           <li><%= link_to t('navigation.recent_books'), books_path(recent: true), class: "primary-link" %></li>
           <li><%= link_to t('navigation.recent_lectures'), lectures_path(recent: true), class: "primary-link" %></li>
-          <li><%= link_to t('navigation.about_sheikh_alt'), about_path, class: "primary-link" %></li>
+          <%# <li><%= link_to t('navigation.about_sheikh_alt'), about_path, class: "primary-link" %></li>
         </ul>
       </div>
 

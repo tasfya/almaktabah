@@ -32,7 +32,7 @@ class LessonImportJob < ApplicationJob
     lesson.assign_to(Domain.find(domain_id))
 
     # Handle file attachments
-    attach_from_url(series, :explainable, row.explainable_url) if row.explainable_url.present?
+    # attach_from_url(series, :explainable, row.explainable_url) if row.explainable_url.present?
     attach_from_url(lesson, :thumbnail, row.thumbnail_url) if row.thumbnail_url.present?
     attach_from_url(lesson, :audio, row.audio_file_url) if row.audio_file_url.present?
     attach_from_url(lesson, :video, row.video_file_url) if row.video_file_url.present?
