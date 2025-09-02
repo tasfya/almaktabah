@@ -53,7 +53,7 @@ class AudioOptimizationJob < ApplicationJob
     key = ensure_key_unique(item)
     item.optimized_audio.attach(
       io: output_tempfile,
-      filename: item.audio.filename.to_s,
+      filename: "#{File.basename(item.audio.filename.to_s, '.*')}.mp3",
       key:,
       content_type: "audio/mpeg"
     )
