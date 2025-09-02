@@ -4,7 +4,10 @@ namespace :friendly_id do
     models = [ Series, Lecture, Book, News, Fatwa, Benefit ]
     puts "Generating slugs for existing records..."
     models.each do |model|
-      model.find_each(batch_size: 100, &:save)
+      model.find_each(batch_size: 100) do |record|
+        record.slug = nil
+        record.save!
+      end
       puts "Slugs generated for #{model.name}"
     end
     puts "Slug generation completed."
