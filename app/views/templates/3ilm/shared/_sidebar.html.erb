@@ -1,0 +1,56 @@
+<div class="drawer-side z-20">
+  <label for="sidebar-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+  <aside class="menu bg-base-100 text-base-content min-h-full w-56 p-4">
+    <ul class="space-y-2">
+      <li>
+        <%= link_to root_path, class: active_link_class(root_path) do %>
+          <%= icon "home", library: "heroicons", class: "w-5 h-5" %>
+          <span>الرئيسية</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to series_index_path, class: active_link_class(series_index_path) do %>
+          <%= icon "rectangle-stack", library: "heroicons", class: "w-5 h-5" %>
+          <span>السلاسل</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to lectures_path, class: active_link_class(lectures_path) do %>
+          <%= icon "play", library: "heroicons", class: "w-5 h-5" %>
+          <span>المحاضرات</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to books_path, class: active_link_class(books_path) do %>
+          <%= icon "book-open", library: "heroicons", class: "w-5 h-5" %>
+          <span>الكتب</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to news_index_path, class: active_link_class(news_index_path) do %>
+          <%= icon "newspaper", library: "heroicons", class: "w-5 h-5" %>
+          <span>الأخبار</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to benefits_path, class: active_link_class(benefits_path) do %>
+          <%= icon "star", library: "heroicons", class: "w-5 h-5" %>
+          <span>الفوائد</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to fatwas_path, class: active_link_class(fatwas_path) do %>
+          <%= icon "scale", library: "heroicons", class: "w-5 h-5" %>
+          <span>الفتاوى</span>
+        <% end %>
+      </li>
+      <div class="divider my-4"></div>
+      <li>
+        <%= link_to search_path, class: active_link_class(search_path) do %>
+          <%= icon "magnifying-glass", library: "heroicons", class: "w-5 h-5" %>
+          <span>البحث</span>
+        <% end %>
+      </li>
+    </ul>
+  </aside>
+</div>

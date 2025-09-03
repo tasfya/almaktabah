@@ -2,12 +2,9 @@
 <html dir="rtl" lang="ar">
   <head>
     <title><%= content_for(:title) %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="theme-color" content="#10b981">
     <meta charset="utf-8">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -16,28 +13,29 @@
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
     <%# Domain-specific favicons %>
     <%= favicon_link_tags %>
+    <%# Includes built stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <% if content = custom_css_tag %>
+    <%# Include domain custom CSS %>
+    <% if custom_css_tag %>
       <style nonce="<%= content_security_policy_nonce %>">
-        <%= content %>
+        <%= custom_css_tag %>
       </style>
     <% end %>
-    
     <%= javascript_importmap_tags %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
-  <body class="bg-background text-main-text">
-    <%= render 'templates/3ilm/shared/header' %>
-    <%= render 'shared/news_bar' %>
-    <main class="min-h-screen w-full">
-      <% unless controller_name == 'home' %>
-        <div class="container mx-auto px-4 py-4">
-          <%= render 'shared/breadcrumb' %>
+  <body class="bg-background text-main-text islamic-pattern">
+    <%= render 'shared/header' %>
+    <div class="w-full sm:container sm:mx-auto sm:px-6 lg:px-8 drawer lg:drawer-open">
+      <input id="sidebar-drawer" type="checkbox" class="drawer-toggle" />
+      <div class="drawer-content flex flex-col ">
+        <div class="p-3 mb-2">
+          <%= yield %>
         </div>
-      <% end %>
-      <%= yield %>
-    </main>
-    <%= render 'templates/3ilm/shared/footer' %>
-    <%= render 'shared/audio_player' %>
+        <%= render 'shared/audio_player' %>
+        <%= render 'shared/footer' %>
+      </div>
+      <%= render "shared/sidebar" %>
+    </div>
   </body>
 </html>
