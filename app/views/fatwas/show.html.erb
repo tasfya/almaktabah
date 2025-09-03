@@ -96,5 +96,5 @@
 <%= render 'shared/share_modal', 
     modal_id: 'fatwa_share_modal',
     url: request.original_url,
-    title: @fatwa.title,
-    text: @fatwa.title %>
+    title: html_escape(@fatwa.title),
+    text: html_escape(@fatwa.title) %>

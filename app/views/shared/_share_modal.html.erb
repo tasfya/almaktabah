@@ -8,9 +8,9 @@
 <dialog id="<%= modal_id %>" 
         class="modal" 
         data-controller="share-modal"
-        data-share-modal-url-value="<%= share_url %>"
-        data-share-modal-title-value="<%= share_title %>"
-        data-share-modal-text-value="<%= share_text %>"
+        data-share-modal-url-value="<%= html_escape(share_url) %>"
+        data-share-modal-title-value="<%= html_escape(share_title) %>"
+        data-share-modal-text-value="<%= html_escape(share_text) %>"
         data-share-modal-target="modal"
         data-action="click->share-modal#clickOutside">
   <div class="modal-box max-w-md">
