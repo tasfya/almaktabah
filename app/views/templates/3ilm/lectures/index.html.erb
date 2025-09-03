@@ -6,7 +6,7 @@
     <div class="bg-base-100 rounded-lg shadow-sm overflow-hidden">
       <div class="divide-y divide-gray-200">
         <% @lectures.each_with_index do |lecture, idx| %>
-          <%= render "shared/playlist_card", resource: lecture, with_icon: true, index: idx %>
+          <%= render "shared/playlist_card", resource: lecture, with_icon: true, index: idx, show_scholar: true, link_to_resource: true %>
         <% end %>
       </div>
     </div>

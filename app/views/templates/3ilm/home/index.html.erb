@@ -30,7 +30,7 @@
         <div class="rounded-lg shadow-sm overflow-hidden">
           <div class="divide-y divide-gray-100">
             <% @top_lectures.each do |lecture| %>
-              <%= render "shared/playlist_card", resource: lecture, with_icon: true %>
+              <%= render "shared/playlist_card", resource: lecture, with_icon: true, show_scholar: true %>
             <% end %>
           </div>
         </div>

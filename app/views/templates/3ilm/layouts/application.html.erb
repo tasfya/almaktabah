@@ -30,6 +30,7 @@
       <input id="sidebar-drawer" type="checkbox" class="drawer-toggle" />
       <div class="drawer-content flex flex-col ">
         <div class="p-3 mb-2">
+          <%= render 'shared/news_bar' %>
           <%= yield %>
         </div>
         <%= render 'shared/audio_player' %>
