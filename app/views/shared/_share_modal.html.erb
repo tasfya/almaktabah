@@ -1,0 +1,89 @@
+<%
+  modal_id = local_assigns[:modal_id] || 'share_modal'
+  share_url = local_assigns[:url] || request.original_url
+  share_title = local_assigns[:title] || content_for(:title) || @title || page_title
+  share_text = local_assigns[:text] || share_title
+%>
+
+<dialog id="<%= modal_id %>" 
+        class="modal" 
+        data-controller="share-modal"
+        data-share-modal-url-value="<%= html_escape(share_url) %>"
+        data-share-modal-title-value="<%= html_escape(share_title) %>"
+        data-share-modal-text-value="<%= html_escape(share_text) %>"
+        data-share-modal-target="modal"
+        data-action="click->share-modal#clickOutside">
+  <div class="modal-box max-w-md">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-bold text-lg"><%= t('common.share') %></h3>
+      
+      <div class="modal-action mt-4">
+        <form method="dialog">
+            <button class="btn btn-xs btn-ghost">
+                <%= icon "x-mark", class: "size-3 sm:size-4" %>
+            </button>
+        </form>
+      </div>
+    </div>
+    <!-- URL Display -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium mb-2"><%= t('common.link') %></label>
+      <div class="flex items-center gap-2">
+        <input type="text" 
+               value="<%= share_url %>" 
+               readonly
+               data-share-modal-target="urlInput"
+               class="input input-bordered flex-1 text-sm transition-colors duration-300">
+        <button class="btn btn-square btn-outline transition-colors duration-300"
+                data-action="click->share-modal#copyLink"
+                data-share-modal-target="copyButton"
+                title="<%= t('buttons.copy_link') %>">
+          <span data-share-modal-target="copyIcon" class="transition-opacity duration-200">
+            <%= icon "clipboard", class: "size-4" %>
+          </span>
+        </button>
+      </div>
+      <!-- Feedback message -->
+      <div data-share-modal-target="feedback" class="mt-2 text-sm hidden transition-all duration-300">
+        <div data-share-modal-target="successMessage" class="text-success flex items-center gap-2 hidden animate-in fade-in duration-300">
+          <%= icon "check-circle", class: "size-4" %>
+          <span><%= t('common.copy_success') %></span>
+        </div>
+        <div data-share-modal-target="errorMessage" class="text-error flex items-center gap-2 hidden animate-in fade-in duration-300">
+          <%= icon "x-circle", class: "size-4" %>
+          <span><%= t('common.copy_error') %></span>
+        </div>
+      </div>
+    </div>
+    <!-- Social Media Buttons -->
+    <div class="space-y-3 ">
+      <h4 class="font-medium text-sm"><%= t('common.share_on') %></h4>
+      
+      <div class="flex flex-wrap gap-3">
+        <!-- Twitter -->
+        <button class="btn btn-square"
+                data-action="click->share-modal#shareTwitter">
+          <%= icon "twitter", library: "lucide", class: "size-5" %>
+        </button>
+
+        <!-- Facebook -->
+        <button class="btn btn-square"
+                data-action="click->share-modal#shareFacebook">
+          <%= icon "facebook", library: "lucide", class: "size-5" %>
+        </button>
+
+        <!-- WhatsApp -->
+        <button class="btn btn-square"
+                data-action="click->share-modal#shareWhatsApp">
+          <%= icon "message-circle", library: "lucide", class: "size-5" %>
+        </button>
+
+        <!-- Telegram -->
+        <button class="btn btn-square"
+                data-action="click->share-modal#shareTelegram">
+          <%= icon "send", library: "lucide", class: "size-5" %>
+        </button>
+      </div>
+    </div>
+  </div>
+</dialog>

@@ -8,45 +8,53 @@ export default class extends ApplicationController {
     domain: String 
   }
 
-  play() {
-    this.element.play()
-  }
-
   connect() {
     console.log("Connected player controller")
     this.setupMediaSession()
     this.setupMediaSessionHandlers()
+    this.play()
   }
 
   disconnect() {
     this.clearMediaSession()
   }
 
-  toggle() {
-    if (this.element.paused) this.play()
-    else this.element.pause()
+  play() {
+    const playPromise = this.element.play()
+    console.log("play promise:", playPromise)
+
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        console.log("Playback started")
+      }).catch(error => {
+        console.warn("Playback failed:", error)
+      })
+    }
   }
 
-  // Set up Media Session API for iPhone lock screen integration
+  toggle() {
+    if (this.element.paused) {
+      this.play()
+    } else {
+      this.element.pause()
+    }
+  }
+
   setupMediaSession() {
     if ('mediaSession' in navigator) {
-      // Set metadata
       navigator.mediaSession.metadata = new MediaMetadata({
         title: this.titleValue || 'Audio',
         artist: this.artistValue || this.domainValue || 'مكتبة الشيخ',
         artwork: this.getArtworkArray()
       })
 
-      // Set playback state
       navigator.mediaSession.playbackState = 'paused'
     }
   }
 
-  // Get artwork array with domain favicon as fallback
   getArtworkArray() {
     const artworks = []
-    
-    // Primary artwork (lesson/lecture thumbnail)
+
     if (this.artworkValue) {
       artworks.push({
         src: this.artworkValue,
@@ -55,7 +63,6 @@ export default class extends ApplicationController {
       })
     }
 
-    // Domain favicon as fallback (important for iPhone lock screen)
     const faviconLink = document.querySelector('link[rel="apple-touch-icon"]')
     if (faviconLink) {
       artworks.push({
@@ -65,10 +72,9 @@ export default class extends ApplicationController {
       })
     }
 
-    // Additional favicon sizes
     const faviconLinks = document.querySelectorAll('link[rel="apple-touch-icon"]')
     faviconLinks.forEach(link => {
-      if (link.href && !artworks.some(artwork => artwork.src === link.href)) {
+      if (link.href && !artworks.some(a => a.src === link.href)) {
         artworks.push({
           src: link.href,
           sizes: link.getAttribute('sizes') || '180x180',
@@ -80,11 +86,10 @@ export default class extends ApplicationController {
     return artworks
   }
 
-  // Set up media session action handlers
   setupMediaSessionHandlers() {
     if ('mediaSession' in navigator) {
       navigator.mediaSession.setActionHandler('play', () => {
-        this.element.play()
+        this.play()
         navigator.mediaSession.playbackState = 'playing'
       })
 
@@ -112,7 +117,6 @@ export default class extends ApplicationController {
         )
       })
 
-      // Update position state for better scrubbing on iPhone
       this.element.addEventListener('timeupdate', () => {
         if ('setPositionState' in navigator.mediaSession) {
           navigator.mediaSession.setPositionState({
@@ -123,7 +127,6 @@ export default class extends ApplicationController {
         }
       })
 
-      // Update playback state
       this.element.addEventListener('play', () => {
         navigator.mediaSession.playbackState = 'playing'
       })
@@ -138,7 +141,6 @@ export default class extends ApplicationController {
     }
   }
 
-  // Clear media session when disconnecting
   clearMediaSession() {
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = null

@@ -9,7 +9,7 @@
     </p>
     <%= render 'shared/filters' %>
     <% if @books.any? %>
-      <div class="mobile-grid-responsive mobile-gap">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <% @books.each do |book| %>
           <%= render partial: "book_card", locals: { book: } %>
         <% end %>

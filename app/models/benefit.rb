@@ -3,6 +3,7 @@ class Benefit < ApplicationRecord
     include Publishable
     include MediaHandler
     include DomainAssignable
+    include AudioFallback
 
     belongs_to :scholar, optional: true
 

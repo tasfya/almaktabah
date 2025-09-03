@@ -2,6 +2,7 @@ class Lesson < ApplicationRecord
   include MediaHandler
   include Publishable
   include DomainAssignable
+  include AudioFallback
 
 
   belongs_to :series
