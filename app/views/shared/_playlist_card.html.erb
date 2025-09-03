@@ -1,3 +1,9 @@
+<%
+  # Generate unique modal ID based on resource type and ID
+  modal_id = "share_modal_#{resource.class.name.downcase}_#{resource.id}"
+  share_url = resource.is_a?(Lesson) ? polymorphic_url(resource.series) : polymorphic_url(resource)
+%>
+
 <div class="p-4 hover:bg-gray-50 transition">
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
     <div class="flex items-center gap-4 flex-1 min-w-0">
@@ -30,12 +36,16 @@
       <% end %>
     <% end %>
       <button class="btn btn-secondary btn-sm"
-              data-controller="clipboard"
-              data-clipboard-text-value="<%= resource.is_a?(Lesson) ? polymorphic_url(resource.series) : polymorphic_url(resource) %>"
-              data-clipboard-success-message-value="<%= t('common.copy_success') %>"
-              data-clipboard-error-message-value="<%= t('common.copy_error') %>"
-              data-action="click->clipboard#copy">
+              data-controller="share-trigger"
+              data-share-trigger-modal-id-value="<%= modal_id %>"
+              data-action="click->share-trigger#open">
         <%= icon "share", class: "size-4"%>
       </button>
   </div>
 </div>
+
+<%= render 'shared/share_modal', 
+    modal_id: modal_id,
+    url: share_url,
+    title: resource.title,
+    text: resource.title %>

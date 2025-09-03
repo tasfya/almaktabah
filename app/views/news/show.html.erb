@@ -31,26 +31,12 @@
                 <%= t('.share_news') %>
               </h3>
               <div class="flex items-center gap-4">
-                <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape(@news.title) %>&url=<%= CGI.escape(request.original_url) %>"
-                   target="_blank" rel="noopener"
-                   class="btn btn-primary">
-                  <%= icon "twitter", library: "lucide", class: "size-4"%>
-                  <%= t("buttons.share_on_twitter")%>
-                </a>
-                <a href="https://www.facebook.com/sharer/sharer.php?u=<%= CGI.escape(request.original_url) %>"
-                   target="_blank" rel="noopener"
-                   class="btn btn-primary">
-                  <%= icon "facebook", library: "lucide", class: "size-4"%>
-                  <%= t("buttons.share_on_facebook")%>
-                </a>
-                <button data-controller="clipboard"
-                        data-clipboard-text-value="<%= request.original_url %>"
-                        data-clipboard-success-message-value="<%= t('common.copy_success') %>"
-                        data-clipboard-error-message-value="<%= t('common.copy_error') %>"
-                        data-action="click->clipboard#copy"
-                        class="btn btn-secondary">
-                  <%= icon "clipboard", class: "size-4" %>
-                  <%= t("buttons.copy_link")%>
+                <button class="btn btn-primary"
+                        data-controller="share-trigger"
+                        data-share-trigger-modal-id-value="news_share_modal"
+                        data-action="click->share-trigger#open">
+                  <%= icon "share", class: "size-4" %>
+                  <%= t('buttons.share') %>
                 </button>
               </div>
             </div>
@@ -60,3 +46,9 @@
       </div>
   </div>
 </div>
+
+<%= render 'shared/share_modal', 
+    modal_id: 'news_share_modal',
+    url: request.original_url,
+    title: @news.title,
+    text: @news.title %>
