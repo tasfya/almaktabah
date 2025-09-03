@@ -59,7 +59,7 @@ class Domain < ApplicationRecord
     !scholar_specific?
   end
 
-x  def assigned_scholar
+  def assigned_scholar
     return nil unless scholar_specific?
     assigned_scholars.first
   end
@@ -68,7 +68,7 @@ x  def assigned_scholar
     Scholar.for_domain_id(id)
   end
 
-x  def filtered_scholars
+  def filtered_scholars
     if scholar_specific?
       Scholar.where(id: assigned_scholar.id)
     else
