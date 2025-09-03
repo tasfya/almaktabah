@@ -48,19 +48,12 @@
                 <%= t('.share_fatwa') %>
               </h3>
               <div class="flex items-center gap-4">
-                <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape(@fatwa.title) %>&url=<%= CGI.escape(request.original_url) %>"
-                   target="_blank" rel="noopener" class="btn btn-primary">
-                  <%= icon "twitter", library: "lucide", class: "size-4"%>
-                  <%= t('buttons.share_on_twitter') %>
-                </a>
-                <button data-controller="clipboard"
-                        data-clipboard-text-value="<%= request.original_url %>"
-                        data-clipboard-success-message-value="<%= t('common.copy_success') %>"
-                        data-clipboard-error-message-value="<%= t('common.copy_error') %>"
-                        data-action="click->clipboard#copy"
-                        class="btn btn-secondary"> 
-                  <%= icon "clipboard", class: "size-4" %> 
-                  <%= t('buttons.copy_link') %>
+                <button class="btn btn-primary"
+                        data-controller="share-trigger"
+                        data-share-trigger-modal-id-value="fatwa_share_modal"
+                        data-action="click->share-trigger#open">
+                  <%= icon "share", class: "size-4" %>
+                  <%= t('buttons.share') %>
                 </button>
               </div>
             </div>
@@ -99,3 +92,9 @@
     </div>
   </div>
 </div>
+
+<%= render 'shared/share_modal', 
+    modal_id: 'fatwa_share_modal',
+    url: request.original_url,
+    title: @fatwa.title,
+    text: @fatwa.title %>
