@@ -3,12 +3,21 @@ Rails.application.routes.draw do
     mount MissionControl::Jobs::Engine => "/jobs"
   end
 
-  resources :books, only: [ :index, :show ]
-  resources :lectures, only: [ :index, :show ]
-  resources :series, only: [ :index, :show ]
+  resources :books, only: [ :index ]
+  resources :lectures, only: [ :index ]
+  resources :series, only: [ :index ]
+  resources :benefits, only: [ :index ]
+  resources :articles, only: [ :index ]
+
+  scope "scholar/:scholar_id" do
+    resources :books, only: [ :show ], controller: "books"
+    resources :benefits, only: [ :show ], controller: "benefits"
+    resources :articles, only: [ :show ], controller: "articles"
+    resources :series, only: [ :show ], controller: "series"
+    get "lectures(/:kind)/:id", to: "lectures#show", as: "lecture"
+  end
+
   resources :news, only: [ :index, :show ]
-  resources :benefits, only: [ :index, :show ]
-  resources :articles, only: [ :index, :show ]
   resources :scholars, only: [ :index, :show ]
   resources :fatwas, only: [ :index, :show ]
 

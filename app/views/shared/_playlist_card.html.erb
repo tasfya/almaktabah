@@ -1,7 +1,7 @@
 <%
   # Generate unique modal ID based on resource type and ID
   modal_id = "share_modal_#{resource.class.name.downcase}_#{resource.id}"
-  share_url = resource.is_a?(Lesson) ? polymorphic_url(resource.series) : polymorphic_url(resource)
+  share_url = resource_share_url(resource)
 %>
 
 <div class="p-4 hover:bg-gray-50 transition">

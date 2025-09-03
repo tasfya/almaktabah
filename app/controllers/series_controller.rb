@@ -20,7 +20,7 @@ class SeriesController < ApplicationController
       breadcrumb_for(t("breadcrumbs.series"), series_index_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.series"), series_index_path)
-      breadcrumb_for(@series.title, series_path(@series))
+      breadcrumb_for(@series.title, series_path(@series.scholar, @series))
     end
   end
 

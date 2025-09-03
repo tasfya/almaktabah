@@ -24,7 +24,7 @@ class BenefitsController < ApplicationController
       breadcrumb_for(t("breadcrumbs.benefits"), benefits_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.benefits"), benefits_path)
-      breadcrumb_for(@benefit.title, benefit_path(@benefit))
+      breadcrumb_for(@benefit.title, benefit_path(@benefit, scholar_id: @benefit.scholar.to_param))
     end
   end
 end

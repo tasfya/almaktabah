@@ -1,7 +1,7 @@
 class Scholar < ApplicationRecord
   include Publishable
   include Sluggable
-  friendly_id :name, use: [ :slugged, :history ]
+  friendly_id :name, use: [ :slugged, :history, :sequentially_slugged ]
 
   has_rich_text :bio
 

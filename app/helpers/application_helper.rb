@@ -67,4 +67,15 @@ module ApplicationHelper
 
     text.downcase.gsub(/[^ا-ي0-9\s]/i, "").gsub(/\s+/, "-")
   end
+
+  def resource_share_url(resource)
+    if resource.is_a?(Lesson)
+      polymorphic_url(resource.series, scholar_id: resource.series.scholar.to_param)
+    elsif resource.is_a?(Lecture)
+      kind = resource.kind.present? ? I18n.t("activerecord.attributes.lecture.kind.#{resource.kind}") : nil
+      polymorphic_url(resource, scholar_id: resource.scholar.to_param, kind:)
+    else
+      polymorphic_url(resource, scholar_id: resource.scholar.to_param)
+    end
+  end
 end

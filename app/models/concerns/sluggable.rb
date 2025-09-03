@@ -6,7 +6,7 @@ module Sluggable
     include TextHelper
 
     extend FriendlyId
-    friendly_id :title, use: [ :slugged, :history ]
+    friendly_id :title, use: [ :slugged, :history, :sequentially_slugged ]
 
     def normalize_friendly_id(value, sep: "-")
       normalize_for_slug(value, separator: sep)
