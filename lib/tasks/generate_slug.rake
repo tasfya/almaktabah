@@ -4,7 +4,7 @@
 namespace :friendly_id do
   desc "Generate slugs for existing records"
   task generate_slugs: :environment do
-    models = [ Series, Lecture, Book, News, Fatwa, Benefit ]
+    models = [ Series, Lecture, Book, News, Fatwa, Benefit, Scholar ]
     puts "Generating slugs for existing records..."
     models.each do |model|
       model.find_each(batch_size: 100) do |record|
