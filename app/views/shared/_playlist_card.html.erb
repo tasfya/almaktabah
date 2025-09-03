@@ -1,38 +1,51 @@
-<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between px-4 py-3 hover:bg-gray-50 transition">
-  <div class="flex items-center gap-4">
-    <% if local_assigns[:with_icon].present? %>
-      <div class="p-2 rounded-lg border w-fit border-background-contrast">
-        <%= icon "book-open", class: "size-4 sm:size-5" %>
+<%
+  # Generate unique modal ID based on resource type and ID
+  modal_id = "share_modal_#{resource.class.name.downcase}_#{resource.id}"
+  share_url = resource.is_a?(Lesson) ? polymorphic_url(resource.series) : polymorphic_url(resource)
+%>
+
+<div class="p-4 hover:bg-gray-50 transition">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div class="flex items-center gap-4 flex-1 min-w-0">
+      <% if local_assigns[:with_icon].present? %>
+        <div class="p-2 rounded border border-background-contrast flex-shrink-0">
+          <%= icon "book-open", class: "size-5" %>
+        </div>
+      <% else %>
+        <% if local_assigns[:index].present? %>
+        <span class="text-gray-500 w-8 text-center text-base font-medium flex-shrink-0"><%= local_assigns[:index] + 1 %></span>
+        <% end %>
+      <% end %>
+      <div class="flex-1 min-w-0">
+        <h3 class="font-medium text-base mb-1 truncate"><%= resource.title %></h3>
+        <% if resource.respond_to?(:youtube_url) && resource.youtube_url.present? %>
+          <a href="<%= youtube_embed_url(resource.youtube_url) %>" target="_blank"
+              class="text-sm text-gray-500 hover:underline flex items-center gap-2">
+            <%= icon "youtube", library: "lucide", class: "size-4" %>
+            <span>YouTube</span>
+          </a>
+        <% end %>
       </div>
-    <% else %>
-      <% if local_assigns[:index].present? %>
-      <span class="text-gray-500 w-6 text-center"><%= local_assigns[:index] + 1 %></span>
-      <% end %>
-    <% end %>
-    <div>
-      <h3 class="font-medium"><%= resource.title %></h3>
-      <% if resource.respond_to?(:youtube_url) && resource.youtube_url.present? %>
-        <a href="<%= youtube_embed_url(resource.youtube_url) %>" target="_blank"
-            class="text-xs text-gray-500 hover:underline flex items-center gap-1">
-          <%= icon "youtube", library: "lucide", class: "size-4" %>
-        </a>
-      <% end %>
     </div>
   </div>
-  <div class="flex items-center gap-2">
-    <%= play_button(resource: resource, klass: "btn btn-secondary btn-sm") %>
-    <% if resource.respond_to?(:optimized_audio) && resource.optimized_audio.attached? %>
-      <%= link_to(rails_blob_url(resource.optimized_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
+  <div class="flex items-center gap-2 flex-shrink-0 justify-end">
+    <% if resource.has_any_audio? %>
+      <%= play_button(resource: resource, klass: "btn btn-secondary btn-sm") %>
+      <%= link_to(rails_blob_url(resource.best_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
         <%= icon "arrow-down-tray", class: "size-3 sm:size-5" %>
       <% end %>
     <% end %>
-    <button class="btn btn-secondary btn-sm w-fit"
-              data-controller="clipboard"
-              data-clipboard-text-value="<%= request.original_url %>"
-              data-clipboard-success-message-value="<%= t('common.copy_success') %>"
-              data-clipboard-error-message-value="<%= t('common.copy_error') %>"
-              data-action="click->clipboard#copy">
-      <%= icon "share", class: "size-3 sm:size-5"%>
-    </button>
+      <button class="btn btn-secondary btn-sm"
+              data-controller="share-trigger"
+              data-share-trigger-modal-id-value="<%= modal_id %>"
+              data-action="click->share-trigger#open">
+        <%= icon "share", class: "size-4"%>
+      </button>
   </div>
 </div>
+
+<%= render 'shared/share_modal', 
+    modal_id: modal_id,
+    url: share_url,
+    title: resource.title,
+    text: resource.title %>

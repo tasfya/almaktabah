@@ -178,12 +178,14 @@ ar:
     send_message: "إرسال الرسالة"
     apply_filter: "تطبيق الفلترة"
     reset: "إعادة تعيين"
+    close: "إغلاق"
     view_all_lessons: "عرض جميع دروس السلسلة"
     previous: "السابق"
     prev: "السابق"
     next: "التالي"
     close: "إغلاق"
     search_button: "بحث"
+    view_all: "عرض الكل"
   news_bar:
     latest_news: "آخر الأخبار"
   site:
@@ -217,6 +219,7 @@ ar:
     recent_lessons: "أحدث الدروس"
     about_sheikh_alt: "عن الشيخ"
     contact_us: "اتصل بنا"
+    mobile_menu: "القائمة الجانبية"
   common:
     no_media_available: "لا توجد وسائط متاحة حالياً"
     video: "فيديو"
@@ -244,6 +247,9 @@ ar:
     pagination_showing: "عرض %{from}-%{to} من %{count} نتيجة"
     copy_success: "تم نسخ الرابط بنجاح!"
     copy_error: "خطأ في نسخ الرابط: "
+    share: "مشاركة"
+    link: "الرابط"
+    share_on: "شارك عبر"
     book_not_found: "الكتاب غير موجود"
     lecture_not_found: "المحاضرة غير موجودة"
     lesson_not_found: "الدرس غير موجود"
@@ -419,3 +425,57 @@ ar:
     news: "الأخبار"
     about: "حول"
     contact: "اتصل بنا"
+  datetime:
+    distance_in_words:
+      half_a_minute: "نصف دقيقة"
+      less_than_x_seconds:
+        one: "أقل من ثانية واحدة"
+        other: "أقل من %{count} ثواني"
+      x_seconds:
+        one: "ثانية واحدة"
+        other: "%{count} ثواني"
+      less_than_x_minutes:
+        one: "أقل من دقيقة واحدة"
+        other: "أقل من %{count} دقائق"
+      x_minutes:
+        one: "دقيقة واحدة"
+        other: "%{count} دقائق"
+      about_x_hours:
+        one: "حوالي ساعة واحدة"
+        other: "حوالي %{count} ساعات"
+      x_days:
+        one: "يوم واحد"
+        two: "يومان"
+        few: "%{count} أيام"
+        many: "%{count} يوماً"
+        other: "%{count} أيام"
+      about_x_months:
+        one: "حوالي شهر واحد"
+        two: "حوالي شهران"
+        few: "حوالي %{count} أشهر"
+        many: "حوالي %{count} شهراً"
+        other: "حوالي %{count} أشهر"
+      x_months:
+        one: "شهر واحد"
+        two: "شهران"
+        few: "%{count} أشهر"
+        many: "%{count} شهراً"
+        other: "%{count} أشهر"
+      about_x_years:
+        one: "حوالي سنة واحدة"
+        two: "حوالي سنتان"
+        few: "حوالي %{count} سنوات"
+        many: "حوالي %{count} سنة"
+        other: "حوالي %{count} سنوات"
+      over_x_years:
+        one: "أكثر من سنة واحدة"
+        two: "أكثر من سنتان"
+        few: "أكثر من %{count} سنوات"
+        many: "أكثر من %{count} سنة"
+        other: "أكثر من %{count} سنوات"
+      almost_x_years:
+        one: "تقريباً سنة واحدة"
+        two: "تقريباً سنتان"
+        few: "تقريباً %{count} سنوات"
+        many: "تقريباً %{count} سنة"
+        other: "تقريباً %{count} سنوات"
