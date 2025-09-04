@@ -7,6 +7,9 @@ module TextHelper
     # Remove tashkeel (diacritics) if Arabic text is present
     str = remove_tashkeel(str)
 
+    # Remove tatweel (U+0640) - Arabic elongation character
+    str = remove_tatweel(str)
+
     # Remove all punctuation (Arabic + Latin)
     str = remove_punctuation(str)
 

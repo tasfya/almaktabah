@@ -24,6 +24,10 @@ module ArabicHelper
     text.gsub(TASHKEEL_PATTERN, "")
   end
 
+  def remove_tatweel(text)
+    text.gsub(/\u0640/, "")
+  end
+
   def remove_punctuation(text)
     text.gsub(/[[:punct:]\p{P}]+/u, " ")
   end

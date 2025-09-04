@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :benefits, only: [ :index ]
   resources :articles, only: [ :index ]
 
-  scope "scholar/:scholar_id" do
+  scope ":scholar_id" do
     resources :books, only: [ :show ]
     resources :benefits, only: [ :show ]
     resources :articles, only: [ :show ]

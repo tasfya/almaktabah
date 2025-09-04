@@ -1,6 +1,12 @@
 class Scholar < ApplicationRecord
   include Publishable
   include Sluggable
+
+  has_many :lectures, dependent: :nullify
+  has_many :series, dependent: :nullify
+  has_many :benefits, dependent: :nullify
+  has_many :articles, dependent: :nullify
+
   friendly_id :name, use: [ :slugged, :history, :sequentially_slugged ]
 
   has_rich_text :bio

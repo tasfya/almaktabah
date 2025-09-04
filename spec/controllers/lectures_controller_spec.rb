@@ -124,7 +124,7 @@ RSpec.describe LecturesController, type: :controller do
 
       it "sets up breadcrumbs" do
         expect(controller).to receive(:breadcrumb_for).with(I18n.t("breadcrumbs.lectures"), lectures_path)
-        expect(controller).to receive(:breadcrumb_for).with(published_lecture.title, lecture_path(scholar_id: scholar.to_param, kind: I18n.t("activerecord.attributes.lecture.kind.#{published_lecture.kind}"), id: published_lecture.to_param))
+        expect(controller).to receive(:breadcrumb_for).with(published_lecture.title, lecture_path(scholar_id: scholar.to_param, kind: published_lecture.kind, id: published_lecture.to_param))
         get :show, params: { scholar_id: scholar.to_param, kind: published_lecture.kind, id: published_lecture.to_param }
       end
     end
