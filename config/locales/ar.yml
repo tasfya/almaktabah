@@ -392,10 +392,10 @@ ar:
       benefits: "فوائد"
     attributes:
       lecture:
-          kind:
-            sermon: "خطبة"
-            conference: "محاضرة"
-            benefit: "فائدة"
+        kind:
+          sermon: "خطبة"
+          conference: "محاضرة"
+          benefit: "فائدة"
   sheikh:
     name: "الشيخ محمد بن رمزان الهاجري"
     description: "الموقع الرسمي لفضيلة الشيخ محمد بن رمزان الهاجري يحتوي على مجموعة متنوعة من الدروس والمحاضرات والكتب والفتاوى."

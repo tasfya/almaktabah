@@ -10,10 +10,10 @@ Rails.application.routes.draw do
   resources :articles, only: [ :index ]
 
   scope "scholar/:scholar_id" do
-    resources :books, only: [ :show ], controller: "books"
-    resources :benefits, only: [ :show ], controller: "benefits"
-    resources :articles, only: [ :show ], controller: "articles"
-    resources :series, only: [ :show ], controller: "series"
+    resources :books, only: [ :show ]
+    resources :benefits, only: [ :show ]
+    resources :articles, only: [ :show ]
+    resources :series, only: [ :show ]
     get "lectures(/:kind)/:id", to: "lectures#show", as: "lecture"
   end
 

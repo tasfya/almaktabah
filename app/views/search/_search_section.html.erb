@@ -35,7 +35,7 @@
           <div class="flex-1 min-w-0">
            <h4 class="text-lg font-medium mb-2">
               <% if result.is_a?(Lesson) %>
-                <%= link_to result.series.title, series_path(result.series, result.series.scholar), class: "transition-colors" %>
+                <%= link_to result.series.title, series_path(result.series.scholar, result.series), class: "transition-colors" %>
               <% else %>
                 <%= link_to result.title, polymorphic_path(result), class: "transition-colors" %>
               <% end %>

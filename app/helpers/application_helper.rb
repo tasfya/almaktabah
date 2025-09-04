@@ -69,13 +69,18 @@ module ApplicationHelper
   end
 
   def resource_share_url(resource)
-    if resource.is_a?(Lesson)
-      polymorphic_url(resource.series, scholar_id: resource.series.scholar.to_param)
-    elsif resource.is_a?(Lecture)
-      kind = resource.kind.present? ? I18n.t("activerecord.attributes.lecture.kind.#{resource.kind}") : nil
-      polymorphic_url(resource, scholar_id: resource.scholar.to_param, kind:)
+    case resource
+    when Lesson
+      series = resource.series
+      scholar = series&.scholar
+      return polymorphic_url(series, scholar_id: scholar.to_param) if series && scholar
+    when Lecture
+      scholar = resource.respond_to?(:scholar) ? resource.scholar : nil
+      return polymorphic_url(resource, scholar_id: scholar.to_param, kind: resource.kind.presence) if scholar
     else
-      polymorphic_url(resource, scholar_id: resource.scholar.to_param)
+      scholar = resource.respond_to?(:scholar) ? resource.scholar : nil
+      return polymorphic_url(resource, scholar_id: scholar.to_param) if scholar
     end
+    polymorphic_url(resource)
   end
 end
