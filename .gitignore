@@ -51,3 +51,6 @@ node_modules
 .DS_Store
 db/backups
 .todos.yaml
+
+# VS Code
+.vscode/*
