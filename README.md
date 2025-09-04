@@ -35,20 +35,6 @@ bin/rake users:make_admin[user@example.com]
 bin/rake users:list_admins
 ```
 
-## Seeding Demo Data
-To seed the database with demo data, run the following command:
-
-```bash
-bin/rake db:populate_content
-```
-
-## To Create slugs for existing records (if not already present)
-If you have existing records without slugs, you can generate them using the following rake task:
-
-```bash
-bin/rake friendly_id:generate_slugs
-```
-
 ## Styling Framework
 
 This application uses **Tailwind CSS 4** with **daisyUI** for styling and UI components. Propshaft will automatically handle the asset pipeline for these files. If the changes are not reflected, run `bin/rails assets:clobber` to clear compiled assets.
