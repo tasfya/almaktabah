@@ -9,7 +9,7 @@ module Sluggable
     friendly_id :title, use: [ :slugged, :history, :sequentially_slugged ]
 
     def normalize_friendly_id(value, sep: "-")
-      normalize_for_slug(value, separator: sep)
+      normalize_for_slug(value, sep: sep)
     end
 
     def to_param
