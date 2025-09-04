@@ -50,29 +50,4 @@ class Domain < ApplicationRecord
     return false if !self.class.available_templates.include?(template_name)
     true
   end
-
-  def scholar_specific?
-    assigned_scholars.count == 1
-  end
-
-  def allow_scholars_listing?
-    !scholar_specific?
-  end
-
-  def assigned_scholar
-    return nil unless scholar_specific?
-    assigned_scholars.first
-  end
-
-  def assigned_scholars
-    Scholar.for_domain_id(id)
-  end
-
-  def filtered_scholars
-    if scholar_specific?
-      Scholar.where(id: assigned_scholar.id)
-    else
-      assigned_scholars
-    end
-  end
 end

@@ -44,14 +44,12 @@
           <span>الفتاوى</span>
         <% end %>
       </li>
-      <% if @domain&.allow_scholars_listing? %>
-        <li>
-          <%= link_to scholars_path, class: active_link_class(scholars_path) do %>
-            <%= icon "user-group", library: "heroicons", class: "w-5 h-5" %>
-            <span>العلماء</span>
-          <% end %>
-        </li>
-      <% end %>
+      <li>
+        <%= link_to scholars_path, class: active_link_class(scholars_path) do %>
+          <%= icon "user-group", library: "heroicons", class: "w-5 h-5" %>
+          <span>العلماء</span>
+        <% end %>
+      </li>
       <div class="divider my-4"></div>
       <li>
         <%= link_to search_path, class: active_link_class(search_path) do %>

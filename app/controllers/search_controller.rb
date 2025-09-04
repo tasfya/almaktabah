@@ -29,8 +29,7 @@
       @results[:news] = search_news
       @results[:benefits] = search_benefits
       @results[:fatwas] = search_fatwas
-      # Only include scholars in search if listing is allowed for this domain
-      @results[:scholars] = search_scholars if @domain.allow_scholars_listing?
+      @results[:scholars] = search_scholars # TODO: only for 3ilm.org
     end
 
     def search_books
@@ -76,7 +75,7 @@
     end
 
     def search_scholars
-      @domain.filtered_scholars.published.ransack(
+      Scholar.published.ransack(
         first_name_or_last_name_cont: @query
       ).result(distinct: true).order(:first_name).limit(5)
     end
