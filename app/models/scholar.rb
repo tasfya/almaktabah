@@ -19,7 +19,7 @@ class Scholar < ApplicationRecord
   end
 
   def normalize_friendly_id(value, sep: "-")
-    normalize_for_slug(name, separator: "-")
+    normalize_for_slug(value, sep:)
   end
 
   protected

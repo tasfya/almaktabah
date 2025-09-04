@@ -16,6 +16,7 @@ namespace :friendly_id do
     puts "Slug generation completed."
   rescue => e
     puts "Error generating slugs: #{e.message}"
+    puts e.backtrace.join("\n")
     exit 1
   end
 end
