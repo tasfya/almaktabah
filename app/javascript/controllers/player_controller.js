@@ -1,11 +1,11 @@
 import ApplicationController from "controllers/application_controller"
-
+// connects to data-controller="player"
 export default class extends ApplicationController {
-  static values = { 
-    title: String, 
-    artist: String, 
+  static values = {
+    title: String,
+    artist: String,
     artwork: String,
-    domain: String 
+    domain: String
   }
 
   connect() {
@@ -13,10 +13,30 @@ export default class extends ApplicationController {
     this.setupMediaSession()
     this.setupMediaSessionHandlers()
     this.play()
+    this.setupUserInteractionListeners()
   }
 
   disconnect() {
     this.clearMediaSession()
+  }
+
+  setupUserInteractionListeners() {
+    const playButton = document.querySelector(`[data-player-id='${this.element.id}_player_content']`)
+    if (!playButton) {
+      console.warn("Play button not found for player:", this.element.id)
+      return
+    }
+    this.element.addEventListener("play", () => {
+      const event = new Event("audio:playing")
+      playButton.dispatchEvent(event)
+      console.log("Dispatched audio:playing event")
+    })
+
+    this.element.addEventListener("pause", () => {
+      const event = new Event("audio:paused")
+      playButton.dispatchEvent(event)
+      console.log("Dispatched audio:paused event")
+    })
   }
 
   play() {
@@ -26,6 +46,10 @@ export default class extends ApplicationController {
     if (playPromise !== undefined) {
       playPromise.then(() => {
         console.log("Playback started")
+        // launch new event to notify play button controllers
+        const event = new Event("audio:playing")
+        const playButton = document.querySelector(`[data-player-id='${this.element.id}_player_content']`)
+        playButton.dispatchEvent(event)
       }).catch(error => {
         console.warn("Playback failed:", error)
       })
@@ -34,9 +58,19 @@ export default class extends ApplicationController {
 
   toggle() {
     if (this.element.paused) {
-      this.play()
+      this.play().then(() => {
+        const event = new Event("audio:playing")
+        console.log("Dispatching audio:playing event")
+        const playButton = document.querySelector(`[data-player-id='${this.element.id}_player_content']`)
+        playButton.dispatchEvent(event)
+      })
     } else {
-      this.element.pause()
+      this.element.pause().then(() => {
+        const event = new Event("audio:paused")
+        console.log("Dispatching audio:paused event")
+        const playButton = document.querySelector(`[data-player-id='${this.element.id}_player_content']`)
+        playButton.dispatchEvent(event)
+      })
     }
   }
 
@@ -112,7 +146,7 @@ export default class extends ApplicationController {
       navigator.mediaSession.setActionHandler('seekforward', (details) => {
         const skipTime = details.seekOffset || 10
         this.element.currentTime = Math.min(
-          this.element.currentTime + skipTime, 
+          this.element.currentTime + skipTime,
           this.element.duration
         )
       })
