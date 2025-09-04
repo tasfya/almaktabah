@@ -28,6 +28,7 @@ proxy:
    - fawzan.3ilm.org
    - ramli.3ilm.org
    - suhai.me
+   - alsuliman.3ilm.org
 
 # Credentials for your image host.
 registry:

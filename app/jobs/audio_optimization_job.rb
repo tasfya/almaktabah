@@ -50,13 +50,22 @@ class AudioOptimizationJob < ApplicationJob
 
   def attach_optimized_audio(item, output_tempfile)
     output_tempfile.rewind
-    key = item.generate_optimize_audio_bucket_key
-
+    key = ensure_key_unique(item)
     item.optimized_audio.attach(
       io: output_tempfile,
-      filename: item.audio.filename.to_s,
+      filename: "#{File.basename(item.audio.filename.to_s, '.*')}.mp3",
       key:,
       content_type: "audio/mpeg"
     )
+  end
+
+  def ensure_key_unique(item)
+    key = item.generate_optimize_audio_bucket_key
+    counter = 0
+    while ActiveStorage::Blob.where(key: key).exists?
+      key = "#{key.split('.').first}_#{counter}.mp3"
+      counter += 1
+      break if counter > 5
+    end
   end
 end
