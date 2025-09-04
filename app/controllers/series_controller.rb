@@ -25,7 +25,11 @@ class SeriesController < ApplicationController
   end
 
   def set_series
-    @series = Series.friendly.for_domain_id(@domain.id).published.find(params[:id])
+    @scholar = Scholar.friendly.find(params[:scholar_id])
+    @series = @scholar.series.friendly
+                      .for_domain_id(@domain.id)
+                      .published
+                      .find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to series_index_path, alert: t("messages.series_not_found")
   end

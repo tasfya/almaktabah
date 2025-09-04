@@ -272,7 +272,7 @@ namespace :db do
         description: description,
         content: content,
         duration: rand(30..120),
-        kind: [ :seremon, :conference, :benefit ].sample,
+        kind: [ :sermon, :conference, :benefit ].sample,
         published: true,
         published_at: Faker::Date.between(from: 1.year.ago, to: Date.today)
       )

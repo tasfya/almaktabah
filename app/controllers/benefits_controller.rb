@@ -13,7 +13,11 @@ class BenefitsController < ApplicationController
   private
 
   def set_benefit
-    @benefit = Benefit.friendly.for_domain_id(@domain.id).published.find(params[:id])
+    @scholar = Scholar.friendly.find(params[:scholar_id])
+    @benefit = @scholar.benefits.friendly
+                       .for_domain_id(@domain.id)
+                       .published
+                       .find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to benefits_path, alert: t("messages.benefit_not_found")
   end

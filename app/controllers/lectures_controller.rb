@@ -29,7 +29,11 @@ class LecturesController < ApplicationController
   end
 
   def set_lecture
-    @lecture = Lecture.friendly.for_domain_id(@domain.id).published.find(params[:id])
+    @scholar = Scholar.friendly.find(params[:scholar_id])
+    @lecture = @scholar.lectures.friendly
+                       .for_domain_id(@domain.id)
+                       .published
+                       .find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to lectures_path, alert: t("messages.lecture_not_found")
   end
