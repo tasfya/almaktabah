@@ -22,6 +22,7 @@ module TextHelper
     # Strip leading/trailing separator
     str.gsub!(/^#{Regexp.escape(sep)}|#{Regexp.escape(sep)}$/, "")
 
-    str.downcase
+    slug = str.downcase
+    slug.empty? ? nil : slug
   end
 end

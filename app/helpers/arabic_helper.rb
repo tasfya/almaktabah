@@ -1,7 +1,7 @@
 module ArabicHelper
   # Arabic Unicode character ranges
-  ARABIC_LETTERS = "\u0600-\u06FF".freeze
-  TASHKEEL_PATTERN = /[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06ED]/.freeze
+  ARABIC_LETTERS = "\\p{Arabic}".freeze
+  TASHKEEL_PATTERN = /[\p{M}&&\p{Arabic}]/u.freeze
 
   ARABIC_TO_LATIN = {
     "ا" => "a", "ب" => "b", "ت" => "t", "ث" => "th",
