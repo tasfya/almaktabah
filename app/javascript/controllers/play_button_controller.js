@@ -11,7 +11,6 @@ export default class extends ApplicationController {
       this.data.set("originalText", this.textTarget.textContent)
     }
     this.element.addEventListener("audio:playing", this.hideLoading.bind(this))
-    this.element.addEventListener("audio:playing", this.hideLoading.bind(this))
     this.element.addEventListener("audio:playing", this.#toggleAudioIcons.bind(this, true))
     this.element.addEventListener("audio:paused", this.#toggleAudioIcons.bind(this, false))
 
@@ -19,8 +18,8 @@ export default class extends ApplicationController {
 
   disconnect() {
     this.element.removeEventListener("audio:playing", this.hideLoading.bind(this))
-    this.element.removeEventListener("audio:playing", this.toggleAudioIcons.bind(this, true))
-    this.element.removeEventListener("audio:paused", this.toggleAudioIcons.bind(this, false))
+    this.element.removeEventListener("audio:playing", this.#toggleAudioIcons.bind(this, true))
+    this.element.removeEventListener("audio:paused", this.#toggleAudioIcons.bind(this, false))
 
   }
 
