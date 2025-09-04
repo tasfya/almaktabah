@@ -66,7 +66,7 @@ module Seeds
           next
         end
 
-        if data['audio_url'].present?
+        if data['audio_url'].present? && !lesson.audio.attached?
           path = Rails.root.join('tmp', 'audio', 'lessons', "lesson_#{lesson.id}.mp3")
           if download_file(data['audio_url'], path)
             lesson.audio.attach(io: File.open(path), filename: File.basename(path))
@@ -76,7 +76,7 @@ module Seeds
           end
         end
 
-        if data['video_url'].present? && data['video_url'].end_with?('mp4')
+        if data['video_url'].present? && data['video_url'].end_with?('mp4') && !lesson.video.attached?
           path = Rails.root.join('tmp', 'video', 'lessons', "lesson_#{lesson.id}.mp4")
           if download_file(data['video_url'], path)
             lesson.video.attach(io: File.open(path), filename: File.basename(path))
