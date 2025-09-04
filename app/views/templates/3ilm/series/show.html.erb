@@ -1,0 +1,43 @@
+<% content_for :title, @series.title %>
+<div class="min-h-screen bg-background">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row items-center lg:items-end gap-6 mb-10">
+      <div class="w-40 h-40 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+        <%= image_tag("background.jpg", class: "w-full h-full object-cover") %>
+      </div>
+      <div class="flex-1 text-center lg:text-right">
+        <p class="uppercase tracking-wide text-lg text-gray-400 mb-2">
+          <%= t('.series_label') %>
+        </p>
+        <h1 class="text-4xl font-bold mb-4"><%= @series.title %></h1>
+        <div class="flex items-center justify-right gap-4 mb-4">
+          <div class="text-right">
+            <h2 class="text-base font-semibold">
+              <%= link_to @series.scholar.name, scholar_path(@series.scholar), class: "hover:underline" %>
+            </h2>
+          </div>
+        </div>
+        <div class="flex items-center justify-center lg:justify-start gap-3 text-sm text-gray-500 mb-4">
+          <% if @series.category.present? %>
+            <span class="badge badge-primary rounded-full"><%= @series.category %></span>
+          <% end %>
+          <span class="badge badge-secondary">
+            <%= pluralize(@series.lessons.published.count, 'درس') %>
+          </span>
+        </div>
+        <% if @series.description.present? %>
+          <p class="text-gray-600 max-w-2xl mx-auto lg:mx-0">
+            <%= truncate(@series.description, length: 180) %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+    <div class="bg-card rounded-lg shadow overflow-hidden">
+      <div class="divide-y divide-gray-200">
+        <% @lessons.each_with_index do |lesson, idx| %>
+          <%= render "shared/playlist_card", resource: lesson, with_icon: true, index: idx %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

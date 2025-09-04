@@ -2,8 +2,11 @@
   # Generate unique modal ID based on resource type and ID
   modal_id = "share_modal_#{resource.class.name.downcase}_#{resource.id}"
   share_url = resource.is_a?(Lesson) ? polymorphic_url(resource.series) : polymorphic_url(resource)
-%>
+  show_scholar = local_assigns.fetch(:show_scholar, false)
 
+  # Control whether the title links to the resource show page
+  link_to_resource = local_assigns.fetch(:link_to_resource, false)
+%>
 <div class="p-4 hover:bg-gray-50 transition">
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
     <div class="flex items-center gap-4 flex-1 min-w-0">
@@ -13,11 +16,33 @@
         </div>
       <% else %>
         <% if local_assigns[:index].present? %>
-        <span class="text-gray-500 w-8 text-center text-base font-medium flex-shrink-0"><%= local_assigns[:index] + 1 %></span>
+          <span class="text-gray-500 w-8 text-center text-base font-medium flex-shrink-0"><%= local_assigns[:index] + 1 %></span>
         <% end %>
       <% end %>
       <div class="flex-1 min-w-0">
-        <h3 class="font-medium text-base mb-1 truncate"><%= resource.title %></h3>
+        <h3 class="font-medium text-base mb-1 truncate">
+          <% if link_to_resource %>
+            <%= link_to resource.title, polymorphic_path(resource), class: "hover:underline" %>
+          <% else %>
+            <%= resource.title %>
+          <% end %>
+        </h3>
+        <% if show_scholar %>
+          <% scholar = nil %>
+          <% if resource.respond_to?(:scholar) && resource.scholar.present? %>
+            <% scholar = resource.scholar %>
+          <% elsif resource.respond_to?(:series) && resource.series&.scholar.present? %>
+            <% scholar = resource.series.scholar %>
+          <% end %>
+        <% end %>
+        <% if scholar.present? %>
+          <div class="flex items-center gap-1">
+            <%= icon "user", class: "size-4 text-gray-500" %>
+            <span class="text-base text-gray-600 truncate">
+              <%= link_to scholar.name, scholar_path(scholar), class: "hover:link" %>
+            </span>
+          </div>
+        <% end %>
         <% if resource.respond_to?(:youtube_url) && resource.youtube_url.present? %>
           <a href="<%= youtube_embed_url(resource.youtube_url) %>" target="_blank"
               class="text-sm text-gray-500 hover:underline flex items-center gap-2">
@@ -35,15 +60,14 @@
         <%= icon "arrow-down-tray", class: "size-3 sm:size-5" %>
       <% end %>
     <% end %>
-      <button class="btn btn-secondary btn-sm"
+    <button class="btn btn-secondary btn-sm"
               data-controller="share-trigger"
               data-share-trigger-modal-id-value="<%= modal_id %>"
               data-action="click->share-trigger#open">
-        <%= icon "share", class: "size-4"%>
-      </button>
+      <%= icon "share", class: "size-4"%>
+    </button>
   </div>
 </div>
-
 <%= render 'shared/share_modal', 
     modal_id: modal_id,
     url: share_url,

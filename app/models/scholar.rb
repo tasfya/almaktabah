@@ -2,6 +2,7 @@ class Scholar < ApplicationRecord
   include Publishable
 
   has_rich_text :bio
+  has_one_attached :avatar, service: Rails.application.config.public_storage
 
   # Helper method to get full name
   def name

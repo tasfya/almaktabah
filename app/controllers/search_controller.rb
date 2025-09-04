@@ -29,7 +29,7 @@
       @results[:news] = search_news
       @results[:benefits] = search_benefits
       @results[:fatwas] = search_fatwas
-      @results[:scholars] = search_scholars
+      @results[:scholars] = search_scholars # TODO: only for 3ilm.org
     end
 
     def search_books
