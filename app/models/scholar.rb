@@ -28,7 +28,7 @@ class Scholar < ApplicationRecord
       first_name: first_name,
       last_name: last_name,
       full_name: name,
-      full_name_alias: nil
+      full_name_alias: full_name_alias
     }
   end
 end
