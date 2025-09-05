@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :fatwa do
+      scholar
       title { Faker::Book.title }
       question { Faker::Lorem.paragraph }
       answer { Faker::Lorem.paragraphs(number: 20).join("\n\n") }

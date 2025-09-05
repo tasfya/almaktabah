@@ -38,6 +38,7 @@ describe 'Fatwas API', type: :request do
           expect(fatwa_data).to have_key('answer')
           expect(fatwa_data).to have_key('category')
           expect(fatwa_data).to have_key('published_at')
+          expect(fatwa_data).to have_key('scholar')
         end
       end
     end

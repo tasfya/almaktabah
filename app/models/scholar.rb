@@ -1,6 +1,13 @@
 class Scholar < ApplicationRecord
   include Publishable
 
+  has_many :articles, foreign_key: :author_id
+  has_many :benefits
+  has_many :books, foreign_key: :author_id
+  has_many :lectures
+  has_many :series
+  has_many :fatwas
+
   has_rich_text :bio
 
   # Helper method to get full name
