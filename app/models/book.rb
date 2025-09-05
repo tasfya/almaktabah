@@ -3,7 +3,7 @@ class Book < ApplicationRecord
   include DomainAssignable
   include AttachmentSerializable
 
-  belongs_to :author, class_name: "Scholar", foreign_key: "author_id"
+  belongs_to :author, class_name: "Scholar", foreign_key: "author_id", inverse_of: :author
   has_one_attached :file, service: Rails.application.config.public_storage
   has_one_attached :cover_image, service: Rails.application.config.public_storage
 

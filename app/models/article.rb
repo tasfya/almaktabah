@@ -2,7 +2,7 @@ class Article < ApplicationRecord
   include Publishable
   include DomainAssignable
 
-  belongs_to :author, class_name: "Scholar"
+  belongs_to :author, class_name: "Scholar", inverse_of: :author
 
   has_rich_text :content
 

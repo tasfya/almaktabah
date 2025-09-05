@@ -4,7 +4,7 @@ class Benefit < ApplicationRecord
   include DomainAssignable
   include AttachmentSerializable
 
-  belongs_to :scholar, optional: true
+  belongs_to :scholar, optional: true, inverse_of: :scholar
 
   has_one_attached :thumbnail, service: Rails.application.config.public_storage
   has_one_attached :audio, service: Rails.application.config.public_storage

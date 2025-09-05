@@ -5,7 +5,7 @@ class Series < ApplicationRecord
 
     has_one_attached :explainable, service: Rails.application.config.public_storage
     has_many :lessons, dependent: :destroy
-    belongs_to :scholar
+    belongs_to :scholar, inverse_of: :scholar
     # Scopes
     scope :recent, -> { order(published_at: :desc) }
     scope :by_category, ->(category) { where(category: category) if category.present? }

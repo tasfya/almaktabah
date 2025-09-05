@@ -2,7 +2,7 @@ class Fatwa < ApplicationRecord
   include Publishable
   include DomainAssignable
 
-  belongs_to :scholar, optional: true
+  belongs_to :scholar, optional: true, inverse_of: :scholar
 
   has_rich_text :question
   has_rich_text :answer
