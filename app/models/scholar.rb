@@ -1,11 +1,11 @@
 class Scholar < ApplicationRecord
   include Publishable
 
-  has_many :articles, foreign_key: :author_id, dependent: :restrict, inverse_of: :author
+  has_many :articles, foreign_key: :author_id, dependent: :restrict_with_error, inverse_of: :author
   has_many :benefits,  dependent: :nullify, inverse_of: :scholar
-  has_many :books,     foreign_key: :author_id, dependent: :restrict, inverse_of: :author
-  has_many :lectures,  dependent: :restrict, inverse_of: :scholar
-  has_many :series,    dependent: :restrict, inverse_of: :scholar
+  has_many :books,     foreign_key: :author_id, dependent: :restrict_with_error, inverse_of: :author
+  has_many :lectures,  dependent: :restrict_with_error, inverse_of: :scholar
+  has_many :series,    dependent: :restrict_with_error, inverse_of: :scholar
   has_many :fatwas,    dependent: :nullify, inverse_of: :scholar
   has_rich_text :bio
 

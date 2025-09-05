@@ -15,7 +15,7 @@ class Lecture < ApplicationRecord
   has_one_attached :video, service: Rails.application.config.public_storage
   has_one_attached :optimized_audio, service: Rails.application.config.public_storage
   has_rich_text :content
-  belongs_to :scholar, inverse_of: :scholar
+  belongs_to :scholar, inverse_of: :lectures
 
   scope :recent, -> { order(published_at: :desc) }
   scope :by_category, ->(category) { where(category: category) if category.present? }
