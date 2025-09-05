@@ -68,7 +68,7 @@ http://localhost:3000/api-docs
 When you make changes to API endpoints or data structures, update the Swagger documentation by running:
 
 ```bash
-bundle exec rake rswag:specs:swaggerize
+bundle exec rake rswag
 ```
 
 This command generates the OpenAPI JSON files from your RSpec API tests, which are then served by the Swagger UI.
