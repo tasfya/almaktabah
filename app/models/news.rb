@@ -9,7 +9,7 @@ class News < ApplicationRecord
 
   validates :title, presence: true
   validates :content, presence: true
-  validates :published_at, presence: true
+  validates :published_at, presence: true, if: :published?
   validates :slug, presence: true, uniqueness: true
 
   scope :recent, -> { order(published_at: :desc) }

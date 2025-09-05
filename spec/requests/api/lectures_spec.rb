@@ -3,7 +3,7 @@ require 'openapi_helper'
 describe 'Lectures API', type: :request do
   let(:domain) { create(:domain, host: 'localhost') }
   let(:scholar) { create(:scholar) }
-  let!(:lecture) { create(:lecture, :with_domain, scholar: scholar) }
+  let!(:lecture) { create(:lecture, :published, :with_domain, scholar: scholar) }
 
   before do
     # Assign lecture to domain

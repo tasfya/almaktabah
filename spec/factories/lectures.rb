@@ -5,9 +5,8 @@ FactoryBot.define do
     duration { Faker::Number.between(from: 1, to: 120) }
     category { Faker::Lorem.word }
     kind { :conference }
-    published { true }
+    published
     scholar { association(:scholar) }
-    published_at { Faker::Date.backward(days: 14) }
     content { Faker::Lorem.paragraphs(number: 3).join("\n\n") }
     audio { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
     thumbnail { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'thumbnail.jpg'), 'image/jpeg') }
