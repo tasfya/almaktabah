@@ -233,7 +233,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_05_210911) do
   add_foreign_key "benefits", "scholars"
   add_foreign_key "books", "scholars", column: "author_id"
   add_foreign_key "domain_assignments", "domains"
-  add_foreign_key "fatwas", "scholars"
+  add_foreign_key "fatwas", "scholars", on_delete: :nullify
   add_foreign_key "lectures", "scholars"
   add_foreign_key "lessons", "series"
   add_foreign_key "series", "scholars"
