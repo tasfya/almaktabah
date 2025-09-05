@@ -5,7 +5,7 @@ module Filterable
 
   def setup_search_and_pagination(model_class)
     @q = model_class.ransack(params[:q])
-    @pagy, @records = pagy(@q.result(distinct: true), limit: 12)
+    @pagy, @records = pagy(@q.result(distinct: true))
     @records
   end
 end

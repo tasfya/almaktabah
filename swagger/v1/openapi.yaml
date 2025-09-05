@@ -1,0 +1,673 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/articles":
+    get:
+      summary: List articles
+      tags:
+      - Articles
+      description: Returns a paginated list of articles for the current domain
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          headers:
+            Link:
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
+            Current-Page:
+              schema:
+                type: integer
+              description: Current page number
+            Page-Items:
+              schema:
+                type: integer
+              description: Items per page
+            Total-Pages:
+              schema:
+                type: integer
+              description: Total number of pages
+            Total-Count:
+              schema:
+                type: integer
+              description: Total number of items
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ArticlesResponse"
+  "/books":
+    get:
+      summary: List books
+      tags:
+      - Books
+      description: Returns a paginated list of books for the current domain
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          headers:
+            Link:
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
+            Current-Page:
+              schema:
+                type: integer
+              description: Current page number
+            Page-Items:
+              schema:
+                type: integer
+              description: Items per page
+            Total-Pages:
+              schema:
+                type: integer
+              description: Total number of pages
+            Total-Count:
+              schema:
+                type: integer
+              description: Total number of items
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BooksResponse"
+  "/fatwas":
+    get:
+      summary: List fatwas
+      tags:
+      - Fatwas
+      description: Returns a paginated list of fatwas for the current domain
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          headers:
+            Link:
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
+            Current-Page:
+              schema:
+                type: integer
+              description: Current page number
+            Page-Items:
+              schema:
+                type: integer
+              description: Items per page
+            Total-Pages:
+              schema:
+                type: integer
+              description: Total number of pages
+            Total-Count:
+              schema:
+                type: integer
+              description: Total number of items
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FatwasResponse"
+  "/lectures":
+    get:
+      summary: List lectures
+      tags:
+      - Lectures
+      description: Returns a paginated list of lectures for the current domain
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          headers:
+            Link:
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
+            Current-Page:
+              schema:
+                type: integer
+              description: Current page number
+            Page-Items:
+              schema:
+                type: integer
+              description: Items per page
+            Total-Pages:
+              schema:
+                type: integer
+              description: Total number of pages
+            Total-Count:
+              schema:
+                type: integer
+              description: Total number of items
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/LecturesResponse"
+  "/lessons":
+    get:
+      summary: List lessons
+      tags:
+      - Lessons
+      description: Returns a paginated list of lessons for the current domain
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          headers:
+            Link:
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
+            Current-Page:
+              schema:
+                type: integer
+              description: Current page number
+            Page-Items:
+              schema:
+                type: integer
+              description: Items per page
+            Total-Pages:
+              schema:
+                type: integer
+              description: Total number of pages
+            Total-Count:
+              schema:
+                type: integer
+              description: Total number of items
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/LessonsResponse"
+  "/news":
+    get:
+      summary: List news
+      tags:
+      - News
+      description: Returns a paginated list of news for the current domain
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          headers:
+            Link:
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
+            Current-Page:
+              schema:
+                type: integer
+              description: Current page number
+            Page-Items:
+              schema:
+                type: integer
+              description: Items per page
+            Total-Pages:
+              schema:
+                type: integer
+              description: Total number of pages
+            Total-Count:
+              schema:
+                type: integer
+              description: Total number of items
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NewsResponse"
+  "/scholars":
+    get:
+      summary: List scholars
+      tags:
+      - Scholars
+      description: Returns a paginated list of published scholars
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          headers:
+            Link:
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
+            Current-Page:
+              schema:
+                type: integer
+              description: Current page number
+            Page-Items:
+              schema:
+                type: integer
+              description: Items per page
+            Total-Pages:
+              schema:
+                type: integer
+              description: Total number of pages
+            Total-Count:
+              schema:
+                type: integer
+              description: Total number of items
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ScholarsResponse"
+  "/series":
+    get:
+      summary: List series
+      tags:
+      - Series
+      description: Returns a paginated list of series for the current domain
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          headers:
+            Link:
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
+            Current-Page:
+              schema:
+                type: integer
+              description: Current page number
+            Page-Items:
+              schema:
+                type: integer
+              description: Items per page
+            Total-Pages:
+              schema:
+                type: integer
+              description: Total number of pages
+            Total-Count:
+              schema:
+                type: integer
+              description: Total number of items
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SeriesResponse"
+servers:
+- url: "{defaultHost}"
+  variables:
+    defaultHost:
+      default: ''
+- url: https://3ilm.org
+components:
+  schemas:
+    Scholar:
+      type: object
+      properties:
+        id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        full_name:
+          type: string
+        full_name_alias:
+          type: string
+          nullable: true
+      required:
+      - id
+      - first_name
+      - last_name
+      - full_name
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        downloads:
+          type: integer
+        author:
+          "$ref": "#/components/schemas/Scholar"
+        file_url:
+          type: string
+          nullable: true
+        cover_image_url:
+          type: string
+          nullable: true
+      required:
+      - id
+      - title
+      - downloads
+      - author
+    Lecture:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        kind:
+          type: string
+          enum:
+          - sermon
+          - conference
+          - benefit
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        duration:
+          type: integer
+          nullable: true
+        scholar:
+          "$ref": "#/components/schemas/Scholar"
+        thumbnail_url:
+          type: string
+          nullable: true
+        audio_url:
+          type: string
+          nullable: true
+        video_url:
+          type: string
+          nullable: true
+      required:
+      - id
+      - title
+      - kind
+      - scholar
+    Series:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        published:
+          type: boolean
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        scholar:
+          "$ref": "#/components/schemas/Scholar"
+          nullable: true
+        explainable_url:
+          type: string
+          nullable: true
+        lessons_count:
+          type: integer
+      required:
+      - id
+      - title
+      - published
+      - lessons_count
+    Lesson:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        position:
+          type: integer
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        duration:
+          type: integer
+          nullable: true
+        series_id:
+          type: integer
+        scholar:
+          "$ref": "#/components/schemas/Scholar"
+          nullable: true
+        thumbnail_url:
+          type: string
+          nullable: true
+        audio_url:
+          type: string
+          nullable: true
+        video_url:
+          type: string
+          nullable: true
+      required:
+      - id
+      - title
+      - series_id
+    News:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        slug:
+          type: string
+        published_at:
+          type: string
+          format: date-time
+        content_excerpt:
+          type: string
+        thumbnail_url:
+          type: string
+          nullable: true
+      required:
+      - id
+      - title
+      - slug
+      - published_at
+      - content_excerpt
+    Article:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        author:
+          "$ref": "#/components/schemas/Scholar"
+      required:
+      - id
+      - title
+      - author
+    Fatwa:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        question:
+          type: string
+          nullable: true
+        answer:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        scholar:
+          "$ref": "#/components/schemas/Scholar"
+          nullable: true
+      required:
+      - id
+      - title
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+      - error
+    PaginationMeta:
+      type: object
+      properties:
+        count:
+          type: integer
+        page:
+          type: integer
+        prev:
+          type: integer
+          nullable: true
+        next:
+          type: integer
+          nullable: true
+        pages:
+          type: integer
+        from:
+          type: integer
+        to:
+          type: integer
+      required:
+      - count
+      - page
+      - pages
+      - from
+      - to
+    BooksResponse:
+      type: array
+      items:
+        "$ref": "#/components/schemas/Book"
+    LecturesResponse:
+      type: array
+      items:
+        "$ref": "#/components/schemas/Lecture"
+    SeriesResponse:
+      type: array
+      items:
+        "$ref": "#/components/schemas/Series"
+    NewsResponse:
+      type: array
+      items:
+        "$ref": "#/components/schemas/News"
+    ArticlesResponse:
+      type: array
+      items:
+        "$ref": "#/components/schemas/Article"
+    ScholarsResponse:
+      type: array
+      items:
+        "$ref": "#/components/schemas/Scholar"
+    FatwasResponse:
+      type: array
+      items:
+        "$ref": "#/components/schemas/Fatwa"
+    LessonsResponse:
+      type: array
+      items:
+        "$ref": "#/components/schemas/Lesson"

@@ -16,10 +16,23 @@
 # Uncomment the following lines to make the configuration take effect.
 
 PreCommit:
- RuboCop:
-   enabled: true
-   on_warn: fail # Treat all warnings as failures
+  RuboCop:
+    enabled: true
+    on_warn: fail # Treat all warnings as failures
 
+  RSpec:
+    enabled: false
+
+PrePush:
+  RunCommand:
+    enabled: true
+    name: Generate OpenAPI configuration
+    command: ["sh", "-c", "bundle exec rake rswag:specs:swaggerize"]
+    include:
+      - "spec/openapi_helper.rb"
+      - "spec/requests/**/*.rb"
+      - "spec/api/**/*.rb"
+      - "spec/integration/**/*.rb"
 #  TrailingWhitespace:
 #    enabled: true
 #    exclude:

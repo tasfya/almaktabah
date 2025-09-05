@@ -2,12 +2,16 @@ class FatwasController < ApplicationController
   include Filterable
   before_action :set_fatwa, only: [ :show ]
   before_action :setup_fatwas_breadcrumbs
-
   def index
     @q = Fatwa.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
-    @pagy, @fatwas = pagy(@q.result(distinct: true), limit: 12)
-  end
+    results = @q.result(distinct: true).includes(:scholar, :rich_text_question, :rich_text_answer)
+    @pagy, @fatwas = pagy(results)
 
+    respond_to do |format|
+      format.html
+      format.json { render json: @fatwas }
+    end
+  end
   def show; end
 
   private

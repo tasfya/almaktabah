@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
   authenticate :user, ->(u) { u.admin? } do
     mount MissionControl::Jobs::Engine => "/jobs"
   end
@@ -6,6 +8,7 @@ Rails.application.routes.draw do
   resources :books, only: [ :index, :show ]
   resources :lectures, only: [ :index, :show ]
   resources :series, only: [ :index, :show ]
+  resources :lessons, only: [ :index, :show ]
   resources :news, only: [ :index, :show ]
   resources :benefits, only: [ :index, :show ]
   resources :articles, only: [ :index, :show ]

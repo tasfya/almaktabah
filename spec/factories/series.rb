@@ -2,9 +2,10 @@ FactoryBot.define do
   factory :series do
     title { Faker::Book.title }
     description { Faker::Lorem.paragraph }
-    published_at { Faker::Date.between(from: 2.days.ago, to: Date.today) }
     category { Faker::Book.genre }
     scholar { association(:scholar) }
+    published
+
 
     trait :with_lessons do
       lessons { create_list(:lesson, 5) }

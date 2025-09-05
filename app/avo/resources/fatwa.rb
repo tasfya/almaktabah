@@ -7,6 +7,7 @@ class Avo::Resources::Fatwa < Avo::BaseResource
 
   def fields
     field :id, as: :id
+    field :scholar, as: :belongs_to
     field :title, as: :text
     field :category, as: :text
     field :question, as: :trix
