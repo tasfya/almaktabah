@@ -1,4 +1,5 @@
 class Benefit < ApplicationRecord
+    include Sluggable
     include Publishable
     include MediaHandler
     include DomainAssignable

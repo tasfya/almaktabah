@@ -1,4 +1,5 @@
 class Lecture < ApplicationRecord
+  include Sluggable
   include MediaHandler
   include DomainAssignable
   include Publishable

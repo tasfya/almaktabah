@@ -67,4 +67,20 @@ module ApplicationHelper
 
     text.downcase.gsub(/[^ا-ي0-9\s]/i, "").gsub(/\s+/, "-")
   end
+
+  def resource_share_url(resource)
+    case resource
+    when Lesson
+      series = resource.series
+      scholar = series&.scholar
+      return polymorphic_url(series, scholar_id: scholar.to_param) if series && scholar
+    when Lecture
+      scholar = resource.respond_to?(:scholar) ? resource.scholar : nil
+      return polymorphic_url(resource, scholar_id: scholar.to_param, kind: resource.kind.presence) if scholar
+    else
+      scholar = resource.respond_to?(:scholar) ? resource.scholar : nil
+      return polymorphic_url(resource, scholar_id: scholar.to_param) if scholar
+    end
+    polymorphic_url(resource)
+  end
 end

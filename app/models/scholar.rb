@@ -1,5 +1,13 @@
 class Scholar < ApplicationRecord
   include Publishable
+  include Sluggable
+
+  has_many :lectures, dependent: :nullify
+  has_many :series, dependent: :nullify
+  has_many :benefits, dependent: :nullify
+  has_many :articles, dependent: :nullify
+
+  friendly_id :name, use: [ :slugged, :history, :sequentially_slugged ]
 
   has_rich_text :bio
 
@@ -14,5 +22,15 @@ class Scholar < ApplicationRecord
 
   def self.ransackable_associations(auth_object = nil)
     []
+  end
+
+  def normalize_friendly_id(value, sep: "-")
+    normalize_for_slug(value, sep:)
+  end
+
+  protected
+
+  def should_generate_new_friendly_id?
+    will_save_change_to_first_name? || will_save_change_to_last_name? || slug.blank?
   end
 end

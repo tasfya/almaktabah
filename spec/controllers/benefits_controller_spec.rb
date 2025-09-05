@@ -5,8 +5,9 @@ RSpec.describe BenefitsController, type: :controller do
     request.host = "localhost"
   end
   let!(:domain) { create(:domain, host: "localhost") }
-  let(:published_benefit) { create(:benefit, published: true, published_at: 1.day.ago) }
-  let(:unpublished_benefit) { create(:benefit, published: false) }
+  let!(:scholar) { create(:scholar) }
+  let(:published_benefit) { create(:benefit, published: true, published_at: 1.day.ago, scholar: scholar) }
+  let(:unpublished_benefit) { create(:benefit, published: false, scholar: scholar) }
 
   describe "GET #index" do
     it "returns a successful response" do
@@ -76,12 +77,12 @@ RSpec.describe BenefitsController, type: :controller do
   describe "GET #show" do
     context "when benefit is published" do
       it "returns a successful response" do
-        get :show, params: { id: published_benefit.id }
+        get :show, params: { scholar_id: scholar.id, id: published_benefit.id }
         expect(response).to be_successful
       end
 
       it "assigns the requested benefit" do
-        get :show, params: { id: published_benefit.id }
+        get :show, params: { scholar_id: scholar.id, id: published_benefit.id }
         expect(assigns(:benefit)).to eq(published_benefit)
       end
 
@@ -92,33 +93,33 @@ RSpec.describe BenefitsController, type: :controller do
         )
         expect(controller).to receive(:breadcrumb_for).with(
           published_benefit.title,
-          benefit_path(published_benefit)
+          benefit_path(scholar_id: scholar.to_param, id: published_benefit.to_param)
         )
 
-        get :show, params: { id: published_benefit.id }
+        get :show, params: { scholar_id: scholar.to_param, id: published_benefit.to_param }
       end
     end
 
     context "when benefit is not published" do
       it "redirects to benefits index" do
-        get :show, params: { id: unpublished_benefit.id }
+        get :show, params: { scholar_id: scholar.id, id: unpublished_benefit.id }
         expect(response).to redirect_to(benefits_path)
       end
 
       it "shows not found alert" do
-        get :show, params: { id: unpublished_benefit.id }
+        get :show, params: { scholar_id: scholar.id, id: unpublished_benefit.id }
         expect(flash[:alert]).to eq(I18n.t("messages.benefit_not_found"))
       end
     end
 
     context "when benefit does not exist" do
       it "redirects to benefits index" do
-        get :show, params: { id: 99999 }
+        get :show, params: { scholar_id: scholar.id, id: 99999 }
         expect(response).to redirect_to(benefits_path)
       end
 
       it "shows not found alert" do
-        get :show, params: { id: 99999 }
+        get :show, params: { scholar_id: scholar.id, id: 99999 }
         expect(flash[:alert]).to eq(I18n.t("messages.benefit_not_found"))
       end
     end

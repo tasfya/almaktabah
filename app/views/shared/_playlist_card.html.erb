@@ -1,7 +1,7 @@
 <%
   # Generate unique modal ID based on resource type and ID
   modal_id = "share_modal_#{resource.class.name.downcase}_#{resource.id}"
-  share_url = resource.is_a?(Lesson) ? polymorphic_url(resource.series) : polymorphic_url(resource)
+  share_url = resource_share_url(resource)
 %>
 
 <div class="p-4 hover:bg-gray-50 transition">
@@ -17,7 +17,13 @@
         <% end %>
       <% end %>
       <div class="flex-1 min-w-0">
-        <h3 class="font-medium text-base mb-1 truncate"><%= resource.title %></h3>
+        <% if local_assigns[:clickable].presence %>
+          <%= link_to share_url, class: "hover:underline" do %>
+            <h3 class="font-medium text-base mb-1 truncate"><%= resource.title %></h3>
+          <% end %>
+        <% else %>
+          <h3 class="font-medium text-base mb-1 truncate"><%= resource.title %></h3>
+        <% end %>
         <% if resource.respond_to?(:youtube_url) && resource.youtube_url.present? %>
           <a href="<%= youtube_embed_url(resource.youtube_url) %>" target="_blank"
               class="text-sm text-gray-500 hover:underline flex items-center gap-2">

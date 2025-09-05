@@ -22,7 +22,7 @@
       </div>
 
       <div class="flex flex-col sm:flex-row gap-3">
-        <%= link_to series_path(@series), class: "btn btn-secondary w-full sm:w-auto gap-2" do %>
+        <%= link_to series_path(@series.scholar, @series), class: "btn btn-secondary w-full sm:w-auto gap-2" do %>
           <%= icon "play", library: "lucide", class: "w-5 h-5" %>
           <span><%= t('buttons.view_series') %></span>
         <% end %>

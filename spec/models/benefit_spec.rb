@@ -78,6 +78,48 @@ RSpec.describe Benefit, type: :model do
     end
   end
 
+  describe 'slug functionality' do
+    context 'when title is in Arabic' do
+      it 'generates slug from Arabic title' do
+        arabic_benefit = create(:benefit, title: 'فائدة في التوبة والاستغفار')
+        expect(arabic_benefit.slug).to eq('فائدة-في-التوبة-والاستغفار')
+      end
+
+      it 'can be found using friendly finder' do
+        arabic_benefit = create(:benefit, title: 'حديث شريف عن الصدقة')
+        found_benefit = Benefit.friendly.find('حديث-شريف-عن-الصدقة')
+        expect(found_benefit).to eq(arabic_benefit)
+      end
+    end
+
+    context 'when title is in English' do
+      it 'generates slug from English title' do
+        english_benefit = create(:benefit, title: 'The Virtue of Patience')
+        expect(english_benefit.slug).to eq('the-virtue-of-patience')
+      end
+
+      it 'can be found using friendly finder' do
+        english_benefit = create(:benefit, title: 'Daily Islamic Reminders')
+        found_benefit = Benefit.friendly.find('daily-islamic-reminders')
+        expect(found_benefit).to eq(english_benefit)
+      end
+    end
+
+    context 'slug history' do
+      it 'maintains old slug when title changes' do
+        benefit = create(:benefit, title: 'آداب الطعام والشراب')
+        old_slug = benefit.slug
+
+        benefit.update(title: 'سنن وآداب الطعام')
+        benefit.reload
+
+        expect(benefit.slug).to eq('سنن-وآداب-الطعام')
+        expect(Benefit.friendly.find(old_slug)).to eq(benefit)
+        expect(Benefit.friendly.find('سنن-وآداب-الطعام')).to eq(benefit)
+      end
+    end
+  end
+
   describe 'domain assignment' do
     let!(:domain) { create(:domain, host: "test-domain-#{SecureRandom.hex(4)}.com") }
     let!(:test_benefit) { create(:benefit) }

@@ -1,4 +1,5 @@
 class Fatwa < ApplicationRecord
+  include Sluggable
   include Publishable
   include DomainAssignable
 
