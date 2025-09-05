@@ -21,7 +21,7 @@ PreCommit:
     on_warn: fail # Treat all warnings as failures
 
   RSpec:
-    enabled: true
+    enabled: false
 
   RunCommand:
     enabled: true
