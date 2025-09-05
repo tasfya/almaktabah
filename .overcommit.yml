@@ -28,6 +28,11 @@ PrePush:
     enabled: true
     name: Generate OpenAPI configuration
     command: ["sh", "-c", "bundle exec rake rswag:specs:swaggerize"]
+    include:
+      - "spec/openapi_helper.rb"
+      - "spec/requests/**/*.rb"
+      - "spec/api/**/*.rb"
+      - "spec/integration/**/*.rb"
 #  TrailingWhitespace:
 #    enabled: true
 #    exclude:
