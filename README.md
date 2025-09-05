@@ -6,12 +6,13 @@ This is the README for Almaktabah application.
 
 - Fork and clone the repository.
 - Run `bundle install` to install dependencies.
+- Install pre-commit hooks: `bundle exec overcommit --install`.
 - Set up the database with `bin/setup`.
 - Start the server with `bin/dev`.
 - Make your changes in a new branch.
 - Ensure tests pass with `bundle exec rspec`.
 - (Optional) Seed the database with `bin/rails db:seed` for sample data.
-- Follow the code style using `bundle exec rubocop`.
+- Follow the code style using `bundle exec rubocop` (enforced via pre-commit hook).
 - Submit a pull request.
 
 ## Admin Dashboard
