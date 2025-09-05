@@ -11,8 +11,8 @@ Pagy::DEFAULT[:params]      = {}    # params for links
 
 # Load Pagy extras
 require "pagy/extras/array"
-require 'pagy/extras/headers'
-require 'pagy/extras/limit'
+require "pagy/extras/headers"
+require "pagy/extras/limit"
 require "pagy/extras/overflow"
 
 # Handle overflow pages

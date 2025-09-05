@@ -41,8 +41,8 @@ RSpec.configure do |config|
           }
         },
         {
-          url: 'https://3ilm.org',
-        },
+          url: 'https://3ilm.org'
+        }
       ],
       components: {
         schemas: {
@@ -55,7 +55,7 @@ RSpec.configure do |config|
               full_name: { type: :string },
               full_name_alias: { type: :string, nullable: true }
             },
-            required: [:id, :first_name, :last_name, :full_name]
+            required: [ :id, :first_name, :last_name, :full_name ]
           },
           Book: {
             type: :object,
@@ -70,7 +70,7 @@ RSpec.configure do |config|
               file_url: { type: :string, nullable: true },
               cover_image_url: { type: :string, nullable: true }
             },
-            required: [:id, :title, :downloads, :author]
+            required: [ :id, :title, :downloads, :author ]
           },
           Lecture: {
             type: :object,
@@ -79,7 +79,7 @@ RSpec.configure do |config|
               title: { type: :string },
               description: { type: :string, nullable: true },
               category: { type: :string, nullable: true },
-              kind: { type: :string, enum: [:sermon, :conference, :benefit] },
+              kind: { type: :string, enum: [ :sermon, :conference, :benefit ] },
               published_at: { type: :string, format: :date_time, nullable: true },
               duration: { type: :integer, nullable: true },
               scholar: { '$ref' => '#/components/schemas/Scholar' },
@@ -87,7 +87,7 @@ RSpec.configure do |config|
               audio_url: { type: :string, nullable: true },
               video_url: { type: :string, nullable: true }
             },
-            required: [:id, :title, :kind, :scholar]
+            required: [ :id, :title, :kind, :scholar ]
           },
           Series: {
             type: :object,
@@ -102,7 +102,7 @@ RSpec.configure do |config|
               explainable_url: { type: :string, nullable: true },
               lessons_count: { type: :integer }
             },
-            required: [:id, :title, :published, :lessons_count]
+            required: [ :id, :title, :published, :lessons_count ]
           },
           News: {
             type: :object,
@@ -115,7 +115,7 @@ RSpec.configure do |config|
               content_excerpt: { type: :string },
               thumbnail_url: { type: :string, nullable: true }
             },
-            required: [:id, :title, :slug, :published_at, :content_excerpt]
+            required: [ :id, :title, :slug, :published_at, :content_excerpt ]
           },
           Article: {
             type: :object,
@@ -126,7 +126,7 @@ RSpec.configure do |config|
               published_at: { type: :string, format: :date_time, nullable: true },
               author: { '$ref' => '#/components/schemas/Scholar' }
             },
-            required: [:id, :title, :author]
+            required: [ :id, :title, :author ]
           },
           Fatwa: {
             type: :object,
@@ -139,14 +139,14 @@ RSpec.configure do |config|
               published_at: { type: :string, format: :date_time, nullable: true },
               scholar: { '$ref' => '#/components/schemas/Scholar', nullable: true }
             },
-            required: [:id, :title]
+            required: [ :id, :title ]
           },
           Error: {
             type: :object,
             properties: {
               error: { type: :string }
             },
-            required: [:error]
+            required: [ :error ]
           },
           PaginationMeta: {
             type: :object,
@@ -159,7 +159,7 @@ RSpec.configure do |config|
               from: { type: :integer },
               to: { type: :integer }
             },
-            required: [:count, :page, :pages, :from, :to]
+            required: [ :count, :page, :pages, :from, :to ]
           },
           BooksResponse: {
             type: :array,
@@ -188,7 +188,7 @@ RSpec.configure do |config|
           FatwasResponse: {
             type: :array,
             items: { '$ref' => '#/components/schemas/Fatwa' }
-          },
+          }
         }
       }
     }
