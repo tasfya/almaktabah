@@ -3,6 +3,7 @@ require "digest/md5"
 class News < ApplicationRecord
   include Publishable
   include DomainAssignable
+  include AttachmentSerializable
 
   has_one_attached :thumbnail, service: Rails.application.config.public_storage
 
@@ -34,7 +35,7 @@ class News < ApplicationRecord
       slug: slug,
       published_at: published_at,
       content_excerpt: content.to_plain_text.truncate(200),
-      thumbnail_url: thumbnail.attached? ? Rails.application.routes.url_helpers.rails_blob_url(thumbnail, only_path: true) : nil
+      thumbnail_url: attachment_url(thumbnail)
     }
   end
 

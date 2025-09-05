@@ -3,6 +3,7 @@ class Lecture < ApplicationRecord
   include DomainAssignable
   include Publishable
   include AudioFallback
+  include AttachmentSerializable
 
   enum :kind, { sermon: 1, conference: 2, benefit: 3 }
 
@@ -64,9 +65,9 @@ class Lecture < ApplicationRecord
       published_at: published_at,
       duration: duration,
       scholar: scholar.as_json,
-      thumbnail_url: thumbnail.attached? ? Rails.application.routes.url_helpers.rails_blob_url(thumbnail, only_path: true) : nil,
-      audio_url: audio.attached? ? Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true) : nil,
-      video_url: video.attached? ? Rails.application.routes.url_helpers.rails_blob_url(video, only_path: true) : nil
+      thumbnail_url: attachment_url(thumbnail),
+      audio_url: attachment_url(audio),
+      video_url: attachment_url(video)
     }
   end
 end

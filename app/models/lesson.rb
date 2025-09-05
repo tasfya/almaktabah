@@ -3,6 +3,7 @@ class Lesson < ApplicationRecord
   include Publishable
   include DomainAssignable
   include AudioFallback
+  include AttachmentSerializable
 
 
   belongs_to :series
@@ -90,9 +91,9 @@ class Lesson < ApplicationRecord
         title: series.title
       },
       scholar_name: scholar.name,
-      thumbnail_url: thumbnail.attached? ? Rails.application.routes.url_helpers.rails_blob_url(thumbnail, only_path: true) : nil,
-      audio_url: audio.attached? ? Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true) : nil,
-      video_url: video.attached? ? Rails.application.routes.url_helpers.rails_blob_url(video, only_path: true) : nil
+      thumbnail_url: attachment_url(thumbnail),
+      audio_url: attachment_url(audio),
+      video_url: attachment_url(video)
     }
   end
 end

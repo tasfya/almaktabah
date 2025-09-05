@@ -2,6 +2,7 @@ class Benefit < ApplicationRecord
   include Publishable
   include MediaHandler
   include DomainAssignable
+  include AttachmentSerializable
 
   belongs_to :scholar, optional: true
 
@@ -38,9 +39,9 @@ class Benefit < ApplicationRecord
       published_at: published_at,
       duration: duration,
       scholar: scholar.present? ? { id: scholar.id, name: scholar.name } : nil,
-      thumbnail_url: thumbnail.attached? ? Rails.application.routes.url_helpers.rails_blob_url(thumbnail, only_path: true) : nil,
-      audio_url: audio.attached? ? Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true) : nil,
-      video_url: video.attached? ? Rails.application.routes.url_helpers.rails_blob_url(video, only_path: true) : nil,
+      thumbnail_url: attachment_url(thumbnail),
+      audio_url: attachment_url(audio),
+      video_url: attachment_url(video),
       content_excerpt: content.to_plain_text.truncate(200)
     }
   end

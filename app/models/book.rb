@@ -1,6 +1,7 @@
 class Book < ApplicationRecord
   include Publishable
   include DomainAssignable
+  include AttachmentSerializable
 
   belongs_to :author, class_name: "Scholar", foreign_key: "author_id"
   has_one_attached :file, service: Rails.application.config.public_storage
@@ -32,8 +33,8 @@ class Book < ApplicationRecord
       published_at: published_at,
       downloads: downloads,
       author: author.as_json,
-      file_url: file.attached? ? Rails.application.routes.url_helpers.rails_blob_url(file, only_path: true) : nil,
-      cover_image_url: cover_image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(cover_image, only_path: true) : nil
+      file_url: attachment_url(file),
+      cover_image_url: attachment_url(cover_image)
     }
   end
 end

@@ -1,6 +1,7 @@
 class Series < ApplicationRecord
     include Publishable
     include DomainAssignable
+    include AttachmentSerializable
 
     has_one_attached :explainable, service: Rails.application.config.public_storage
     has_many :lessons, dependent: :destroy
@@ -28,7 +29,7 @@ class Series < ApplicationRecord
         published: published,
         published_at: published_at,
         scholar: scholar.present? ? scholar.as_json : nil,
-        explainable_url: explainable.attached? ? Rails.application.routes.url_helpers.rails_blob_url(explainable, only_path: true) : nil,
+        explainable_url: attachment_url(explainable),
         lessons_count: lessons.count
       }
     end
