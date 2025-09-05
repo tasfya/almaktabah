@@ -86,11 +86,8 @@ class Lesson < ApplicationRecord
       position: position,
       published_at: published_at,
       duration: duration,
-      series: {
-        id: series.id,
-        title: series.title
-      },
-      scholar_name: scholar.name,
+      series_id: series_id,
+      scholar: scholar.present? ? scholar.as_json : nil,
       thumbnail_url: attachment_url(thumbnail),
       audio_url: attachment_url(audio),
       video_url: attachment_url(video)
