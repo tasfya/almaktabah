@@ -4,7 +4,13 @@ class LessonsController < ApplicationController
   before_action :setup_lessons_breadcrumbs
 
   def index
-    @q = Lesson.for_domain_id(@domain.id).published.includes(:series).ransack(params[:q])
+    @q = Lesson.for_domain_id(@domain.id)
+      .published
+      .includes(series: :scholar)
+      .with_attached_thumbnail
+      .with_attached_audio
+      .with_attached_video
+      .ransack(params[:q])
     @pagy, @lessons = pagy(@q.result(distinct: true))
 
 
