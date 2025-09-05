@@ -1,6 +1,7 @@
 class Benefit < ApplicationRecord
   include Publishable
   include MediaHandler
+  include AudioFallback
   include DomainAssignable
   include AttachmentSerializable
 
