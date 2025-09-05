@@ -29,7 +29,7 @@ FactoryBot.define do
     end
 
     after(:create) do |lesson|
-        lesson.domains = [ Domain.find_or_create_by(host: "localhost") ]
+        lesson.domains = [ Domain.find_or_create_by(host: "localhost") ] if lesson.domains.blank?
     end
     end
 end

@@ -72,7 +72,3 @@ bundle exec rake rswag:specs:swaggerize
 ```
 
 This command generates the OpenAPI JSON files from your RSpec API tests, which are then served by the Swagger UI.
-
-```
-
-```

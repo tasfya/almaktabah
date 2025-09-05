@@ -4,11 +4,11 @@ require 'rails_helper'
 
 # Helper method for adding pagination headers to responses
 def add_pagination_headers
-  header 'Link', type: :string, description: 'RFC-8288 compliant pagination links (first, prev, next, last)'
-  header 'Current-Page', type: :integer, description: 'Current page number'
-  header 'Page-Items', type: :integer, description: 'Items per page'
-  header 'Total-Pages', type: :integer, description: 'Total number of pages'
-  header 'Total-Count', type: :integer, description: 'Total number of items'
+  header 'Link', schema: { type: :string }, description: 'RFC-8288 pagination links (first, prev, next, last)'
+  header 'Current-Page', schema: { type: :integer }, description: 'Current page number'
+  header 'Page-Items', schema: { type: :integer }, description: 'Items per page'
+  header 'Total-Pages', schema: { type: :integer }, description: 'Total number of pages'
+  header 'Total-Count', schema: { type: :integer }, description: 'Total number of items'
 end
 
 RSpec.configure do |config|
@@ -67,7 +67,7 @@ RSpec.configure do |config|
               title: { type: :string },
               description: { type: :string, nullable: true },
               category: { type: :string, nullable: true },
-              published_at: { type: :string, format: :date_time, nullable: true },
+              published_at: { type: :string, format: "date-time", nullable: true },
               downloads: { type: :integer },
               author: { '$ref' => '#/components/schemas/Scholar' },
               file_url: { type: :string, nullable: true },
@@ -83,7 +83,7 @@ RSpec.configure do |config|
               description: { type: :string, nullable: true },
               category: { type: :string, nullable: true },
               kind: { type: :string, enum: [ :sermon, :conference, :benefit ] },
-              published_at: { type: :string, format: :date_time, nullable: true },
+              published_at: { type: :string, format: "date-time", nullable: true },
               duration: { type: :integer, nullable: true },
               scholar: { '$ref' => '#/components/schemas/Scholar' },
               thumbnail_url: { type: :string, nullable: true },
@@ -100,7 +100,7 @@ RSpec.configure do |config|
               description: { type: :string, nullable: true },
               category: { type: :string, nullable: true },
               published: { type: :boolean },
-              published_at: { type: :string, format: :date_time, nullable: true },
+              published_at: { type: :string, format: "date-time", nullable: true },
               scholar: { '$ref' => '#/components/schemas/Scholar', nullable: true },
               explainable_url: { type: :string, nullable: true },
               lessons_count: { type: :integer }
@@ -114,7 +114,7 @@ RSpec.configure do |config|
               title: { type: :string },
               description: { type: :string, nullable: true },
               slug: { type: :string },
-              published_at: { type: :string, format: :date_time },
+              published_at: { type: :string, format: "date-time" },
               content_excerpt: { type: :string },
               thumbnail_url: { type: :string, nullable: true }
             },
@@ -126,7 +126,7 @@ RSpec.configure do |config|
               id: { type: :integer },
               title: { type: :string },
               content: { type: :string, nullable: true },
-              published_at: { type: :string, format: :date_time, nullable: true },
+              published_at: { type: :string, format: "date-time", nullable: true },
               author: { '$ref' => '#/components/schemas/Scholar' }
             },
             required: [ :id, :title, :author ]
@@ -139,7 +139,7 @@ RSpec.configure do |config|
               question: { type: :string, nullable: true },
               answer: { type: :string, nullable: true },
               category: { type: :string, nullable: true },
-              published_at: { type: :string, format: :date_time, nullable: true },
+              published_at: { type: :string, format: "date-time", nullable: true },
               scholar: { '$ref' => '#/components/schemas/Scholar', nullable: true }
             },
             required: [ :id, :title ]

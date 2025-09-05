@@ -26,20 +26,24 @@ paths:
           description: successful
           headers:
             Link:
-              type: string
-              description: RFC-8288 compliant pagination links (first, prev, next,
-                last)
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
             Current-Page:
-              type: integer
+              schema:
+                type: integer
               description: Current page number
             Page-Items:
-              type: integer
+              schema:
+                type: integer
               description: Items per page
             Total-Pages:
-              type: integer
+              schema:
+                type: integer
               description: Total number of pages
             Total-Count:
-              type: integer
+              schema:
+                type: integer
               description: Total number of items
           content:
             application/json:
@@ -67,20 +71,24 @@ paths:
           description: successful
           headers:
             Link:
-              type: string
-              description: RFC-8288 compliant pagination links (first, prev, next,
-                last)
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
             Current-Page:
-              type: integer
+              schema:
+                type: integer
               description: Current page number
             Page-Items:
-              type: integer
+              schema:
+                type: integer
               description: Items per page
             Total-Pages:
-              type: integer
+              schema:
+                type: integer
               description: Total number of pages
             Total-Count:
-              type: integer
+              schema:
+                type: integer
               description: Total number of items
           content:
             application/json:
@@ -108,20 +116,24 @@ paths:
           description: successful
           headers:
             Link:
-              type: string
-              description: RFC-8288 compliant pagination links (first, prev, next,
-                last)
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
             Current-Page:
-              type: integer
+              schema:
+                type: integer
               description: Current page number
             Page-Items:
-              type: integer
+              schema:
+                type: integer
               description: Items per page
             Total-Pages:
-              type: integer
+              schema:
+                type: integer
               description: Total number of pages
             Total-Count:
-              type: integer
+              schema:
+                type: integer
               description: Total number of items
           content:
             application/json:
@@ -149,20 +161,24 @@ paths:
           description: successful
           headers:
             Link:
-              type: string
-              description: RFC-8288 compliant pagination links (first, prev, next,
-                last)
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
             Current-Page:
-              type: integer
+              schema:
+                type: integer
               description: Current page number
             Page-Items:
-              type: integer
+              schema:
+                type: integer
               description: Items per page
             Total-Pages:
-              type: integer
+              schema:
+                type: integer
               description: Total number of pages
             Total-Count:
-              type: integer
+              schema:
+                type: integer
               description: Total number of items
           content:
             application/json:
@@ -190,20 +206,24 @@ paths:
           description: successful
           headers:
             Link:
-              type: string
-              description: RFC-8288 compliant pagination links (first, prev, next,
-                last)
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
             Current-Page:
-              type: integer
+              schema:
+                type: integer
               description: Current page number
             Page-Items:
-              type: integer
+              schema:
+                type: integer
               description: Items per page
             Total-Pages:
-              type: integer
+              schema:
+                type: integer
               description: Total number of pages
             Total-Count:
-              type: integer
+              schema:
+                type: integer
               description: Total number of items
           content:
             application/json:
@@ -231,20 +251,24 @@ paths:
           description: successful
           headers:
             Link:
-              type: string
-              description: RFC-8288 compliant pagination links (first, prev, next,
-                last)
+              schema:
+                type: string
+              description: RFC-8288 pagination links (first, prev, next, last)
             Current-Page:
-              type: integer
+              schema:
+                type: integer
               description: Current page number
             Page-Items:
-              type: integer
+              schema:
+                type: integer
               description: Items per page
             Total-Pages:
-              type: integer
+              schema:
+                type: integer
               description: Total number of pages
             Total-Count:
-              type: integer
+              schema:
+                type: integer
               description: Total number of items
           content:
             application/json:
@@ -292,7 +316,7 @@ components:
           nullable: true
         published_at:
           type: string
-          format: date_time
+          format: date-time
           nullable: true
         downloads:
           type: integer
@@ -330,7 +354,7 @@ components:
           - benefit
         published_at:
           type: string
-          format: date_time
+          format: date-time
           nullable: true
         duration:
           type: integer
@@ -368,7 +392,7 @@ components:
           type: boolean
         published_at:
           type: string
-          format: date_time
+          format: date-time
           nullable: true
         scholar:
           "$ref": "#/components/schemas/Scholar"
@@ -397,7 +421,7 @@ components:
           type: string
         published_at:
           type: string
-          format: date_time
+          format: date-time
         content_excerpt:
           type: string
         thumbnail_url:
@@ -421,7 +445,7 @@ components:
           nullable: true
         published_at:
           type: string
-          format: date_time
+          format: date-time
           nullable: true
         author:
           "$ref": "#/components/schemas/Scholar"
@@ -447,7 +471,7 @@ components:
           nullable: true
         published_at:
           type: string
-          format: date_time
+          format: date-time
           nullable: true
         scholar:
           "$ref": "#/components/schemas/Scholar"
