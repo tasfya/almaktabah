@@ -36,6 +36,8 @@ describe 'Articles API', type: :request do
           expect(data.first).to have_key('id')
           expect(data.first).to have_key('title')
           expect(data.first).to have_key('content')
+          expect(data.first).to have_key('published_at')
+          expect(data.first).to have_key('author')
         end
       end
     end

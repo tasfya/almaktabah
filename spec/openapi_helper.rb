@@ -107,6 +107,23 @@ RSpec.configure do |config|
             },
             required: [ :id, :title, :published, :lessons_count ]
           },
+          Lesson: {
+            type: :object,
+            properties: {
+              id: { type: :integer },
+              title: { type: :string },
+              description: { type: :string, nullable: true },
+              position: { type: :integer, nullable: true },
+              published_at: { type: :string, format: "date-time", nullable: true },
+              duration: { type: :integer, nullable: true },
+              series_id: { type: :integer },
+              scholar: { '$ref' => '#/components/schemas/Scholar', nullable: true },
+              thumbnail_url: { type: :string, nullable: true },
+              audio_url: { type: :string, nullable: true },
+              video_url: { type: :string, nullable: true }
+            },
+            required: [ :id, :title, :series_id ]
+          },
           News: {
             type: :object,
             properties: {
@@ -191,6 +208,10 @@ RSpec.configure do |config|
           FatwasResponse: {
             type: :array,
             items: { '$ref' => '#/components/schemas/Fatwa' }
+          },
+          LessonsResponse: {
+            type: :array,
+            items: { '$ref' => '#/components/schemas/Lesson' }
           }
         }
       }

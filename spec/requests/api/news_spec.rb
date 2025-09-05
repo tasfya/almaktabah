@@ -34,7 +34,11 @@ describe 'News API', type: :request do
           expect(data).to be_an(Array)
           expect(data.first).to have_key('id')
           expect(data.first).to have_key('title')
+          expect(data.first).to have_key('description')
           expect(data.first).to have_key('slug')
+          expect(data.first).to have_key('published_at')
+          expect(data.first).to have_key('content_excerpt')
+          expect(data.first).to have_key('thumbnail_url')
         end
       end
     end

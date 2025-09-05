@@ -36,7 +36,13 @@ describe 'Books API', type: :request do
           expect(data).to be_an(Array)
           expect(data.first).to have_key('id')
           expect(data.first).to have_key('title')
+          expect(data.first).to have_key('description')
+          expect(data.first).to have_key('category')
+          expect(data.first).to have_key('published_at')
+          expect(data.first).to have_key('downloads')
           expect(data.first).to have_key('author')
+          expect(data.first).to have_key('file_url')
+          expect(data.first).to have_key('cover_image_url')
         end
       end
     end

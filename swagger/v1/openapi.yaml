@@ -8,21 +8,21 @@ paths:
     get:
       summary: List articles
       tags:
-        - Articles
+      - Articles
       description: Returns a paginated list of articles for the current domain
       parameters:
-        - name: page
-          in: query
-          description: Page number
-          schema:
-            type: integer
-        - name: limit
-          in: query
-          description: Items per page (max 100)
-          schema:
-            type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
       responses:
-        "200":
+        '200':
           description: successful
           headers:
             Link:
@@ -53,21 +53,21 @@ paths:
     get:
       summary: List books
       tags:
-        - Books
+      - Books
       description: Returns a paginated list of books for the current domain
       parameters:
-        - name: page
-          in: query
-          description: Page number
-          schema:
-            type: integer
-        - name: limit
-          in: query
-          description: Items per page (max 100)
-          schema:
-            type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
       responses:
-        "200":
+        '200':
           description: successful
           headers:
             Link:
@@ -98,21 +98,21 @@ paths:
     get:
       summary: List fatwas
       tags:
-        - Fatwas
+      - Fatwas
       description: Returns a paginated list of fatwas for the current domain
       parameters:
-        - name: page
-          in: query
-          description: Page number
-          schema:
-            type: integer
-        - name: limit
-          in: query
-          description: Items per page (max 100)
-          schema:
-            type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
       responses:
-        "200":
+        '200':
           description: successful
           headers:
             Link:
@@ -143,21 +143,21 @@ paths:
     get:
       summary: List lectures
       tags:
-        - Lectures
+      - Lectures
       description: Returns a paginated list of lectures for the current domain
       parameters:
-        - name: page
-          in: query
-          description: Page number
-          schema:
-            type: integer
-        - name: limit
-          in: query
-          description: Items per page (max 100)
-          schema:
-            type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
       responses:
-        "200":
+        '200':
           description: successful
           headers:
             Link:
@@ -188,21 +188,21 @@ paths:
     get:
       summary: List lessons
       tags:
-        - Lessons
+      - Lessons
       description: Returns a paginated list of lessons for the current domain
       parameters:
-        - name: page
-          in: query
-          description: Page number
-          schema:
-            type: integer
-        - name: limit
-          in: query
-          description: Items per page (max 100)
-          schema:
-            type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
       responses:
-        "200":
+        '200':
           description: successful
           headers:
             Link:
@@ -233,21 +233,21 @@ paths:
     get:
       summary: List news
       tags:
-        - News
+      - News
       description: Returns a paginated list of news for the current domain
       parameters:
-        - name: page
-          in: query
-          description: Page number
-          schema:
-            type: integer
-        - name: limit
-          in: query
-          description: Items per page (max 100)
-          schema:
-            type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
       responses:
-        "200":
+        '200':
           description: successful
           headers:
             Link:
@@ -278,21 +278,21 @@ paths:
     get:
       summary: List scholars
       tags:
-        - Scholars
+      - Scholars
       description: Returns a paginated list of published scholars
       parameters:
-        - name: page
-          in: query
-          description: Page number
-          schema:
-            type: integer
-        - name: limit
-          in: query
-          description: Items per page (max 100)
-          schema:
-            type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
       responses:
-        "200":
+        '200':
           description: successful
           headers:
             Link:
@@ -323,21 +323,21 @@ paths:
     get:
       summary: List series
       tags:
-        - Series
+      - Series
       description: Returns a paginated list of series for the current domain
       parameters:
-        - name: page
-          in: query
-          description: Page number
-          schema:
-            type: integer
-        - name: limit
-          in: query
-          description: Items per page (max 100)
-          schema:
-            type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Items per page (max 100)
+        schema:
+          type: integer
       responses:
-        "200":
+        '200':
           description: successful
           headers:
             Link:
@@ -365,11 +365,11 @@ paths:
               schema:
                 "$ref": "#/components/schemas/SeriesResponse"
 servers:
-  - url: "{defaultHost}"
-    variables:
-      defaultHost:
-        default: ""
-  - url: https://3ilm.org
+- url: "{defaultHost}"
+  variables:
+    defaultHost:
+      default: ''
+- url: https://3ilm.org
 components:
   schemas:
     Scholar:
@@ -387,10 +387,10 @@ components:
           type: string
           nullable: true
       required:
-        - id
-        - first_name
-        - last_name
-        - full_name
+      - id
+      - first_name
+      - last_name
+      - full_name
     Book:
       type: object
       properties:
@@ -419,10 +419,10 @@ components:
           type: string
           nullable: true
       required:
-        - id
-        - title
-        - downloads
-        - author
+      - id
+      - title
+      - downloads
+      - author
     Lecture:
       type: object
       properties:
@@ -439,9 +439,9 @@ components:
         kind:
           type: string
           enum:
-            - sermon
-            - conference
-            - benefit
+          - sermon
+          - conference
+          - benefit
         published_at:
           type: string
           format: date-time
@@ -461,10 +461,10 @@ components:
           type: string
           nullable: true
       required:
-        - id
-        - title
-        - kind
-        - scholar
+      - id
+      - title
+      - kind
+      - scholar
     Series:
       type: object
       properties:
@@ -493,10 +493,48 @@ components:
         lessons_count:
           type: integer
       required:
-        - id
-        - title
-        - published
-        - lessons_count
+      - id
+      - title
+      - published
+      - lessons_count
+    Lesson:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        position:
+          type: integer
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        duration:
+          type: integer
+          nullable: true
+        series_id:
+          type: integer
+        scholar:
+          "$ref": "#/components/schemas/Scholar"
+          nullable: true
+        thumbnail_url:
+          type: string
+          nullable: true
+        audio_url:
+          type: string
+          nullable: true
+        video_url:
+          type: string
+          nullable: true
+      required:
+      - id
+      - title
+      - series_id
     News:
       type: object
       properties:
@@ -518,11 +556,11 @@ components:
           type: string
           nullable: true
       required:
-        - id
-        - title
-        - slug
-        - published_at
-        - content_excerpt
+      - id
+      - title
+      - slug
+      - published_at
+      - content_excerpt
     Article:
       type: object
       properties:
@@ -540,9 +578,9 @@ components:
         author:
           "$ref": "#/components/schemas/Scholar"
       required:
-        - id
-        - title
-        - author
+      - id
+      - title
+      - author
     Fatwa:
       type: object
       properties:
@@ -567,15 +605,15 @@ components:
           "$ref": "#/components/schemas/Scholar"
           nullable: true
       required:
-        - id
-        - title
+      - id
+      - title
     Error:
       type: object
       properties:
         error:
           type: string
       required:
-        - error
+      - error
     PaginationMeta:
       type: object
       properties:
@@ -596,11 +634,11 @@ components:
         to:
           type: integer
       required:
-        - count
-        - page
-        - pages
-        - from
-        - to
+      - count
+      - page
+      - pages
+      - from
+      - to
     BooksResponse:
       type: array
       items:
@@ -613,10 +651,6 @@ components:
       type: array
       items:
         "$ref": "#/components/schemas/Series"
-    LessonsResponse:
-      type: array
-      items:
-        "$ref": "#/components/schemas/Lesson"
     NewsResponse:
       type: array
       items:
@@ -633,3 +667,7 @@ components:
       type: array
       items:
         "$ref": "#/components/schemas/Fatwa"
+    LessonsResponse:
+      type: array
+      items:
+        "$ref": "#/components/schemas/Lesson"

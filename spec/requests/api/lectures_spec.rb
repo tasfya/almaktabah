@@ -35,8 +35,15 @@ describe 'Lectures API', type: :request do
           expect(data).to be_an(Array)
           expect(data.first).to have_key('id')
           expect(data.first).to have_key('title')
-          expect(data.first).to have_key('scholar')
+          expect(data.first).to have_key('description')
+          expect(data.first).to have_key('category')
           expect(data.first).to have_key('kind')
+          expect(data.first).to have_key('published_at')
+          expect(data.first).to have_key('duration')
+          expect(data.first).to have_key('scholar')
+          expect(data.first).to have_key('thumbnail_url')
+          expect(data.first).to have_key('audio_url')
+          expect(data.first).to have_key('video_url')
         end
       end
     end

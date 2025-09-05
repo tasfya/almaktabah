@@ -25,6 +25,8 @@ describe 'Scholars API', type: :request do
           expect(data.first).to have_key('id')
           expect(data.first).to have_key('first_name')
           expect(data.first).to have_key('last_name')
+          expect(data.first).to have_key('full_name')
+          expect(data.first).to have_key('full_name_alias')
         end
       end
     end
