@@ -23,6 +23,7 @@ PreCommit:
   RSpec:
     enabled: false
 
+PrePush:
   RunCommand:
     enabled: true
     name: Generate OpenAPI configuration
