@@ -6,6 +6,10 @@ FactoryBot.define do
     category { Faker::Book.genre }
     scholar { association(:scholar) }
 
+    trait :published do
+      published { true }
+    end
+
     trait :with_lessons do
       lessons { create_list(:lesson, 5) }
     end

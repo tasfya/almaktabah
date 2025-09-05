@@ -4,6 +4,7 @@ FactoryBot.define do
 
     description { Faker::Lorem.paragraph }
     category { Faker::Book.genre }
+    published { true }
     published_at { Faker::Date.between(from: 2.years.ago, to: Date.today) }
     pages { rand(1..1000) }
     downloads { rand(1..1000) }

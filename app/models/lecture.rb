@@ -63,10 +63,7 @@ class Lecture < ApplicationRecord
       kind: kind,
       published_at: published_at,
       duration: duration,
-      scholar: {
-        id: scholar.id,
-        name: scholar.name
-      },
+      scholar: scholar.as_json,
       thumbnail_url: thumbnail.attached? ? Rails.application.routes.url_helpers.rails_blob_url(thumbnail, only_path: true) : nil,
       audio_url: audio.attached? ? Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true) : nil,
       video_url: video.attached? ? Rails.application.routes.url_helpers.rails_blob_url(video, only_path: true) : nil

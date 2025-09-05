@@ -5,7 +5,7 @@ class FatwasController < ApplicationController
 
   def index
     @q = Fatwa.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
-    @pagy, @fatwas = pagy(@q.result(distinct: true), limit: 12)
+    @pagy, @fatwas = pagy(@q.result(distinct: true))
   end
 
   def show; end

@@ -5,7 +5,7 @@ class LecturesController < ApplicationController
 
   def index
     @q = Lecture.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
-    @pagy, @lectures = pagy(@q.result(distinct: true), limit: 12)
+    @pagy, @lectures = pagy(@q.result(distinct: true))
 
     respond_to do |format|
       format.html

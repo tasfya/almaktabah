@@ -27,7 +27,7 @@ class Series < ApplicationRecord
         category: category,
         published: published,
         published_at: published_at,
-        scholar: scholar.present? ? { id: scholar.id, name: scholar.name } : nil,
+        scholar: scholar.present? ? scholar.as_json : nil,
         explainable_url: explainable.attached? ? Rails.application.routes.url_helpers.rails_blob_url(explainable, only_path: true) : nil,
         lessons_count: lessons.count
       }

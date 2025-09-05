@@ -15,4 +15,14 @@ class Scholar < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     []
   end
+
+  def as_json(options = {})
+    {
+      id: id,
+      first_name: first_name,
+      last_name: last_name,
+      full_name: name,
+      full_name_alias: nil
+    }
+  end
 end

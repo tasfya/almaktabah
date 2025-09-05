@@ -4,12 +4,9 @@ class LessonsController < ApplicationController
   before_action :setup_lessons_breadcrumbs
 
   def index
-    if @domain
-      @q = Lesson.for_domain_id(@domain.id).published.includes(:series).ransack(params[:q])
-      @pagy, @lessons = pagy(@q.result(distinct: true), limit: 12)
-    else
-      @lessons = []
-    end
+    @q = Lesson.for_domain_id(@domain.id).published.includes(:series).ransack(params[:q])
+    @pagy, @lessons = pagy(@q.result(distinct: true))
+
 
     respond_to do |format|
       format.html

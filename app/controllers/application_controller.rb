@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  after_action { pagy_headers_merge(@pagy) if @pagy }
   allow_browser versions: :modern
   before_action :setup_breadcrumbs
   before_action :set_domain

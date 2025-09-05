@@ -31,10 +31,7 @@ class Book < ApplicationRecord
       category: category,
       published_at: published_at,
       downloads: downloads,
-      author: {
-        id: author.id,
-        name: author.name
-      },
+      author: author.as_json,
       file_url: file.attached? ? Rails.application.routes.url_helpers.rails_blob_url(file, only_path: true) : nil,
       cover_image_url: cover_image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(cover_image, only_path: true) : nil
     }
