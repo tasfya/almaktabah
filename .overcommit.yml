@@ -27,7 +27,7 @@ PrePush:
   RunCommand:
     enabled: true
     name: Generate OpenAPI configuration
-    command: ["bundle", "exec", "rake", "rswag:specs:swaggerize"]
+    command: ["sh", "-c", "bundle exec rake rswag:specs:swaggerize"]
 #  TrailingWhitespace:
 #    enabled: true
 #    exclude:
