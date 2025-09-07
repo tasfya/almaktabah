@@ -111,7 +111,7 @@
 
   - Audio (podcasts, lectures, benefits)
   - Video (recorded lectures, lessons)
-  - Written (books, articles, fatwas)
+  - Text (books, articles, fatwas)
 
 - **Topic Filter:** Islamic knowledge categories
 
@@ -137,7 +137,7 @@
   - Options disappear when no matching content exists
   - Real-time updates as user makes selections
 
-- Filters work together (AND logic) for precise results
+- Filters work together: Multiple selections within a single filter category (e.g., selecting multiple scholars or topics) use OR logic, while different filter types (e.g., Scholar + Content Type + Topic) are combined using AND logic for precise results.
 - Active filter chips show current selections
 - One-click filter removal
 - "Clear all filters" option
@@ -216,20 +216,26 @@
 
 **Hero Section:**
 
-- Live events
-- Upcoming events, latest news
-- Featured course/series with compelling imagery
-- Recent books, lectures, news, fatwas, and series in background
+- Prominent search bar with integrated filters for quick content discovery
+- Live lessons currently in progress
+- Last three live recordings for easy access to recent sessions
+- Upcoming event dates for next live lessons and sessions
+- Featured content highlighting curated Islamic educational materials
 - Clear value proposition: "Structured Islamic Learning for Modern Muslims"
 - Call-to-action: "Start Your Journey" or "Browse Lectures"
 
 **Content Discovery Sections:**
 
-1. **Continue Learning** - Personalized recommendations
-2. **Popular Series** - Featured courses
-3. **Daily Reminders** - Short benefits/audio
+1. **Continue Learning** - Personalized recommendations based on user history
+2. **Popular Series** - Featured courses with compelling imagery
+3. **Daily Reminders** - Short benefits/audio for spiritual growth
 4. **Recent Lectures** - Latest scholarly content
 5. **Essential Books** - Core Islamic texts
+6. **Latest Additions by Category:**
+   - Series: Most recently added educational courses
+   - Books: Newest Islamic literature and texts
+   - Lectures: Latest audio/video scholarly content
+   - Fatwas: Recent Islamic legal rulings
 
 **Quick Access:**
 
