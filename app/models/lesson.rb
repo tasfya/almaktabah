@@ -3,6 +3,7 @@ class Lesson < ApplicationRecord
   include Publishable
   include DomainAssignable
   include AudioFallback
+  include AttachmentSerializable
 
 
   belongs_to :series
@@ -75,5 +76,21 @@ class Lesson < ApplicationRecord
   def generate_optimize_audio_bucket_key
     key = position? ? position : title
     "all-audios/#{scholar.full_name}/series/#{series_title}/#{key}.mp3"
+  end
+
+  def as_json(options = {})
+    {
+      id: id,
+      title: title,
+      description: description,
+      position: position,
+      published_at: published_at,
+      duration: duration,
+      series_id: series_id,
+      scholar: scholar.present? ? scholar.as_json : nil,
+      thumbnail_url: attachment_url(thumbnail),
+      audio_url: attachment_url(audio),
+      video_url: attachment_url(video)
+    }
   end
 end

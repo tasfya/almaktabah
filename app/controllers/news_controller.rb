@@ -4,8 +4,13 @@ class NewsController < ApplicationController
   before_action :setup_news_breadcrumbs
 
   def index
-    @q = News.for_domain_id(@domain.id).published.ransack(params[:q])
-    @pagy, @news = pagy(@q.result(distinct: true), limit: 12)
+    @q = News.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
+    @pagy, @news = pagy(@q.result(distinct: true))
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @news }
+    end
   end
 
   def show
@@ -14,7 +19,12 @@ class NewsController < ApplicationController
   private
 
   def set_news
-    @news = News.for_domain_id(@domain.id).published.find_by!(slug: params[:id]) rescue News.for_domain_id(@domain.id).published.find(params[:id])
+    @news = News.friendly
+                .for_domain_id(@domain.id)
+                .published
+                .find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to news_index_path, alert: t("messages.news_not_found")
   end
 
   def setup_news_breadcrumbs

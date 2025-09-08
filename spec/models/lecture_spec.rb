@@ -11,6 +11,45 @@ RSpec.describe Lecture, type: :model do
     it { should belong_to(:scholar) }
   end
 
+  describe 'included modules' do
+    it 'includes Sluggable' do
+      expect(Lecture.included_modules).to include(Sluggable)
+    end
+
+    it 'includes Publishable' do
+      expect(Lecture.included_modules).to include(Publishable)
+    end
+
+    it 'includes DomainAssignable' do
+      expect(Lecture.included_modules).to include(DomainAssignable)
+    end
+  end
+
+  describe 'slug functionality' do
+    let(:lecture_item) { create(:lecture, title: 'محاضرة في العقيدة') }
+
+    it 'generates a slug from the title' do
+      expect(lecture_item.slug).to eq('محاضرة-في-العقيدة')
+    end
+
+    it 'can be found by slug' do
+      expect(Lecture.friendly.find(lecture_item.slug)).to eq(lecture_item)
+    end
+
+    it 'maintains slug history when title changes' do
+      old_slug = lecture_item.slug
+      lecture_item.update!(title: 'محاضرة في الفقه')
+
+      expect(lecture_item.slug).to eq('محاضرة-في-الفقه')
+      expect(Lecture.friendly.find(old_slug)).to eq(lecture_item)
+    end
+
+    it 'works with English titles' do
+      english_lecture = create(:lecture, title: 'Introduction to Islamic Studies')
+      expect(english_lecture.slug).to eq('introduction-to-islamic-studies')
+    end
+  end
+
   describe 'scopes' do
     describe '.recent' do
       it 'orders lectures by published_at descending' do
