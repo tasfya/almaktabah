@@ -1,10 +1,12 @@
 class Series < ApplicationRecord
+    include Sluggable
     include Publishable
     include DomainAssignable
+    include AttachmentSerializable
 
     has_one_attached :explainable, service: Rails.application.config.public_storage
     has_many :lessons, dependent: :destroy
-    belongs_to :scholar
+    belongs_to :scholar, inverse_of: :series
     # Scopes
     scope :recent, -> { order(published_at: :desc) }
     scope :by_category, ->(category) { where(category: category) if category.present? }
@@ -17,5 +19,19 @@ class Series < ApplicationRecord
 
     def self.ransackable_associations(auth_object = nil)
         [ "lessons", "scholar" ]
+    end
+
+    def as_json(options = {})
+      {
+        id: id,
+        title: title,
+        description: description,
+        category: category,
+        published: published,
+        published_at: published_at,
+        scholar: scholar.present? ? scholar.as_json : nil,
+        explainable_url: attachment_url(explainable),
+        lessons_count: lessons.count
+      }
     end
 end

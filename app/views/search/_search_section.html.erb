@@ -52,7 +52,7 @@
 
           <div class="flex-shrink-0">
             <% if result.is_a?(Lesson) %>
-              <%= link_to series_path(result.series), class: "btn btn-secondary btn-sm" do %>
+              <%= link_to series_path(result.series.scholar, result.series), class: "btn btn-secondary btn-sm" do %>
                 <%= t('.view') %>
                 <%= icon "arrow-left", class: "size-3" %>
               <% end %>

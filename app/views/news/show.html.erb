@@ -50,5 +50,5 @@
 <%= render 'shared/share_modal', 
     modal_id: 'news_share_modal',
     url: request.original_url,
-    title: @news.title,
-    text: @news.title %>
+    title: html_escape(@news.title),
+    text: html_escape(@news.title) %>

@@ -25,6 +25,7 @@ class Avo::Resources::Lesson < Avo::BaseResource
 
   def fields
     field :id, as: :id, sortable: true
+    field :series, as: :belongs_to, searchable: true, sortable: true
     field :title, as: :text, sortable: true, searchable: true
     field :description, as: :textarea, searchable: true
     field :content, as: :trix

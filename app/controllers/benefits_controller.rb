@@ -5,7 +5,12 @@ class BenefitsController < ApplicationController
 
   def index
     @q = Benefit.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
-    @pagy, @benefits = pagy(@q.result(distinct: true), limit: 12)
+    @pagy, @benefits = pagy(@q.result(distinct: true))
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @benefits }
+    end
   end
 
   def show; end
@@ -13,7 +18,11 @@ class BenefitsController < ApplicationController
   private
 
   def set_benefit
-    @benefit = Benefit.for_domain_id(@domain.id).published.find(params[:id])
+    @scholar = Scholar.friendly.find(params[:scholar_id])
+    @benefit = @scholar.benefits.friendly
+                       .for_domain_id(@domain.id)
+                       .published
+                       .find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to benefits_path, alert: t("messages.benefit_not_found")
   end
@@ -24,7 +33,7 @@ class BenefitsController < ApplicationController
       breadcrumb_for(t("breadcrumbs.benefits"), benefits_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.benefits"), benefits_path)
-      breadcrumb_for(@benefit.title, benefit_path(@benefit))
+      breadcrumb_for(@benefit.title, benefit_path(@benefit, scholar_id: @benefit.scholar.to_param))
     end
   end
 end

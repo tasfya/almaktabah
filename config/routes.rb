@@ -1,14 +1,30 @@
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
   authenticate :user, ->(u) { u.admin? } do
     mount MissionControl::Jobs::Engine => "/jobs"
   end
 
+  resources :books, only: [ :index ]
+  resources :lectures, only: [ :index ]
+  resources :series, only: [ :index ]
+  resources :benefits, only: [ :index ]
+  resources :articles, only: [ :index ]
+
+  scope ":scholar_id" do
+    resources :books, only: [ :show ]
+    resources :benefits, only: [ :show ]
+    resources :articles, only: [ :show ]
+    resources :series, only: [ :show ]
+    get "lectures(/:kind)/:id", to: "lectures#show", as: "lecture"
+  end
+
+
   resources :books, only: [ :index, :show ]
   resources :lectures, only: [ :index, :show ]
   resources :series, only: [ :index, :show ]
+  resources :lessons, only: [ :index, :show ]
   resources :news, only: [ :index, :show ]
-  resources :benefits, only: [ :index, :show ]
-  resources :articles, only: [ :index, :show ]
   resources :scholars, only: [ :index, :show ]
   resources :fatwas, only: [ :index, :show ]
 

@@ -1,0 +1,38 @@
+<div data-controller="floating-video"
+     id="floating-video-player"
+     data-turbo-permanent
+     class="fixed right-2 bottom-2 w-80 md:right-4 md:bottom-4 md:w-96 bg-gray-900 text-white rounded-lg shadow-2xl overflow-hidden z-50 hidden
+            max-w-[calc(100vw-16px)] max-h-[calc(100vh-80px)]">
+  <div class="flex justify-between items-center p-2 border-b border-gray-700">
+    <h3 class="font-bold text-xs md:text-sm truncate" data-floating-video-target="title">
+      Video Player
+    </h3>
+    <div class="flex items-center gap-1">
+      <button class="btn btn-xs btn-circle btn-ghost text-white hover:bg-gray-700 md:hidden"
+              data-action="click->floating-video#toggleMinimize"
+        data-floating-video-target="minimizeBtn"
+        type="button">
+        <%= icon("minus", class: "size-3") %>
+      </button>
+      <button class="btn btn-xs md:btn-sm btn-circle btn-ghost text-white hover:bg-gray-700"
+              data-action="click->floating-video#close"
+        type="button">
+        <%= icon("x-mark", class: "size-3 md:size-4") %>
+      </button>
+    </div>
+  </div>
+  <div class="bg-white text-black aspect-video" data-floating-video-target="videoContainer">
+    <video data-floating-video-target="video"
+           class="w-full h-full hidden"
+           controls
+           preload="metadata">
+      <!-- Video source will be set dynamically -->
+    </video>
+    <%# youtube iframe %>
+    <iframe src="" data-floating-video-target="youtubeIframe" 
+              frameborder="0"
+              allowfullscreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              class="w-full h-full hidden"></iframe>
+  </div>
+</div>

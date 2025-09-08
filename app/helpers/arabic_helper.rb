@@ -1,4 +1,8 @@
 module ArabicHelper
+  # Arabic Unicode character ranges
+  ARABIC_LETTERS = "\\p{Arabic}".freeze
+  TASHKEEL_PATTERN = /[\p{M}&&\p{Arabic}]/u.freeze
+
   ARABIC_TO_LATIN = {
     "ا" => "a", "ب" => "b", "ت" => "t", "ث" => "th",
     "ج" => "j", "ح" => "h", "خ" => "kh", "د" => "d",
@@ -14,5 +18,22 @@ module ArabicHelper
 
   def transliterate_arabic(text)
     text.chars.map { |char| ARABIC_TO_LATIN[char] || char }.join
+  end
+
+  def remove_tashkeel(text)
+    text.gsub(TASHKEEL_PATTERN, "")
+  end
+
+  def remove_tatweel(text)
+    text.gsub(/\u0640/, "")
+  end
+
+  def remove_punctuation(text)
+    text.gsub(/[[:punct:]\p{P}]+/u, " ")
+  end
+
+  def clean_for_slug(text, sep: "-")
+    # Keep Arabic letters, digits, and ASCII letters; replace others with separator
+    text.gsub(/[^0-9A-Za-z#{ARABIC_LETTERS}]+/u, sep)
   end
 end

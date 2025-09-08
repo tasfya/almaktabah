@@ -1,11 +1,20 @@
 <%
   # Generate unique modal ID based on resource type and ID
   modal_id = "share_modal_#{resource.class.name.downcase}_#{resource.id}"
-  share_url = resource.is_a?(Lesson) ? polymorphic_url(resource.series) : polymorphic_url(resource)
   show_scholar = local_assigns.fetch(:show_scholar, false)
-
-  # Control whether the title links to the resource show page
-  link_to_resource = local_assigns.fetch(:link_to_resource, false)
+  
+  if resource.is_a?(Lesson)
+    share_url = polymorphic_url(resource.series)
+    resource_link = polymorphic_path(resource.series)
+  elsif resource.is_a?(Lecture)
+    share_url = lecture_url(resource.scholar, resource)
+    resource_link = lecture_path(resource.scholar, resource)
+  else
+    share_url = polymorphic_url(resource)
+    resource_link = polymorphic_path(resource)
+  end
+  
+  linkable = local_assigns[:linkable].present? ? local_assigns[:linkable] : false
 %>
 <div class="p-4 hover:bg-gray-50 transition">
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -21,8 +30,8 @@
       <% end %>
       <div class="flex-1 min-w-0">
         <h3 class="font-medium text-base mb-1 truncate">
-          <% if link_to_resource %>
-            <%= link_to resource.title, polymorphic_path(resource), class: "hover:underline" %>
+          <% if linkable %>
+            <%= link_to resource.title, resource_link, class: "hover:underline" %>
           <% else %>
             <%= resource.title %>
           <% end %>
@@ -49,21 +58,34 @@
             <%= icon "youtube", library: "lucide", class: "size-4" %>
             <span>YouTube</span>
           </a>
+        <% if linkable %>
+          <%= link_to resource_link do %>
+            <h3 class="font-medium text-base mb-1 truncate hover:link"><%= resource.title %></h3>
+          <% end %>
+        <% else %>
+          <h3 class="font-medium text-base mb-1 truncate"><%= resource.title %></h3>
         <% end %>
       </div>
     </div>
   </div>
   <div class="flex items-center gap-2 flex-shrink-0 justify-end">
-    <% if resource.has_any_audio? %>
+    <% if resource.respond_to?(:has_any_audio?) && resource.has_any_audio? %>
       <%= play_button(resource: resource, klass: "btn btn-secondary btn-sm") %>
       <%= link_to(rails_blob_url(resource.best_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
         <%= icon "arrow-down-tray", class: "size-3 sm:size-5" %>
       <% end %>
+    <% elsif resource.respond_to?(:video?) && resource.video? %>
+      <%= video_modal_button(resource:, klass: "btn btn-secondary btn-sm") %>
+      <%= link_to(rails_blob_url(resource.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
+        <%= icon "arrow-down-tray", class: "size-3 sm:size-5" %>
+      <% end %>
+    <% elsif resource.respond_to?(:youtube_url?) && resource.youtube_url? %>
+      <%= youtube_modal_button(resource:, klass: "btn btn-secondary btn-sm") %>
     <% end %>
     <button class="btn btn-secondary btn-sm"
-              data-controller="share-trigger"
-              data-share-trigger-modal-id-value="<%= modal_id %>"
-              data-action="click->share-trigger#open">
+            data-controller="share-trigger"
+            data-share-trigger-modal-id-value="<%= modal_id %>"
+            data-action="click->share-trigger#open">
       <%= icon "share", class: "size-4"%>
     </button>
   </div>

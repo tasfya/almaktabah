@@ -1,19 +1,19 @@
 require "digest/md5"
 
 class News < ApplicationRecord
+  include Sluggable
   include Publishable
   include DomainAssignable
+  include AttachmentSerializable
 
   has_one_attached :thumbnail, service: Rails.application.config.public_storage
 
   validates :title, presence: true
   validates :content, presence: true
-  validates :published_at, presence: true
+  validates :published_at, presence: true, if: :published?
   validates :slug, presence: true, uniqueness: true
 
   scope :recent, -> { order(published_at: :desc) }
-
-  before_validation :generate_slug, if: -> { slug.blank? && title.present? }
 
   has_rich_text :content
 
@@ -24,6 +24,18 @@ class News < ApplicationRecord
 
   def self.ransackable_associations(auth_object = nil)
     []
+  end
+
+  def as_json(options = {})
+    {
+      id: id,
+      title: title,
+      description: description,
+      slug: slug,
+      published_at: published_at,
+      content_excerpt: content.to_plain_text.truncate(200),
+      thumbnail_url: attachment_url(thumbnail)
+    }
   end
 
   private

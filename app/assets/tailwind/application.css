@@ -157,3 +157,36 @@
   @apply bg-primary text-primary-content font-medium shadow-sm;
 }
 
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: none;
+}
+#floating-video-player {
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 767px) {
+  #floating-video-player .btn {
+    min-height: 32px;
+    min-width: 32px;
+    touch-action: manipulation;
+  }
+  
+  #floating-video-player video::-webkit-media-controls-panel {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+}
