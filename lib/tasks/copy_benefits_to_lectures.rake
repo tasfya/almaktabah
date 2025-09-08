@@ -12,15 +12,13 @@ namespace :copy_benefits_to_lectures do
           duration:     benefit.duration,
           category:     benefit.category,
           kind:         :benefit,
+          old_id:      benefit.id,
           scholar_id:   benefit.scholar_id,
           published:    benefit.published,
           published_at: benefit.published_at,
         )
 
-        unless lecture.save
-          Rails.logger.error "Failed to save Benefit ID #{benefit.id} -> Lecture errors: #{lecture.errors.full_messages.join(", ")}"
-          raise ActiveRecord::Rollback
-        end
+        lecture.save!
 
         if benefit.domains.any?
           benefit.domains.each do |domain|
@@ -31,8 +29,7 @@ namespace :copy_benefits_to_lectures do
         lecture.audio.attach(benefit.audio.blob) if benefit.audio.attached?
         lecture.thumbnail.attach(benefit.thumbnail.blob) if benefit.thumbnail.attached?
         lecture.video.attach(benefit.video.blob) if benefit.video.attached?
-
-        AudioOptimizationJob.perform_later(lecture) if lecture.audio.attached?
+        lecture.optimized_audio.attach(benefit.optimized_audio.blob) if benefit.optimized_audio.attached?
       rescue => e
         Rails.logger.error "Exception while copying Benefit ID #{benefit.id}: #{e.class} - #{e.message}"
         raise ActiveRecord::Rollback
