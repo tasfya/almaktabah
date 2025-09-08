@@ -6,6 +6,11 @@ namespace :copy_benefits_to_lectures do
     Benefit.find_each do |benefit|
       ActiveRecord::Base.transaction do
         puts "Copying Benefit ID #{benefit.id} - #{benefit.title}"
+        exist = Lecture.find_by(old_id: benefit.id, kind: :benefit)
+        if exist
+          puts "Lecture for Benefit ID #{benefit.id} already exists. Skipping."
+          next
+        end
 
         lecture = Lecture.new(
           title:        benefit.title,
