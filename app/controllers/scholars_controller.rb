@@ -35,7 +35,7 @@ class ScholarsController < ApplicationController
       breadcrumb_for(t("breadcrumbs.scholars"), scholars_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.scholars"), scholars_path)
-      breadcrumb_for(@scholar.name, scholar_path(@scholar))
+      breadcrumb_for(@scholar.full_name, scholar_path(@scholar))
     end
   end
 

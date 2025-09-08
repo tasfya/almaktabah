@@ -7,7 +7,7 @@
     </div>
   </div>
   <h3 class="text-lg font-semibold mb-2 text-center break-words">
-    <%= scholar.name %>
+    <%= scholar.full_name %>
   </h3>
   <% if scholar.bio.present? %>
     <p class="text-sm mb-4 text-center"><%= truncate(strip_tags(scholar.bio), length: 100) %></p>
