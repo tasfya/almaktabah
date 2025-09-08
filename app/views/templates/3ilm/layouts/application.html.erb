@@ -16,26 +16,27 @@
     <%# Includes built stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%# Include domain custom CSS %>
-    <% if content = custom_css_tag %>
+    <% if custom_css_tag %>
       <style nonce="<%= content_security_policy_nonce %>">
-        <%= content %>
+        <%= custom_css_tag %>
       </style>
     <% end %>
     <%= javascript_importmap_tags %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
-  <body class="bg-background text-main-text">
+  <body class="bg-background text-main-text islamic-pattern">
     <%= render 'shared/header' %>
-    <%= render 'shared/news_bar' %>
-    <main class="min-h-screen w-full">
-      <% unless controller_name == 'home' %>
-        <div class="container mx-auto px-4">
-          <%= render 'shared/breadcrumb' %>
+    <div class="w-full sm:container sm:mx-auto sm:px-6 lg:px-8 drawer lg:drawer-open">
+      <input id="sidebar-drawer" type="checkbox" class="drawer-toggle" />
+      <div class="drawer-content flex flex-col ">
+        <div class="p-3 mb-2">
+          <%= render 'shared/news_bar' %>
+          <%= yield %>
         </div>
-      <% end %>
-      <%= yield %>
-    </main>
-    <%= render 'shared/footer' %>
-    <%= render 'shared/audio_player' %>
+        <%= render 'shared/audio_player' %>
+        <%= render 'shared/footer' %>
+      </div>
+      <%= render "shared/sidebar" %>
+    </div>
   </body>
 </html>

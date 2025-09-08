@@ -1,0 +1,12 @@
+<button class="<%= klass %>"
+        data-controller="video-button"
+        data-video-button-url-value="<%= url_for(resource.video) %>"
+        data-video-button-type-value="<%= resource.video.content_type %>"
+        data-video-button-title-value="<%= resource.title %>"
+        data-action="click->video-button#play"
+        type="button">
+  <%= icon("play", class: icon_class) %>
+  <span class="sr-only">
+    <%= t("buttons.watch_video") %>
+  </span>
+</button>

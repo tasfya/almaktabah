@@ -10,35 +10,56 @@
   <div class="p-6">
     <div class="space-y-4">
       <% results.each do |result| %>
-        <div class="bg-card hover:bg-card-hover text-card-contrast flex items-start gap-4 p-4 border  border-background-contrast rounded-lg transition-colors">
+        <%=
+          case result
+          when Lesson
+            link_target = lesson_path(result)
+            link_label  = result.series.title
+          when Scholar
+            link_target = scholar_path(result)
+            link_label  = "#{result.first_name} #{result.last_name}"
+          when Lecture
+            link_target = lecture_path(result.scholar, result)
+            link_label  = result.title
+          when Book
+            link_target = book_path(result.author, result)
+            link_label  = result.title
+          when Series
+            link_target = series_path(result.scholar, result)
+            link_label  = result.title
+          else
+            link_target = polymorphic_path(result)
+            link_label  = result.try(:title) || result.to_s
+          end
+        %>
+
+        <div class="bg-card hover:bg-card-hover text-card-contrast flex items-start gap-4 p-4 border border-background-contrast rounded-lg transition-colors">
+          <!-- Icon -->
           <div class="flex-shrink-0">
             <% case model_name %>
             <% when :books %>
-              <%= icon "book-open", class: "size-6 " %>
+              <%= icon "book-open", class: "size-6" %>
             <% when :lectures %>
               <%= icon "play", class: "size-6 text-secondary-500" %>
             <% when :lessons %>
-              <%= icon "graduation-cap", library: "lucide", class: "size-6 " %>
+              <%= icon "graduation-cap", library: "lucide", class: "size-6" %>
             <% when :series %>
-              <%= icon "folder", class: "size-6 " %>
+              <%= icon "folder", class: "size-6" %>
             <% when :news %>
-              <%= icon "newspaper", class: "size-6 " %>
+              <%= icon "newspaper", class: "size-6" %>
             <% when :benefits %>
-              <%= icon "star", class: "size-6 " %>
+              <%= icon "star", class: "size-6" %>
             <% when :fatwas %>
-              <%= icon "scale", class: "size-6 " %>
+              <%= icon "scale", class: "size-6" %>
             <% when :scholars %>
-              <%= icon "user", class: "size-6 " %>
+              <%= icon "user", class: "size-6" %>
             <% end %>
           </div>
 
+          <!-- Main content -->
           <div class="flex-1 min-w-0">
-           <h4 class="text-lg font-medium mb-2">
-              <% if result.is_a?(Lesson) %>
-                <%= link_to result.series.title, series_path(result.series), class: "transition-colors" %>
-              <% else %>
-                <%= link_to result.title, polymorphic_path(result), class: "transition-colors" %>
-              <% end %>
+            <h4 class="text-lg font-medium mb-2">
+              <%= link_to link_label, link_target, class: "transition-colors" %>
             </h4>
 
             <% if result.respond_to?(:description) && result.description.present? %>
@@ -48,17 +69,11 @@
             <% end %>
           </div>
 
+          <!-- View button -->
           <div class="flex-shrink-0">
-            <% if result.is_a?(Lesson) %>
-              <%= link_to series_path(result.series), class: "btn btn-secondary btn-sm" do %>
-                <%= t('.view') %>
-                <%= icon "arrow-left", class: "size-3" %>
-              <% end %>
-            <% else %>
-              <%= link_to send("#{model_name.to_s.singularize}_path", result), class: "btn btn-secondary btn-sm" do %>
-                <%= t('.view') %>
-                <%= icon "arrow-left", class: "size-3" %>
-              <% end %> 
+            <%= link_to link_target, class: "btn btn-secondary btn-sm" do %>
+              <%= t('.view') %>
+              <%= icon "arrow-left", class: "size-3" %>
             <% end %>
           </div>
         </div>

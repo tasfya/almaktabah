@@ -155,6 +155,8 @@ ar:
         contact_button: "تواصل معنا"
   buttons:
     watch_on_youtube: "شاهد على يوتيوب"
+    watch_video: "شاهد الفيديو"
+    watch_youtube_video: "شاهد على يوتيوب"
     send_question: "إرسال سؤال"
     share: "مشاركة"
     print: "طباعة"
@@ -211,6 +213,7 @@ ar:
     contact: "تواصل معنا"
     lessons: "الدروس العلمية"
     series: "السلاسل"
+    scholars: "العلماء"
     search: "البحث"
     quick_links: "روابط سريعة"
     content: "المحتوى"
@@ -277,7 +280,7 @@ ar:
       most_viewed: "الأكثر مشاهدة"
       most_downloaded: "الأكثر تحميلًا"
       default: "الافتراضي"
-    search_placeholder: "البحث في %{type}..."
+    search_placeholder: "ابحث..."
     search: "بحث"
     labels:
       search: "البحث"
@@ -390,6 +393,12 @@ ar:
       books: "كتب"
       lectures: "محاضرات"
       benefits: "فوائد"
+    attributes:
+      lecture:
+        kind:
+          sermon: "خطبة"
+          conference: "محاضرة"
+          benefit: "فائدة"
   sheikh:
     name: "الشيخ محمد بن رمزان الهاجري"
     description: "الموقع الرسمي لفضيلة الشيخ محمد بن رمزان الهاجري يحتوي على مجموعة متنوعة من الدروس والمحاضرات والكتب والفتاوى."
@@ -415,6 +424,28 @@ ar:
     lecture_not_found: "المحاضرة غير موجودة"
     lesson_not_found: "الدرس غير موجود"
     series_not_found: "السلسلة غير موجودة"
+    scholar_not_found: "الشيخ غير موجود"
+    scholars_listing_not_allowed: "عرض قائمة العلماء غير متاح في هذا الموقع"
+  scholars:
+    index:
+      title: "العلماء"
+      description: "تعرف على العلماء وسيرهم ومؤلفاتهم ومحاضراتهم"
+      no_scholars: "لا يوجد علماء متاحون حالياً"
+    show:
+      about_scholar: "نبذة عن الشيخ"
+      lectures_by_scholar: "محاضرات الشيخ"
+      series_by_scholar: "سلاسل الشيخ"
+      view_all_lectures: "عرض جميع المحاضرات"
+      view_all_series: "عرض جميع السلاسل"
+      lessons_count:
+        zero: "لا توجد دروس"
+        one: "درس واحد"
+        two: "درسان"
+        few: "%{count} دروس"
+        many: "%{count} درساً"
+        other: "%{count} دروس"
+    scholar_card:
+      view_profile: "عرض الملف الشخصي"
   breadcrumbs:
     books: "الكتب"
     lectures: "المحاضرات"
@@ -423,9 +454,9 @@ ar:
     benefits: "الفوائد"
     series: "السلاسل العلمية"
     news: "الأخبار"
+    scholars: "العلماء"
     about: "حول"
     contact: "اتصل بنا"
-  
   datetime:
     distance_in_words:
       half_a_minute: "نصف دقيقة"

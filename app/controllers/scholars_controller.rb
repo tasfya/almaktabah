@@ -14,6 +14,17 @@ class ScholarsController < ApplicationController
   end
 
   def show
+    @lectures = Lecture.for_domain_id(@domain.id)
+                      .published
+                      .where(scholar: @scholar)
+                      .order(published_at: :desc)
+                      .limit(6)
+
+    @series = Series.for_domain_id(@domain.id)
+                   .published
+                   .where(scholar: @scholar)
+                   .order(published_at: :desc)
+                   .limit(6)
   end
 
   private
@@ -24,13 +35,11 @@ class ScholarsController < ApplicationController
       breadcrumb_for(t("breadcrumbs.scholars"), scholars_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.scholars"), scholars_path)
-      breadcrumb_for(@scholar.name, scholar_path(@scholar))
+      breadcrumb_for(@scholar.full_name, scholar_path(@scholar))
     end
   end
 
   def set_scholar
-    @scholar = Scholar.published.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to scholars_path, alert: t("messages.scholar_not_found")
+    @scholar = Scholar.published.friendly.find(params[:id])
   end
 end

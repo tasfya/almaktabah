@@ -29,12 +29,16 @@ class BooksController < ApplicationController
       breadcrumb_for(t("breadcrumbs.books"), books_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.books"), books_path)
-      breadcrumb_for(@book.title, book_path(@book))
+      breadcrumb_for(@book.title, book_path(@book.author, @book))
     end
   end
 
   def set_book
-    @book = Book.for_domain_id(@domain.id).published.find(params[:id])
+    @scholar = Scholar.friendly.find(params[:scholar_id])
+    @book = @scholar.books.friendly
+                    .for_domain_id(@domain.id)
+                    .published
+                    .find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to books_path, alert: t("messages.book_not_found")
   end

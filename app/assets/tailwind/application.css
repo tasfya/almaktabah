@@ -24,7 +24,7 @@
 }
 
 @utility mobile-card {
-  @apply p-3 sm:p-4 lg:p-6 bg-white rounded-lg shadow-sm border border-gray-200;
+  @apply p-3 sm:p-4 lg:p-6 bg-base-100 rounded-lg shadow-sm border border-gray-200;
 }
 
 @utility mobile-gap {
@@ -136,5 +136,57 @@
       transform: translateY(0);
       opacity: 1;
     }
+  }
+}
+
+.islamic-pattern {
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.02) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.02) 0%, transparent 40%),
+    url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='islamic' x='0' y='0' width='60' height='60' patternUnits='userSpaceOnUse'%3E%3Cg fill='none' stroke='%239CA3AF' stroke-width='0.8' opacity='0.15'%3E%3Cpolygon points='30,5 40,20 55,20 45,30 50,45 30,40 10,45 15,30 5,20 20,20'/%3E%3Cpolygon points='0,0 5,8 12,8 8,12 10,20 0,16 -10,20 -8,12 -12,8 -5,8'/%3E%3Cpolygon points='60,0 65,8 72,8 68,12 70,20 60,16 50,20 52,12 48,8 55,8'/%3E%3Cpolygon points='0,60 5,68 12,68 8,72 10,80 0,76 -10,80 -8,72 -12,68 -5,68'/%3E%3Cpolygon points='60,60 65,68 72,68 68,72 70,80 60,76 50,80 52,72 48,68 55,68'/%3E%3Cline x1='0' y1='30' x2='15' y2='30'/%3E%3Cline x1='45' y1='30' x2='60' y2='30'/%3E%3Cline x1='30' y1='0' x2='30' y2='15'/%3E%3Cline x1='30' y1='45' x2='30' y2='60'/%3E%3Ccircle cx='15' cy='15' r='2'/%3E%3Ccircle cx='45' cy='15' r='2'/%3E%3Ccircle cx='45' cy='45' r='2'/%3E%3Ccircle cx='15' cy='45' r='2'/%3E%3C/g%3E%3C/pattern%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23islamic)'/%3E%3C/svg%3E");
+  background-size: 120px 120px, 120px 120px, 60px 60px;
+  background-position: 0 0, 60px 60px, 0 0;
+  background-repeat: repeat;
+}
+
+.sidebar-link {
+  @apply flex items-center gap-3 p-3 rounded-lg transition-all duration-200 hover:bg-base-300;
+}
+
+.sidebar-link.active {
+  @apply bg-primary text-primary-content font-medium shadow-sm;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: none;
+}
+#floating-video-player {
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 767px) {
+  #floating-video-player .btn {
+    min-height: 32px;
+    min-width: 32px;
+    touch-action: manipulation;
+  }
+  
+  #floating-video-player video::-webkit-media-controls-panel {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
   }
 }
