@@ -1,4 +1,5 @@
 class Series < ApplicationRecord
+    include Sluggable
     include Publishable
     include DomainAssignable
     include AttachmentSerializable

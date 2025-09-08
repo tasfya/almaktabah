@@ -4,8 +4,8 @@ FactoryBot.define do
     description { Faker::Lorem.paragraph }
     duration { Faker::Number.between(from: 1, to: 120) }
     category { Faker::Lorem.word }
-    kind { :conference }
-    published
+    kind { Lecture.kinds.keys.sample }
+    published { true }
     scholar { association(:scholar) }
     content { Faker::Lorem.paragraphs(number: 3).join("\n\n") }
     audio { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }

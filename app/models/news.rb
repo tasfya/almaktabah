@@ -1,6 +1,7 @@
 require "digest/md5"
 
 class News < ApplicationRecord
+  include Sluggable
   include Publishable
   include DomainAssignable
   include AttachmentSerializable
@@ -13,8 +14,6 @@ class News < ApplicationRecord
   validates :slug, presence: true, uniqueness: true
 
   scope :recent, -> { order(published_at: :desc) }
-
-  before_validation :generate_slug, if: -> { slug.blank? && title.present? }
 
   has_rich_text :content
 

@@ -11,6 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_09_05_210911) do
+
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -79,8 +80,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_05_210911) do
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
     t.integer "scholar_id"
+    t.string "slug"
     t.index ["published"], name: "index_benefits_on_published"
     t.index ["scholar_id"], name: "index_benefits_on_scholar_id"
+    t.index ["slug"], name: "index_benefits_on_slug", unique: true
   end
 
   create_table "books", force: :cascade do |t|
@@ -94,9 +97,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_05_210911) do
     t.integer "downloads", default: 0
     t.integer "pages"
     t.boolean "published", default: false, null: false
+    t.string "slug"
     t.index ["author_id"], name: "index_books_on_author_id"
     t.index ["category"], name: "index_books_on_category"
     t.index ["published"], name: "index_books_on_published"
+    t.index ["slug"], name: "index_books_on_slug", unique: true
     t.index ["title"], name: "index_books_on_title"
   end
 
@@ -129,8 +134,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_05_210911) do
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
     t.integer "scholar_id"
+    t.string "slug"
     t.index ["published"], name: "index_fatwas_on_published"
+    t.index ["slug"], name: "index_fatwas_on_slug", unique: true
     t.index ["scholar_id"], name: "index_fatwas_on_scholar_id"
+  end
+
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string "slug", null: false
+    t.integer "sluggable_id", null: false
+    t.string "sluggable_type", limit: 50
+    t.string "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
+    t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
   create_table "lectures", force: :cascade do |t|
@@ -148,10 +166,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_05_210911) do
     t.integer "scholar_id"
     t.string "source_url"
     t.integer "kind"
+    t.string "slug"
     t.index ["kind"], name: "index_lectures_on_kind"
     t.index ["old_id"], name: "index_lectures_on_old_id"
     t.index ["published"], name: "index_lectures_on_published"
     t.index ["scholar_id"], name: "index_lectures_on_scholar_id"
+    t.index ["slug"], name: "index_lectures_on_slug", unique: true
     t.index ["title"], name: "index_lectures_on_title"
   end
 
@@ -181,10 +201,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_05_210911) do
     t.string "title"
     t.text "description"
     t.datetime "published_at"
-    t.string "slug", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
+    t.string "slug"
     t.index ["published"], name: "index_news_on_published"
     t.index ["slug"], name: "index_news_on_slug", unique: true
   end
@@ -198,7 +218,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_05_210911) do
     t.datetime "published_at"
     t.string "full_name"
     t.string "full_name_alias"
+    t.string "slug"
     t.index ["published"], name: "index_scholars_on_published"
+    t.index ["slug"], name: "index_scholars_on_slug", unique: true
   end
 
   create_table "series", force: :cascade do |t|
@@ -210,8 +232,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_05_210911) do
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
     t.integer "scholar_id"
+    t.string "slug"
     t.index ["published"], name: "index_series_on_published"
     t.index ["scholar_id"], name: "index_series_on_scholar_id"
+    t.index ["slug"], name: "index_series_on_slug", unique: true
   end
 
   create_table "users", force: :cascade do |t|

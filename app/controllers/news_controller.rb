@@ -19,7 +19,9 @@ class NewsController < ApplicationController
   private
 
   def set_news
-    @news = News.for_domain_id(@domain.id).published.find_by!(slug: params[:id]) rescue News.for_domain_id(@domain.id).published.find(params[:id])
+    @news = News.for_domain_id(@domain.id).published.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to news_index_path, alert: t("messages.news_not_found")
   end
 
   def setup_news_breadcrumbs

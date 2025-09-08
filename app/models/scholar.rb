@@ -1,5 +1,7 @@
 class Scholar < ApplicationRecord
   include Publishable
+  include Sluggable
+  friendly_id :name, use: [ :slugged, :history ]
 
   has_many :articles, foreign_key: :author_id, dependent: :restrict_with_error, inverse_of: :author
   has_many :benefits,  dependent: :nullify, inverse_of: :scholar
@@ -30,5 +32,15 @@ class Scholar < ApplicationRecord
       full_name: name,
       full_name_alias: full_name_alias
     }
+  end 
+  
+  def normalize_friendly_id(value, sep: "-")
+    normalize_for_slug(value, sep:)
+  end
+
+  protected
+
+  def should_generate_new_friendly_id?
+    will_save_change_to_first_name? || will_save_change_to_last_name? || slug.blank?
   end
 end
