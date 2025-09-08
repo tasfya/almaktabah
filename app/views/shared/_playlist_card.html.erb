@@ -1,9 +1,19 @@
 <%
   # Generate unique modal ID based on resource type and ID
   modal_id = "share_modal_#{resource.class.name.downcase}_#{resource.id}"
-  share_url = resource.is_a?(Lesson) ? polymorphic_url(resource.series) : polymorphic_url(resource)
+  
+  if resource.is_a?(Lesson)
+    share_url = polymorphic_url(resource.series)
+    resource_link = polymorphic_path(resource.series)
+  elsif resource.is_a?(Lecture)
+    share_url = lecture_url(resource.scholar, resource)
+    resource_link = lecture_path(resource.scholar, resource)
+  else
+    share_url = polymorphic_url(resource)
+    resource_link = polymorphic_path(resource)
+  end
+  
   linkable = local_assigns[:linkable].present? ? local_assigns[:linkable] : false
-  resource_link =  resource.is_a?(Lesson) ? polymorphic_path(resource.series) : polymorphic_path(resource)
 %>
 <div class="p-4 hover:bg-gray-50 transition">
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
