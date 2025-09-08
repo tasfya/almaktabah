@@ -75,7 +75,7 @@
     end
 
     def search_scholars
-      Scholar.published.ransack(
+      @domain.filtered_scholars.published.ransack(
         first_name_or_last_name_cont: @query
       ).result(distinct: true).order(:first_name).limit(5)
     end

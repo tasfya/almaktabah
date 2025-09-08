@@ -49,7 +49,7 @@ module Seeds
           next
         end
 
-        if data['audio_url'].present?
+        if data['audio_url'].present? && !lecture.audio.attached?
           path = Rails.root.join('tmp', 'audio', 'lectures', "lecture_#{lecture.id}.mp3")
           if download_file(data['audio_url'], path)
             lecture.audio.attach(io: File.open(path), filename: File.basename(path))

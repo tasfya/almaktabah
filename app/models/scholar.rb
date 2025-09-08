@@ -1,5 +1,6 @@
 class Scholar < ApplicationRecord
   include Publishable
+  include DomainAssignable
 
   has_rich_text :bio
   has_one_attached :avatar, service: Rails.application.config.public_storage
@@ -10,10 +11,10 @@ class Scholar < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    [ "created_at", "first_name", "id", "last_name", "updated_at" ]
+    [ "created_at", "first_name", "id", "last_name", "updated_at", "published", "published_at" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    []
+    [ "domain_assignments", "domains" ]
   end
 end
