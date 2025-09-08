@@ -1,17 +1,11 @@
 <%= link_to scholar_path(scholar), class: "block bg-card hover:bg-card-hover text-card-contrast border border-background-contrast rounded-lg p-6 hover:shadow-md transition-shadow hover:text-inherit" do %>
-  <% if scholar.avatar.present? %>
-    <div class="mb-4 flex justify-center">
-      <%= image_tag scholar.avatar, class: "w-24 h-24 object-cover rounded-full" %>
+  <div class="mb-4 flex justify-center">
+    <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
+      <svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+      </svg>
     </div>
-  <% else %>
-    <div class="mb-4 flex justify-center">
-      <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
-        <svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-        </svg>
-      </div>
-    </div>
-  <% end %>
+  </div>
   <h3 class="text-lg font-semibold mb-2 text-center break-words">
     <%= scholar.name %>
   </h3>
