@@ -1,8 +1,9 @@
 class Benefit < ApplicationRecord
+  include Sluggable
   include Publishable
   include MediaHandler
-  include AudioFallback
   include DomainAssignable
+  include AudioFallback
   include AttachmentSerializable
 
   belongs_to :scholar, optional: true, inverse_of: :benefits
@@ -15,7 +16,6 @@ class Benefit < ApplicationRecord
 
   has_rich_text :content
 
-  after_commit :set_duration, on: [ :create, :update ]
   validates :title, presence: true, length: { maximum: 255 }
   validates :description, presence: true, length: { maximum: 1000 }
 

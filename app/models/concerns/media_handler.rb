@@ -3,6 +3,7 @@ module MediaHandler
 
   included do
     after_save :process_media_files
+    after_commit :extract_duration, on: [ :create, :update ]
   end
 
   def video?
@@ -41,5 +42,11 @@ module MediaHandler
   def handle_youtube_resource
     return unless self.respond_to?(:youtube_url) && youtube_url.present? && !video.attached?
     YoutubeDownloadJob.perform_later(self, file_url: youtube_url)
+  end
+
+  def extract_duration
+    return if self.respond_to?(:duration) && duration.present?
+
+    MediaDurationExtractionJob.perform_later(self)
   end
 end
