@@ -45,6 +45,8 @@ module MediaHandler
   end
 
   def extract_duration
+    return if self.respond_to?(:duration) && duration.present?
+
     MediaDurationExtractionJob.perform_later(self)
   end
 end
