@@ -2,8 +2,9 @@ class Book < ApplicationRecord
   include Sluggable
   include Publishable
   include DomainAssignable
+  include AttachmentSerializable
 
-  belongs_to :author, class_name: "Scholar", foreign_key: "author_id"
+  belongs_to :author, class_name: "Scholar", foreign_key: "author_id", inverse_of: :books
   has_one_attached :file, service: Rails.application.config.public_storage
   has_one_attached :cover_image, service: Rails.application.config.public_storage
 
@@ -22,5 +23,19 @@ class Book < ApplicationRecord
 
   def self.ransackable_associations(auth_object = nil)
     [ "author" ]
+  end
+
+  def as_json(options = {})
+    {
+      id: id,
+      title: title,
+      description: description,
+      category: category,
+      published_at: published_at,
+      downloads: downloads,
+      author: author.as_json,
+      file_url: attachment_url(file),
+      cover_image_url: attachment_url(cover_image)
+    }
   end
 end

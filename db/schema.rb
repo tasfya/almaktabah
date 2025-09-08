@@ -132,7 +132,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_111545) do
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
     t.string "slug"
+    t.integer "scholar_id"
     t.index ["published"], name: "index_fatwas_on_published"
+    t.index ["scholar_id"], name: "index_fatwas_on_scholar_id"
     t.index ["slug"], name: "index_fatwas_on_slug", unique: true
   end
 
@@ -253,6 +255,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_111545) do
   add_foreign_key "benefits", "scholars"
   add_foreign_key "books", "scholars", column: "author_id"
   add_foreign_key "domain_assignments", "domains"
+  add_foreign_key "fatwas", "scholars", on_delete: :nullify
   add_foreign_key "lectures", "scholars"
   add_foreign_key "lessons", "series"
   add_foreign_key "series", "scholars"

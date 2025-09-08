@@ -55,6 +55,8 @@ gem "sentry-ruby"
 gem "sentry-rails"
 gem "streamio-ffmpeg"
 gem "mission_control-jobs"
+gem "rswag-api"
+gem "rswag-ui"
 
 # YouTube video downloader and HTTP requests
 gem "httparty"
@@ -74,6 +76,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "rspec-rails"
+  gem "rswag-specs"
   gem "shoulda-matchers"
   gem "factory_bot_rails"
   gem "faker"
