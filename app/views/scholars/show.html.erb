@@ -2,15 +2,11 @@
 <article class="bg-white border border-background-contrast rounded-lg shadow-md p-8">
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
     <div class="md:col-span-1 flex justify-center">
-      <% if @scholar.avatar.present? %>
-        <%= image_tag @scholar.avatar, class: "w-48 h-48 object-cover rounded-full shadow-md", alt: @scholar.name %>
-      <% else %>
-        <div class="w-48 h-48 bg-gray-200 rounded-full flex items-center justify-center shadow-md">
-          <svg class="w-24 h-24 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-          </svg>
-        </div>
-      <% end %>
+      <div class="w-48 h-48 bg-gray-200 rounded-full flex items-center justify-center shadow-md">
+        <svg class="w-24 h-24 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+        </svg>
+      </div>
     </div>
     <div class="md:col-span-2">
       <header>

@@ -40,6 +40,6 @@ class ScholarsController < ApplicationController
   end
 
   def set_scholar
-    @scholar = Scholar.published.find(params[:id])
+    @scholar = Scholar.published.friendly.find(params[:id])
   end
 end
