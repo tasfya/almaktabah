@@ -30,6 +30,48 @@ RSpec.describe Book, type: :model do
     end
   end
 
+  describe 'slug functionality' do
+    context 'when title is in Arabic' do
+      it 'generates slug from Arabic title' do
+        arabic_book = create(:book, title: 'كتاب التوحيد')
+        expect(arabic_book.slug).to eq('كتاب-التوحيد')
+      end
+
+      it 'can be found using friendly finder' do
+        arabic_book = create(:book, title: 'الأسماء والصفات')
+        found_book = Book.friendly.find('الأسماء-والصفات')
+        expect(found_book).to eq(arabic_book)
+      end
+    end
+
+    context 'when title is in English' do
+      it 'generates slug from English title' do
+        english_book = create(:book, title: 'The Book of Monotheism')
+        expect(english_book.slug).to eq('the-book-of-monotheism')
+      end
+
+      it 'can be found using friendly finder' do
+        english_book = create(:book, title: 'Islamic Theology')
+        found_book = Book.friendly.find('islamic-theology')
+        expect(found_book).to eq(english_book)
+      end
+    end
+
+    context 'slug history' do
+      it 'maintains old slug when title changes' do
+        book = create(:book, title: 'كتاب الصلاة')
+        old_slug = book.slug
+
+        book.update(title: 'فقه الصلاة')
+        book.reload
+
+        expect(book.slug).to eq('فقه-الصلاة')
+        expect(Book.friendly.find(old_slug)).to eq(book)
+        expect(Book.friendly.find('فقه-الصلاة')).to eq(book)
+      end
+    end
+  end
+
   describe 'domain assignment' do
     let(:domain) { create(:domain) }
     let(:test_book) { create(:book, :without_domain) }
