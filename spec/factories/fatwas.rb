@@ -1,12 +1,14 @@
 FactoryBot.define do
   factory :fatwa do
+      scholar
       title { Faker::Book.title }
       question { Faker::Lorem.paragraph }
       answer { Faker::Lorem.paragraphs(number: 20).join("\n\n") }
-      published_at { Faker::Date.between(from: 2.days.ago, to: Date.today) }
+      published
       category { Faker::Book.genre }
       created_at { Time.now }
       updated_at { Time.now }
+
 
       transient do
         assign_domain { true }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_03_142346) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_08_105821) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -133,7 +133,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_03_142346) do
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
     t.string "slug"
+    t.integer "scholar_id"
     t.index ["published"], name: "index_fatwas_on_published"
+    t.index ["scholar_id"], name: "index_fatwas_on_scholar_id"
     t.index ["slug"], name: "index_fatwas_on_slug", unique: true
   end
 
@@ -198,10 +200,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_03_142346) do
     t.string "title"
     t.text "description"
     t.datetime "published_at"
+    t.string "slug", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
-    t.string "slug"
     t.index ["published"], name: "index_news_on_published"
     t.index ["slug"], name: "index_news_on_slug", unique: true
   end
@@ -254,6 +256,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_03_142346) do
   add_foreign_key "benefits", "scholars"
   add_foreign_key "books", "scholars", column: "author_id"
   add_foreign_key "domain_assignments", "domains"
+  add_foreign_key "fatwas", "scholars", on_delete: :nullify
   add_foreign_key "lectures", "scholars"
   add_foreign_key "lessons", "series"
   add_foreign_key "series", "scholars"

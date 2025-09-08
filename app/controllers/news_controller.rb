@@ -4,8 +4,13 @@ class NewsController < ApplicationController
   before_action :setup_news_breadcrumbs
 
   def index
-    @q = News.for_domain_id(@domain.id).published.ransack(params[:q])
-    @pagy, @news = pagy(@q.result(distinct: true), limit: 12)
+    @q = News.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
+    @pagy, @news = pagy(@q.result(distinct: true))
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @news }
+    end
   end
 
   def show
