@@ -17,7 +17,7 @@
             link_label  = result.series.title
           when Scholar
             link_target = scholar_path(result)
-            link_label  = "#{result.first_name} #{result.last_name}"
+            link_label  = "#{result.full_name}"
           when Lecture
             link_target = lecture_path(result.scholar, result)
             link_label  = result.title
