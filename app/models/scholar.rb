@@ -32,8 +32,8 @@ class Scholar < ApplicationRecord
       full_name: name,
       full_name_alias: full_name_alias
     }
-  end 
-  
+  end
+
   def normalize_friendly_id(value, sep: "-")
     normalize_for_slug(value, sep:)
   end

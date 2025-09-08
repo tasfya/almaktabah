@@ -51,6 +51,5 @@ class Benefit < ApplicationRecord
 
   def set_duration
     MediaDurationExtractionJob.perform_later(self)
-
   end
 end
