@@ -2,6 +2,8 @@
                 local: false, 
                 data: { 
                   turbo_stream: true,
+                  player_id: dom_id(resource) + "_player_content",
+                  currently_playing: "false",
                   controller: "play-button",
                   action: "submit->play-button#handleSubmit"
                 } do |form| %>
@@ -11,8 +13,11 @@
                     play_button_target: "button",
                     disable_with: "Loading..."
                   } do %>
-    <span data-play-button-target="icon">
+    <span data-play-button-target="playIcon">
       <%= icon("play", class: "size-3 sm:size-5") %>
+    </span>
+    <span data-play-button-target="pauseIcon" class="hidden">
+      <%= icon("pause", class: "size-3 sm:size-5") %>
     </span>
     <span data-play-button-target="loadingIcon" class="hidden">
       <%= icon("arrow-path", class: "size-3 sm:size-5 animate-spin") %>

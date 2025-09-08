@@ -9,6 +9,12 @@ class Scholar < ApplicationRecord
 
   friendly_id :name, use: [ :slugged, :history, :sequentially_slugged ]
 
+  has_many :articles, foreign_key: :author_id, dependent: :restrict_with_error, inverse_of: :author
+  has_many :benefits,  dependent: :nullify, inverse_of: :scholar
+  has_many :books,     foreign_key: :author_id, dependent: :restrict_with_error, inverse_of: :author
+  has_many :lectures,  dependent: :restrict_with_error, inverse_of: :scholar
+  has_many :series,    dependent: :restrict_with_error, inverse_of: :scholar
+  has_many :fatwas,    dependent: :nullify, inverse_of: :scholar
   has_rich_text :bio
 
   # Helper method to get full name
@@ -22,6 +28,16 @@ class Scholar < ApplicationRecord
 
   def self.ransackable_associations(auth_object = nil)
     []
+  end
+
+  def as_json(options = {})
+    {
+      id: id,
+      first_name: first_name,
+      last_name: last_name,
+      full_name: name,
+      full_name_alias: full_name_alias
+    }
   end
 
   def normalize_friendly_id(value, sep: "-")

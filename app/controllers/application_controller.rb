@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :setup_breadcrumbs
   before_action :set_domain
   before_action :latest_news
+  after_action { pagy_headers_merge(@pagy) if @pagy }
   include BreadcrumbHelper
   include Pagy::Backend
   include ViewResolver

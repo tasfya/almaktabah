@@ -4,12 +4,15 @@
 
 # Pagy DEFAULT configuration
 Pagy::DEFAULT[:limit]       = 12    # items per page
+Pagy::DEFAULT[:limit_max]       = 100
 Pagy::DEFAULT[:size]        = [ 1, 4, 4, 1 ] # nav bar links
 Pagy::DEFAULT[:page_param]  = :page # page parameter name
 Pagy::DEFAULT[:params]      = {}    # params for links
 
-# Load Pagy extras (no Bootstrap, using Tailwind CSS)
+# Load Pagy extras
 require "pagy/extras/array"
+require "pagy/extras/headers"
+require "pagy/extras/limit"
 require "pagy/extras/overflow"
 
 # Handle overflow pages

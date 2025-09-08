@@ -5,7 +5,12 @@ class BooksController < ApplicationController
 
   def index
     @q = Book.for_domain_id(@domain.id).published.includes(:author).ransack(params[:q])
-    @pagy, @books = pagy(@q.result(distinct: true), limit: 12)
+    @pagy, @books = pagy(@q.result(distinct: true))
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @books }
+    end
   end
 
   def show
