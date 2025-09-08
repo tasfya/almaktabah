@@ -64,6 +64,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_111545) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
+    t.datetime "published_at"
     t.index ["author_id"], name: "index_articles_on_author_id"
     t.index ["published"], name: "index_articles_on_published"
   end
