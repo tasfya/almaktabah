@@ -155,6 +155,8 @@ ar:
         contact_button: "تواصل معنا"
   buttons:
     watch_on_youtube: "شاهد على يوتيوب"
+    watch_video: "شاهد الفيديو"
+    watch_youtube_video: "شاهد على يوتيوب"
     send_question: "إرسال سؤال"
     share: "مشاركة"
     print: "طباعة"
