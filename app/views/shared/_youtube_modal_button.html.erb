@@ -1,0 +1,9 @@
+<button class="<%= klass %>"
+        data-controller="youtube-button"
+        data-youtube-button-url-value="<%= youtube_embed_url(resource.youtube_url) %>"
+        data-youtube-button-title-value="<%= resource.title %>"
+        data-action="click->youtube-button#play"
+        type="button">
+  <%= icon("youtube", library: "lucide", class: icon_class) %>
+  <span class="sr-only"><%= t("buttons.watch_youtube_video") %></span>
+</button>
