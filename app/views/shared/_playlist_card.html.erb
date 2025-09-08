@@ -1,6 +1,7 @@
 <%
   # Generate unique modal ID based on resource type and ID
   modal_id = "share_modal_#{resource.class.name.downcase}_#{resource.id}"
+  show_scholar = local_assigns.fetch(:show_scholar, false)
   
   if resource.is_a?(Lesson)
     share_url = polymorphic_url(resource.series)
@@ -28,6 +29,22 @@
         <% end %>
       <% end %>
       <div class="flex-1 min-w-0">
+        <% if show_scholar %>
+          <% scholar = nil %>
+          <% if resource.respond_to?(:scholar) && resource.scholar.present? %>
+            <% scholar = resource.scholar %>
+          <% elsif resource.respond_to?(:series) && resource.series&.scholar.present? %>
+            <% scholar = resource.series.scholar %>
+          <% end %>
+        <% end %>
+        <% if scholar.present? %>
+          <div class="flex items-center gap-1">
+            <%= icon "user", class: "size-4 text-gray-500" %>
+            <span class="text-base text-gray-600 truncate">
+              <%= link_to scholar.name, scholar_path(scholar), class: "hover:link" %>
+            </span>
+          </div>
+        <% end %>
         <% if linkable %>
           <%= link_to resource_link do %>
             <h3 class="font-medium text-base mb-1 truncate hover:link"><%= resource.title %></h3>

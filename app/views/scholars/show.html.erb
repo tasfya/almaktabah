@@ -1,0 +1,99 @@
+<% content_for :title, @scholar.name %>
+<article class="bg-white border border-background-contrast rounded-lg shadow-md p-8">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+    <div class="md:col-span-1 flex justify-center">
+      <% if @scholar.avatar.present? %>
+        <%= image_tag @scholar.avatar, class: "w-48 h-48 object-cover rounded-full shadow-md", alt: @scholar.name %>
+      <% else %>
+        <div class="w-48 h-48 bg-gray-200 rounded-full flex items-center justify-center shadow-md">
+          <svg class="w-24 h-24 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+          </svg>
+        </div>
+      <% end %>
+    </div>
+    <div class="md:col-span-2">
+      <header>
+        <h1 class="text-3xl font-bold mb-4">
+          <%= @scholar.name %>
+        </h1>
+        <% if @scholar.bio.present? %>
+          <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4"><%= t('.about_scholar') %></h2>
+            <div class="prose prose-lg max-w-none">
+              <%= @scholar.bio %>
+            </div>
+          </section>
+        <% end %>
+      </header>
+    </div>
+  </div>
+  <% if @lectures.any? %>
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold mb-6">
+        <%= t(".lectures_by_scholar")%>
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @lectures.each do |lecture| %>
+          <div class="bg-card hover:bg-card-hover text-card-contrast border border-background-contrast rounded-lg p-4 hover:shadow-md transition-shadow">
+            <h3 class="text-lg font-semibold mb-2">
+              <%= link_to lecture.title, lecture_path(lecture), class: "hover:text-primary-500" %>
+            </h3>
+            <% if lecture.description.present? %>
+              <p class="text-sm mb-2">
+                <%= truncate(lecture.description, length: 100) %>
+              </p>
+            <% end %>
+            <div class="flex items-center justify-between text-sm">
+              <% if lecture.category.present? %>
+                <span class="badge badge-primary"><%= lecture.category %></span>
+              <% end %>
+              <% if lecture.published_at.present? %>
+                <span class="text-gray-500"><%= l lecture.published_at, format: :short %></span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <% if @lectures.size >= 6 %>
+        <div class="text-center mt-6">
+          <%= link_to t('.view_all_lectures'), lectures_path(q: { scholar_id_eq: @scholar.id }), class: "btn btn-secondary" %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+  <% if @series.any? %>
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold mb-6">
+        <%= t(".series_by_scholar")%>
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @series.each do |series| %>
+          <div class="bg-card hover:bg-card-hover text-card-contrast border border-background-contrast rounded-lg p-4 hover:shadow-md transition-shadow">
+            <h3 class="text-lg font-semibold mb-2">
+              <%= link_to series.title, series_path(series), class: "hover:text-primary-500" %>
+            </h3>
+            <% if series.description.present? %>
+              <p class="text-sm mb-2">
+                <%= truncate(series.description, length: 100) %>
+              </p>
+            <% end %>
+            <div class="flex items-center justify-between text-sm">
+              <% if series.category.present? %>
+                <span class="badge badge-primary"><%= series.category %></span>
+              <% end %>
+              <% if series.lessons.any? %>
+                <span class="text-gray-500"><%= t('.lessons_count', count: series.lessons.count) %></span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <% if @series.size >= 6 %>
+        <div class="text-center mt-6">
+          <%= link_to t('.view_all_series'), series_index_path(q: { scholar_id_eq: @scholar.id }), class: "btn btn-secondary" %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+</article>

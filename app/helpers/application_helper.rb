@@ -68,6 +68,21 @@ module ApplicationHelper
     text.downcase.gsub(/[^ا-ي0-9\s]/i, "").gsub(/\s+/, "-")
   end
 
+  def active_link_class(path, base_class = "sidebar-link")
+    current_path = request.path
+    if path == root_path
+      return "#{base_class} active" if current_path == root_path
+      return base_class
+    end
+
+    if current_path.start_with?(path)
+      "#{base_class} active"
+    else
+      base_class
+    end
+  end
+
+
   def resource_share_url(resource)
     case resource
     when Lesson
