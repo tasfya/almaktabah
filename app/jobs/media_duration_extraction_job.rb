@@ -3,6 +3,8 @@ class MediaDurationExtractionJob < ApplicationJob
 
   def perform(media_record)
     return unless media_record.audio.attached? || media_record.video.attached?
+    return unless media_record.respond_to?(:duration)
+    return if media_record.duration.present?
 
     extract_duration(media_record)
   end
