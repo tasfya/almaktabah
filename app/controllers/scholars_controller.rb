@@ -4,8 +4,13 @@ class ScholarsController < ApplicationController
   before_action :setup_scholars_breadcrumbs
 
   def index
-    @q = Scholar.published.order(:first_name, :last_name).ransack(params[:q])
-    @pagy, @scholars = pagy(@q.result(distinct: true), limit: 12)
+    @q = Scholar.published.order(:first_name).ransack(params[:q])
+    @pagy, @scholars = pagy(@q.result(distinct: true))
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @scholars }
+    end
   end
 
   def show
