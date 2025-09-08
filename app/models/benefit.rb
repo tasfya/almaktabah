@@ -4,6 +4,7 @@ class Benefit < ApplicationRecord
   include MediaHandler
   include DomainAssignable
   include AudioFallback
+  include AttachmentSerializable
 
   belongs_to :scholar, optional: true, inverse_of: :benefits
 
