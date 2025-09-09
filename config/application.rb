@@ -60,6 +60,6 @@ module Almaktabah
       g.helper true
     end
 
-    MissionControl::Jobs.base_controller_class = "AdminController"
+    MissionControl::Jobs.base_controller_class = "JobsController"
   end
 end
