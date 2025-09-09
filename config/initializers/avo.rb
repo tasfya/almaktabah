@@ -12,8 +12,6 @@ Avo.configure do |config|
   ## == Licensing ==
   # config.license_key = ENV['AVO_LICENSE_KEY']]
 
-  config.resource_parent_controller = "AdminController"
-
   ## == Set the context ==
   config.set_context do
     # Return a context object that gets evaluated within Avo::ApplicationController
