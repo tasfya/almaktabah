@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_08_105821) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_09_002712) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -134,6 +134,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_105821) do
     t.boolean "published", default: false, null: false
     t.string "slug"
     t.integer "scholar_id"
+    t.string "source_url"
     t.index ["published"], name: "index_fatwas_on_published"
     t.index ["scholar_id"], name: "index_fatwas_on_scholar_id"
     t.index ["slug"], name: "index_fatwas_on_slug", unique: true
