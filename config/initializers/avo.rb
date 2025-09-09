@@ -10,7 +10,9 @@ Avo.configure do |config|
   # config.home_path = nil
 
   ## == Licensing ==
-  # config.license_key = ENV['AVO_LICENSE_KEY']
+  # config.license_key = ENV['AVO_LICENSE_KEY']]
+
+  config.resource_parent_controller = "AdminController"
 
   ## == Set the context ==
   config.set_context do

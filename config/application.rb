@@ -59,5 +59,7 @@ module Almaktabah
       g.javascripts true
       g.helper true
     end
+
+    MissionControl::Jobs.base_controller_class = "AdminController"
   end
 end
