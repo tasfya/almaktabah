@@ -41,7 +41,7 @@ class CsvImportProcessor
       rescue => e
         error_msg = "Failed to enqueue job for line #{line_number + 1}: #{e.message}"
         @errors << { line: line_number + 1, message: error_msg }
-        Rails.logger.error error_msg
+        Rails.logger.error e
       end
     end
 
