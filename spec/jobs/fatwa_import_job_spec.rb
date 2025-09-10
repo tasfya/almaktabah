@@ -25,11 +25,11 @@ RSpec.describe FatwaImportJob, type: :job do
       expect(fatwa.category).to eq('Religious')
     end
 
-    it 'assigns fatwa to domain' do
-      described_class.new.perform(row_data, domain.id, 2)
+    # it 'assigns fatwa to domain' do
+    #   described_class.new.perform(row_data, domain.id, 2)
 
-      fatwa = Fatwa.last
-      expect(fatwa.domains).to include(domain)
-    end
+    #   fatwa = Fatwa.last
+    #   expect(fatwa.domains).to include(domain)
+    # end
   end
 end

@@ -81,6 +81,24 @@
               </div>
             <% end %>
           </section>
+          <% if @fatwa.has_any_audio? %>
+            <section class="mb-8">
+              <div class="rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">
+                  <%= t(".download_options")%>
+                </h3>
+                <div class="flex flex-wrap gap-4">
+                  <% if @fatwa.has_any_audio? %>
+                    <%= link_to rails_blob_url(@fatwa.best_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
+                      <%= icon "arrow-down-tray", class: "size-5" %>
+                      <%= t("buttons.download_audio")%>
+                    <% end %>
+                    <%= play_button(resource: @fatwa) %>
+                  <% end %>
+                </div>
+              </div>
+            </section>
+          <% end %>
         </article>
       </div>
     </div>

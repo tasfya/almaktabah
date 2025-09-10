@@ -2,6 +2,9 @@ class Fatwa < ApplicationRecord
   include Sluggable
   include Publishable
   include DomainAssignable
+  include MediaHandler
+  include AudioFallback
+  include AttachmentSerializable
 
   belongs_to :scholar, optional: true, inverse_of: :fatwas
 
