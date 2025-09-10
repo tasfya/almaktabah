@@ -25,9 +25,7 @@ class FatwaImportJob < ApplicationJob
       scholar_id: scholar.id,
       source_url: row.source_url,
     )
-    if domain_id.present?
-      fatwa.assign_to(Domain.find(domain_id))
-    end
+    fatwa.assign_to(Domain.find(3))
 
     # Handle file attachments
     attach_from_url(fatwa, :audio, row.audio_file_url, content_type: "audio/mpeg") if row.audio_file_url.present?
