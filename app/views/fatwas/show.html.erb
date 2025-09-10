@@ -10,7 +10,7 @@
             </h1>
             <div class="flex flex-wrap items-center gap-4 text-sm mb-6">
               <% if @fatwa.category.present? %>
-                <span class="badge badge-primary rounded-full"> 
+                <span class="badge badge-primary rounded-full">
                   <%= @fatwa.category %>
                 </span>
               <% end %>
@@ -33,12 +33,6 @@
               </h2>
               <div class="prose prose-lg max-w-none p-6 rounded-lg border-r-4 border-background-contrast">
                 <%= @fatwa.answer %>
-              </div>
-            </section>
-          <% elsif @fatwa.content.present? %>
-            <section class="mb-8">
-              <div class="prose prose-lg max-w-none">
-                <%= @fatwa.content %>
               </div>
             </section>
           <% end %>
@@ -93,7 +87,7 @@
   </div>
 </div>
 
-<%= render 'shared/share_modal', 
+<%= render 'shared/share_modal',
     modal_id: 'fatwa_share_modal',
     url: request.original_url,
     title: html_escape(@fatwa.title),
