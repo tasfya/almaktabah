@@ -48,8 +48,19 @@
    - Published status
 
 7. **News** - Platform announcements and updates
+
    - Rich text content
    - Publishing workflow
+
+8. **Article** - Written educational content
+
+   - Title
+   - Body (rich text)
+   - Author (linked to Scholar)
+   - Cover image (attachment)
+   - Publishing workflow metadata (status, published_at, draft/versions)
+   - Tags/categories
+   - Optional summary/excerpt
 
 ### Current User Journey
 
@@ -63,15 +74,102 @@
 **Navigation:**
 
 - Books, Lectures, Series, News, Scholars, Fatwas
-- Search functionality
+- Unified catalog search with advanced filtering
 - Play functionality for audio/video content
 
 **Content Consumption:**
 
-- List views with filtering
+- Catalog-style grid/list views with comprehensive filtering
 - Individual content pages (when we have rich text of video)
 - Audio/video playback
 - Download capabilities
+
+**New Catalog Discovery Flow:**
+
+- Unified search interface with smart filters
+- Dynamic content updates based on filter selections
+- Context-aware filter preselection (e.g., series filter active on series page)
+- Personalized recommendations and recently viewed content (for anonymous users (opt-in, clearable) or logged-in users)
+
+### Catalog Search & Filtering System
+
+**Primary Search Interface:**
+
+- Prominent search bar at the top of all catalog pages
+- Real-time search suggestions and autocomplete
+- Clear search button with loading states
+- Search history and recent searches (for anonymous users (opt-in, clearable) or logged-in users)
+
+**Advanced Filter Panel:**
+
+- **Scholar Filter:** Multi-select dropdown of all available scholars
+
+  - Shows scholar name, number of associated content items
+  - Searchable with scholar name or topic expertise
+  - Visual indicators for most popular scholars
+
+- **Content Type Filter:** Predefined categories
+
+  - Series (educational courses)
+  - Book (Islamic literature)
+  - Article (written content)
+  - Fatwa (Islamic legal rulings)
+  - Sermon (religious speeches)
+  - Conference (scholarly gatherings)
+  - Benefit (short spiritual reminders)
+
+- **Media Type Filter:** Content format options
+
+  - Audio (podcasts, lectures, benefits)
+  - Video (recorded lectures, lessons)
+  - Text (books, articles, fatwas)
+
+- **Topic Filter:** Islamic knowledge categories
+
+  - Quran (Quranic studies and recitation)
+  - Aqeedah (Islamic theology and creed)
+  - Hadith (Prophetic traditions)
+  - Fiqh (Islamic jurisprudence)
+  - Seerah (Prophet's biography)
+  - Arabic (Arabic language studies)
+
+- **Duration Filter:** Time-based filtering
+  - Short (0-15 minutes)
+  - Medium (15-60 minutes)
+  - Long (60+ minutes)
+  - Custom range selector
+
+**Filter Behavior:**
+
+- **Live Filters:** Dynamic filter options that update based on current selections
+
+  - Only shows available options for remaining content
+  - Displays item count for each filter option (e.g., "Quran (24)", "Dr. Ahmad (15)")
+  - Options disabled when no matching content exists
+  - Real-time updates as user makes selections
+
+- Filters work together: Multiple selections within a single filter category (e.g., selecting multiple scholars or topics) use OR logic, while different filter types (e.g., Scholar + Content Type + Topic) are combined using AND logic for precise results.
+- Active filter chips show current selections
+- One-click filter removal
+- "Clear all filters" option
+- Filter state persists in URL for bookmarking/sharing
+- Mobile-optimized filter panel (collapsible sidebar)
+
+**Dynamic Results:**
+
+- Instant results update as filters are applied
+- Loading states during search/filter operations
+- Result count display ("X results found")
+- No results state with helpful suggestions
+- Infinite scroll or pagination for large result sets
+
+**Context-Aware Preselection:**
+
+- Series page: Content Type "Series" preselected
+- Books page: Content Type "Book" preselected
+- Scholar profile: Scholar filter preselected
+- Topic pages: Topic filter preselected
+- Search from homepage: No preselection (neutral state)
 
 ## Target User Personas
 
@@ -129,26 +227,34 @@
 
 **Hero Section:**
 
-- Live events
-- Upcoming events, latest news
-- Featured course/series with compelling imagery
-- Recent books, lectures, news, fatwas, and series in background
+- Prominent search bar with integrated filters for quick content discovery
+- Live lessons currently in progress
+- Last three live recordings for easy access to recent sessions
+- Upcoming event dates for next live lessons and sessions
+- Featured content highlighting curated Islamic educational materials
 - Clear value proposition: "Structured Islamic Learning for Modern Muslims"
 - Call-to-action: "Start Your Journey" or "Browse Lectures"
 
 **Content Discovery Sections:**
 
-1. **Continue Learning** - Personalized recommendations
-2. **Popular Series** - Featured courses
-3. **Daily Reminders** - Short benefits/audio
+1. **Continue Learning** - Personalized recommendations based on user history
+2. **Popular Series** - Featured courses with compelling imagery
+3. **Daily Reminders** - Short benefits/audio for spiritual growth
 4. **Recent Lectures** - Latest scholarly content
 5. **Essential Books** - Core Islamic texts
+6. **Latest Additions by Category:**
+   - Series: Most recently added educational courses
+   - Books: Newest Islamic literature and texts
+   - Lectures: Latest audio/video scholarly content
+   - Fatwas: Recent Islamic legal rulings
 
 **Quick Access:**
 
-- Search bar with smart suggestions
-- Category filters
-- Recently played/listened content
+- **Unified Catalog Search:** Prominent search bar with advanced filtering
+- **Smart Filter Suggestions:** Context-aware filter recommendations
+- **Recently Viewed:** Continue where you left off
+- **Quick Filter Shortcuts:** Popular topics, scholars, and content types
+- **Saved Searches:** Bookmark favorite filter combinations
 
 ## Content Organization Strategy
 
@@ -212,8 +318,34 @@ Discover Content → Preview → Play/Download → Save to Library → Share →
 ### Search & Discovery Flow
 
 ```
-Search Query → Filter Results → Preview Content → Consume → Save/Bookmark → Explore Related
+Search Query → Apply Live Filters → Instant Results Update → Preview Content → Consume → Save/Bookmark → Explore Related
 ```
+
+### Catalog Interface Design
+
+**Layout Options:**
+
+- **Grid View:** Card-based layout with thumbnails, ideal for visual browsing
+- **List View:** Compact list with key metadata, better for scanning
+- **Toggle:** Easy switch between grid and list views
+- **Responsive:** Adapts to screen size automatically
+
+**Content Cards:**
+
+- Thumbnail image or icon
+- Title and scholar name
+- Content type badge
+- Duration and topic tags
+- Quick action buttons (play, bookmark, share)
+- Progress indicators for series/lessons
+
+**Sorting Options:**
+
+- Relevance (default for search)
+- Most Recent
+- Most Popular
+- Duration (shortest/longest)
+- Scholar Name (alphabetical)
 
 ## Design System Recommendations
 
@@ -294,15 +426,20 @@ Search Query → Filter Results → Preview Content → Consume → Save/Bookmar
 - **Most Consumed:** Popular content identification
 - **Search Effectiveness:** Click-through rates from search
 - **Download Rates:** Content popularity by downloads
+- **Filter Usage:** Most used filters and combinations
+- **Search Conversion:** Percentage of searches leading to content consumption
+- **Catalog Engagement:** Time spent browsing catalog, filter interactions
 
 ## Next Steps
 
-1. **User Research:** Conduct interviews with target users
-2. **Competitive Analysis:** Review similar Islamic education platforms
-3. **Wireframing:** Create low-fidelity wireframes for key flows
-4. **Prototyping:** Develop interactive prototypes for user testing
-5. **Visual Design:** Create comprehensive design system
-6. **Usability Testing:** Validate designs with real users
+1. **User Research:** Conduct interviews with target users about catalog preferences
+2. **Competitive Analysis:** Review catalog interfaces on similar Islamic education platforms
+3. **Wireframing:** Create low-fidelity wireframes for catalog interface and filter system
+4. **Interactive Prototyping:** Develop clickable prototypes for catalog search and filtering
+5. **Filter Testing:** Test live filter interactions and performance with real data
+6. **Visual Design:** Create comprehensive design system for catalog components
+7. **Usability Testing:** Validate catalog UX with real users, focusing on filter discoverability
+8. **A/B Testing:** Test different catalog layouts (grid vs list) and filter arrangements
 
 ## Key Design Challenges
 
@@ -310,5 +447,9 @@ Search Query → Filter Results → Preview Content → Consume → Save/Bookmar
 2. **Progressive Disclosure:** Balancing simplicity with advanced features
 3. **Mobile Audio Experience:** Optimizing for audio consumption
 4. **Cultural Sensitivity:** Respectful representation of Islamic content
+5. **Filter Complexity:** Making advanced filtering intuitive without overwhelming users
+6. **Live Filter Performance:** Ensuring smooth performance with dynamic filter updates
+7. **Context-Aware Preselection:** Intelligently setting appropriate defaults based on user context
+8. **Cross-Device Consistency:** Maintaining filter state and preferences across devices
 
 This brief provides a foundation for designing an intuitive, culturally sensitive, and educationally effective Islamic knowledge platform that serves both casual learners and serious students of Islamic knowledge.
