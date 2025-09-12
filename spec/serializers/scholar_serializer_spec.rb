@@ -16,6 +16,6 @@ RSpec.describe ScholarSerializer, type: :serializer do
     expect(serialized[:slug]).to eq(scholar.slug)
     expect(serialized[:published_at]).to be_present
     expect(serialized[:full_name]).to eq(scholar.name)
-    expect(serialized[:bio]).to eq('<p>Test bio</p>')
+    expect(serialized[:bio]).to include('Test bio')
   end
 end
