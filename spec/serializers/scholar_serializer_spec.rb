@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ScholarSerializer, type: :serializer do
-  let(:scholar) { create(:scholar, first_name: 'John', last_name: 'Doe', slug: 'john-doe', published_at: Time.current) }
+  let(:scholar) { create(:scholar) }
 
   before do
     scholar.bio = '<p>Test bio</p>'
@@ -11,11 +11,11 @@ RSpec.describe ScholarSerializer, type: :serializer do
   it 'serializes the scholar attributes' do
     serialized = ScholarSerializer.render_as_hash(scholar)
     expect(serialized[:id]).to eq(scholar.id)
-    expect(serialized[:first_name]).to eq('John')
-    expect(serialized[:last_name]).to eq('Doe')
-    expect(serialized[:slug]).to eq('john-doe')
+    expect(serialized[:first_name]).to eq(scholar.first_name)
+    expect(serialized[:last_name]).to eq(scholar.last_name)
+    expect(serialized[:slug]).to eq(scholar.slug)
     expect(serialized[:published_at]).to be_present
-    expect(serialized[:full_name]).to eq('John Doe')
+    expect(serialized[:full_name]).to eq(scholar.name)
     expect(serialized[:bio]).to eq('<p>Test bio</p>')
   end
 end

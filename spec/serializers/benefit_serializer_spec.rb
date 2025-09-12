@@ -1,8 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe BenefitSerializer, type: :serializer do
-  let(:scholar) { create(:scholar) }
-  let(:benefit) { create(:benefit, scholar: scholar, title: 'Test Benefit', description: 'Description', published_at: Time.current, slug: 'test-benefit') }
+  let(:benefit) { create(:benefit) }
 
   before do
     benefit.content = '<p>Test content</p>'
@@ -12,10 +11,10 @@ RSpec.describe BenefitSerializer, type: :serializer do
   it 'serializes the benefit attributes' do
     serialized = BenefitSerializer.render_as_hash(benefit)
     expect(serialized).to have_key(:id)
-    expect(serialized[:title]).to eq('Test Benefit')
-    expect(serialized[:description]).to eq('Description')
+    expect(serialized[:title]).to eq(benefit.title)
+    expect(serialized[:description]).to eq(benefit.description)
     expect(serialized[:published_at]).to be_present
-    expect(serialized[:slug]).to eq('test-benefit')
+    expect(serialized[:slug]).to eq(benefit.slug)
     expect(serialized[:content_excerpt]).to eq('Test content')
     expect(serialized[:scholar]).to be_present
   end
