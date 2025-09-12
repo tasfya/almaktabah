@@ -3,7 +3,7 @@
 class BenefitSerializer < AppSerializer
   identifier :id
 
-  fields :title, :description, :slug
+  fields :published_at, :title, :description, :slug
 
   association :scholar, blueprint: ScholarSerializer
 

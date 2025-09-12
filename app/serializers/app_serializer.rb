@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class AppSerializer < Blueprinter::Base
-  # Common published_at field - inherited by all serializers
-  field :published_at do |obj|
-    obj.published_at&.iso8601
-  end
-
   # Reusable method for attachment URL fields
   def self.add_attachment_url_field(attachment_name, url_method = :attachment_url)
     field "#{attachment_name}_url" do |obj|

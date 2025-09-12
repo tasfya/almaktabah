@@ -3,7 +3,7 @@
 class FatwaSerializer < AppSerializer
   identifier :id
 
-  fields :title, :category, :slug, :source_url
+  fields :published_at, :title, :category, :slug, :source_url
 
   add_content_field :question, format: :plain
   add_content_field :answer, format: :plain

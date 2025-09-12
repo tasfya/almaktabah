@@ -3,7 +3,7 @@
 class ArticleSerializer < AppSerializer
   identifier :id
 
-  fields :title
+  fields :published_at, :title
 
   association :author, blueprint: ScholarSerializer
 

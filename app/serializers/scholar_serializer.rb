@@ -3,7 +3,7 @@
 class ScholarSerializer < AppSerializer
   identifier :id
 
-  fields :first_name, :last_name, :slug, :full_name_alias
+  fields :published_at, :first_name, :last_name, :slug, :full_name_alias
 
   field :full_name do |scholar|
     scholar.name

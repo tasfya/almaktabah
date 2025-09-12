@@ -3,7 +3,7 @@
 class SeriesSerializer < AppSerializer
   identifier :id
 
-  fields :title, :description, :category, :slug, :published
+  fields :published_at, :title, :description, :category, :slug, :published
 
   association :scholar, blueprint: ScholarSerializer
 
