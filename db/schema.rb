@@ -132,8 +132,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_09_002712) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
-    t.string "slug"
     t.integer "scholar_id"
+    t.string "slug"
     t.string "source_url"
     t.index ["published"], name: "index_fatwas_on_published"
     t.index ["scholar_id"], name: "index_fatwas_on_scholar_id"
