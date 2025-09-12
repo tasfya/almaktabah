@@ -48,8 +48,19 @@
    - Published status
 
 7. **News** - Platform announcements and updates
+
    - Rich text content
    - Publishing workflow
+
+8. **Article** - Written educational content
+
+   - Title
+   - Body (rich text)
+   - Author (linked to Scholar)
+   - Cover image (attachment)
+   - Publishing workflow metadata (status, published_at, draft/versions)
+   - Tags/categories
+   - Optional summary/excerpt
 
 ### Current User Journey
 
@@ -78,7 +89,7 @@
 - Unified search interface with smart filters
 - Dynamic content updates based on filter selections
 - Context-aware filter preselection (e.g., series filter active on series page)
-- Personalized recommendations and recently viewed content
+- Personalized recommendations and recently viewed content (for anonymous users (opt-in, clearable) or logged-in users)
 
 ### Catalog Search & Filtering System
 
@@ -87,7 +98,7 @@
 - Prominent search bar at the top of all catalog pages
 - Real-time search suggestions and autocomplete
 - Clear search button with loading states
-- Search history and recent searches
+- Search history and recent searches (for anonymous users (opt-in, clearable) or logged-in users)
 
 **Advanced Filter Panel:**
 
@@ -134,7 +145,7 @@
 
   - Only shows available options for remaining content
   - Displays item count for each filter option (e.g., "Quran (24)", "Dr. Ahmad (15)")
-  - Options disappear when no matching content exists
+  - Options disabled when no matching content exists
   - Real-time updates as user makes selections
 
 - Filters work together: Multiple selections within a single filter category (e.g., selecting multiple scholars or topics) use OR logic, while different filter types (e.g., Scholar + Content Type + Topic) are combined using AND logic for precise results.
