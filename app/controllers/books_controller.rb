@@ -22,7 +22,6 @@ class BooksController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: BookSerializer.render(@book) }
     end
   end
 

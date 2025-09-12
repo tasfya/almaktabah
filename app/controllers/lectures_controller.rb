@@ -22,7 +22,6 @@ class LecturesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: LectureSerializer.render(@lecture) }
     end
   end
 

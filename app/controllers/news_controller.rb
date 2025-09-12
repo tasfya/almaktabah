@@ -16,7 +16,6 @@ class NewsController < ApplicationController
   def show
     respond_to do |format|
       format.html
-      format.json { render json: NewsSerializer.render(@news) }
     end
   end
 

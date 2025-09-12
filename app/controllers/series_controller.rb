@@ -18,7 +18,6 @@ class SeriesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: SeriesSerializer.render(@series) }
     end
   end
 

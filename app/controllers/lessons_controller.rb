@@ -30,7 +30,6 @@ class LessonsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: LessonSerializer.render(@lesson) }
     end
   end
 

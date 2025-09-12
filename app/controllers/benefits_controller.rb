@@ -16,7 +16,6 @@ class BenefitsController < ApplicationController
   def show
     respond_to do |format|
       format.html
-      format.json { render json: BenefitSerializer.render(@benefit) }
     end
   end
 

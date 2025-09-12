@@ -15,7 +15,6 @@ class FatwasController < ApplicationController
   def show
     respond_to do |format|
       format.html
-      format.json { render json: FatwaSerializer.render(@fatwa) }
     end
   end
 

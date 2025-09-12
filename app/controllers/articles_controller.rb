@@ -16,7 +16,6 @@ class ArticlesController < ApplicationController
   def show
     respond_to do |format|
       format.html
-      format.json { render json: ArticleSerializer.render(@article) }
     end
   end
 
