@@ -24,18 +24,4 @@ class Book < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     [ "author" ]
   end
-
-  def as_json(options = {})
-    {
-      id: id,
-      title: title,
-      description: description,
-      category: category,
-      published_at: published_at,
-      downloads: downloads,
-      author: author.as_json,
-      file_url: attachment_url(file),
-      cover_image_url: attachment_url(cover_image)
-    }
-  end
 end

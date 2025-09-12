@@ -9,11 +9,16 @@ class BenefitsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @benefits }
+      format.json { render json: BenefitSerializer.render(@benefits) }
     end
   end
 
-  def show; end
+  def show
+    respond_to do |format|
+      format.html
+      format.json { render json: BenefitSerializer.render(@benefit) }
+    end
+  end
 
   private
 

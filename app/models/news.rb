@@ -26,17 +26,6 @@ class News < ApplicationRecord
     []
   end
 
-  def as_json(options = {})
-    {
-      id: id,
-      title: title,
-      description: description,
-      slug: slug,
-      published_at: published_at,
-      content_excerpt: content.to_plain_text.truncate(200),
-      thumbnail_url: attachment_url(thumbnail)
-    }
-  end
 
   private
 

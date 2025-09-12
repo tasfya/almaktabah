@@ -9,7 +9,7 @@ class LecturesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @lectures }
+      format.json { render json: LectureSerializer.render(@lectures) }
     end
   end
 
@@ -19,6 +19,11 @@ class LecturesController < ApplicationController
                                .where.not(id: @lecture.id)
                                .recent
                                .limit(4)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: LectureSerializer.render(@lecture) }
+    end
   end
 
   private

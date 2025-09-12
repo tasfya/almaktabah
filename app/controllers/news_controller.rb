@@ -9,7 +9,7 @@ class NewsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @news }
+      format.json { render json: NewsSerializer.render(@news) }
     end
   end
 

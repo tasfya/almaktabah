@@ -31,21 +31,6 @@ class Benefit < ApplicationRecord
     "all-audios/#{scholar.full_name}/benefits/#{title}.mp3"
   end
 
-  def as_json(options = {})
-    {
-      id: id,
-      title: title,
-      description: description,
-      category: category,
-      published_at: published_at,
-      duration: duration,
-      scholar: scholar.present? ? { id: scholar.id, name: scholar.name } : nil,
-      thumbnail_url: attachment_url(thumbnail),
-      audio_url: attachment_url(audio),
-      video_url: attachment_url(video),
-      content_excerpt: content.to_plain_text.truncate(200)
-    }
-  end
 
   private
 
