@@ -12,7 +12,12 @@ class FatwasController < ApplicationController
       format.json { render json: FatwaSerializer.render(@fatwas) }
     end
   end
-  def show; end
+  def show
+    respond_to do |format|
+      format.html
+      format.json { render json: FatwaSerializer.render(@fatwa) }
+    end
+  end
 
   private
 

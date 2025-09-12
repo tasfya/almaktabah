@@ -55,20 +55,4 @@ class Lecture < ApplicationRecord
   def generate_optimize_audio_bucket_key
     "all-audios/#{scholar.name}/lectures/#{kind}/#{title}.mp3"
   end
-
-  def as_json(options = {})
-    {
-      id: id,
-      title: title,
-      description: description,
-      category: category,
-      kind: kind,
-      published_at: published_at,
-      duration: duration,
-      scholar: scholar.as_json,
-      thumbnail_url: attachment_url(thumbnail),
-      audio_url: attachment_url(audio),
-      video_url: attachment_url(video)
-    }
-  end
 end
