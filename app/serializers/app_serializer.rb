@@ -14,7 +14,15 @@ class AppSerializer < Blueprinter::Base
         if url_method == :attachment_url
           obj.attachment_url(attachment)
         else
-          attachment.url
+          begin
+            attachment.url
+          rescue NoMethodError, ArgumentError
+            begin
+              obj.attachment_url(attachment)
+            rescue NoMethodError, ArgumentError
+              nil
+            end
+          end
         end
       else
         nil
