@@ -12,32 +12,42 @@ class FatwaImportJob < ApplicationJob
 
     row = ::OpenStruct.new(row_data)
 
-    # Find or create scholar
-    if row_data["scholar_id"]
-      scholar = Scholar.find(row_data["scholar_id"])
-    elsif row_data["scholar_full_name"].present?
-      scholar = find_or_create_scholar_by_full_name(row_data["scholar_full_name"])
+    # Validate domain_id and domain existence
+    if domain_id.blank?
+      Rails.logger.error "domain_id is blank for fatwa import on line #{line_number}"
+      return
     end
 
-    fatwa = Fatwa.find_or_create_by!(
-      title: row.title,
-      category: row.category,
-      scholar_id: scholar.id,
-      source_url: row.source_url,
-    )
-
-    if domain_id.present?
-      fatwa.assign_to(Domain.find(domain_id))
-    else
-      Rails.logger.error "No domain_id provided for fatwa import on line #{line_number}"
-      raise ArgumentError, "domain_id is required"
+    unless Domain.exists?(domain_id)
+      Rails.logger.error "Domain with id #{domain_id} does not exist for fatwa import on line #{line_number}"
+      return
     end
 
-    # Handle file attachments
-    attach_from_url(fatwa, :audio, row.audio_file_url, content_type: "audio/mpeg") if row.audio_file_url.present?
+    domain = Domain.find(domain_id)
 
-    Rails.logger.info "Successfully created/updated fatwa: #{fatwa.title}"
-    fatwa
+    ActiveRecord::Base.transaction do
+      # Find or create scholar
+      if row_data["scholar_id"]
+        scholar = Scholar.find(row_data["scholar_id"])
+      elsif row_data["scholar_full_name"].present?
+        scholar = find_or_create_scholar_by_full_name(row_data["scholar_full_name"])
+      end
+
+      fatwa = Fatwa.find_or_create_by!(
+        title: row.title,
+        category: row.category,
+        scholar_id: scholar.id,
+        source_url: row.source_url,
+      )
+
+      fatwa.assign_to(domain)
+
+      # Handle file attachments
+      attach_from_url(fatwa, :audio, row.audio_file_url, content_type: "audio/mpeg") if row.audio_file_url.present?
+
+      Rails.logger.info "Successfully created/updated fatwa: #{fatwa.title}"
+      fatwa
+    end
   rescue => e
     Rails.logger.error "Failed to process fatwa import for line #{line_number}: #{e.message}"
     raise e
