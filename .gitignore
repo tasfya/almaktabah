@@ -52,5 +52,9 @@ node_modules
 db/backups
 .todos.yaml
 
+.kilocode
+.roo
+/AGENTS.md
+
 # VS Code
 .vscode/*
