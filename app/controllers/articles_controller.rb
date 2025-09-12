@@ -9,7 +9,7 @@ class ArticlesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: ArticleSerializer.render(@articles) }
+      format.json { render json: ArticleSerializer.render_as_hash(@articles) }
     end
   end
 

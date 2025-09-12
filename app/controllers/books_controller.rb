@@ -9,7 +9,7 @@ class BooksController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: BookSerializer.render(@books) }
+      format.json { render json: BookSerializer.render_as_hash(@books) }
     end
   end
 

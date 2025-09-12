@@ -9,7 +9,7 @@ class SeriesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: SeriesSerializer.render(@series) }
+      format.json { render json: SeriesSerializer.render_as_hash(@series) }
     end
   end
 

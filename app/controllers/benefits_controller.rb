@@ -9,7 +9,7 @@ class BenefitsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: BenefitSerializer.render(@benefits) }
+      format.json { render json: BenefitSerializer.render_as_hash(@benefits) }
     end
   end
 

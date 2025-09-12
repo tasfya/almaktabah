@@ -16,7 +16,7 @@ class LessonsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: LessonSerializer.render(@lessons) }
+      format.json { render json: LessonSerializer.render_as_hash(@lessons) }
     end
   end
 

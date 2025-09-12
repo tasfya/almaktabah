@@ -9,7 +9,7 @@ class ScholarsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: ScholarSerializer.render(@scholars) }
+      format.json { render json: ScholarSerializer.render_as_hash(@scholars) }
     end
   end
 
