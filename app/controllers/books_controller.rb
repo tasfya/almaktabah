@@ -9,7 +9,7 @@ class BooksController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @books }
+      format.json { render json: BookSerializer.render_as_hash(@books) }
     end
   end
 
@@ -19,6 +19,10 @@ class BooksController < ApplicationController
                          .where.not(id: @book.id)
                          .recent
                          .limit(4)
+
+    respond_to do |format|
+      format.html
+    end
   end
 
   private

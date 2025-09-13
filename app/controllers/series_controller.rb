@@ -9,12 +9,16 @@ class SeriesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @series }
+      format.json { render json: SeriesSerializer.render_as_hash(@series) }
     end
   end
 
   def show
     @lessons = @series.lessons.for_domain_id(@domain.id).published.ordered_by_lesson_number
+
+    respond_to do |format|
+      format.html
+    end
   end
 
   private

@@ -122,6 +122,10 @@ GEM
     benchmark (0.4.1)
     bigdecimal (3.2.3)
     bindex (0.8.1)
+    blueprinter (1.2.1)
+    blueprinter-activerecord (1.3.0)
+      activerecord (>= 6.0)
+      blueprinter (~> 1.0)
     bootsnap (1.18.6)
       msgpack (~> 1.2)
     brakeman (7.1.0)
@@ -586,6 +590,8 @@ PLATFORMS
 DEPENDENCIES
   avo (>= 3.2)
   aws-sdk-s3
+  blueprinter
+  blueprinter-activerecord
   bootsnap
   brakeman
   cairo (~> 1.18)

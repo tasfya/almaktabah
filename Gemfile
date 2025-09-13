@@ -57,6 +57,8 @@ gem "streamio-ffmpeg"
 gem "mission_control-jobs"
 gem "rswag-api"
 gem "rswag-ui"
+gem "blueprinter"
+gem "blueprinter-activerecord"
 
 # YouTube video downloader and HTTP requests
 gem "httparty"

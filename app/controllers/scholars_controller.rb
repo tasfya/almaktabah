@@ -9,7 +9,7 @@ class ScholarsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @scholars }
+      format.json { render json: ScholarSerializer.render_as_hash(@scholars) }
     end
   end
 
@@ -25,6 +25,10 @@ class ScholarsController < ApplicationController
                    .where(scholar: @scholar)
                    .order(published_at: :desc)
                    .limit(6)
+
+    respond_to do |format|
+      format.html
+    end
   end
 
   private

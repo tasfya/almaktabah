@@ -16,7 +16,7 @@ class LessonsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @lessons }
+      format.json { render json: LessonSerializer.render_as_hash(@lessons) }
     end
   end
 
@@ -27,6 +27,10 @@ class LessonsController < ApplicationController
                              .where.not(id: @lesson.id)
                              .recent
                              .limit(4)
+
+    respond_to do |format|
+      format.html
+    end
   end
 
   private

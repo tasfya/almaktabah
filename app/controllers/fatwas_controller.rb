@@ -9,10 +9,14 @@ class FatwasController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @fatwas }
+      format.json { render json: FatwaSerializer.render_as_hash(@fatwas) }
     end
   end
-  def show; end
+  def show
+    respond_to do |format|
+      format.html
+    end
+  end
 
   private
 

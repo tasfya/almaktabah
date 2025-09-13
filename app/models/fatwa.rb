@@ -22,16 +22,4 @@ class Fatwa < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     [ "scholar" ]
   end
-
-  def as_json(options = {})
-    {
-      id: id,
-      title: title,
-      question: question&.body&.to_plain_text,
-      answer: answer&.body&.to_plain_text,
-      category: category,
-      published_at: published_at,
-      scholar: scholar.present? ? scholar.as_json : nil
-    }
-  end
 end

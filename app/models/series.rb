@@ -18,20 +18,6 @@ class Series < ApplicationRecord
     end
 
     def self.ransackable_associations(auth_object = nil)
-        [ "lessons", "scholar" ]
-    end
-
-    def as_json(options = {})
-      {
-        id: id,
-        title: title,
-        description: description,
-        category: category,
-        published: published,
-        published_at: published_at,
-        scholar: scholar.present? ? scholar.as_json : nil,
-        explainable_url: attachment_url(explainable),
-        lessons_count: lessons.count
-      }
+      [ "lessons", "scholar" ]
     end
 end

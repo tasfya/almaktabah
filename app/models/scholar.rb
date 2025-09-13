@@ -30,15 +30,6 @@ class Scholar < ApplicationRecord
     []
   end
 
-  def as_json(options = {})
-    {
-      id: id,
-      first_name: first_name,
-      last_name: last_name,
-      full_name: name,
-      full_name_alias: full_name_alias
-    }
-  end
 
   def normalize_friendly_id(value, sep: "-")
     normalize_for_slug(value, sep:)

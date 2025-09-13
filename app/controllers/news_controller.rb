@@ -9,11 +9,14 @@ class NewsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @news }
+      format.json { render json: NewsSerializer.render_as_hash(@news) }
     end
   end
 
   def show
+    respond_to do |format|
+      format.html
+    end
   end
 
   private

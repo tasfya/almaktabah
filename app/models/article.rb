@@ -14,14 +14,4 @@ class Article < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     [ "author" ]
   end
-
-  def as_json(options = {})
-    {
-      id: id,
-      title: title,
-      content: content&.body&.to_html,
-      published_at: published_at,
-      author: author.as_json
-    }
-  end
 end
