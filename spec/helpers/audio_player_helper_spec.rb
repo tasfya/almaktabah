@@ -11,7 +11,9 @@ RSpec.describe AudioPlayerHelper, type: :helper do
           "shared/play_button",
           resource: resource_with_audio,
           klass: "btn btn-secondary w-fit whitespace-nowrap",
-          icon_class: "size-4"
+          icon_class: "size-4",
+          is_playing: false,
+          custom_content: nil
         )
 
         helper.play_button(resource: resource_with_audio)
@@ -25,7 +27,9 @@ RSpec.describe AudioPlayerHelper, type: :helper do
           "shared/play_button",
           resource: resource_with_audio,
           klass: custom_class,
-          icon_class: custom_icon_class
+          icon_class: custom_icon_class,
+          custom_content: nil,
+          is_playing: false
         )
 
         helper.play_button(

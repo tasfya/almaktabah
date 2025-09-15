@@ -13,6 +13,8 @@ export default class extends ApplicationController {
     this.element.addEventListener("audio:playing", this.hideLoading.bind(this))
     this.element.addEventListener("audio:playing", this.#toggleAudioIcons.bind(this, true))
     this.element.addEventListener("audio:paused", this.#toggleAudioIcons.bind(this, false))
+    const currentlyPlaying = this.element.dataset.currentlyPlaying === "true"
+    this.#toggleAudioIcons(currentlyPlaying)
 
   }
 
@@ -48,6 +50,7 @@ export default class extends ApplicationController {
 
     const currentlyPlaying = event.target.dataset.currentlyPlaying === "true"
     if (this.#isPlayerLoaded(event)) {
+      console.log("Player is already loaded")
       event.preventDefault()
       currentlyPlaying ? this.#pauseAllAudio() : this.#playAudio()
       event.target.dataset.currentlyPlaying = (!currentlyPlaying).toString()

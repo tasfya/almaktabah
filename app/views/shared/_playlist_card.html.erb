@@ -13,7 +13,9 @@
     share_url = polymorphic_url(resource)
     resource_link = polymorphic_path(resource)
   end
-  
+
+  current_audio =  session[:current_audio]
+  is_playing = current_audio.present? && current_audio["resource_id"] == resource.id && current_audio["resource_type"] == resource.class.name
   linkable = local_assigns[:linkable].present? ? local_assigns[:linkable] : false
 %>
 <div class="p-4 hover:bg-gray-50 transition">
@@ -57,7 +59,7 @@
   </div>
   <div class="flex items-center gap-2 flex-shrink-0 justify-end">
     <% if resource.respond_to?(:has_any_audio?) && resource.has_any_audio? %>
-      <%= play_button(resource: resource, klass: "btn btn-secondary btn-sm") %>
+      <%= play_button(resource: resource, klass: "btn btn-secondary btn-sm", is_playing: ) %>
       <%= link_to(rails_blob_url(resource.best_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
         <%= icon "arrow-down-tray", class: "size-3 sm:size-5" %>
       <% end %>

@@ -2,8 +2,8 @@
                 local: false, 
                 data: { 
                   turbo_stream: true,
-                  player_id: dom_id(resource) + "_player_content",
-                  currently_playing: "false",
+                  player_id: dom_id(resource),
+                  currently_playing: is_playing,
                   controller: "play-button",
                   action: "submit->play-button#handleSubmit"
                 } do |form| %>
@@ -29,11 +29,6 @@
   <% end %>
   
   <template data-play-button-target="template">
-    <div class="bg-white border-t border-gray-200 shadow-lg p-4">
-      <div class="flex items-center justify-center space-x-3">
-        <%= icon("arrow-path", class: "size-3 sm:size-5 animate-spin text-gray-600") %>
-        <span class="text-gray-700"><%= t("buttons.loading_audio") %></span>
-      </div>
-    </div>
+    <%= render partial: "shared/player_skeleton" %>
   </template>
 <% end %>

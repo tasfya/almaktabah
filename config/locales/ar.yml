@@ -1,4 +1,8 @@
 ar:
+  play:
+    player_content:
+      next_lesson: "الدرس التالي"
+      previous_lesson: "الدرس السابق"
   search:
     index:
       search_too_short: "يجب أن يكون البحث مكونًا من حرفين على الأقل"

@@ -1,15 +1,13 @@
 <div id="audio-player-container" class="fixed inset-x-0 bottom-0 z-50" data-turbo-permanent>
   <div id="audio-player" class="empty:hidden">
     <!-- Audio player content will be rendered here via turbo streams -->
+    <% if current_audio_from_session && current_audio_from_session[:resource] %>
+      <% audio_data = current_audio_from_session %>
+      <%= render "play/player_content", resource: audio_data[:resource], restore_position: audio_data[:position] %>
+    <% end %>
   </div>
-  
   <!-- Loading template -->
   <template data-play-button-target="loadingTemplate">
-    <div class="bg-white border-t border-background-contrast shadow-lg p-4">
-      <div class="flex items-center justify-center space-x-3">
-        <%= icon("arrow-path", class: "w-5 h-5 animate-spin") %>
-        <span><%= t("buttons.loading_audio") %></span>
-      </div>
-    </div>
+    <%= render partial: "shared/player_skeleton" %>
   </template>
 </div>

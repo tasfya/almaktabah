@@ -1,7 +1,10 @@
 class PlayController < ApplicationController
   before_action :set_resource, only: [ :show ]
 
+
   def show
+    save_current_audio_to_session(@resource)
+
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.update("audio-player", render_to_string(partial: "play/player_content", locals: { resource: @resource }))
@@ -11,7 +14,18 @@ class PlayController < ApplicationController
   end
 
   def stop
+    clear_current_audio_from_session
     render turbo_stream: turbo_stream.update("audio-player", "")
+  end
+
+  def update_position
+    if params[:resource_type] && params[:resource_id] && params[:position] && params[:position].to_f >= 0.0
+      session[:current_audio] ||= {}
+      session[:current_audio]["position"] = params[:position].to_f
+      head :ok
+    else
+      head :bad_request
+    end
   end
 
   private
@@ -33,5 +47,19 @@ class PlayController < ApplicationController
     else
       raise NameError, "Invalid resource type: #{resource_type}"
     end
+  end
+
+  def save_current_audio_to_session(resource)
+    session[:current_audio] = {
+      "resource_type" => resource.class.name,
+      "resource_id" => resource.id,
+      "title" => resource.title,
+      "position" => session.dig(:current_audio, "position") || 0.0,
+      "timestamp" => Time.current.to_i
+    }
+  end
+
+  def clear_current_audio_from_session
+    session.delete(:current_audio)
   end
 end
