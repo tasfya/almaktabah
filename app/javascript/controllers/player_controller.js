@@ -83,7 +83,7 @@ export default class extends ApplicationController {
   }
 
   setupUserInteractionListeners() {
-    const playButton = document.querySelector(`[data-player-id='${this.element.id}_player_content']`)
+    const playButton = document.querySelector(`[data-player-id='${this.element.id}']`)
     if (!playButton) {
       console.warn("Play button not found for player:", this.element.id)
       return
@@ -114,7 +114,7 @@ export default class extends ApplicationController {
         console.log("Playback started")
         // launch new event to notify play button controllers
         const event = new Event("audio:playing")
-        const playButton = document.querySelector(`[data-player-id='${this.element.id}_player_content']`)
+        const playButton = document.querySelector(`[data-player-id='${this.element.id}']`)
         if (playButton) {
           playButton.dispatchEvent(event)
         }
@@ -152,7 +152,7 @@ export default class extends ApplicationController {
       this.play().then(() => {
         const event = new Event("audio:playing")
         console.log("Dispatching audio:playing event")
-        const playButton = document.querySelector(`[data-player-id='${this.element.id}_player_content']`)
+        const playButton = document.querySelector(`[data-player-id='${this.element.id}']`)
         if (playButton) {
           playButton.dispatchEvent(event)
         }
@@ -161,7 +161,7 @@ export default class extends ApplicationController {
       this.element.pause().then(() => {
         const event = new Event("audio:paused")
         console.log("Dispatching audio:paused event")
-        const playButton = document.querySelector(`[data-player-id='${this.element.id}_player_content']`)
+        const playButton = document.querySelector(`[data-player-id='${this.element.id}']`)
         if (playButton) {
           playButton.dispatchEvent(event)
         }

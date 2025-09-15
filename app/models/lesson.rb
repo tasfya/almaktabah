@@ -77,4 +77,29 @@ class Lesson < ApplicationRecord
     key = position? ? position : title
     "all-audios/#{scholar.full_name}/series/#{series_title}/#{key}.mp3"
   end
+
+  def title_for_display
+    position ? "#{position} - #{title}" : title
+  end
+
+  def next_lesson
+    return nil unless series
+
+    current_pos = position || -1
+    series.lessons
+          .unscope(:order)
+          .where("COALESCE(position, -1) > ?", current_pos)
+          .order(Arel.sql("COALESCE(position, 999999), created_at ASC"))
+          .first
+  end
+
+  def previous_lesson
+    return nil unless series
+    current_pos = position || Float::INFINITY
+    series.lessons
+          .unscope(:order)
+          .where("COALESCE(position, 999999) < ?", current_pos)
+          .order(Arel.sql("COALESCE(position, -1) DESC, created_at DESC"))
+          .first
+  end
 end
