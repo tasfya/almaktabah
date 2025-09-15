@@ -34,4 +34,29 @@ class ApplicationController < ActionController::Base
 
     @latest_news ||= News.for_domain_id(@domain.id).published.order(published_at: :desc).limit(5)
   end
+
+
+  def current_audio_from_session
+    return nil unless session[:current_audio]
+
+    audio_data = session[:current_audio]
+    return nil unless audio_data["resource_type"] && audio_data["resource_id"]
+
+    begin
+      resource_class = audio_data["resource_type"].constantize
+      raise NameError unless %w[Lesson Lecture Benefit].include?(resource_class.name)
+      resource = resource_class.for_domain_id(@domain.id).published.find(audio_data["resource_id"])
+      {
+        resource: resource,
+        position: audio_data["position"] || 0.0,
+        timestamp: audio_data["timestamp"]
+      }
+    rescue ActiveRecord::RecordNotFound, NameError
+      # Clear invalid session data
+      session.delete(:current_audio)
+      nil
+    end
+  end
+
+  helper_method :current_audio_from_session
 end

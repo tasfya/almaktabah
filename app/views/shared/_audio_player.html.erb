@@ -1,6 +1,10 @@
 <div id="audio-player-container" class="fixed inset-x-0 bottom-0 z-50" data-turbo-permanent>
   <div id="audio-player" class="empty:hidden">
     <!-- Audio player content will be rendered here via turbo streams -->
+    <% if current_audio_from_session && current_audio_from_session[:resource] %>
+      <% audio_data = current_audio_from_session %>
+      <%= render "play/player_content", resource: audio_data[:resource], restore_position: audio_data[:position] %>
+    <% end %>
   </div>
   
   <!-- Loading template -->

@@ -70,20 +70,23 @@
     <!-- Audio Player -->
     <div class="px-3 py-3 bg-gray-50 sticky bottom-0">
       <% if resource.has_any_audio? %>
+        <% restore_position = local_assigns[:restore_position] || 0 %>
         <%= audio_tag resource.best_audio, 
-            id: resource.best_audio_dom_id, 
+            id: dom_id(resource), 
             class: "w-full h-10 rounded-lg", 
             controls: true, 
             preload: "metadata",
-            id: dom_id(resource),
             muted: Rails.env.test?, 
             data: {
               controller: "player", 
-              action: "loadeddata->player#play",
+              action: "loadedmetadata->player#onMetadataLoaded",
               player_title_value: resource.title,
               player_artist_value: resource.respond_to?(:series) && resource.series.present? ? resource.series.title : site_info[:name],
               player_artwork_value: resource.respond_to?(:thumbnail) && resource.thumbnail.attached? ? url_for(resource.thumbnail) : apple_touch_icon_url,
-              player_domain_value: site_info[:name]
+              player_domain_value: site_info[:name],
+              player_restore_position_value: restore_position,
+              player_resource_type_value: resource.class.name.underscore,
+              player_resource_id_value: resource.id
             } %>
       <% end %>
     </div>
