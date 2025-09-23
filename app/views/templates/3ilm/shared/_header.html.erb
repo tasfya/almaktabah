@@ -1,9 +1,9 @@
 <header
   data-controller="3ilm--header"
   data-3ilm--header-target="header"
-  class="bg-base-200 shadow-sm transition-transform duration-300"
+  class="shadow-sm transition-transform duration-300"
 >
-  <div class="bg-navbar text-navbar-contrast">
+  <div class="bg-primary">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-[var(--header-height)]">
       <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto" do %>
         <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
@@ -13,10 +13,10 @@
       </label>
       <div class="hidden md:flex flex-row-reverse gap-2 items-center w-full flex-1 mr-auto">
         <div class="hidden md:flex items-center gap-1">
-          <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-sm p-1" do %>
+          <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-secondary text-primary-content hover:text-secondary-content btn-sm p-1" do %>
             <%= icon "youtube", library: "lucide", class: "size-5" %>
           <% end %>
-          <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-sm p-1" do %>
+          <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-secondary text-primary-content hover:text-secondary-content btn-sm p-1" do %>
             <%= icon "twitter", library: "lucide", class: "size-5" %>
           <% end %>
         </div>
