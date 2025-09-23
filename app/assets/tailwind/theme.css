@@ -12,14 +12,6 @@
   --color-secondary-link-hover: #333333;
   --color-secondary-link-active: #333333;
 
-  --color-main-text: #333333;
-  --color-navbar: #111827;
-  --color-navbar-contrast: #ffffff;
-  --color-newsbar: #111827;
-  --color-newsbar-contrast: #ffffff;
-  --color-footer: #0a0a0a;
-  --color-footer-contrast: #ffffff;
-
   --color-card: #ffffff;
   --color-card-hover: #f1f5f9;
   --color-card-contrast: #3b3b3b;
@@ -31,7 +23,8 @@
 }
 
 @plugin "./daisyui.js" {
-  themes: ilm --default, binramzan, saleh-suhaymi, fawzan, zayd-almadkhali;
+  themes: ilm --default, binramzan, suhayimi, ubayd, zayd, fawzan, ramly,
+    alsuliman;
 }
 
 @plugin "./daisyui-theme.js" {
@@ -107,12 +100,12 @@
   name: "suhayimi";
   prefersdark: false;
   color-scheme: "light";
-  --color-base-100: oklch(96.5% 0.025 67.5);
-  --color-base-200: oklch(93% 0.025 67.5);
-  --color-base-300: oklch(88% 0.025 67.5);
+  --color-base-100: oklch(100% 0.005 67.5);
+  --color-base-200: oklch(95% 0.005 67.5);
+  --color-base-300: oklch(90% 0.005 67.5);
   --color-base-content: oklch(20% 0 0);
-  --color-primary: oklch(58.92% 0.199 207.079);
-  --color-primary-content: oklch(100% 0 0);
+  --color-primary: oklch(21% 0.03 264);
+  --color-primary-content: oklch(80% 0.03 264);
   --color-secondary: oklch(92% 0.04 70);
   --color-secondary-content: oklch(5% 0 0);
   --color-accent: oklch(70% 0.15 50);
