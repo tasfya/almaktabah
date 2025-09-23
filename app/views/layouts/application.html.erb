@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html dir="rtl" lang="ar" data-theme="<%= @domain&.name.presence || 'default' %>">
   <head>
     <title><%= content_for(:title) %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -24,8 +24,9 @@
     <%= javascript_importmap_tags %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
-  <body class="bg-background text-main-text">
+  <body class="bg-base-200 text-base-content">
     <%= render 'shared/header' %>
+    <%= render 'shared/theme_switcher' %>
     <%= render 'shared/news_bar' %>
     <main class="min-h-screen w-full pb-16 md:pb-0">
       <% unless controller_name == 'home' %>

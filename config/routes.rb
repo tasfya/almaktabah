@@ -39,6 +39,10 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
+  if Rails.env.development?
+    get "theme-playground", to: "theme_playground#index"
+  end
+
   devise_for :users, skip: [ :registrations ]
   authenticate :user do
     mount Avo::Engine => "/avo"

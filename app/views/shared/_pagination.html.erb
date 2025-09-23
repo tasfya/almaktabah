@@ -1,5 +1,5 @@
 <% if defined?(@pagy) && @pagy %>
-  <div class="flex items-center justify-between border-t border-background-contrast px-4 py-3 sm:px-6 mt-8">
+  <div class="flex items-center justify-between border-t border-base-300 px-4 py-3 sm:px-6 mt-8">
     <div class="flex flex-1 justify-between sm:hidden">
       <% ['prev', 'next'].each do |dir| %>
         <% page = @pagy.public_send(dir) %>
@@ -15,7 +15,6 @@
       <p class="text-sm">
         <%= t('common.pagination_showing', from: @pagy.from, to: @pagy.to, count: @pagy.count) %>
       </p>
-
       <nav class="join" aria-label="Pagination">
         <% if @pagy.prev %>
           <%= link_to pagy_url_for(@pagy, @pagy.prev), class: "btn btn-sm join-item" do %>
@@ -28,7 +27,6 @@
             <span class="sr-only"><%= t('buttons.previous') %></span>
           </span>
         <% end %>
-
         <% @pagy.series.each do |item| %>
           <% if item.is_a?(Integer) %>
             <% if item == @pagy.page %>
@@ -40,7 +38,6 @@
             <span class="btn btn-sm join-item btn-disabled"><%= item %></span>
           <% end %>
         <% end %>
-
         <% if @pagy.next %>
           <%= link_to pagy_url_for(@pagy, @pagy.next), class: "btn btn-sm join-item" do %>
             <span class="sr-only"><%= t('buttons.next') %></span>

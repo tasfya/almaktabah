@@ -3,7 +3,7 @@
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
       <div class="lg:col-span-2">
-        <article class="border border-background-contrast rounded-lg shadow-md p-8">
+        <article class="border border-base-300 rounded-lg shadow-md p-8">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div class="md:col-span-1">
               <% if @book.cover_image.present?%>
@@ -64,7 +64,7 @@
               </h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% @related_books.each do |related_book| %>
-                  <div class="bg-card hover:bg-card-hover text-card-contrast border border-background-contrast rounded-lg p-6 hover:shadow-md transition-shadow">
+                  <div class="bg-card text-card-contrast border border-base-300 rounded-lg p-6 hover:shadow-md transition-shadow">
                     <div class="flex gap-4">
                       <% if related_book.cover_image.present? %>
                         <%= image_tag related_book.cover_image, class: "w-16 h-20 object-cover rounded", alt: related_book.title %>
@@ -96,6 +96,6 @@
           <% end %>
         </article>
       </div>
-      </div>
+    </div>
   </div>
 </div>

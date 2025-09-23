@@ -1,4 +1,4 @@
-<%= link_to book_path(book.author, book), class: "block bg-card hover:bg-card-hover text-card-contrast border border-background-contrast rounded-lg p-6 hover:shadow-md transition-shadow hover:text-inherit" do %>
+<%= link_to book_path(book.author, book), class: "block bg-card text-card-contrast border border-base-300 rounded-lg p-6 hover:shadow-md transition-shadow hover:text-inherit" do %>
   <% if book.cover_image.present? %>
     <div class="mb-4">
       <%= image_tag book.cover_image, class: "w-full h-48 object-cover rounded" %>

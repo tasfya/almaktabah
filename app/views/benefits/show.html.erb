@@ -2,7 +2,7 @@
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
       <div class="lg:col-span-2">
-        <article class="border border-background-contrast rounded-lg shadow-md p-8">
+        <article class="border border-base-300 rounded-lg shadow-md p-8">
           <header class="mb-8">
             <% if @benefit.video? %>
               <section class="mb-8">
@@ -37,7 +37,7 @@
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       <%= t("buttons.download_audio")%>
                     <% end %>
-                          <%= play_button(resource: @benefit, klass: "btn btn-lg btn-secondary group") %>
+                    <%= play_button(resource: @benefit, klass: "btn btn-lg btn-secondary group") %>
                   <% end %>
                   <% if @benefit.video? %>
                     <%= link_to rails_blob_url(@benefit.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary w-fit" do %>

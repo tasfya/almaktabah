@@ -2,7 +2,7 @@
   # Generate unique modal ID based on resource type and ID
   modal_id = "share_modal_#{resource.class.name.downcase}_#{resource.id}"
   show_scholar = local_assigns.fetch(:show_scholar, false)
-  
+
   if resource.is_a?(Lesson)
     share_url = polymorphic_url(resource.series)
     resource_link = polymorphic_path(resource.series)
@@ -13,14 +13,14 @@
     share_url = polymorphic_url(resource)
     resource_link = polymorphic_path(resource)
   end
-  
+
   linkable = local_assigns[:linkable].present? ? local_assigns[:linkable] : false
 %>
 <div class="p-4 hover:bg-gray-50 transition">
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
     <div class="flex items-center gap-4 flex-1 min-w-0">
       <% if local_assigns[:with_icon].present? %>
-        <div class="p-2 rounded border border-background-contrast flex-shrink-0">
+        <div class="p-2 rounded border border-base-300 flex-shrink-0">
           <%= icon "book-open", class: "size-5" %>
         </div>
       <% else %>
@@ -77,7 +77,7 @@
     </button>
   </div>
 </div>
-<%= render 'shared/share_modal', 
+<%= render 'shared/share_modal',
     modal_id: modal_id,
     url: share_url,
     title: resource.title,
