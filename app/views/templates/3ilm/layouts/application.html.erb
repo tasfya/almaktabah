@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html dir="rtl" lang="ar" data-theme="<%= @domain&.name.presence || 'default' %>">
   <head>
     <title><%= content_for(:title) %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -24,8 +24,9 @@
     <%= javascript_importmap_tags %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
-  <body class="bg-background text-main-text islamic-pattern">
+  <body class="bg-base-200 text-base-content islamic-pattern">
     <%= render 'shared/header' %>
+    <%= render 'shared/theme_switcher' %>
     <div class="w-full sm:container sm:mx-auto sm:px-6 lg:px-8 drawer lg:drawer-open">
       <input id="sidebar-drawer" type="checkbox" class="drawer-toggle" />
       <div class="drawer-content flex flex-col ">

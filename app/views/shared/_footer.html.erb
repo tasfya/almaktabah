@@ -1,4 +1,4 @@
-<footer class="bg-footer text-footer-contrast pb-16 sm:pb-0">
+<footer class="bg-primary pb-16 sm:pb-0">
   <div class="container mx-auto px-4 py-12">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <div class="md:col-span-1">
@@ -9,9 +9,8 @@
           <%= t('sheikh.description') %>
         </p>
       </div>
-
       <div>
-        <h4 class="text-lg font-semibold mb-4"><%= t('navigation.quick_links') %></h4>
+        <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('navigation.quick_links') %></h4>
         <ul class="space-y-2">
           <li><%= link_to t('navigation.home'), root_path, class: "primary-link" %></li>
           <li><%= link_to t('navigation.books'), books_path, class: "primary-link" %></li>
@@ -19,39 +18,30 @@
           <li><%= link_to t('navigation.series'), series_index_path, class: "primary-link" %></li>
         </ul>
       </div>
-
       <div>
-        <h4 class="text-lg font-semibold mb-4"><%= t('navigation.content') %></h4>
+        <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('navigation.content') %></h4>
         <ul class="space-y-2">
           <li><%= link_to t('navigation.recent_books'), books_path(recent: true), class: "primary-link" %></li>
           <li><%= link_to t('navigation.recent_lectures'), lectures_path(recent: true), class: "primary-link" %></li>
           <%# <li><%= link_to t('navigation.about_sheikh_alt'), about_path, class: "primary-link" %></li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 class="text-lg font-semibold mb-4"><%= t('footer.contact_title') %></h4>
-        <div class="space-y-2">
-          <p class="text-sm"><%= t('footer.contact_description') %></p>
-          <p class="text-sm">
-            <%# t('footer.email_label') %> <%# site_info[:support_email] %>
-          </p>
-        </div>
-        <div class="mt-4 flex gap-4">
-          <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm text-primary hover:text-primary-hover" do %>
-            <%= icon "youtube", library: "lucide", class: "size-5" %>
-          <% end %>
-          <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm text-primary hover:text-primary-hover" do %>
-            <%= icon "twitter", library: "lucide", class: "size-5" %>
-          <% end %>
-        </div>
-      </div>
+      </ul>
     </div>
-
-    <div class="border-t border-background-contrast mt-8 pt-8 text-center">
-      <p class="text-sm">
-        &copy; <%= Date.current.year %> <%= t('footer.copyright') %>
-      </p>
+    <div>
+      <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('footer.contact_title') %></h4>
+      <div class="mt-4 flex gap-4">
+        <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
+          <%= icon "youtube", library: "lucide", class: "size-5" %>
+        <% end %>
+        <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
+          <%= icon "twitter", library: "lucide", class: "size-5" %>
+        <% end %>
+      </div>
     </div>
   </div>
+  <div class="border-t border-base-300 mt-8 pt-8 text-center">
+    <p class="text-sm">
+      &copy; <%= Date.current.year %> <%= t('footer.copyright') %>
+    </p>
+  </div>
+</div>
 </footer>

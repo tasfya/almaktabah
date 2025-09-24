@@ -1,15 +1,13 @@
-<%= link_to series_path(series.scholar, series), class: "block bg-card hover:bg-card-hover text-card-contrast w-full border border-background-contrast rounded-lg p-6 hover:shadow-md transition-shadow" do %>
+<%= link_to series_path(series.scholar, series), class: "block bg-card text-card-contrast w-full border border-base-300 rounded-lg p-6 hover:shadow-md transition-shadow" do %>
   <h3 class="text-lg font-semibold  mb-2 hover:text-primary-500">
     <%= series.title %>
   </h3>
-  
   <% if series.scholar.present? %>
     <div class="flex items-center gap-2 mb-3">
       <%= icon "user", class: "size-4 text-gray-500" %>
       <span class="text-sm text-gray-600"><%= series.scholar.name %></span>
     </div>
   <% end %>
-  
   <span class="inline-flex items-center gap-2 text-sm mb-3">
     <%= pluralize(series.lessons.for_domain_id(@domain.id).count, 'درس') %>
     <%= icon "book-open", class: "size-5 text-primary-500" %>

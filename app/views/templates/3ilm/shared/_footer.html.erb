@@ -9,7 +9,6 @@
           <%= t('sheikh.description') %>
         </p>
       </div>
-
       <div>
         <h4 class="text-lg font-semibold mb-4"><%= t('navigation.quick_links') %></h4>
         <ul class="space-y-2">
@@ -19,39 +18,36 @@
           <li><%= link_to t('navigation.series'), series_index_path, class: "hover:link" %></li>
         </ul>
       </div>
-
       <div>
         <h4 class="text-lg font-semibold mb-4"><%= t('navigation.content') %></h4>
         <ul class="space-y-2">
           <li><%= link_to t('navigation.recent_books'), books_path(recent: true), class: "hover:link" %></li>
           <li><%= link_to t('navigation.recent_lectures'), lectures_path(recent: true), class: "hover:link" %></li>
           <%# <li><%= link_to t('navigation.about_sheikh_alt'), about_path, class: "hover:link" %></li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 class="text-lg font-semibold mb-4"><%= t('footer.contact_title') %></h4>
-        <div class="space-y-2">
-          <p class="text-sm"><%= t('footer.contact_description') %></p>
-          <p class="text-sm">
-            <%# t('footer.email_label') %> <%# site_info[:support_email] %>
-          </p>
-        </div>
-        <div class="mt-4 flex gap-4">
-          <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm text-primary hover:text-primary-hover" do %>
-            <%= icon "youtube", library: "lucide", class: "size-5" %>
-          <% end %>
-          <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm text-primary hover:text-primary-hover" do %>
-            <%= icon "twitter", library: "lucide", class: "size-5" %>
-          <% end %>
-        </div>
-      </div>
+      </ul>
     </div>
-
-    <div class="border-t border-background-contrast mt-8 pt-8 text-center">
-      <p class="text-sm">
-        &copy; <%= Date.current.year %> <%= t('footer.copyright') %>
-      </p>
+    <div>
+      <h4 class="text-lg font-semibold mb-4"><%= t('footer.contact_title') %></h4>
+      <div class="space-y-2">
+        <p class="text-sm"><%= t('footer.contact_description') %></p>
+        <p class="text-sm">
+          <%# t('footer.email_label') %> <%# site_info[:support_email] %>
+        </p>
+      </div>
+      <div class="mt-4 flex gap-4">
+        <%= link_to site_info[:youtube_url], class: "btn btn-link btn-sm text-primary hover:text-primary-hover" do %>
+          <%= icon "youtube", library: "lucide", class: "size-5" %>
+        <% end %>
+        <%= link_to site_info[:twitter_url], class: "btn btn-link btn-sm text-primary hover:text-primary-hover" do %>
+          <%= icon "twitter", library: "lucide", class: "size-5" %>
+        <% end %>
+      </div>
     </div>
   </div>
+  <div class="border-t border-base-300 mt-8 pt-8 text-center">
+    <p class="text-sm">
+      &copy; <%= Date.current.year %> <%= t('footer.copyright') %>
+    </p>
+  </div>
+</div>
 </footer>

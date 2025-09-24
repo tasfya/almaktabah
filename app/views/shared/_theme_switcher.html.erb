@@ -1,0 +1,18 @@
+<% if Rails.env.development? %>
+  <div data-controller="theme-switcher" data-theme-switcher-target="switcher" class="fixed top-4 right-4 z-50 bg-base-100 border border-base-300 rounded-lg p-2 shadow-lg">
+    <div class="flex items-center gap-2">
+      <span class="text-sm font-medium">Theme:</span>
+      <select data-theme-switcher-target="select" data-action="change->theme-switcher#changeTheme" class="select select-bordered select-xs">
+        <option value="ilm">ilm</option>
+        <option value="binramzan">binramzan</option>
+        <option value="suhayimi">suhayimi</option>
+        <option value="ubayd">ubayd</option>
+        <option value="zayd">zayd</option>
+        <option value="fawzan">fawzan</option>
+        <option value="ramly">ramly</option>
+        <option value="alsuliman">alsuliman</option>
+      </select>
+      <button data-action="click->theme-switcher#hide" class="btn btn-xs btn-ghost">×</button>
+    </div>
+  </div>
+<% end %>

@@ -1,5 +1,5 @@
-<div class="rounded-lg shadow-md border border-background-contrast overflow-hidden">
-  <div class="bg-background-subtle px-6 py-4 border-b border-background-contrast">
+<div class="rounded-lg shadow-md border border-base-300 overflow-hidden">
+  <div class="bg-background-subtle px-6 py-4 border-b border-base-300">
     <h3 class="text-lg font-semibold">
       <%= t("navigation.#{model_name}") %>
       <span class="text-sm font-normal">
@@ -32,8 +32,7 @@
             link_label  = result.try(:title) || result.to_s
           end
         %>
-
-        <div class="bg-card hover:bg-card-hover text-card-contrast flex items-start gap-4 p-4 border border-background-contrast rounded-lg transition-colors">
+        <div class="bg-card text-card-contrast flex items-start gap-4 p-4 border border-base-300 rounded-lg transition-colors">
           <!-- Icon -->
           <div class="flex-shrink-0">
             <% case model_name %>
@@ -55,20 +54,17 @@
               <%= icon "user", class: "size-6" %>
             <% end %>
           </div>
-
           <!-- Main content -->
           <div class="flex-1 min-w-0">
             <h4 class="text-lg font-medium mb-2">
               <%= link_to link_label, link_target, class: "transition-colors" %>
             </h4>
-
             <% if result.respond_to?(:description) && result.description.present? %>
               <p class="text-sm line-clamp-2">
                 <%= truncate(strip_tags(result.description), length: 150) %>
               </p>
             <% end %>
           </div>
-
           <!-- View button -->
           <div class="flex-shrink-0">
             <%= link_to link_target, class: "btn btn-secondary btn-sm" do %>
