@@ -32,7 +32,7 @@
         <% end %>
       </div>
     </div>
-    <div class="bg-card rounded-lg shadow overflow-hidden">
+    <div class="card bg-base-100 shadow overflow-hidden">
       <div class="divide-y divide-gray-200">
         <% @lessons.each_with_index do |lesson, idx| %>
           <%= render "shared/playlist_card", resource: lesson, with_icon: true, index: idx %>
