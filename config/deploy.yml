@@ -105,13 +105,12 @@ accessories:
   typesense:
     image: typesense/typesense:29.0
     host: 188.245.209.159
-    port: 8108
     env:
       secret:
         - TYPESENSE_API_KEY
       clear:
         TYPESENSE_DATA_DIR: /data
-        TYPESENSE_ENABLE_CORS: true
+        TYPESENSE_ENABLE_CORS: "true"
         TYPESENSE_CORS_DOMAINS: "https://binramzan.net,https://3ilm.org,https://zayd.3ilm.org,https://luhaidan.3ilm.org,https://ubayd.3ilm.org,https://fawzan.3ilm.org,https://ramli.3ilm.org,https://suhai.me,https://alsuliman.3ilm.org"
         TYPESENSE_MEMORY_LIMIT: 4GB
     directories:
