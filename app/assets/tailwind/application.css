@@ -78,36 +78,9 @@
     font-family: var(--font-title);
   }
 }
-@utility search-input {
-  @apply w-full px-3 py-2 border rounded-md shadow-sm bg-input text-input-contrast;
-}
 
 @utility select-primary {
   @apply w-full px-3 py-2 border rounded-md shadow-sm bg-input text-input-contrast;
-}
-
-@utility audio-player {
-  @apply bg-primary border-t  shadow-lg;
-}
-
-@utility audio-progress {
-  @apply h-1 bg-primary transition-all duration-100;
-}
-
-@utility flash-message {
-  animation: slideInDown 0.3s ease-out;
-}
-
-@utility text-balance {
-  text-wrap: balance;
-}
-
-@utility rtl-space-x-reverse {
-  & > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-x-reverse: 1;
-    margin-right: calc(var(--tw-space-x) * var(--tw-space-x-reverse));
-    margin-left: calc(var(--tw-space-x) * calc(1 - var(--tw-space-x-reverse)));
-  }
 }
 
 /* Custom keyframes */
