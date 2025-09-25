@@ -1,4 +1,5 @@
 class Lecture < ApplicationRecord
+  include Typesense
   include Sluggable
   include MediaHandler
   include DomainAssignable
@@ -10,6 +11,50 @@ class Lecture < ApplicationRecord
 
   validates :title, presence: true
   validates :source_url, uniqueness: true, allow_blank: true
+
+  typesense enqueue: true, if: :published? do
+    attribute :title
+    attribute :description
+    attribute :content_text do
+      description.present? ? description : ""
+    end
+
+    attribute :content_type do
+      "lecture"
+    end
+    attribute :kind
+    attribute :duration
+    attribute :scholar_name do
+      scholar.name
+    end
+    attribute :scholar_id
+    attribute :media_type do
+      video.attached? ? "video" : "audio"
+    end
+    attribute :domain_ids do
+      domain_assignments.pluck(:domain_id)
+    end
+
+    predefined_fields [
+      { "name" => "title", "type" => "string", "locale" => "ar" },
+      { "name" => "description", "type" => "string", "locale" => "ar" },
+      { "name" => "content_text", "type" => "string", "locale" => "ar" },
+      { "name" => "content_type", "type" => "string", "facet" => true },
+      { "name" => "kind", "type" => "string", "facet" => true },
+      { "name" => "duration", "type" => "int32" },
+      { "name" => "scholar_name", "type" => "string", "facet" => true },
+      { "name" => "scholar_id", "type" => "int32", "facet" => true },
+      { "name" => "media_type", "type" => "string", "facet" => true },
+      { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
+      { "name" => "published_at", "type" => "int64" },
+      { "name" => "created_at", "type" => "int64" }
+    ]
+
+    default_sorting_field "published_at"
+
+    symbols_to_index [ "-", "_" ]
+    token_separators [ "-", "_" ]
+  end
 
   has_one_attached :thumbnail, service: Rails.application.config.public_storage
   has_one_attached :audio, service: Rails.application.config.public_storage
