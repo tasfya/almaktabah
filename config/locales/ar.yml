@@ -131,7 +131,9 @@ ar:
       subtitle: "تعرف على الشيخ وسيرته ونشاطاته العلمية"
       scholar:
         name: "الشيخ محمد بن رمزان الهاجري"
+        place_label: "المكان"
         place: "الجبيل، المنطقة الشرقية، المملكة العربية السعودية"
+        birth_year_label: "سنة الميلاد"
         birth_year: "1384 هـ"
         badge: "من علماء أهل السنة والجماعة"
         biography:
@@ -185,7 +187,6 @@ ar:
     previous: "السابق"
     prev: "السابق"
     next: "التالي"
-    close: "إغلاق"
     search_button: "بحث"
     view_all: "عرض الكل"
   news_bar:

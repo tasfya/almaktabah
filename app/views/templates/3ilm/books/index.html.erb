@@ -1,22 +1,24 @@
 <% content_for :title, t('navigation.books') %>
-<div class="mobile-card">
-  <h1 class="text-2xl font-bold mb-4">
-    <%= t('.title') %>
-  </h1>
-  <p class="mb-4 text-sm text-gray-600">
-    <%= t('.description') %>
-  </p>
-  <%= render 'shared/filters' %>
-  <% if @books.any? %>
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-      <% @books.each do |book| %>
-        <%= render partial: "book_card", locals: { book: } %>
-      <% end %>
-    </div>
-  <% else %>
-    <div class="text-center text-gray-500 py-8">
-      <%= t('.no_books') %>
-    </div>
-  <% end %>
-  <%= render 'shared/pagination' %>
+<div class="card bg-base-100 shadow-sm">
+  <div class="card-body">
+    <h1 class="card-title text-2xl">
+      <%= t('.title') %>
+    </h1>
+    <p class="mb-4 text-sm text-gray-600">
+      <%= t('.description') %>
+    </p>
+    <%= render 'shared/filters' %>
+    <% if @books.any? %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        <% @books.each do |book| %>
+          <%= render partial: "book_card", locals: { book: } %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center text-gray-500 py-8">
+        <%= t('.no_books') %>
+      </div>
+    <% end %>
+    <%= render 'shared/pagination' %>
+  </div>
 </div>

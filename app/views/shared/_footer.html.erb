@@ -5,25 +5,25 @@
         <div class="flex items-center gap-3 mb-4">
           <%= image_tag @logo_url, alt: t('site.name'), width: 400, height: 150, class: "rounded-full" %>
         </div>
-        <p class="text-sm">
+        <p class="text-sm text-primary-content">
           <%= t('sheikh.description') %>
         </p>
       </div>
       <div>
         <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('navigation.quick_links') %></h4>
         <ul class="space-y-2">
-          <li><%= link_to t('navigation.home'), root_path, class: "primary-link" %></li>
-          <li><%= link_to t('navigation.books'), books_path, class: "primary-link" %></li>
-          <li><%= link_to t('navigation.lectures'), lectures_path, class: "primary-link" %></li>
-          <li><%= link_to t('navigation.series'), series_index_path, class: "primary-link" %></li>
+          <li><%= link_to t('navigation.home'), root_path, class: "btn hover:underline btn-primary" %></li>
+          <li><%= link_to t('navigation.books'), books_path, class: "btn hover:underline btn-primary" %></li>
+          <li><%= link_to t('navigation.lectures'), lectures_path, class: "btn hover:underline btn-primary" %></li>
+          <li><%= link_to t('navigation.series'), series_index_path, class: "btn hover:underline btn-primary" %></li>
         </ul>
       </div>
       <div>
         <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('navigation.content') %></h4>
         <ul class="space-y-2">
-          <li><%= link_to t('navigation.recent_books'), books_path(recent: true), class: "primary-link" %></li>
-          <li><%= link_to t('navigation.recent_lectures'), lectures_path(recent: true), class: "primary-link" %></li>
-          <%# <li><%= link_to t('navigation.about_sheikh_alt'), about_path, class: "primary-link" %></li>
+          <li><%= link_to t('navigation.recent_books'), books_path(recent: true), class: "btn hover:underline btn-primary" %></li>
+          <li><%= link_to t('navigation.recent_lectures'), lectures_path(recent: true), class: "btn hover:underline btn-primary" %></li>
+          <%# <li><%= link_to t('navigation.about_sheikh_alt'), about_path, class: "btn hover:underline btn-primary" %></li>
       </ul>
     </div>
     <div>
@@ -39,7 +39,7 @@
     </div>
   </div>
   <div class="border-t border-base-300 mt-8 pt-8 text-center">
-    <p class="text-sm">
+    <p class="text-sm text-primary-content">
       &copy; <%= Date.current.year %> <%= t('footer.copyright') %>
     </p>
   </div>

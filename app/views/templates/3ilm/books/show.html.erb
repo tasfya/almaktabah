@@ -60,30 +60,30 @@
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <% @related_books.each do |related_book| %>
-          <div class="bg-card text-card-contrast border border-base-300 rounded-lg p-6 hover:shadow-md transition-shadow">
-            <div class="flex gap-4">
+          <div class="card card-side card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow">
+            <figure class="pr-4 py-4">
               <% if related_book.cover_image.present? %>
-                <%= image_tag related_book.cover_image, class: "w-16 h-20 object-cover rounded", alt: related_book.title %>
+                <%= image_tag related_book.cover_image, class: "w-24 h-32 object-cover rounded", alt: related_book.title %>
               <% else %>
-                <div class="w-16 h-20 rounded flex items-center justify-center">
-                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
+                <div class="w-24 h-32 rounded flex items-center justify-center">
+                  <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>book</title><g fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="16" y1="5.8" x2="16" y2="31" fill="none" stroke="currentColor" stroke-width="2"></line> <path d="M23.5,2C19.4,2,16,3.6,16,5.8,16,3.6,12.6,2,8.5,2S1,3.6,1,5.8V31c0-2.3,3.4-4,7.5-4S16,28.7,16,31c0-2.3,3.4-4,7.5-4S31,28.7,31,31V5.8C31,3.6,27.6,2,23.5,2Z" fill="none" stroke="currentColor" stroke-width="2"></path></g></svg>
                 </div>
               <% end %>
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold mb-1">
-                  <%= link_to related_book.title, book_path(related_book), class: "hover:text-primary-500" %>
-                </h3>
-                <% if related_book.author.present? %>
-                  <p class="text-sm mb-2">
-                    <%= related_book.author.respond_to?(:name) ? related_book.author.name : related_book.author %>
-                  </p>
-                <% end %>
-                <div class="flex items-center justify-between text-sm">
-                  <span class="px-2 py-1 rounded"><%= related_book.category %></span>
+            </figure>
+            <div class="card-body">
+              <h3 class="card-title">
+                <%= link_to related_book.title, book_path(related_book), class: "hover:text-primary-500" %>
+              </h3>
+              <% if related_book.author.present? %>
+                <p class="text-sm">
+                  <%= related_book.author.respond_to?(:name) ? related_book.author.name : related_book.author %>
+                </p>
+              <% end %>
+              <% if related_book.category.present? %>
+                <div class="card-actions justify-start">
+                  <span class="badge badge-primary"><%= related_book.category %></span>
                 </div>
-              </div>
+              <% end %>
             </div>
           </div>
         <% end %>

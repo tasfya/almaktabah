@@ -54,7 +54,9 @@ module Seeds
       @default_scholar ||= Scholar.find_or_create_by(
         first_name: "محمد",
         last_name: "بن رمزان الهاجري"
-      )
+      ) do |scholar|
+        scholar.published = true
+      end
     end
 
     def self.assign_to_domain(record, domain_id)

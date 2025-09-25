@@ -4,18 +4,6 @@
   --font-title: "Noto Kufi Arabic", var(--font-fallback);
   --font-sans: DroidNask, "Noto Kufi Arabic", var(--font-fallback);
 
-  --color-primary-link: #ffffff;
-  --color-primary-link-hover: #ffffff;
-  --color-primary-link-active: #ffffff;
-
-  --color-secondary-link: #333333;
-  --color-secondary-link-hover: #333333;
-  --color-secondary-link-active: #333333;
-
-  --color-card: #ffffff;
-  --color-card-hover: #f1f5f9;
-  --color-card-contrast: #3b3b3b;
-
   --color-input: #ffffff;
   --color-input-contrast: #1f2937;
 

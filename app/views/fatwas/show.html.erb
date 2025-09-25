@@ -21,7 +21,7 @@
               <h2 class="text-2xl font-bold mb-4">
                 <%= t('.question') %>
               </h2>
-              <div class="prose prose-lg max-w-none p-6 rounded-lg border-r-4 border-base-300">
+              <div class="prose prose-lg max-w-none p-6">
                 <%= @fatwa.question %>
               </div>
             </section>
@@ -31,7 +31,7 @@
               <h2 class="text-2xl font-bold mb-4">
                 <%= t('.answer') %>
               </h2>
-              <div class="prose prose-lg max-w-none p-6 rounded-lg border-r-4 border-base-300">
+              <div class="prose prose-lg max-w-none p-6">
                 <%= @fatwa.answer %>
               </div>
             </section>
@@ -60,19 +60,23 @@
             <% if related_fatwas.any? %>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% related_fatwas.each do |related_fatwa| %>
-                  <div class="bg-card text-card-contrast border rounded-lg p-6 hover:shadow-md transition-shadow">
-                    <h3 class="text-lg font-semibold mb-3">
-                      <%= link_to related_fatwa.title, fatwa_path(related_fatwa), class: "secondary-link" %>
-                    </h3>
-                    <% if related_fatwa.question.present? %>
-                      <p class="text-sm mb-4">
-                        <%= truncate(strip_tags(related_fatwa.question.to_s), length: 100) %>
-                      </p>
-                    <% end %>
-                    <div class="flex items-center justify-between text-sm">
-                      <span class=" px-2 py-1 rounded"><%= related_fatwa.category %></span>
+                  <%= link_to fatwa_path(related_fatwa), class: "card card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow block" do %>
+                    <div class="card-body">
+                      <h3 class="card-title">
+                        <%= related_fatwa.title %>
+                      </h3>
+                      <% if related_fatwa.question.present? %>
+                        <p class="text-sm">
+                          <%= truncate(strip_tags(related_fatwa.question.to_s), length: 100) %>
+                        </p>
+                      <% end %>
+                      <div class="card-actions justify-start">
+                        <% if related_fatwa.category.present? %>
+                          <span class="badge badge-primary"><%= related_fatwa.category %></span>
+                        <% end %>
+                      </div>
                     </div>
-                  </div>
+                  <% end %>
                 <% end %>
               </div>
             <% else %>

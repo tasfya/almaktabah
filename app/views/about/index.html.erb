@@ -1,5 +1,4 @@
 <% content_for :title, t('.title') %>
-
 <div class="container mx-auto">
   <div class="text-center mb-8">
     <div class="mb-6">
@@ -12,83 +11,81 @@
       <%= t('.subtitle') %>
     </p>
   </div>
-
-  <div class="mobile-card">
-    <div class="flex flex-col sm:flex-row gap-6 mb-6">
-      <div class="flex-shrink-0 mx-auto sm:mx-0">
-        <div class="w-32 h-32 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center">
-          <svg class="w-16 h-16 text-blue-600" viewBox="0 0 100 100" fill="currentColor">
-            <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35"/>
-          </svg>
-        </div>
-            </div>
-            <div class="flex-1 text-right">
-              <h2 class="text-3xl font-bold  mb-4"><%= t('.scholar.name') %></h2>
-              <div class="space-y-2 ">
-                <p><span class="font-semibold"><%= t('.scholar.place') %>:</span> <%= t('.scholar.place') %></p>
-                <p><span class="font-semibold"><%= t('.scholar.birth_year') %>:</span> <%= t('.scholar.birth_year') %></p>
-      </div>
-      <div class="flex-1">
-        <div class="text-center sm:text-right">
-          <div class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
-            <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body">
+      <div class="flex flex-col sm:flex-row gap-6 mb-6">
+        <div class="flex-shrink-0 mx-auto sm:mx-0">
+          <div class="w-32 h-32 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center">
+            <svg class="w-16 h-16 text-blue-600" viewBox="0 0 100 100" fill="currentColor">
+              <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35"/>
             </svg>
-            <%= t('.scholar.badge') %>
           </div>
         </div>
-
-        <div class="text-right space-y-4">
-          <p class="text-gray-700 leading-relaxed"><%= t('.scholar.biography.intro_1') %></p>
-          <p class="text-gray-700 leading-relaxed"><%= t('.scholar.biography.intro_2') %></p>
-
-          <h3 class="text-lg font-bold text-gray-900 mt-6 mb-3"><%= t('.scholar.education_title') %></h3>
-          <p class="text-gray-700 leading-relaxed"><%= t('.scholar.education_text') %></p>
-
-          <h3 class="text-lg font-bold text-gray-900 mt-6 mb-3"><%= t('.scholar.activities_title') %></h3>
-          <p class="text-gray-700 leading-relaxed"><%= t('.scholar.activities_text_1') %></p>
-          <p class="text-gray-700 leading-relaxed"><%= t('.scholar.activities_text_2') %></p>
+        <div class="flex-1 text-right">
+          <h2 class="text-3xl font-bold  mb-4"><%= t('.scholar.name') %></h2>
+          <div class="space-y-2 ">
+            <p><span class="font-semibold"><%= t('.scholar.place_label') %>:</span> <%= t('.scholar.place') %></p>
+            <p><span class="font-semibold"><%= t('.scholar.birth_year_label') %>:</span> <%= t('.scholar.birth_year') %></p>
+          </div>
+          <div class="flex-1">
+            <div class="text-center sm:text-right">
+              <div class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
+                <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+                <%= t('.scholar.badge') %>
+              </div>
+            </div>
+            <div class="text-right space-y-4">
+              <p class="text-gray-700 leading-relaxed"><%= t('.scholar.biography.intro_1') %></p>
+              <p class="text-gray-700 leading-relaxed"><%= t('.scholar.biography.intro_2') %></p>
+              <h3 class="text-lg font-bold text-gray-900 mt-6 mb-3"><%= t('.scholar.education_title') %></h3>
+              <p class="text-gray-700 leading-relaxed"><%= t('.scholar.education_text') %></p>
+              <h3 class="text-lg font-bold text-gray-900 mt-6 mb-3"><%= t('.scholar.activities_title') %></h3>
+              <p class="text-gray-700 leading-relaxed"><%= t('.scholar.activities_text_1') %></p>
+              <p class="text-gray-700 leading-relaxed"><%= t('.scholar.activities_text_2') %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card bg-base-100 shadow-sm">
+      <div class="card-body">
+        <h3 class="text-2xl font-bold mb-4 text-right"><%= t('.quick_stats.title') %></h3>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="text-center p-3 bg-gray-50 rounded-lg">
+            <div class="text-xl font-bold text-blue-600"><%= @stats&.dig(:lessons_count) || Lesson.count %></div>
+            <div class="text-sm text-gray-600"><%= t('.quick_stats.lessons') %></div>
+          </div>
+          <div class="text-center p-3 bg-gray-50 rounded-lg">
+            <div class="text-xl font-bold text-blue-600"><%= @stats&.dig(:lectures_count) || Lecture.count %></div>
+            <div class="text-sm text-gray-600"><%= t('.quick_stats.lectures') %></div>
+          </div>
+          <div class="text-center p-3 bg-gray-50 rounded-lg">
+            <div class="text-xl font-bold text-blue-600"><%= @stats&.dig(:series_count) || Series.count %></div>
+            <div class="text-sm text-gray-600"><%= t('.quick_stats.series') %></div>
+          </div>
+          <div class="text-center p-3 bg-gray-50 rounded-lg">
+            <div class="text-xl font-bold text-blue-600"><%= @stats&.dig(:books_count) || Book.count %></div>
+            <div class="text-sm text-gray-600"><%= t('.quick_stats.books') %></div>
+          </div>
+        </div>
+        <h3 class="text-2xl font-bold mb-4 text-right"><%= t('.contact_info.title') %></h3>
+        <div class="space-y-3 text-right">
+          <div class="flex items-center gap-3 flex-row-reverse">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span class="text-gray-700"><%= t('.contact_info.location') %></span>
+          </div>
+          <div class="flex items-center gap-3 flex-row-reverse">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <span class="text-gray-700"><%= t('.contact_info.birth_year') %></span>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="mobile-card">
-    <h3 class="text-2xl font-bold mb-4 text-right"><%= t('.quick_stats.title') %></h3>
-    <div class="grid grid-cols-2 gap-4 mb-6">
-      <div class="text-center p-3 bg-gray-50 rounded-lg">
-        <div class="text-xl font-bold text-blue-600"><%= @stats&.dig(:lessons_count) || Lesson.count %></div>
-        <div class="text-sm text-gray-600"><%= t('.quick_stats.lessons') %></div>
-      </div>
-      <div class="text-center p-3 bg-gray-50 rounded-lg">
-        <div class="text-xl font-bold text-blue-600"><%= @stats&.dig(:lectures_count) || Lecture.count %></div>
-        <div class="text-sm text-gray-600"><%= t('.quick_stats.lectures') %></div>
-      </div>
-      <div class="text-center p-3 bg-gray-50 rounded-lg">
-        <div class="text-xl font-bold text-blue-600"><%= @stats&.dig(:series_count) || Series.count %></div>
-        <div class="text-sm text-gray-600"><%= t('.quick_stats.series') %></div>
-      </div>
-      <div class="text-center p-3 bg-gray-50 rounded-lg">
-        <div class="text-xl font-bold text-blue-600"><%= @stats&.dig(:books_count) || Book.count %></div>
-        <div class="text-sm text-gray-600"><%= t('.quick_stats.books') %></div>
-      </div>
-    </div>
-
-    <h3 class="text-2xl font-bold mb-4 text-right"><%= t('.contact_info.title') %></h3>
-    <div class="space-y-3 text-right">
-      <div class="flex items-center gap-3 flex-row-reverse">
-        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-        </svg>
-        <span class="text-gray-700"><%= t('.contact_info.location') %></span>
-      </div>
-      <div class="flex items-center gap-3 flex-row-reverse">
-        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-        </svg>
-        <span class="text-gray-700"><%= t('.contact_info.birth_year') %></span>
-      </div>
-    </div>
-  </div>
-</div>

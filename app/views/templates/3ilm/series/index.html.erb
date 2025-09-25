@@ -1,22 +1,24 @@
 <% content_for :title, t('navigation.series') %>
-<div class="mobile-card">
-  <h1 class="text-2xl font-bold mb-4">
-    <%= t('.title') %>
-  </h1>
-  <p class="text-sm text-gray-600 mb-4">
-    <%= t('.description') %>
-  </p>
-  <%= render 'shared/filters' %>
-  <% if @series.any? %>
-    <div class="space-y-3">
-      <% @series.each do |series| %>
-        <%= render partial: "series_card", locals: { series: series }%>
-      <% end %>
-    </div>
-  <% else %>
-    <div class="text-center text-gray-500 py-8">
-      <p><%= t('.no_series') %> </p>
-    </div>
-  <% end %>
-  <%= render 'shared/pagination' %>
+<div class="card bg-base-100 shadow-sm">
+  <div class="card-body">
+    <h1 class="card-title text-2xl">
+      <%= t('.title') %>
+    </h1>
+    <p class="text-sm text-gray-600 mb-4">
+      <%= t('.description') %>
+    </p>
+    <%= render 'shared/filters' %>
+    <% if @series.any? %>
+      <div class="space-y-3">
+        <% @series.each do |series| %>
+          <%= render partial: "series_card", locals: { series: series }%>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center text-gray-500 py-8">
+        <p><%= t('.no_series') %> </p>
+      </div>
+    <% end %>
+    <%= render 'shared/pagination' %>
+  </div>
 </div>

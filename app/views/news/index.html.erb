@@ -1,18 +1,20 @@
 <% content_for :title, t('navigation.news') %>
-<div class="mobile-section">
-  <div class="mobile-card">
-    <h1 class="mobile-text-lg font-bold mb-4"><%= t('.title') %></h1>
-    <p class="text-sm text-gray-600 mb-4"><%= t('.description') %></p>
-    <%= render 'shared/filters' %>
-    <% if @news.any? %>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mobile-gap">
-        <% @news.each do |news_item| %>
-          <%= render 'news_card', news_item: news_item %>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="text-center text-gray-500 py-8"><%= t('.no_news') %></div>
-    <% end %>
-    <%= render 'shared/pagination' %>
+<div class="container mb-8">
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body">
+      <h1 class="card-title"><%= t('.title') %></h1>
+      <p class="text-sm text-gray-600 mb-4"><%= t('.description') %></p>
+      <%= render 'shared/filters' %>
+      <% if @news.any? %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mobile-gap">
+          <% @news.each do |news_item| %>
+            <%= render 'news_card', news_item: news_item %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center text-gray-500 py-8"><%= t('.no_news') %></div>
+      <% end %>
+      <%= render 'shared/pagination' %>
+    </div>
   </div>
 </div>
