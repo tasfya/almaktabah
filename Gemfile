@@ -21,6 +21,9 @@ gem "puma", ">= 5.0"
 # Pagination
 gem "pagy", "~> 9.4"
 
+# Search and indexing
+gem "typesense-rails", "~> 1.0.0.rc1"
+
 # Filtering and searching
 gem "ransack", "~> 4.0"
 
