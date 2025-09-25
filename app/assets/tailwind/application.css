@@ -19,20 +19,9 @@
 }
 
 /* Mobile-first spacing utilities */
-@utility mobile-section {
-  @apply py-3 sm:py-6 lg:py-8 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
-}
-
-@utility mobile-card {
-  @apply p-3 sm:p-4 lg:p-6 bg-base-100 rounded-lg shadow-sm border border-gray-200;
-}
 
 @utility mobile-gap {
   @apply gap-3 sm:gap-4 lg:gap-6;
-}
-
-@utility mobile-grid-responsive {
-  @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
 }
 
 /* Text utilities */

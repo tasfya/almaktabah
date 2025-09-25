@@ -1,30 +1,32 @@
 <% content_for :title, t('navigation.fatwas') %>
 <div class="container mx-auto">
-  <div class="mobile-card">
-    <h1 class="text-2xl font-bold mb-4"> <%= t('.title') %> </h1>
-    <p class="text-sm text-gray-600 mb-4"> <%= t('.description') %> </p>
-    <%= render 'shared/filters' %>
-    <% if @fatwas.any? %>
-      <div class="space-y-3">
-        <% @fatwas.each do |fatwa| %>
-          <%= link_to fatwa_path(fatwa), class: "card card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow" do %>
-            <div class="card-body">
-              <h3 class="card-title">
-                <%= fatwa.title %>
-              </h3>
-              <div class="flex items-center justify-between text-sm text-gray-600">
-                <span class="px-2 py-1 bg-gray-100 rounded text-gray-700">
-                  <%= fatwa.category %>
-                </span>
-                <span><%= fatwa.created_at.strftime("%Y/%m/%d") %></span>
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body">
+      <h1 class="card-title text-2xl"> <%= t('.title') %> </h1>
+      <p class="text-sm text-gray-600 mb-4"> <%= t('.description') %> </p>
+      <%= render 'shared/filters' %>
+      <% if @fatwas.any? %>
+        <div class="space-y-3">
+          <% @fatwas.each do |fatwa| %>
+            <%= link_to fatwa_path(fatwa), class: "card card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow" do %>
+              <div class="card-body">
+                <h3 class="card-title">
+                  <%= fatwa.title %>
+                </h3>
+                <div class="flex items-center justify-between text-sm text-gray-600">
+                  <span class="px-2 py-1 bg-gray-100 rounded text-gray-700">
+                    <%= fatwa.category %>
+                  </span>
+                  <span><%= fatwa.created_at.strftime("%Y/%m/%d") %></span>
+                </div>
               </div>
-            </div>
+            <% end %>
           <% end %>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="text-center text-gray-500 py-8"><%= t('.no_fatwas') %></div>
-    <% end %>
-    <%= render 'shared/pagination' %>
+        </div>
+      <% else %>
+        <div class="text-center text-gray-500 py-8"><%= t('.no_fatwas') %></div>
+      <% end %>
+      <%= render 'shared/pagination' %>
+    </div>
   </div>
 </div>

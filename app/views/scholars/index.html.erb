@@ -1,23 +1,25 @@
 <% content_for :title, t('navigation.scholars') %>
 <div class="container mx-auto">
-  <div class="mobile-card">
-    <h1 class="text-2xl font-bold mb-4">
-      <%= t('.title') %>
-    </h1>
-    <p class="mb-4 text-sm text-gray-600">
-      <%= t('.description') %>
-    </p>
-    <% if @scholars.any? %>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <% @scholars.each do |scholar| %>
-          <%= render partial: "scholar_card", locals: { scholar: } %>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="text-center text-gray-500 py-8">
-        <%= t('.no_scholars') %>
-      </div>
-    <% end %>
-    <%= render 'shared/pagination' %>
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body">
+      <h1 class="card-title">
+        <%= t('.title') %>
+      </h1>
+      <p class="mb-4 text-sm text-gray-600">
+        <%= t('.description') %>
+      </p>
+      <% if @scholars.any? %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <% @scholars.each do |scholar| %>
+            <%= render partial: "scholar_card", locals: { scholar: } %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center text-gray-500 py-8">
+          <%= t('.no_scholars') %>
+        </div>
+      <% end %>
+      <%= render 'shared/pagination' %>
+    </div>
   </div>
 </div>
