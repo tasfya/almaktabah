@@ -79,9 +79,11 @@
                   <%= related_book.author.respond_to?(:name) ? related_book.author.name : related_book.author %>
                 </p>
               <% end %>
-              <div class="card-actions justify-start">
-                <span class="badge badge-primary"><%= related_book.category %></span>
-              </div>
+              <% if related_book.category.present? %>
+                <div class="card-actions justify-start">
+                  <span class="badge badge-primary"><%= related_book.category %></span>
+                </div>
+              <% end %>
             </div>
           </div>
         <% end %>
