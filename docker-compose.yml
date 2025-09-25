@@ -1,0 +1,21 @@
+services:
+  typesense:
+    image: typesense/typesense:29.0
+    ports:
+      - "8108:8108"
+    volumes:
+      - typesense_data:/data
+    environment:
+      TYPESENSE_DATA_DIR: /data
+      TYPESENSE_API_KEY: dev_api_key_almaktabah_2024
+      TYPESENSE_ENABLE_CORS: true
+      TYPESENSE_CORS_DOMAINS: "http://localhost:3000,http://127.0.0.1:3000"
+      TYPESENSE_MEMORY_LIMIT: 2GB
+    command: >
+      --data-dir /data
+      --api-key=dev_api_key_almaktabah_2024
+      --enable-cors
+      --cors-domains=http://localhost:3000,http://127.0.0.1:3000
+
+volumes:
+  typesense_data:

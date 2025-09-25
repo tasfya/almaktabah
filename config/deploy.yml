@@ -20,15 +20,15 @@ servers:
 proxy:
   ssl: true
   hosts:
-   - binramzan.net
-   - 3ilm.org
-   - zayd.3ilm.org
-   - luhaidan.3ilm.org
-   - ubayd.3ilm.org
-   - fawzan.3ilm.org
-   - ramli.3ilm.org
-   - suhai.me
-   - alsuliman.3ilm.org
+    - binramzan.net
+    - 3ilm.org
+    - zayd.3ilm.org
+    - luhaidan.3ilm.org
+    - ubayd.3ilm.org
+    - fawzan.3ilm.org
+    - ramli.3ilm.org
+    - suhai.me
+    - alsuliman.3ilm.org
 
 # Credentials for your image host.
 registry:
@@ -69,12 +69,10 @@ aliases:
   logs: app logs -f
   dbc: app exec --interactive --reuse "bin/rails dbconsole"
 
-
 # Use a persistent storage volume for sqlite database files and local Active Storage files.
 # Recommended to change this to a mounted volume path that is backed up off server.
 volumes:
   - "almaktabah_storage:/rails/storage"
-
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
@@ -104,6 +102,20 @@ builder:
 
 # Use accessory services (secrets come from .kamal/secrets).
 accessories:
+  typesense:
+    image: typesense/typesense:29.0
+    host: 188.245.209.159
+    port: 8108
+    env:
+      secret:
+        - TYPESENSE_API_KEY
+      clear:
+        TYPESENSE_DATA_DIR: /data
+        TYPESENSE_ENABLE_CORS: true
+        TYPESENSE_CORS_DOMAINS: "https://binramzan.net,https://3ilm.org,https://zayd.3ilm.org,https://luhaidan.3ilm.org,https://ubayd.3ilm.org,https://fawzan.3ilm.org,https://ramli.3ilm.org,https://suhai.me,https://alsuliman.3ilm.org"
+        TYPESENSE_MEMORY_LIMIT: 4GB
+    directories:
+      - typesense_data:/data
   litestream:
     image: litestream/litestream:sha-8fa09d7a6ea15c66309b7d799518ffbaa8d1ee69
     host: 188.245.209.159
