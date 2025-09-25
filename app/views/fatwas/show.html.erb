@@ -21,7 +21,7 @@
               <h2 class="text-2xl font-bold mb-4">
                 <%= t('.question') %>
               </h2>
-              <div class="prose prose-lg max-w-none p-6 rounded-lg border-r-4 border-base-300">
+              <div class="prose prose-lg max-w-none p-6">
                 <%= @fatwa.question %>
               </div>
             </section>
@@ -31,7 +31,7 @@
               <h2 class="text-2xl font-bold mb-4">
                 <%= t('.answer') %>
               </h2>
-              <div class="prose prose-lg max-w-none p-6 rounded-lg border-r-4 border-base-300">
+              <div class="prose prose-lg max-w-none p-6">
                 <%= @fatwa.answer %>
               </div>
             </section>
@@ -60,10 +60,10 @@
             <% if related_fatwas.any? %>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% related_fatwas.each do |related_fatwa| %>
-                  <div class="card card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow">
+                  <%= link_to fatwa_path(related_fatwa), class: "card card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow block" do %>
                     <div class="card-body">
                       <h3 class="card-title">
-                        <%= link_to related_fatwa.title, fatwa_path(related_fatwa), class: "secondary-link" %>
+                        <%= related_fatwa.title %>
                       </h3>
                       <% if related_fatwa.question.present? %>
                         <p class="text-sm">
@@ -76,7 +76,7 @@
                         <% end %>
                       </div>
                     </div>
-                  </div>
+                  <% end %>
                 <% end %>
               </div>
             <% else %>

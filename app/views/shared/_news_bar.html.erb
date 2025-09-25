@@ -2,7 +2,7 @@
   <div class="bg-primary px-3 py-2">
     <div class="container mx-auto flex items-center gap-4">
       <div class="flex items-center gap-2 flex-shrink-0">
-        <%= link_to news_index_path, class: "primary-link" do %>
+        <%= link_to news_index_path, class: "btn hover:underline btn-primary" do %>
           <%= icon "megaphone", class: "size-5"%>
           <%= t('news_bar.latest_news') %>
         <% end %>
@@ -18,7 +18,7 @@
           <div class="absolute inset-0 flex items-center hidden"
                 data-news-ticker-target="item"
                 data-news-ticker-index="<%= index %>">
-            <%= link_to news_path(news), class: "primary-link text-sm truncate" do %>
+            <%= link_to news_path(news), class: "btn hover:underline btn-primary text-sm truncate" do %>
               <%= news.title %>
             <% end %>
           </div>
