@@ -9,10 +9,10 @@
     </span>
     <p class="text-sm"><%= truncate(series.description, length: 150) %></p>
     <div class="card-actions justify-start">
-      <button class="btn btn-primary btn-outline w-fit">
+      <span class="btn btn-primary btn-outline w-fit pointer-events-none">
         <%= t("buttons.view_series")%>
         <%= icon "arrow-left", class: "size-5" %>
-      </button>
+      </span>
     </div>
   </div>
 <% end %>

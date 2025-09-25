@@ -70,9 +70,7 @@
                         <%= image_tag related_book.cover_image, class: "w-24 h-32 object-cover rounded", alt: related_book.title %>
                       <% else %>
                         <div class="w-24 h-32 rounded flex items-center justify-center">
-                          <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                          </svg>
+                          <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>book</title><g fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="16" y1="5.8" x2="16" y2="31" fill="none" stroke="currentColor" stroke-width="2"></line> <path d="M23.5,2C19.4,2,16,3.6,16,5.8,16,3.6,12.6,2,8.5,2S1,3.6,1,5.8V31c0-2.3,3.4-4,7.5-4S16,28.7,16,31c0-2.3,3.4-4,7.5-4S31,28.7,31,31V5.8C31,3.6,27.6,2,23.5,2Z" fill="none" stroke="currentColor" stroke-width="2"></path></g></svg>
                         </div>
                       <% end %>
                     </figure>

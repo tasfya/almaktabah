@@ -71,7 +71,9 @@
                         </p>
                       <% end %>
                       <div class="card-actions justify-start">
-                        <span class="badge badge-primary"><%= related_fatwa.category %></span>
+                        <% if related_fatwa.category.present? %>
+                          <span class="badge badge-primary"><%= related_fatwa.category %></span>
+                        <% end %>
                       </div>
                     </div>
                   </div>
