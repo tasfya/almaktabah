@@ -87,7 +87,7 @@ class VideoGeneratorService
 
     # Create base canvas using convert command
     canvas_path = temp_dir.join("canvas.png")
-    system("convert -size 1920x1080 canvas:#1a1a1a #{canvas_path}")
+    system([ "convert", "-size", "1920x1080", "canvas:#1a1a1a", canvas_path.to_s ])
 
     # Open the created canvas
     image = MiniMagick::Image.new(canvas_path.to_s)
