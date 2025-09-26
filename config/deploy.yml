@@ -51,6 +51,9 @@ env:
     # Set number of processes dedicated to Solid Queue (default: 1)
     JOB_CONCURRENCY: 5
 
+    TYPESENSE_HOST: almaktabah-typesense
+    TYPESENSE_PORT: 8108
+
     # Set number of cores available to the application on each server (default: 1).
     # WEB_CONCURRENCY: 2
 
@@ -110,8 +113,7 @@ accessories:
         - TYPESENSE_API_KEY
       clear:
         TYPESENSE_DATA_DIR: /data
-        TYPESENSE_ENABLE_CORS: "true"
-        TYPESENSE_CORS_DOMAINS: "https://binramzan.net,https://3ilm.org,https://zayd.3ilm.org,https://luhaidan.3ilm.org,https://ubayd.3ilm.org,https://fawzan.3ilm.org,https://ramli.3ilm.org,https://suhai.me,https://alsuliman.3ilm.org"
+        TYPESENSE_ENABLE_CORS: "false"
         TYPESENSE_MEMORY_LIMIT: 4GB
     directories:
       - typesense_data:/data
