@@ -155,7 +155,7 @@ class VideoGeneratorService
 
   def add_arabic_text_to_image(image, text, y_position:, font_size:, color:)
     arabic_font = get_best_arabic_font
-    if arabic_font&.include?("scheherazade")
+    if arabic_font&.downcase&.include?("scheherazade")
       font_family = "Scheherazade"
     else
       font_family = arabic_font ? File.basename(arabic_font, File.extname(arabic_font)) : "DejaVu-Sans"
