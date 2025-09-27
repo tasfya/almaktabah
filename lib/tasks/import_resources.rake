@@ -72,7 +72,7 @@ namespace :import_resources do
     puts "Processing CSV and enqueuing lesson import jobs from: #{file_path}"
     puts "Domain ID: #{domain_id}"
 
-    processor = CsvImportProcessor.new(file_path, "LessonImportJob", domain_id.to_i)
+    processor = CsvImportProcessor.new(file_path, "LessonFixerImportJob", domain_id.to_i)
     success = processor.process
 
     summary = processor.summary
