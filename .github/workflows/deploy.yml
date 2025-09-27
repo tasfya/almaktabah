@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 1
-          submodules: false #TODO: enable this back when we need to deploy frontend          
+          submodules: false #TODO: enable this back when we need to deploy frontend
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -54,7 +54,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-
       - name: Kamal Deploy
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
@@ -69,4 +68,5 @@ jobs:
           RAILS_ENV: production
           KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY }}
           KAMAL_REGISTRY_USERNAME: mohamedrez
