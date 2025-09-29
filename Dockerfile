@@ -22,7 +22,8 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy custom fonts
-COPY app/assets/fonts/Scheherazade_New/ScheherazadeNew-Regular.ttf /usr/share/fonts/truetype/
+COPY app/assets/fonts/ScheherazadeNew-Regular.ttf /usr/share/fonts/truetype/
+COPY app/assets/fonts/DejaVuSans.ttf /usr/share/fonts/truetype/
 RUN fc-cache -f -v
 
 # Set production environment
