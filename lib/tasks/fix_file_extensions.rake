@@ -1,7 +1,7 @@
 namespace :fix do
   desc "Fix file extensions and names for attachments in production. Pass dry_run=true to preview changes."
   task :fix_attachments, [ :dry_run ] => :environment do |t, args|
-    next unless Rails.env.production?
+    # next unless Rails.env.production?
 
     dry_run = args[:dry_run] == "true"
     puts "Starting to fix attachments... (dry_run: #{dry_run})"
@@ -58,7 +58,8 @@ namespace :fix do
         desired_key = case record.class.name
         when "Lesson", "Lecture"
                         if record.respond_to?(:generate_optimize_audio_bucket_key)
-                          record.generate_optimize_audio_bucket_key
+                          base_key = record.generate_optimize_audio_bucket_key.to_s
+                          base_key.end_with?(ext) ? base_key : "#{base_key}#{ext}"
                         else
                           "#{old_key}#{ext}"
                         end
@@ -81,8 +82,8 @@ namespace :fix do
           else
             begin
               service.client.copy_object(bucket: bucket_name, copy_source: "#{bucket_name}/#{old_key}", key: new_key)
-              service.client.delete_object(bucket: bucket_name, key: old_key)
               blob.update(key: new_key)
+              service.client.delete_object(bucket: bucket_name, key: old_key)
               puts "Renamed S3 key for blob #{blob.id}: #{old_key} -> #{new_key}"
 
               changes_log << {
@@ -157,8 +158,8 @@ namespace :fix do
       if service.exist?(new_key)
         begin
           service.client.copy_object(bucket: bucket_name, copy_source: "#{bucket_name}/#{new_key}", key: old_key)
-          service.client.delete_object(bucket: bucket_name, key: new_key)
           blob.update(key: old_key, filename: old_filename)
+          service.client.delete_object(bucket: bucket_name, key: new_key)
           puts "Rolled back blob #{blob.id}: key #{new_key} -> #{old_key}, filename #{new_filename} -> #{old_filename}"
         rescue => e
           puts "Error rolling back blob #{blob.id}: #{e.message}"
