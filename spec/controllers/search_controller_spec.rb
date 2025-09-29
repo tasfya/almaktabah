@@ -12,7 +12,6 @@ RSpec.describe SearchController, type: :controller do
     let!(:lesson) { create(:lesson, title: "Test Lesson", description: "Test lesson description", published: true, published_at: DateTime.new) }
     let!(:series) { create(:series, title: "Test Series", description: "Test series description", published: true, published_at: DateTime.new) }
     let!(:news) { create(:news, title: "Test News", description: "Test news description", published: true, published_at: DateTime.new) }
-    let!(:benefit) { create(:benefit, title: "Test Benefit", description: "Test benefit description", published: true, published_at: DateTime.new) }
     let!(:fatwa) { create(:fatwa, title: "Test Fatwa", published: true, published_at: DateTime.new) }
     let!(:scholar) { create(:scholar, first_name: "Test", last_name: "Scholar", published: true, published_at: DateTime.new) }
 
@@ -63,7 +62,6 @@ RSpec.describe SearchController, type: :controller do
         expect(assigns(:results)).to have_key(:lessons)
         expect(assigns(:results)).to have_key(:series)
         expect(assigns(:results)).to have_key(:news)
-        expect(assigns(:results)).to have_key(:benefits)
         expect(assigns(:results)).to have_key(:fatwas)
         expect(assigns(:results)).to have_key(:scholars)
       end
@@ -103,12 +101,6 @@ RSpec.describe SearchController, type: :controller do
         get :index, params: { q: "News" }
 
         expect(assigns(:results)[:news]).to include(news)
-      end
-
-      it "finds benefits with matching title" do
-        get :index, params: { q: "Benefit" }
-
-        expect(assigns(:results)[:benefits]).to include(benefit)
       end
 
       it "finds fatwas with matching title" do

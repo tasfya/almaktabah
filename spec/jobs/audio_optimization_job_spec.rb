@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe AudioOptimizationJob, type: :job do
-  let(:benefit) { create(:benefit) }
   let(:lecture) { create(:lecture) }
 
   describe '#perform' do
@@ -9,36 +8,36 @@ RSpec.describe AudioOptimizationJob, type: :job do
       let(:audio_file) { fixture_file_upload('spec/files/audio.mp3', 'audio/mpeg') }
 
       before do
-        benefit.audio.attach(audio_file)
+        lecture.audio.attach(audio_file)
       end
 
       it 'optimizes audio successfully' do
-        expect(benefit.audio).to be_attached
-        expect(benefit.optimized_audio).not_to be_attached
+        expect(lecture.audio).to be_attached
+        expect(lecture.optimized_audio).not_to be_attached
 
-        described_class.perform_now(benefit)
+        described_class.perform_now(lecture)
 
-        benefit.reload
-        expect(benefit.optimized_audio).to be_attached
+        lecture.reload
+        expect(lecture.optimized_audio).to be_attached
       end
 
       it 'logs successful optimization' do
         allow(Rails.logger).to receive(:info)
 
-        described_class.perform_now(benefit)
+        described_class.perform_now(lecture)
 
         expect(Rails.logger).to have_received(:info)
-          .with("Audio optimization completed for item ID #{benefit.id}")
+          .with("Audio optimization completed for item ID #{lecture.id}")
       end
     end
 
     context 'when item has no audio' do
-      let(:benefit_without_audio) { create(:benefit, :without_audio) }
+      let(:lecture_without_audio) { create(:lecture, :without_audio) }
 
       it 'returns early without processing' do
-        expect(benefit_without_audio.audio).not_to be_attached
-        expect { described_class.perform_now(benefit_without_audio) }.not_to raise_error
-        expect(benefit_without_audio.optimized_audio).not_to be_attached
+        expect(lecture_without_audio.audio).not_to be_attached
+        expect { described_class.perform_now(lecture_without_audio) }.not_to raise_error
+        expect(lecture_without_audio.optimized_audio).not_to be_attached
       end
     end
 
@@ -47,13 +46,13 @@ RSpec.describe AudioOptimizationJob, type: :job do
       let(:optimized_file) { fixture_file_upload('spec/files/audio.mp3', 'audio/mpeg') }
 
       before do
-        benefit.audio.attach(audio_file)
-        benefit.optimized_audio.attach(optimized_file)
+        lecture.audio.attach(audio_file)
+        lecture.optimized_audio.attach(optimized_file)
       end
 
       it 'returns early without processing' do
-        expect(benefit.optimized_audio).to be_attached
-        expect { described_class.perform_now(benefit) }.not_to raise_error
+        expect(lecture.optimized_audio).to be_attached
+        expect { described_class.perform_now(lecture) }.not_to raise_error
       end
     end
 
@@ -61,17 +60,17 @@ RSpec.describe AudioOptimizationJob, type: :job do
       let(:audio_file) { fixture_file_upload('spec/files/audio.mp3', 'audio/mpeg') }
 
       before do
-        benefit.audio.attach(audio_file)
+        lecture.audio.attach(audio_file)
         allow(AudioOptimizer).to receive(:new).and_raise(StandardError.new("Optimization failed"))
       end
 
       it 'logs error and re-raises exception' do
         allow(Rails.logger).to receive(:error)
 
-        expect { described_class.perform_now(benefit) }.to raise_error(StandardError, "Optimization failed")
+        expect { described_class.perform_now(lecture) }.to raise_error(StandardError, "Optimization failed")
 
         expect(Rails.logger).to have_received(:error)
-          .with("Audio optimization failed for item ID #{benefit.id}: Optimization failed")
+          .with("Audio optimization failed for item ID #{lecture.id}: Optimization failed")
       end
     end
   end
@@ -81,13 +80,13 @@ RSpec.describe AudioOptimizationJob, type: :job do
     let(:audio_file) { fixture_file_upload('spec/files/audio.mp3', 'audio/mpeg') }
 
     before do
-      benefit.audio.attach(audio_file)
+      lecture.audio.attach(audio_file)
     end
 
     describe '#create_input_tempfile' do
       it 'creates a tempfile with correct extension' do
-        benefit.audio.open do |audio_file|
-          tempfile = job.send(:create_input_tempfile, benefit, audio_file)
+        lecture.audio.open do |audio_file|
+          tempfile = job.send(:create_input_tempfile, lecture, audio_file)
 
           expect(tempfile).to be_a(Tempfile)
           expect(tempfile.path).to end_with('.mp3')
@@ -124,11 +123,11 @@ RSpec.describe AudioOptimizationJob, type: :job do
         output_tempfile.write('optimized audio content')
         output_tempfile.rewind
 
-        job.send(:attach_optimized_audio, benefit, output_tempfile)
+        job.send(:attach_optimized_audio, lecture, output_tempfile)
 
-        benefit.reload
-        expect(benefit.optimized_audio).to be_attached
-        expect(benefit.optimized_audio.content_type).to eq('audio/mpeg')
+        lecture.reload
+        expect(lecture.optimized_audio).to be_attached
+        expect(lecture.optimized_audio.content_type).to eq('audio/mpeg')
 
         output_tempfile.close
         output_tempfile.unlink
@@ -136,18 +135,18 @@ RSpec.describe AudioOptimizationJob, type: :job do
 
       context 'when item responds to generate_optimize_audio_bucket_key' do
         it 'uses custom bucket key with _op prefix' do
-          allow(benefit).to receive(:respond_to?).and_call_original
-          allow(benefit).to receive(:respond_to?).with(:generate_optimize_audio_bucket_key).and_return(true)
-          allow(benefit).to receive(:generate_optimize_audio_bucket_key).and_return('custom/bucket/key.mp3')
+          allow(lecture).to receive(:respond_to?).and_call_original
+          allow(lecture).to receive(:respond_to?).with(:generate_optimize_audio_bucket_key).and_return(true)
+          allow(lecture).to receive(:generate_optimize_audio_bucket_key).and_return('custom/bucket/key.mp3')
 
           output_tempfile = Tempfile.new([ 'optimized', '.mp3' ])
           output_tempfile.write('optimized audio content')
           output_tempfile.rewind
 
-          job.send(:attach_optimized_audio, benefit, output_tempfile)
-          benefit.reload
-          expect(benefit.optimized_audio).to be_attached
-          expect(benefit).to have_received(:generate_optimize_audio_bucket_key)
+          job.send(:attach_optimized_audio, lecture, output_tempfile)
+          lecture.reload
+          expect(lecture.optimized_audio).to be_attached
+          expect(lecture).to have_received(:generate_optimize_audio_bucket_key)
 
           output_tempfile.close
           output_tempfile.unlink

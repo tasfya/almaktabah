@@ -109,31 +109,6 @@
 #     end
 #   end
 
-#   describe 'import_resources:benefits' do
-#     let(:task) { Rake::Task['import_resources:benefits'] }
-#     let(:csv_path) { Rails.root.join('data', 'csv_templates', 'benefits.csv') }
-
-#     before do
-#       task.reenable
-#     end
-
-#     it 'calls CsvImportProcessor with correct parameters' do
-#       expect(CsvImportProcessor).to receive(:new)
-#         .with(csv_path.to_s, 'BenefitImportJob', domain.id)
-#         .and_return(processor_mock)
-#       expect(processor_mock).to receive(:process).and_return(true)
-#       expect(processor_mock).to receive(:summary).and_return({
-#         enqueued_count: 8,
-#         skipped_count: 1,
-#         error_count: 0,
-#         errors: []
-#       })
-
-#       ENV['DOMAIN_ID'] = domain.id.to_s
-#       task.invoke
-#       ENV.delete('DOMAIN_ID')
-#     end
-#   end
 
 #   describe 'import_resources:fatwas' do
 #     let(:task) { Rake::Task['import_resources:fatwas'] }

@@ -105,6 +105,7 @@ class VideoGeneratorService
   def add_text_with_pango(image, text, y_position:, font_size:, color:)
     require "securerandom"
     font_path   = Rails.root.join("app/assets/fonts/ScheherazadeNew-Regular.ttf")
+    wrapped     = word_wrap(text, 50)
     escaped     = text.gsub("&", "&amp;").gsub("<", "&lt;").gsub(">", "&gt;")
     markup      = "<span font_family='Scheherazade New' size='#{font_size * 1024}' foreground='#{color}'>#{escaped}</span>"
     tmp_png     = temp_dir.join("pango_text_#{SecureRandom.hex(4)}.png")
@@ -138,7 +139,7 @@ class VideoGeneratorService
       c.fill color
       c.pointsize font_size.to_s
       c.gravity "center"
-      c.size "1800x300"
+      c.size "1800x500"
       c.background "transparent"
       c.annotate "+0+#{y_position - 540}", wrapped
     end

@@ -21,7 +21,6 @@ class AddPublishedToAllResources < ActiveRecord::Migration[8.0]
     add_index :scholars,  :published
 
     Article.update_all(published: true)
-    Benefit.update_all(published: true)
     Book.update_all(published: true)
     Fatwa.update_all(published: true)
     Lecture.update_all(published: true)

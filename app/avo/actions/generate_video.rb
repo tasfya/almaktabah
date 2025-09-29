@@ -45,7 +45,7 @@ class Avo::Actions::GenerateVideo < Avo::BaseAction
 
   def find_record_by_id(record_id)
     # Try to find the record in each model that includes MediaHandler
-    [ Benefit, Fatwa, Lecture, Lesson ].each do |model_class|
+    [ Fatwa, Lecture, Lesson ].each do |model_class|
       record = model_class.find_by(id: record_id)
       return record if record
     end

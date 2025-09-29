@@ -3,10 +3,12 @@ class Scholar < ApplicationRecord
   include Publishable
   include Sluggable
 
-  has_many :lectures, dependent: :nullify
-  has_many :series, dependent: :nullify
-  has_many :benefits, dependent: :nullify
-  has_many :articles, dependent: :nullify
+  has_many :articles, foreign_key: :author_id, dependent: :restrict_with_error
+  has_many :books, foreign_key: :author_id, dependent: :restrict_with_error
+  has_many :lectures, dependent: :restrict_with_error
+  has_many :series, dependent: :restrict_with_error
+  has_many :fatwas, dependent: :restrict_with_error
+  has_rich_text :bio
 
   friendly_id :name, use: [ :slugged, :history, :sequentially_slugged ]
 
@@ -57,14 +59,6 @@ class Scholar < ApplicationRecord
     symbols_to_index [ "-", "_" ]
     token_separators [ "-", "_" ]
   end
-
-  has_many :articles, foreign_key: :author_id, dependent: :restrict_with_error, inverse_of: :author
-  has_many :benefits,  dependent: :nullify, inverse_of: :scholar
-  has_many :books,     foreign_key: :author_id, dependent: :restrict_with_error, inverse_of: :author
-  has_many :lectures,  dependent: :restrict_with_error, inverse_of: :scholar
-  has_many :series,    dependent: :restrict_with_error, inverse_of: :scholar
-  has_many :fatwas,    dependent: :nullify, inverse_of: :scholar
-  has_rich_text :bio
 
   # Helper method to get full name
   def name
