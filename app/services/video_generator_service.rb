@@ -132,7 +132,7 @@ class VideoGeneratorService
 
   def add_text_simple(image, text, y_position:, font_size:, color:)
     font_path = Rails.root.join("app/assets/fonts/DejaVuSans.ttf")
-    wrapped   = word_wrap(text, 50)
+    wrapped   = word_wrap(text, 30)
     image.combine_options do |c|
       c.font font_path.to_s
       c.fill color
