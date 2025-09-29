@@ -8,12 +8,10 @@ Rails.application.routes.draw do
   resources :books, only: [ :index ]
   resources :lectures, only: [ :index ]
   resources :series, only: [ :index ]
-  resources :benefits, only: [ :index ]
   resources :articles, only: [ :index ]
 
   scope ":scholar_id" do
     resources :books, only: [ :show ]
-    resources :benefits, only: [ :show ]
     resources :articles, only: [ :show ]
     resources :series, only: [ :show ]
     get "lectures(/:kind)/:id", to: "lectures#show", as: "lecture"

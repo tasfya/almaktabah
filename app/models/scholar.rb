@@ -5,7 +5,6 @@ class Scholar < ApplicationRecord
 
   has_many :lectures, dependent: :nullify
   has_many :series, dependent: :nullify
-  has_many :benefits, dependent: :nullify
   has_many :articles, dependent: :nullify
 
   friendly_id :name, use: [ :slugged, :history, :sequentially_slugged ]
@@ -59,7 +58,6 @@ class Scholar < ApplicationRecord
   end
 
   has_many :articles, foreign_key: :author_id, dependent: :restrict_with_error, inverse_of: :author
-  has_many :benefits,  dependent: :nullify, inverse_of: :scholar
   has_many :books,     foreign_key: :author_id, dependent: :restrict_with_error, inverse_of: :author
   has_many :lectures,  dependent: :restrict_with_error, inverse_of: :scholar
   has_many :series,    dependent: :restrict_with_error, inverse_of: :scholar

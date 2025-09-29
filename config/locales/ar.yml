@@ -30,16 +30,6 @@ ar:
     contact_description: "للاستفسارات والتواصل"
     email_label: "البريد الإلكتروني"
     copyright: "جميع الحقوق محفوظة - موقع فضيلة الشيخ محمد بن رمزان الهاجري"
-  benefits:
-    index:
-      title: "الفوائد"
-      description: "اكتشف فوائد ونصائح علمية مفيدة ومختصرة"
-      no_benefits: "لا توجد فوائد متاحة حالياً"
-    show:
-      download_options: "خيارات التحميل"
-      related_benefits: "فوائد ذات صلة"
-      will_be_available: "محتوى الفائدة سيكون متاحاً قريباً."
-      no_related_benefits: "لا توجد فوائد أخرى في نفس التصنيف حالياً"
   books:
     index:
       title: "الكتب"
@@ -178,7 +168,6 @@ ar:
     download_audio: "تحميل الصوت"
     download_video: "تحميل الفيديو"
     download_book: "تحميل الكتاب"
-    download_benefit: "تحميل الفائدة"
     send_message: "إرسال الرسالة"
     apply_filter: "تطبيق الفلترة"
     reset: "إعادة تعيين"
@@ -208,7 +197,6 @@ ar:
     news: "الأخبار"
     fatwas: "الفتاوى"
     about_sheikh: "مع الشيخ"
-    benefits: "الفوائد"
     lectures: "المحاضرات والكلمات"
     scientific_series: "السلاسل العلمية"
     contact: "تواصل معنا"
@@ -385,7 +373,6 @@ ar:
       scholar: "عالم"
       book: "كتاب"
       lecture: "محاضرة"
-      benefit: "فائدة"
     model_names:
       lessons: "دروس"
       fatwas: "فتاوى"
@@ -393,13 +380,11 @@ ar:
       news: "أخبار"
       books: "كتب"
       lectures: "محاضرات"
-      benefits: "فوائد"
     attributes:
       lecture:
         kind:
           sermon: "خطبة"
           conference: "محاضرة"
-          benefit: "فائدة"
   sheikh:
     name: "الشيخ محمد بن رمزان الهاجري"
     description: "الموقع الرسمي لفضيلة الشيخ محمد بن رمزان الهاجري يحتوي على مجموعة متنوعة من الدروس والمحاضرات والكتب والفتاوى."
@@ -452,7 +437,6 @@ ar:
     lectures: "المحاضرات"
     lessons: "الدروس"
     fatwas: "الفتاوى"
-    benefits: "الفوائد"
     series: "السلاسل العلمية"
     news: "الأخبار"
     scholars: "العلماء"

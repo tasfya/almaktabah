@@ -3,7 +3,6 @@ Dir[Rails.root.join("db/seeds/*.rb")].each { |file| require file unless file.end
 SEEDERS = {
   "users" => Seeds::UsersSeeder,
   "books" => Seeds::BooksSeeder,
-  "benefits" => Seeds::BenefitsSeeder,
   "lessons" => Seeds::LessonsSeeder,
   "lectures" => Seeds::LecturesSeeder,
   "news" => Seeds::NewsSeeder,
