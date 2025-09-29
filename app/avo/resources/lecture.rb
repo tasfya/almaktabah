@@ -30,12 +30,14 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :thumbnail, as: :file, accept: "image/*", max_size: 5.megabytes
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes
+    field :generated_video, as: :file, accept: "video/*", max_size: 100.megabytes, hide_on: [ :new, :edit ], readonly: true
     field :optimized_audio, as: :file, accept: "audio/*", max_size: 10.megabytes, hide_on: [ :new, :edit ], readonly: true
     field :created_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
     field :updated_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
   end
 
   def actions
+    action Avo::Actions::GenerateVideo
     action Avo::Actions::PublishLecture
     action Avo::Actions::UnpublishLecture
   end

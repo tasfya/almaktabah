@@ -2,6 +2,7 @@ module MediaHandler
   extend ActiveSupport::Concern
 
   included do
+    has_one_attached :generated_video
     after_save :process_media_files
   end
 

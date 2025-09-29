@@ -8,7 +8,7 @@ FactoryBot.define do
         audio { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
         created_at { Time.now }
         updated_at { Time.now }
-        published
+        published { true }
         after(:build) do |lesson|
           lesson.series ||= create(:series) if lesson.series.nil?
         end
