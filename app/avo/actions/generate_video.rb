@@ -9,12 +9,7 @@ class Avo::Actions::GenerateVideo < Avo::BaseAction
     records = args[:records]
     queued_count = 0
     failed_records = []
-    puts "Args: #{args.inspect}"
-
-    records.each do |record_id|
-      record = find_record_by_id(record_id)
-      next unless record
-
+    records.each do |record|
       begin
         # Check if record has audio
         unless record.respond_to?(:audio?) && record.audio?
@@ -44,17 +39,6 @@ class Avo::Actions::GenerateVideo < Avo::BaseAction
     else
       error "Failed to queue video generation jobs. Errors: #{failed_records.join(', ')}"
     end
-  end
-
-  private
-
-  def find_record_by_id(record_id)
-    # Try to find the record in each model that includes MediaHandler
-    [ Benefit, Fatwa, Lecture, Lesson ].each do |model_class|
-      record = model_class.find_by(id: record_id)
-      return record if record
-    end
-    nil
   end
 
   private
