@@ -16,11 +16,15 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 ffmpeg python3 \
-    libglib2.0-dev libcairo2-dev libgirepository1.0-dev libpango1.0-dev  &&\
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 ffmpeg python3 imagemagick fonts-noto libmagickcore-6.q16-6-extra && \
     curl -L https://github.com/yt-dlp/yt-dlp/releases/download/2025.06.30/yt-dlp -o /usr/local/bin/yt-dlp && \
     chmod a+rx /usr/local/bin/yt-dlp && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Copy custom fonts
+COPY app/assets/fonts/ScheherazadeNew-Regular.ttf /usr/share/fonts/truetype/
+COPY app/assets/fonts/DejaVuSans.ttf /usr/share/fonts/truetype/
+RUN fc-cache -f -v
 
 # Set production environment
 ENV RAILS_ENV="production" \

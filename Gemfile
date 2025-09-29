@@ -107,8 +107,3 @@ gem "avo", ">= 3.2"
 gem "rails_icons", "~> 1.4"
 gem "nice_partials", "~> 0.10.1"
 gem "importmap-rails"
-
-group :video_services do
-  gem "cairo", "~> 1.18"
-  gem "pango", "~> 4.3"
-end

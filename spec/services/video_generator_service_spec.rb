@@ -1,110 +1,150 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
-require 'fileutils'
-require 'ostruct'
 
-# This spec will perform real file operations and generate a video.
-# Make sure you have FFmpeg and ImageMagick installed on your system.
 RSpec.describe VideoGeneratorService, type: :service do
-  # --- Test Setup ---
-  # Create a temporary directory to store test assets
-  let!(:assets_dir) { Rails.root.join("spec", "files") }
-  let!(:audio_file_path) { assets_dir.join("audio.mp3") }
-  let!(:logo_file_path) { assets_dir.join("logo.png") }
+  let(:title) { "شرح كتاب الصيام من عمدة الأحكام" }
+  let(:english_title) { "Introduction to Islamic Studies" }
+  let(:description) { "الدرس الأول - مقدمة في الفقه الإسلامي" }
+  let(:english_description) { "First lesson - Introduction to Islamic jurisprudence" }
+  let(:audio_file_path) { Rails.root.join('spec', 'files', 'test_audio.mp3') }
+  let(:logo_file_path)  { Rails.root.join('spec', 'files', 'logo.png') }
+  let(:temp_dir)       { Rails.root.join('tmp', 'test_video_generation') }
 
-  # --- Shared Service Instance ---
-  # Define the service instance with common parameters
-  let(:title) { "شرح كتاب الصيام من عمتاب الصيام من عمدة الأحكام" }
-  let(:description) { " 1-الدرس الأول" }
-  let(:audio_file) { File.open(audio_file_path) }
-  let(:logo_file) { File.open(logo_file_path) }
+  let(:mock_audio_file) { double('audio_file') }
+  let(:mock_logo_file)  { double('logo_file') }
 
-  # The service instance that will be tested
-  let(:service) do
+  subject(:service) do
     described_class.new(
       title: title,
       description: description,
-      audio_file: audio_file,
-      logo_file: logo_file
+      audio_file: mock_audio_file,
+      logo_file: mock_logo_file
     )
   end
 
-  # --- Test Cases ---
+  before do
+    FileUtils.mkdir_p(File.dirname(audio_file_path))
+    FileUtils.mkdir_p(File.dirname(logo_file_path))
+    FileUtils.touch(audio_file_path) unless File.exist?(audio_file_path)
+    FileUtils.touch(logo_file_path)  unless File.exist?(logo_file_path)
+    FileUtils.rm_rf(temp_dir) if Dir.exist?(temp_dir)
+  end
 
-  # Test suite for the main #call method
-  xdescribe '#call', :real_files do
-    context 'when generation is successful' do
-      let(:result) { service.call }
-      let(:video_path) { result[:video_path] }
+  after do
+    service.cleanup! if service.temp_dir
+    FileUtils.rm_rf(temp_dir) if Dir.exist?(temp_dir)
+  end
 
+  describe '#initialize' do
+    it 'sets attributes correctly' do
+      expect(service.title).to eq(title)
+      expect(service.description).to eq(description)
+      expect(service.audio_file).to eq(mock_audio_file)
+      expect(service.logo_file).to eq(mock_logo_file)
+      expect(service.temp_dir).to be_nil
+    end
 
-      # Clean up the generated files after the test
-      after do
-        service.cleanup!
+    it 'allows nil description' do
+      s = described_class.new(title: title, audio_file: mock_audio_file, logo_file: mock_logo_file)
+      expect(s.description).to be_nil
+    end
+
+    it 'includes ArabicHelper' do
+      expect(service.class.included_modules).to include(ArabicHelper)
+    end
+  end
+
+  describe '#call' do
+    context 'success path' do
+      before do
+        allow(service).to receive(:setup_temp_directory)
+        allow(service).to receive(:copy_file_to_temp).and_return('/tmp/test/audio.mp3', '/tmp/test/logo.png')
+        allow(service).to receive(:create_background_image).and_return('/tmp/test/background.png')
+        allow(service).to receive(:generate_video)
+        allow(service).to receive(:transliterate_arabic).with(title).and_return('sharh-kitab-alsiyam')
+        service.instance_variable_set(:@temp_dir, Pathname.new('/tmp/test'))
       end
 
-      it 'returns a success status' do
+      it 'returns success hash with filename' do
+        result = service.call
         expect(result[:success]).to be true
-      end
-
-      it 'returns the correct filename' do
-        expect(result[:filename]).to include('.mp4')
-      end
-
-      it 'generates a non-empty video file' do
-        expect(File.exist?(video_path)).to be true
-        expect(File.size(video_path)).to be > 0
-      end
-
-      it 'creates a temporary directory for processing' do
-        service.call
-        expect(Dir.exist?(service.temp_dir)).to be true
+        expect(result[:video_path]).to eq('/tmp/test/output.mp4')
+        expect(result[:filename]).to eq('sharh-kitab-alsiyam.mp4')
       end
     end
 
-    context 'when generation fails' do
-      # Use an invalid audio file to trigger a failure
-      let(:invalid_audio_file) { 'non_existent_file.mp3' }
-      let(:service_with_invalid_file) do
-        described_class.new(
-          title: title,
-          description: description,
-          audio_file: invalid_audio_file,
-          logo_file: logo_file
-        )
-      end
-      let(:result) { service_with_invalid_file.call }
-
-      after do
-        service_with_invalid_file.cleanup!
+    context 'failure path' do
+      before do
+        allow(service).to receive(:setup_temp_directory)
+        allow(service).to receive(:copy_file_to_temp).and_raise(StandardError, 'File copy failed')
+        allow(Rails.logger).to receive(:error)
       end
 
-      it 'returns a failure status' do
+      it 'logs and returns error' do
+        result = service.call
         expect(result[:success]).to be false
-      end
-
-      it 'returns an error message' do
-        expect(result[:error]).to include("Unsupported file type")
+        expect(result[:error]).to eq('File copy failed')
       end
     end
   end
 
-  # Test suite for the #cleanup! method
-  xdescribe '#cleanup!' do
-    it 'removes the temporary directory and all its contents' do
-      # First, call the service to create the temp directory
-      result = service.call
-      expect(Dir.exist?(service.temp_dir)).to be true
+  describe '#cleanup!' do
+    before do
+      service.instance_variable_set(:@temp_dir, temp_dir)
+      FileUtils.mkdir_p(temp_dir)
+      FileUtils.touch(temp_dir.join('t.txt'))
+    end
 
-      # Now, run cleanup
+    it 'removes directory' do
+      expect(Dir.exist?(temp_dir)).to be true
       service.cleanup!
-      expect(Dir.exist?(service.temp_dir)).to be false
+      expect(Dir.exist?(temp_dir)).to be false
+    end
+
+    it 'handles nil temp_dir gracefully' do
+      service.instance_variable_set(:@temp_dir, nil)
+      expect { service.cleanup! }.not_to raise_error
     end
   end
 
-  # --- Teardown ---
-  # Remove the assets directory after all tests are done
-  after(:all) do
-    assets_dir = Rails.root.join("tmp", "spec_assets")
-    FileUtils.rm_rf(assets_dir) if Dir.exist?(assets_dir)
+  describe 'private helpers' do
+    describe '#add_text' do
+      let(:mock_image) { double('img') }
+      let(:combine_opts) { double('combine') }
+      let(:font_path) { Rails.root.join('app/assets/fonts/ScheherazadeNew-Regular.ttf') }
+
+      before do
+        allow(mock_image).to receive(:combine_options).and_yield(combine_opts)
+        allow(combine_opts).to receive_messages(font: nil, fill: nil, pointsize: nil,
+                                               gravity: nil, size: nil, background: nil, annotate: nil)
+      end
+
+      it 'renders Arabic with pango markup' do
+        # pango markup should be included in annotate text when arabic: true
+        allow(service).to receive(:word_wrap).and_return('محتوى عربي')
+        expect(combine_opts).to receive(:annotate).with('+0+60', /محتوى عربي/)
+        service.send(:add_text_with_pango, mock_image, title, y_position: 600, font_size: 48, color: 'white')
+      end
+
+      it 'renders English without error' do
+        allow(service).to receive(:word_wrap).and_return('wrapped english')
+        expect(combine_opts).to receive(:annotate).with('+0+60', 'wrapped english')
+        service.send(:add_text_simple, mock_image, english_title,
+                     y_position: 600, font_size: 48, color: 'white')
+      end
+    end
+
+    describe '#word_wrap' do
+      it 'wraps English text' do
+        result = service.send(:word_wrap, 'This is a long sentence to wrap', 10)
+        expect(result.split("\n").all? { |l| l.length <= 10 }).to be true
+      end
+    end
+
+    describe '#arabic_text?' do
+      it { expect(service.send(:arabic_text?, 'مرحبا')).to be true }
+      it { expect(service.send(:arabic_text?, 'Hello')).to be false }
+    end
   end
 end
