@@ -210,7 +210,7 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jmespath (1.6.2)
-    json (2.13.2)
+    json (2.15.0)
     json-schema (5.2.2)
       addressable (~> 2.8)
       bigdecimal (~> 3.1)
@@ -294,7 +294,7 @@ GEM
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     orm_adapter (0.5.0)
-    ostruct (0.6.2)
+    ostruct (0.6.3)
     overcommit (0.68.0)
       childprocess (>= 0.6.3, < 6)
       iniparse (~> 1.4)
@@ -539,7 +539,7 @@ GEM
     typesense (2.1.0)
       oj (~> 3.16)
       typhoeus (~> 1.4)
-    typesense-rails (1.0.0.rc3)
+    typesense-rails (1.0.0.rc4)
       json (>= 1.5.1)
       typesense (>= 0.13.0)
     typhoeus (1.5.0)
@@ -634,7 +634,7 @@ DEPENDENCIES
   tailwindcss-rails
   thruster
   turbo-rails
-  typesense-rails (~> 1.0.0.rc1)
+  typesense-rails (~> 1.0.0.rc4)
   tzinfo-data
   web-console
 
