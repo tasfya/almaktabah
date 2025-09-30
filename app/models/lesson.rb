@@ -101,11 +101,7 @@ class Lesson < ApplicationRecord
   def audio_url
     return nil unless audio.attached?
 
-    if audio.service.respond_to?(:url) && audio.service.name == :public_media_hetzner
-      audio.url
-    else
-      Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
-    end
+    attachment_url(audio)
   end
 
   def audio_file_size
