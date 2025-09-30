@@ -101,7 +101,7 @@ module ApplicationHelper
 
   def direct_download_url(attachment)
     return nil unless attachment&.attached?
-    
+
     if attachment.service.respond_to?(:url) && attachment.service.name == :public_media_hetzner
       attachment.url
     else

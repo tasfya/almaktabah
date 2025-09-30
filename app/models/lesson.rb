@@ -100,7 +100,7 @@ class Lesson < ApplicationRecord
 
   def audio_url
     return nil unless audio.attached?
-    
+
     if audio.service.respond_to?(:url) && audio.service.name == :public_media_hetzner
       audio.url
     else
