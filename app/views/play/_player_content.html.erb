@@ -48,8 +48,8 @@
 
       <div class="flex gap-2 flex-wrap">
         <% if resource.has_any_audio? %>
-          <%= link_to rails_blob_url(resource.best_audio, disposition: "attachment"), 
-              download: true, target: "_blank", 
+          <%= link_to direct_download_url(resource.best_audio),
+              download: true, target: "_blank",
               class: "btn btn-primary btn-sm" do %>
             <%= icon "arrow-down-tray", class: "w-4 h-4" %>
             <%= t("buttons.download") %>

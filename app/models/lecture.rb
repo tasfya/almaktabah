@@ -94,7 +94,13 @@ class Lecture < ApplicationRecord
   def audio_url
     return nil unless audio.attached?
 
-    Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
+    # Use direct S3 URL for better performance and CDN compatibility
+    if audio.service.respond_to?(:url) && audio.service.name == :public_media_hetzner
+      audio.url
+    else
+      # Fallback to Rails blob URL for other storage services
+      Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
+    end
   end
 
   def generate_optimize_audio_bucket_key
