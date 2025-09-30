@@ -94,7 +94,8 @@ class Lecture < ApplicationRecord
   def audio_url
     return nil unless audio.attached?
 
-    Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
+    # Use direct storage URL for Hetzner public media, fallback to Rails blob URL otherwise
+    attachment_url(audio)
   end
 
   def generate_optimize_audio_bucket_key

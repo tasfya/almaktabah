@@ -58,12 +58,12 @@
   <div class="flex items-center gap-2 flex-shrink-0 justify-end">
     <% if resource.respond_to?(:has_any_audio?) && resource.has_any_audio? %>
       <%= play_button(resource: resource, klass: "btn btn-secondary btn-sm") %>
-      <%= link_to(rails_blob_url(resource.best_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
+      <%= link_to(direct_download_url(resource.best_audio), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
         <%= icon "arrow-down-tray", class: "size-3 sm:size-5" %>
       <% end %>
     <% elsif resource.respond_to?(:video?) && resource.video? %>
       <%= video_modal_button(resource:, klass: "btn btn-secondary btn-sm") %>
-      <%= link_to(rails_blob_url(resource.video, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
+      <%= link_to(direct_download_url(resource.video), download: true, target: "_blank", class: "btn btn-secondary btn-sm w-fit") do %>
         <%= icon "arrow-down-tray", class: "size-3 sm:size-5" %>
       <% end %>
     <% elsif resource.respond_to?(:youtube_url?) && resource.youtube_url? %>

@@ -100,7 +100,8 @@ class Lesson < ApplicationRecord
 
   def audio_url
     return nil unless audio.attached?
-    Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
+
+    attachment_url(audio)
   end
 
   def audio_file_size

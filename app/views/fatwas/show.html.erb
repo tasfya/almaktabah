@@ -93,7 +93,7 @@
                 </h3>
                 <div class="flex flex-wrap gap-4">
                   <% if @fatwa.has_any_audio? %>
-                    <%= link_to rails_blob_url(@fatwa.best_audio, disposition: "attachment"), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
+                    <%= link_to direct_download_url(@fatwa.best_audio), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
                       <%= icon "arrow-down-tray", class: "size-5" %>
                       <%= t("buttons.download_audio")%>
                     <% end %>
