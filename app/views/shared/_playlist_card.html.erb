@@ -38,15 +38,7 @@
             <% scholar = resource.series.scholar %>
           <% end %>
         <% end %>
-        
-        <% if scholar.present? %>
-          <div class="flex items-center gap-1">
-            <%= icon "user", class: "size-4 text-gray-500" %>
-            <span class="text-lg text-gray-600 truncate">
-              <%= link_to scholar.name, scholar_path(scholar), class: "hover:link" %>
-            </span>
-          </div>
-        <% end %>
+      
         <div class="flex items-center gap-2 flex-wrap">
           <% if linkable %>
             <%= link_to resource_link do %>
@@ -59,6 +51,14 @@
             <span class="badge badge-primary badge-sm"><%= resource.category %></span>
           <% end %>
         </div>
+        <% if scholar.present? %>
+          <div class="flex items-center gap-1">
+            <%= icon "user", class: "size-4 text-gray-500" %>
+            <span class="text-sm text-gray-600 truncate">
+              <%= link_to scholar.name, scholar_path(scholar), class: "hover:link" %>
+            </span>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
