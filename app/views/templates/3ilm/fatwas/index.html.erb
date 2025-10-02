@@ -10,7 +10,7 @@
             <% @fatwas.each_with_index do |fatwa, idx| %>
               <%= render "shared/playlist_card", resource: fatwa,
                     with_icon: true, index: idx, linkable: true,
-                    custom_icon: "scale", show_scholar: false, show_category: true %>
+                    custom_icon: "scale", show_scholar: true, show_category: true %>
             <% end %>
           </div>
         </div>

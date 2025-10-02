@@ -2,6 +2,7 @@
   # Generate unique modal ID based on resource type and ID
   modal_id = "share_modal_#{resource.class.name.downcase}_#{resource.id}"
   show_scholar = local_assigns.fetch(:show_scholar, false)
+  custom_icon = local_assigns.fetch(:custom_icon, "book-open")
 
   if resource.is_a?(Lesson)
     share_url = polymorphic_url(resource.series)
@@ -21,7 +22,7 @@
     <div class="flex items-center gap-4 flex-1 min-w-0">
       <% if local_assigns[:with_icon].present? %>
         <div class="p-2 rounded border border-base-300 flex-shrink-0">
-          <%= icon "book-open", class: "size-5" %>
+          <%= icon custom_icon, class: "size-5" %>
         </div>
       <% else %>
         <% if local_assigns[:index].present? %>
@@ -37,21 +38,27 @@
             <% scholar = resource.series.scholar %>
           <% end %>
         <% end %>
+        
         <% if scholar.present? %>
           <div class="flex items-center gap-1">
             <%= icon "user", class: "size-4 text-gray-500" %>
-            <span class="text-base text-gray-600 truncate">
+            <span class="text-lg text-gray-600 truncate">
               <%= link_to scholar.name, scholar_path(scholar), class: "hover:link" %>
             </span>
           </div>
         <% end %>
-        <% if linkable %>
-          <%= link_to resource_link do %>
-            <h3 class="font-medium text-base mb-1 truncate hover:link"><%= resource.title %></h3>
+        <div class="flex items-center gap-2 flex-wrap">
+          <% if linkable %>
+            <%= link_to resource_link do %>
+              <h3 class="font-medium text-lg hover:link"><%= resource.title %></h3>
+            <% end %>
+          <% else %>
+            <h3 class="font-medium text-lg"><%= resource.title %></h3>
           <% end %>
-        <% else %>
-          <h3 class="font-medium text-base mb-1 truncate"><%= resource.title %></h3>
-        <% end %>
+          <% if local_assigns[:show_category].present? && resource.respond_to?(:category) && resource.category.present? %>
+            <span class="badge badge-primary badge-sm"><%= resource.category %></span>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>

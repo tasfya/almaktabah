@@ -5,12 +5,20 @@
       <div class="lg:col-span-2">
         <article class="border border-base-300 rounded-lg shadow-md p-8">
           <header class="mb-8">
+            <% if @fatwa.video? %>
+              <section class="mb-8">
+                <video controls class="w-full rounded">
+                  <source src="<%= url_for(@fatwa.video) %>" type="<%= @fatwa.video.content_type %>">
+                  <%= t('common.browser_no_support_video') %>
+                </video>
+              </section>
+            <% end %>
             <h1 class="text-3xl font-bold mb-4">
               <%= @fatwa.title %>
             </h1>
             <div class="flex flex-wrap items-center gap-4 text-sm mb-6">
               <% if @fatwa.category.present? %>
-                <span class="badge badge-primary rounded-full">
+                <span class="badge badge-primary">
                   <%= @fatwa.category %>
                 </span>
               <% end %>
@@ -51,39 +59,6 @@
                 </button>
               </div>
             </div>
-          </section>
-          <section class="mt-12">
-            <h2 class="text-2xl font-bold mb-6">
-              <%= t('.related_fatwas') %>
-            </h2>
-            <% related_fatwas = Fatwa.where(category: @fatwa.category).where.not(id: @fatwa.id).order(created_at: :desc).limit(4) %>
-            <% if related_fatwas.any? %>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <% related_fatwas.each do |related_fatwa| %>
-                  <%= link_to fatwa_path(related_fatwa), class: "card card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow block" do %>
-                    <div class="card-body">
-                      <h3 class="card-title">
-                        <%= related_fatwa.title %>
-                      </h3>
-                      <% if related_fatwa.question.present? %>
-                        <p class="text-sm">
-                          <%= truncate(strip_tags(related_fatwa.question.to_s), length: 100) %>
-                        </p>
-                      <% end %>
-                      <div class="card-actions justify-start">
-                        <% if related_fatwa.category.present? %>
-                          <span class="badge badge-primary"><%= related_fatwa.category %></span>
-                        <% end %>
-                      </div>
-                    </div>
-                  <% end %>
-                <% end %>
-              </div>
-            <% else %>
-              <div class="text-center py-8">
-                <p><%= t('.no_related_fatwas') %></p>
-              </div>
-            <% end %>
           </section>
           <% if @fatwa.has_any_audio? %>
             <section class="mb-8">
