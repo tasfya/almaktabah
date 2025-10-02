@@ -27,7 +27,7 @@ class PlayController < ApplicationController
   end
 
   def resource_class(resource_type)
-    valid_resource_types = %w[Lesson Lecture]
+    valid_resource_types = %w[Lesson Lecture Fatwa]
     if valid_resource_types.include?(resource_type)
       resource_type.constantize
     else

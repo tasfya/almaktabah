@@ -34,7 +34,7 @@
           <div class="card card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow">
             <div class="card-body">
               <h3 class="card-title">
-                <%= link_to lecture.title, lecture_path(lecture), class: "hover:text-primary-500" %>
+                <%= link_to lecture.title, lecture_path(lecture, kind: lecture.kind, scholar_id: @scholar.to_param), class: "hover:text-primary-500" %>
               </h3>
               <% if lecture.description.present? %>
                 <p class="text-sm">
@@ -70,7 +70,7 @@
           <div class="card card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow">
             <div class="card-body">
               <h3 class="card-title">
-                <%= link_to series.title, series_path(series), class: "hover:text-primary-500" %>
+                <%= link_to series.title, series_path(@scholar, series), class: "hover:text-primary-500" %>
               </h3>
               <% if series.description.present? %>
                 <p class="text-sm">
