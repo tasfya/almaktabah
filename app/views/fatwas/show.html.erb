@@ -7,12 +7,10 @@
           <header class="mb-8">
             <% if @fatwa.video? %>
               <section class="mb-8">
-                <% if @fatwa.video? %>
-                  <video controls class="w-full rounded">
-                    <source src="<%= url_for(@fatwa.video) %>" type="<%= @fatwa.video.content_type %>">
-                    <%= t('common.browser_no_support_video') %>
-                  </video>
-                <% end %>
+                <video controls class="w-full rounded">
+                  <source src="<%= url_for(@fatwa.video) %>" type="<%= @fatwa.video.content_type %>">
+                  <%= t('common.browser_no_support_video') %>
+                </video>
               </section>
             <% end %>
             <h1 class="text-3xl font-bold mb-4">
