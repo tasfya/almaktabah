@@ -3,7 +3,7 @@ require 'openapi_helper'
 describe 'Articles API', type: :request do
   let(:domain) { create(:domain, host: 'localhost') }
   let(:author) { create(:scholar) }
-  let!(:article) { create(:article, :published, author: author) }
+  let!(:article) { create(:article, :published, scholar: author) }
 
   before do
     # Assign article to domain
