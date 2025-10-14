@@ -15,6 +15,7 @@ class Avo::Resources::Scholar < Avo::BaseResource
     field :id, as: :id, sortable: true
     field :name, as: :text, sortable: true, searchable: true
     field :full_name, as: :text, sortable: true, searchable: true
+    field :default_domain, as: :belongs_to, searchable: true, sortable: true
     field :bio, as: :textarea, searchable: true
     field :avatar, as: :file, accept: "image/*", max_size: 5.megabytes
     field :lectures_count, as: :text, only_on: [ :index, :show ], sortable: true
