@@ -14,6 +14,6 @@ RSpec.describe ArticleSerializer, type: :serializer do
     expect(serialized[:title]).to eq(article.title)
     expect(serialized[:content]).to include('Test content')
     expect(serialized[:published_at]).to be_present
-    expect(serialized[:author]).to be_present
+    expect(serialized[:scholar]).to be_present
   end
 end

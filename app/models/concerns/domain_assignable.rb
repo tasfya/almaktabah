@@ -11,7 +11,7 @@ module DomainAssignable
   end
 
   def ensure_default_domain_assignment
-    if scholar.default_domain.present? && !assigned_to?(scholar.default_domain)
+    if scholar&.default_domain.present? && !assigned_to?(scholar.default_domain)
       assign_to(scholar.default_domain)
     end
   end

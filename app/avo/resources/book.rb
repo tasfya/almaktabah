@@ -1,6 +1,6 @@
 class Avo::Resources::Book < Avo::BaseResource
   self.title = :title
-  self.includes = [ :author ]
+  self.includes = [ :scholar ]
   self.search = {
     query: -> { query.ransack(id_eq: params[:q], title_cont: params[:q], description_cont: params[:q], m: "or").result(distinct: false) }
   }
@@ -24,7 +24,7 @@ class Avo::Resources::Book < Avo::BaseResource
     field :downloads, as: :number, sortable: true
     field :file, as: :file
     field :cover_image, as: :file
-    field :author, as: :belongs_to, resource: "Scholar", sortable: true, searchable: true
+    field :scholar, as: :belongs_to, resource: "Scholar", sortable: true, searchable: true
     field :created_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
     field :updated_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
   end

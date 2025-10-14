@@ -5,11 +5,11 @@ class Book < ApplicationRecord
   include DomainAssignable
   include AttachmentSerializable
 
-  belongs_to :author, class_name: "Scholar", foreign_key: "author_id", inverse_of: :books
+  belongs_to :scholar, class_name: "Scholar", foreign_key: "author_id", inverse_of: :books
   has_one_attached :file, service: Rails.application.config.public_storage
   has_one_attached :cover_image, service: Rails.application.config.public_storage
 
-  validates :author, presence: true
+  validates :scholar, presence: true
   validates :title, presence: true, uniqueness: true
 
   typesense enqueue: true, if: :published? do
@@ -24,7 +24,7 @@ class Book < ApplicationRecord
       "book"
     end
     attribute :scholar_name do
-      author.name
+      scholar.name
     end
     attribute :scholar_id do
       author_id
@@ -68,6 +68,6 @@ class Book < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    [ "author" ]
+    [ "scholar" ]
   end
 end

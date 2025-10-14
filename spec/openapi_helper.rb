@@ -69,11 +69,11 @@ RSpec.configure do |config|
               category: { type: :string, nullable: true },
               published_at: { type: :string, format: "date-time", nullable: true },
               downloads: { type: :integer },
-              author: { '$ref' => '#/components/schemas/Scholar' },
+              scholar: { '$ref' => '#/components/schemas/Scholar' },
               file_url: { type: :string, nullable: true },
               cover_image_url: { type: :string, nullable: true }
             },
-            required: [ :id, :title, :downloads, :author ]
+            required: [ :id, :title, :downloads, :scholar ]
           },
           Lecture: {
             type: :object,
@@ -144,9 +144,9 @@ RSpec.configure do |config|
               title: { type: :string },
               content: { type: :string, nullable: true },
               published_at: { type: :string, format: "date-time", nullable: true },
-              author: { '$ref' => '#/components/schemas/Scholar' }
+              scholar: { '$ref' => '#/components/schemas/Scholar' }
             },
-            required: [ :id, :title, :author ]
+            required: [ :id, :title, :scholar ]
           },
           Fatwa: {
             type: :object,

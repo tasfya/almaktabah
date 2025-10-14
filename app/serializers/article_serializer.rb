@@ -5,7 +5,7 @@ class ArticleSerializer < AppSerializer
 
   fields :published_at, :title
 
-  association :author, blueprint: ScholarSerializer
+  association :scholar, blueprint: ScholarSerializer
 
   add_content_field :content
 end

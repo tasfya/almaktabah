@@ -2,7 +2,7 @@ class Article < ApplicationRecord
   include Publishable
   include DomainAssignable
 
-  belongs_to :author, class_name: "Scholar", inverse_of: :articles
+  belongs_to :scholar, class_name: "Scholar", foreign_key: "author_id", inverse_of: :articles
 
   has_rich_text :content
 
@@ -12,6 +12,6 @@ class Article < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    [ "author" ]
+    [ "scholar" ]
   end
 end

@@ -4,7 +4,7 @@ RSpec.describe Article, type: :model do
   subject(:article) { build(:article) }
 
   describe 'associations' do
-    it { should belong_to(:author).class_name('Scholar') }
+    it { should belong_to(:scholar).class_name('Scholar') }
   end
 
   describe 'included modules' do
@@ -27,7 +27,7 @@ RSpec.describe Article, type: :model do
 
     describe '.ransackable_associations' do
       it 'includes expected associations' do
-        expected_associations = [ "author" ]
+        expected_associations = [ "scholar" ]
         expect(Article.ransackable_associations).to match_array(expected_associations)
       end
     end

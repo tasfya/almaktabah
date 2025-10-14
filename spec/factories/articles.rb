@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :article do
     title { Faker::Book.title }
-    author { association(:scholar) }
+    scholar { association(:scholar) }
     published
   end
 end

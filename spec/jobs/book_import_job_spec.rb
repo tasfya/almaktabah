@@ -32,8 +32,8 @@ RSpec.describe BookImportJob, type: :job do
       expect(book.category).to eq('Islamic Studies')
       expect(book.pages).to eq(150)
       expect(book.published).to be_truthy
-      expect(book.author.first_name).to eq('John')
-      expect(book.author.last_name).to eq('Doe')
+      expect(book.scholar.first_name).to eq('John')
+      expect(book.scholar.last_name).to eq('Doe')
     end
 
     it 'creates an author if none exists' do
@@ -55,7 +55,7 @@ RSpec.describe BookImportJob, type: :job do
       }.not_to change(Scholar, :count)
 
       book = Book.last
-      expect(book.author).to eq(existing_author)
+      expect(book.scholar).to eq(existing_author)
     end
 
     it 'assigns book to domain' do

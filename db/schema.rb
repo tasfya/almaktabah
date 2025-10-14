@@ -247,5 +247,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_14_095132) do
   add_foreign_key "fatwas", "scholars", on_delete: :nullify
   add_foreign_key "lectures", "scholars"
   add_foreign_key "lessons", "series"
+  add_foreign_key "news", "scholars"
+  add_foreign_key "scholars", "domains", column: "default_domain_id"
   add_foreign_key "series", "scholars"
+  add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
 end

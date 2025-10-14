@@ -32,7 +32,7 @@
     end
 
     def search_books
-      Book.includes(:author).published.for_domain_id(@domain).ransack(
+      Book.includes(:scholar).published.for_domain_id(@domain).ransack(
         title_or_description_cont: @query
       ).result(distinct: true).recent.limit(5)
     end

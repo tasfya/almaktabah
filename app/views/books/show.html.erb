@@ -15,9 +15,9 @@
                 <h1 class="text-3xl font-bold mb-4">
                   <%= @book.title %>
                 </h1>
-                <% if @book.author.present? %>
+                <% if @book.scholar.present? %>
                   <p class="text-xl mb-4">
-                    <%= @book.author.name %>
+                    <%= @book.scholar.name %>
                   </p>
                 <% end %>
                 <div class="flex flex-wrap items-center gap-4 text-sm mb-6">
@@ -47,13 +47,13 @@
               </header>
             </div>
           </div>
-          <% if @book.author.respond_to?(:bio) && @book.author.bio.present? %>
+          <% if @book.scholar.respond_to?(:bio) && @book.scholar.bio.present? %>
             <section class="mb-8">
               <h2 class="text-2xl font-bold mb-4">
                 <%= t(".about_author")%>
               </h2>
               <div class="prose prose-lg max-w-none">
-                <%= @book.author.bio %>
+                <%= @book.scholar.bio %>
               </div>
             </section>
           <% end %>
@@ -76,11 +76,11 @@
                     </figure>
                     <div class="card-body">
                       <h3 class="card-title">
-                        <%= link_to related_book.title, book_path(related_book.author, related_book), class: "hover:text-primary-500" %>
+                        <%= link_to related_book.title, book_path(related_book.scholar, related_book), class: "hover:text-primary-500" %>
                       </h3>
-                      <% if related_book.author.present? %>
+                      <% if related_book.scholar.present? %>
                         <p class="text-sm">
-                          <%= related_book.author.respond_to?(:name) ? related_book.author.name : related_book.author %>
+                          <%= related_book.scholar.respond_to?(:name) ? related_book.scholar.name : related_book.scholar %>
                         </p>
                       <% end %>
                       <% if related_book.category.present? %>
