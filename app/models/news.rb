@@ -6,7 +6,7 @@ class News < ApplicationRecord
   include AttachmentSerializable
 
   has_one_attached :thumbnail, service: Rails.application.config.public_storage
-
+  belongs_to :scholar, optional: true, inverse_of: :news
   validates :title, presence: true
   validates :content, presence: true
   validates :published_at, presence: true, if: :published?

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_29_150037) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_14_095132) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -116,8 +116,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_150037) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
-    t.integer "scholar_id"
     t.string "slug"
+    t.integer "scholar_id"
     t.string "source_url"
     t.index ["published"], name: "index_fatwas_on_published"
     t.index ["scholar_id"], name: "index_fatwas_on_scholar_id"
@@ -189,7 +189,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_150037) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
+    t.integer "scholar_id"
     t.index ["published"], name: "index_news_on_published"
+    t.index ["scholar_id"], name: "index_news_on_scholar_id"
     t.index ["slug"], name: "index_news_on_slug", unique: true
   end
 
@@ -203,6 +205,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_150037) do
     t.string "full_name"
     t.string "full_name_alias"
     t.string "slug"
+    t.integer "default_domain_id"
+    t.index ["default_domain_id"], name: "index_scholars_on_default_domain_id"
     t.index ["published"], name: "index_scholars_on_published"
     t.index ["slug"], name: "index_scholars_on_slug", unique: true
   end
