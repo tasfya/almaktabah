@@ -1,4 +1,4 @@
-<%= link_to book_path(book.author, book), class: "card card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow" do %>
+<%= link_to book_path(book.scholar, book), class: "card card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow" do %>
   <% if book.cover_image.present? %>
     <figure>
       <%= image_tag book.cover_image, class: "w-full h-48 object-cover rounded" %>
