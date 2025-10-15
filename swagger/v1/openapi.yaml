@@ -410,7 +410,7 @@ components:
           nullable: true
         downloads:
           type: integer
-        author:
+        scholar:
           "$ref": "#/components/schemas/Scholar"
         file_url:
           type: string
@@ -422,7 +422,7 @@ components:
       - id
       - title
       - downloads
-      - author
+      - scholar
     Lecture:
       type: object
       properties:
@@ -575,12 +575,12 @@ components:
           type: string
           format: date-time
           nullable: true
-        author:
+        scholar:
           "$ref": "#/components/schemas/Scholar"
       required:
       - id
       - title
-      - author
+      - scholar
     Fatwa:
       type: object
       properties:

@@ -8,8 +8,8 @@
     <h3 class="card-title break-words">
       <%= book.title %>
     </h3>
-    <% if book.author.present? %>
-      <p class="text-sm"><%= book.author.name %></p>
+    <% if book.scholar.present? %>
+      <p class="text-sm"><%= book.scholar.name %></p>
     <% end %>
     <p class="text-sm"><%= truncate(book.description, length: 100) %></p>
     <div class="card-actions justify-between">

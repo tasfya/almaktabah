@@ -12,7 +12,7 @@ module Seeds
         next if data['name'].blank? || data['name'] =~ /^\d+$/
 
         book = Book.find_or_initialize_by(title: data['name']) do |b|
-          b.author = scholar
+          b.scholar = scholar
           b.description = "كتاب #{data['name']} للشيخ محمد بن رمزان الهاجري"
           b.category = "الكتب"
           b.published_at = Date.today

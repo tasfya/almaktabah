@@ -4,7 +4,7 @@ class BooksController < ApplicationController
   before_action :setup_books_breadcrumbs
 
   def index
-    @q = Book.for_domain_id(@domain.id).published.includes(:author).ransack(params[:q])
+    @q = Book.for_domain_id(@domain.id).published.includes(:scholar).ransack(params[:q])
     @pagy, @books = pagy(@q.result(distinct: true))
 
     respond_to do |format|
@@ -33,7 +33,7 @@ class BooksController < ApplicationController
       breadcrumb_for(t("breadcrumbs.books"), books_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.books"), books_path)
-      breadcrumb_for(@book.title, book_path(@book.author, @book))
+      breadcrumb_for(@book.title, book_path(@book.scholar, @book))
     end
   end
 

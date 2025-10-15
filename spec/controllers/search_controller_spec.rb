@@ -196,7 +196,7 @@ RSpec.describe SearchController, type: :controller do
 
         # Check that books include author association
         book_result = assigns(:results)[:books].first
-        expect { book_result.author.name }.not_to raise_error if book_result
+        expect { book_result.scholar.name }.not_to raise_error if book_result
 
         # Check that lessons include series association
         lesson_result = assigns(:results)[:lessons].first
@@ -225,7 +225,7 @@ RSpec.describe SearchController, type: :controller do
 
     describe "#search_books" do
       it "searches books with proper parameters" do
-        expect(Book).to receive(:includes).with(:author).and_call_original
+        expect(Book).to receive(:includes).with(:scholar).and_call_original
         expect_any_instance_of(Ransack::Search).to receive(:result).with(distinct: true).and_call_original
 
         controller_instance.send(:search_books)

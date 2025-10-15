@@ -19,9 +19,10 @@ class Avo::Resources::Series < Avo::BaseResource
     field :title, as: :text, sortable: true, searchable: true
     field :description, as: :textarea, searchable: true
     field :published, as: :boolean, sortable: true
-    field :scholar, as: :belongs_to, sortable: true, searchable: true
+    field :scholar, as: :belongs_to, sortable: true, searchable: true, use_resource: Avo::Resources::Scholar, placeholder: "Search scholars…"
     field :explainable, as: :file, accept: "pdf/*", max_size: 5.megabytes
     field :lessons_count, as: :text, only_on: [ :index, :show ], sortable: true
+    field :lessons, as: :has_many, searchable: true, use_resource: Avo::Resources::Lesson, show_on: [ :show, :edit ]
     field :created_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
     field :updated_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
   end

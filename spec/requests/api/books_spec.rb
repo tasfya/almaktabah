@@ -2,8 +2,8 @@ require 'openapi_helper'
 
 describe 'Books API', type: :request do
   let(:domain) { create(:domain, host: 'localhost') }
-  let(:author) { create(:scholar) }
-  let!(:book) { create(:book, author: author) }
+  let(:scholar) { create(:scholar) }
+  let!(:book) { create(:book, scholar: scholar) }
 
   before do
     # Assign book to domain
@@ -40,7 +40,7 @@ describe 'Books API', type: :request do
           expect(data.first).to have_key('category')
           expect(data.first).to have_key('published_at')
           expect(data.first).to have_key('downloads')
-          expect(data.first).to have_key('author')
+          expect(data.first).to have_key('scholar')
           expect(data.first).to have_key('file_url')
           expect(data.first).to have_key('cover_image_url')
         end

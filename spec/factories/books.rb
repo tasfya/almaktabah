@@ -8,7 +8,7 @@ FactoryBot.define do
     pages { rand(1..1000) }
     downloads { rand(1..1000) }
 
-    author { association(:scholar) }
+    scholar { association(:scholar) }
 
     after(:build) do |book|
       file_path = Rails.root.join('spec', 'files', 'sample.pdf')

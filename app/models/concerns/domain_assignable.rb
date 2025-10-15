@@ -7,6 +7,13 @@ module DomainAssignable
     scope :for_domain_id, ->(domain_id) {
       joins(:domain_assignments).where(domain_assignments: { domain_id: domain_id })
     }
+    after_save :ensure_default_domain_assignment
+  end
+
+  def ensure_default_domain_assignment
+    if scholar&.default_domain.present? && !assigned_to?(scholar.default_domain)
+      assign_to(scholar.default_domain)
+    end
   end
 
   def assigned_to?(domain)

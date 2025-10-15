@@ -16,7 +16,7 @@ class BookImportJob < ApplicationJob
     end
 
     # Find or create author
-    author = find_or_create_author(row.author_first_name, row.author_last_name)
+    scholar = find_or_create_author(row.author_first_name, row.author_last_name)
 
     published_at = parse_datetime(row.published_at)
 
@@ -25,7 +25,7 @@ class BookImportJob < ApplicationJob
     ) do |b|
       b.description  = row.description
       b.category     = row.category
-      b.author       = author
+      b.scholar       = scholar
       b.pages        = parse_integer(row.pages)
       b.published    = published_at.present?
       b.published_at = published_at

@@ -4,7 +4,7 @@ class ArticlesController < ApplicationController
   before_action :setup_articles_breadcrumbs
 
   def index
-    @q = Article.for_domain_id(@domain.id).published.order(published_at: :desc).includes(:author).ransack(params[:q])
+    @q = Article.for_domain_id(@domain.id).published.order(published_at: :desc).includes(:scholar).ransack(params[:q])
     @pagy, @articles = pagy(@q.result(distinct: true))
 
     respond_to do |format|
