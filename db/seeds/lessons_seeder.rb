@@ -2,7 +2,7 @@ require_relative './base'
 
 module Seeds
   class LessonsSeeder < Base
-    def self.seed(from: nil, domain_id: nil)
+    def self.seed(from: nil, domain_ids: nil)
       puts "📚 Seeding audio lessons..."
 
       lesson_array = load_json('data/lessons.json')
@@ -38,7 +38,7 @@ module Seeds
             puts "Errors: #{series.errors.full_messages.join(', ')}"
             next
           else
-            assign_to_domain(series, domain_id)
+            assign_to_domain(series, domain_ids)
           end
         end
 
@@ -57,7 +57,7 @@ module Seeds
         begin
           lesson.save!
           processed << lesson
-          assign_to_domain(lesson, domain_id)
+          assign_to_domain(lesson, domain_ids)
           puts "✅ Successfully saved lesson: #{lesson.title} (ID: #{lesson.id})"
         rescue ActiveRecord::RecordInvalid
           puts "❌ Failed to save lesson: #{lesson.title}"

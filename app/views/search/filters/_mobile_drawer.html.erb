@@ -1,0 +1,36 @@
+<%# Mobile Drawer Partial - Mobile filter sidebar with overlay %>
+<%# Drawer Toggle Checkbox - Hidden but controls the drawer state %>
+<input
+  id="mobile-filter-drawer"
+  type="checkbox"
+  class="drawer-toggle"
+  data-filter-sidebar-target="checkboxToggle" />
+
+<%# Drawer Overlay for Mobile %>
+<label
+  for="mobile-filter-drawer"
+  class="drawer-overlay lg:hidden"
+  data-filter-sidebar-target="overlay"></label>
+
+<%# Sidebar Drawer %>
+<div
+   data-filter-sidebar-target="sidebar"
+   class="drawer-side fixed top-0 left-0 z-50 w-80 max-w-[80vw] h-full bg-base-100 shadow-2xl transform transition-transform duration-300 ease-in-out overflow-y-auto lg:hidden"
+   role="complementary"
+   aria-label="Search filters sidebar">
+  <div class="flex flex-col h-full p-4 lg:p-0">
+    <%# Mobile Header with Close Button %>
+    <div class="flex items-center justify-between mb-6 lg:hidden">
+      <h2 class="text-lg font-semibold"><%= t('search.filters.title', default: 'Search Filters') %></h2>
+      <label
+        for="mobile-filter-drawer"
+        class="btn btn-circle btn-ghost btn-sm"
+        aria-label="Close filters">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 stroke-current">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </label>
+    </div>
+    <%= render "search/filters/filters" %>
+  </div>
+</div>

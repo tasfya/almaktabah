@@ -27,7 +27,9 @@ class Lesson < ApplicationRecord
     end
     attribute :series_id
     attribute :position
-    attribute :duration
+    attribute :duration do
+      duration.to_i
+    end
     attribute :scholar_name do
       scholar.name
     end
@@ -39,6 +41,15 @@ class Lesson < ApplicationRecord
     end
     attribute :domain_ids do
       domain_assignments.pluck(:domain_id)
+    end
+    attribute :published_at do
+      published_at.to_i
+    end
+    attribute :created_at do
+      created_at.to_i
+    end
+    attribute :thumbnail_url do
+      thumbnail.attached? ? variant_url(thumbnail.variant(:thumb)) : nil
     end
 
     predefined_fields [
@@ -55,7 +66,8 @@ class Lesson < ApplicationRecord
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
       { "name" => "published_at", "type" => "int64" },
-      { "name" => "created_at", "type" => "int64" }
+      { "name" => "created_at", "type" => "int64" },
+      { "name" => "thumbnail_url", "type" => "string" }
     ]
 
     default_sorting_field "published_at"
@@ -64,7 +76,9 @@ class Lesson < ApplicationRecord
     token_separators [ "-", "_" ]
   end
 
-  has_one_attached :thumbnail, service: Rails.application.config.public_storage
+  has_one_attached :thumbnail, service: Rails.application.config.public_storage do |attachable|
+    attachable.variant :thumb, resize_to_limit: [ 200, 200 ]
+  end
   has_one_attached :audio, service: Rails.application.config.public_storage
   has_one_attached :video, service: Rails.application.config.public_storage
   has_one_attached :optimized_audio, service: Rails.application.config.public_storage

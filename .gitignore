@@ -58,3 +58,4 @@ db/backups
 
 # VS Code
 .vscode/*
+/private

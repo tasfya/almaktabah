@@ -1,0 +1,86 @@
+<%# Filter Form %>
+<%= form_with url: search_path, method: :get,
+        data: { filter_sidebar_target: "form", turbo_frame: "search_results" },
+        class: "space-y-6" do |form| %>
+  <%# Hidden field for search query %>
+  <%= form.hidden_field :q, value: @search_query if @search_query.present? %>
+  <%# Scholars Filter Section - Only show if domain has more than one scholar %>
+  <% if @domain_scholars && @domain_scholars.count > 1 %>
+    <div class="card bg-base-100 border border-base-300 shadow-sm">
+      <div class="card-body p-4">
+        <h2 class="card-title text-lg font-medium justify-between">
+          <%= t('search.filters.scholars', default: 'Scholars') %>
+        </h2>
+        <div class="space-y-3 max-h-64 overflow-y-auto pr-2">
+          <% @domain_scholars.each do |scholar| %>
+            <%# Get count from facets if available, otherwise show 0 %>
+            <% count = @facets&.dig('scholar_name')&.dig(scholar.name) || 0 %>
+            <div class="form-control">
+              <label class="label cursor-pointer justify-start gap-3 p-0 hover:bg-base-200 rounded-lg transition-colors">
+                <input
+                      type="checkbox"
+                      name="scholars[]"
+                      value="<%= scholar.name %>"
+                      data-filter-sidebar-target="checkbox"
+                      data-action="change->filter-sidebar#onCheckboxChange"
+                  id="scholar_<%= scholar.id %>"
+                  class="checkbox checkbox-primary checkbox-sm"
+                  <%= 'checked' if @search_filters[:scholars]&.include?(scholar.name) %>>
+                  <span class="label-text flex-1">
+                    <%= scholar.name %>
+                  </span>
+                  <span class="badge badge-ghost badge-sm">
+                    <%= count %>
+                  </span>
+                </label>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <%# Content Types Filter Section %>
+    <div class="card bg-base-100 border border-base-300 shadow-sm mt-4">
+      <div class="card-body p-4">
+        <h2 class="card-title text-lg font-medium justify-between">
+          <%= t('search.filters.content_types', default: 'Content Types') %>
+        </h2>
+        <div class="space-y-3">
+          <% content_types = @all_content_types %>
+          <% content_types.each do |content_type| %>
+            <% facet_count = @facets&.dig('content_type')&.dig(content_type.downcase) || 0 %>
+            <div class="form-control">
+              <label class="label cursor-pointer justify-start gap-3 p-0 hover:bg-base-200 rounded-lg transition-colors">
+                <input
+                    type="checkbox"
+                    name="content_types[]"
+                    value="<%= content_type.downcase %>"
+                    data-filter-sidebar-target="checkbox"
+                    data-action="change->filter-sidebar#onCheckboxChange"
+                  id="content_type_<%= content_type.downcase %>"
+                  class="checkbox checkbox-primary checkbox-sm"
+                  <%= 'checked' if @search_filters[:content_types]&.include?(content_type.downcase) %>
+                  <%= 'disabled' if facet_count == 0 %>>
+                  <span class="label-text flex-1 <%= 'text-gray-400' if facet_count == 0 %>">
+                    <%= content_type %>
+                  </span>
+                  <span class="badge badge-ghost badge-sm <%= 'opacity-50' if facet_count == 0 %>">
+                    <%= facet_count %>
+                  </span>
+                </label>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <%# Apply Filters Button - Visible on mobile only %>
+      <div class="mt-6">
+        <button
+          data-filter-sidebar-target="submitButton"
+          data-action="click->filter-sidebar#submitForm"
+          type="submit"
+          class="btn btn-primary btn-block w-full">
+          <%= t('search.filters.apply', default: 'Apply Filters') %>
+        </button>
+      </div>
+    <% end %>

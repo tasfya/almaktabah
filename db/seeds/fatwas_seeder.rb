@@ -2,7 +2,7 @@ require_relative './base'
 
 module Seeds
   class FatwasSeeder < Base
-    def self.seed(from: nil, domain_id: nil)
+    def self.seed(from: nil, domain_ids: nil)
       puts "Seeding fatwas..."
       scholar = default_scholar
       processed = 0
@@ -44,7 +44,7 @@ module Seeds
 
         if fatwa.save
           processed += 1
-          assign_to_domain(fatwa, domain_id)
+          assign_to_domain(fatwa, domain_ids)
         end
         print "." if processed % 5 == 0
       end

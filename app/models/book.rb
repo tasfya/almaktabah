@@ -7,13 +7,16 @@ class Book < ApplicationRecord
 
   belongs_to :author, class_name: "Scholar", foreign_key: "author_id", inverse_of: :books
   has_one_attached :file, service: Rails.application.config.public_storage
-  has_one_attached :cover_image, service: Rails.application.config.public_storage
+  has_one_attached :cover_image, service: Rails.application.config.public_storage do |attachable|
+    attachable.variant :thumb, resize_to_limit: [ 150, 200 ]
+  end
 
   validates :author, presence: true
   validates :title, presence: true, uniqueness: true
 
   typesense enqueue: true, if: :published? do
     attribute :title
+    attribute :slug
     attribute :description
     attribute :content_text do
       description.present? ? description : ""
@@ -35,10 +38,20 @@ class Book < ApplicationRecord
     attribute :domain_ids do
       domain_assignments.pluck(:domain_id)
     end
+    attribute :published_at do
+      published_at.to_i
+    end
+    attribute :created_at do
+      created_at.to_i
+    end
+    attribute :thumbnail_url do
+      cover_image.attached? ? variant_url(cover_image.variant(:thumb)) : nil
+    end
 
     # Predefined fields with Arabic locale
     predefined_fields [
       { "name" => "title", "type" => "string", "locale" => "ar" },
+      { "name" => "slug", "type" => "string" },
       { "name" => "description", "type" => "string", "locale" => "ar" },
       { "name" => "content_text", "type" => "string", "locale" => "ar" },
       { "name" => "content_type", "type" => "string", "facet" => true },
@@ -47,7 +60,8 @@ class Book < ApplicationRecord
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
       { "name" => "published_at", "type" => "int64" },
-      { "name" => "created_at", "type" => "int64" }
+      { "name" => "created_at", "type" => "int64" },
+      { "name" => "thumbnail_url", "type" => "string" }
     ]
 
     default_sorting_field "published_at"

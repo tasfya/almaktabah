@@ -1,2 +1,2 @@
-web: bin/rails server
+web: RUBY_DEBUG_OPEN=true bin/rails server
 typesense: docker-compose up typesense

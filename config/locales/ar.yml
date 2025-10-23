@@ -1,18 +1,19 @@
 ar:
   search:
     index:
-      search_too_short: "يجب أن يكون البحث مكونًا من حرفين على الأقل"
-      results_found: "تم العثور على %{count} نتيجة للبحث عن"
+      results_found: "تم العثور على %{count} نتيجة"
       no_results_title: "لم يتم العثور على نتائج"
       no_results_description: "جرب البحث بكلمات مختلفة أو تحقق من الكتابة الصحيحة"
-      prompt_title: "ابحث في مكتبة الشيخ"
-      prompt_description: "يمكنك البحث في الكتب، المحاضرات، الدروس، الفتاوى، والمزيد"
+    results:
+      showing: "عرض %{count} من %{total} نتائج"
+      of: "من"
     search_section:
       view: "عرض"
       result_count:
         one: "نتيجة"
         other: "نتائج"
       view_all_in: "عرض جميع النتائج في %{type}"
+    view_all: "عرض الكل"
   audio_player:
     select_audio_clip: "اختر مقطع صوتي"
     library: "المكتبة"
@@ -52,6 +53,7 @@ ar:
       question: "السؤال"
       answer: "الإجابة"
       send_question_desc: "يمكنك إرسال أسئلتك إلى الشيخ من خلال صفحة التواصل"
+    question_label: "السؤال:"
   lectures:
     index:
       title: "المحاضرات والكلمات"
@@ -121,9 +123,7 @@ ar:
       subtitle: "تعرف على الشيخ وسيرته ونشاطاته العلمية"
       scholar:
         name: "الشيخ محمد بن رمزان الهاجري"
-        place_label: "المكان"
         place: "الجبيل، المنطقة الشرقية، المملكة العربية السعودية"
-        birth_year_label: "سنة الميلاد"
         birth_year: "1384 هـ"
         badge: "من علماء أهل السنة والجماعة"
         biography:

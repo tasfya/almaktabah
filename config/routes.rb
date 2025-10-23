@@ -5,10 +5,9 @@ Rails.application.routes.draw do
     mount MissionControl::Jobs::Engine => "/jobs"
   end
 
-  resources :books, only: [ :index ]
-  resources :lectures, only: [ :index ]
-  resources :series, only: [ :index ]
-  resources :articles, only: [ :index ]
+  resources :books, only: [ :index, :show ]
+  resources :series, only: [ :index, :show ]
+  resources :articles, only: [ :index, :show ]
 
   scope ":scholar_id" do
     resources :books, only: [ :show ]
@@ -18,9 +17,7 @@ Rails.application.routes.draw do
   end
 
 
-  resources :books, only: [ :index, :show ]
   resources :lectures, only: [ :index, :show ]
-  resources :series, only: [ :index, :show ]
   resources :lessons, only: [ :index, :show ]
   resources :news, only: [ :index, :show ]
   resources :scholars, only: [ :index, :show ]

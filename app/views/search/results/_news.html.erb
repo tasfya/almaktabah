@@ -1,0 +1,23 @@
+<div class="card card-border card-side bg-base-100 shadow-sm">
+  <div class="card-body">
+    <h2 class="card-title">
+      <%= link_to news['title'], news_path(news['slug']), class: "hover:text-primary" %>
+    </h2>
+    <% if news['description'].present? %>
+      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(news['description']), length: 150) %></p>
+    <% elsif news['content'].present? %>
+      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(news['content'].to_plain_text), length: 150) %></p>
+    <% end %>
+    <div class="card-actions mt-4">
+      <%= link_to news_path(news['slug']), class: "btn btn-primary btn-sm" do %>
+        <%= icon "eye", class: "w-4 h-4 mr-1" %>
+        <%= t('buttons.read') %>
+      <% end %>
+    </div>
+  </div>
+  <% if news['thumbnail_url'].present? %>
+    <figure class='shrink-0'>
+      <%= image_tag news['thumbnail_url'], alt: news['title'], class: "rounded-e-lg w-full h-full object-cover" %>
+    </figure>
+  <% end %>
+</div>

@@ -1,0 +1,50 @@
+<div class="card card-side card-border bg-base-100 shadow-sm">
+  <div class="card-body">
+    <h2 class="card-title">
+      <%= link_to lecture['title'], lecture_path(lecture['slug'], lecture['slug']), class: "hover:text-primary" %>
+      <div class="badge badge-secondary"><%= t("activerecord.attributes.lecture.kind.#{lecture['kind']}") if lecture['kind'] %></div>
+    </h2>
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-sm text-base-content/70">
+        <%= lecture['scholar'] %>
+      </span>
+    </div>
+    <div class="flex gap-2 mb-2">
+      <% if lecture['video_url'].present? %>
+        <div class="badge badge-primary"><%= t('common.video') %></div>
+      <% elsif lecture['audio_url'].present? %>
+        <div class="badge badge-info"><%= t('common.audio') %></div>
+      <% else %>
+        <div class="badge badge-neutral"><%= t('buttons.read') %></div>
+      <% end %>
+      <% if lecture['duration'].present? && lecture['duration'] > 0 %>
+        <div class="badge badge-outline">
+          <%= icon "clock", class: "w-3 h-3 mr-1" %>
+          <%= format_duration(lecture['duration']) %>
+        </div>
+      <% end %>
+    </div>
+    <% if lecture['description'].present? %>
+      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(lecture['description']), length: 150) %></p>
+    <% end %>
+    <div class="card-actions mt-4">
+      <%= link_to lecture_path(lecture['slug'], lecture['slug']), class: "btn btn-primary btn-sm" do %>
+        <%= icon "play", class: "w-4 h-4 mr-1" %>
+      <% end %>
+      <% if lecture['video_url'].present? %>
+        <%= link_to lecture['video_url'], class: "btn btn-outline btn-sm", target: "_blank", rel: "noopener" do %>
+          <%= icon "arrow-down-tray", class: "w-4 h-4 mr-1" %>
+        <% end %>
+      <% elsif lecture['audio_url'].present? %>
+        <%= link_to lecture['audio_url'], class: "btn btn-outline btn-sm", target: "_blank", rel: "noopener" do %>
+          <%= icon "arrow-down-tray", class: "w-4 h-4 mr-1" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <% if lecture['thumbnail_url'].present? %>
+    <figure>
+      <%= image_tag lecture['thumbnail_url'], alt: lecture['title'], class: "rounded-xl w-full object-contain" %>
+    </figure>
+  <% end %>
+</div>

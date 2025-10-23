@@ -2,7 +2,7 @@ require_relative './base'
 
 module Seeds
   class BooksSeeder < Base
-    def self.seed(from: nil, domain_id: nil)
+    def self.seed(from: nil, domain_ids: nil)
       puts "Seeding books..."
       scholar = default_scholar
       books_data = load_json('data/books.json').find { |item| item['type'] == 'table' }['data']
@@ -36,7 +36,7 @@ module Seeds
 
         if book.save
           processed += 1
-          assign_to_domain(book, domain_id)
+          assign_to_domain(book, domain_ids)
         end
         print "." if processed % 5 == 0
       end

@@ -4,7 +4,7 @@ class ScholarsController < ApplicationController
   before_action :setup_scholars_breadcrumbs
 
   def index
-    @q = Scholar.published.order(:first_name).ransack(params[:q])
+    @q = Scholar.published.for_domain_id(@domain.id).order(:first_name).ransack(params[:q])
     @pagy, @scholars = pagy(@q.result(distinct: true))
 
     respond_to do |format|

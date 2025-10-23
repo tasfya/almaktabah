@@ -17,6 +17,7 @@ class Fatwa < ApplicationRecord
 
   typesense enqueue: true, if: :published? do
     attribute :title
+    attribute :slug
     attribute :content_text do
       question_text = question.present? ? question.to_plain_text : ""
       answer_text = answer.present? ? answer.to_plain_text : ""
@@ -36,9 +37,16 @@ class Fatwa < ApplicationRecord
     attribute :domain_ids do
       domain_assignments.pluck(:domain_id)
     end
+    attribute :published_at do
+      published_at.to_i
+    end
+    attribute :created_at do
+      created_at.to_i
+    end
 
     predefined_fields [
       { "name" => "title", "type" => "string", "locale" => "ar" },
+      { "name" => "slug", "type" => "string" },
       { "name" => "content_text", "type" => "string", "locale" => "ar" },
       { "name" => "content_type", "type" => "string", "facet" => true },
       { "name" => "scholar_name", "type" => "string", "facet" => true },

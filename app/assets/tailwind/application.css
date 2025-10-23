@@ -145,3 +145,7 @@
     transform: scale(1.1);
   }
 }
+
+#console {
+  direction: ltr;
+}

@@ -14,6 +14,7 @@ class Lecture < ApplicationRecord
 
   typesense enqueue: true, if: :published? do
     attribute :title
+    attribute :slug
     attribute :description
     attribute :content_text do
       description.present? ? description : ""
@@ -22,8 +23,12 @@ class Lecture < ApplicationRecord
     attribute :content_type do
       "lecture"
     end
-    attribute :kind
-    attribute :duration
+    attribute :kind do
+      kind.presence || "sermon"
+    end
+    attribute :duration do
+      duration.to_i
+    end
     attribute :scholar_name do
       scholar.name
     end
@@ -34,9 +39,19 @@ class Lecture < ApplicationRecord
     attribute :domain_ids do
       domain_assignments.pluck(:domain_id)
     end
+    attribute :published_at do
+      published_at.to_i
+    end
+    attribute :created_at do
+      created_at.to_i
+    end
+    attribute :thumbnail_url do
+      thumbnail.attached? ? variant_url(thumbnail.variant(:thumb)) : nil
+    end
 
     predefined_fields [
       { "name" => "title", "type" => "string", "locale" => "ar" },
+      { "name" => "slug", "type" => "string" },
       { "name" => "description", "type" => "string", "locale" => "ar" },
       { "name" => "content_text", "type" => "string", "locale" => "ar" },
       { "name" => "content_type", "type" => "string", "facet" => true },
@@ -47,7 +62,8 @@ class Lecture < ApplicationRecord
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
       { "name" => "published_at", "type" => "int64" },
-      { "name" => "created_at", "type" => "int64" }
+      { "name" => "created_at", "type" => "int64" },
+      { "name" => "thumbnail_url", "type" => "string" }
     ]
 
     default_sorting_field "published_at"
@@ -56,7 +72,9 @@ class Lecture < ApplicationRecord
     token_separators [ "-", "_" ]
   end
 
-  has_one_attached :thumbnail, service: Rails.application.config.public_storage
+  has_one_attached :thumbnail, service: Rails.application.config.public_storage do |attachable|
+    attachable.variant :thumb, resize_to_limit: [ 200, 200 ]
+  end
   has_one_attached :audio, service: Rails.application.config.public_storage
   has_one_attached :video, service: Rails.application.config.public_storage
   has_one_attached :optimized_audio, service: Rails.application.config.public_storage

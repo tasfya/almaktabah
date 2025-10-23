@@ -1,0 +1,23 @@
+<div class="card card-border bg-base-100 shadow-sm">
+  <div class="card-body">
+    <h2 class="card-title">
+      <%= link_to article['title'], article_path(article['slug']), class: "hover:text-primary" %>
+    </h2>
+    <% if article['author'].present? %>
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-sm text-base-content/70">
+          <%= link_to article['author']['name'], scholar_path(article['author']['slug']), class: "hover:text-primary" %>
+        </span>
+      </div>
+    <% end %>
+    <% if article['content'].present? %>
+      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(article['content']), length: 150) %></p>
+    <% end %>
+    <div class="card-actions mt-4">
+      <%= link_to article_path(article['slug']), class: "btn btn-primary btn-sm" do %>
+        <%= icon "eye", class: "w-4 h-4 mr-1" %>
+        <%= t('buttons.read') %>
+      <% end %>
+    </div>
+  </div>
+</div>

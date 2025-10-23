@@ -12,17 +12,25 @@ SEEDERS = {
 parts = ENV["PARTS"]&.split(",") || SEEDERS.keys
 starting_from = ENV["FROM"]&.strip
 
-domain_id = ENV["DOMAIN_ID"]
-
-if domain_id
-  Domain.find(domain_id) || raise("Domain with ID #{domain_id} not found")
+domain_ids = if ENV["DOMAIN_ID"]
+  [ ENV["DOMAIN_ID"].to_i ]
 else
-  # Ensure a default domain for "localhost" exists
-  default_domain = Domain.find_or_create_by!(host: "127.0.0.1") do |domain|
-    domain.name = "localhost"
+  # Create two domains: 127.0.0.1 with default template, localhost with 3ilm template
+  domain1 = Domain.find_or_create_by!(host: "127.0.0.1") do |domain|
+    domain.name = "Default Domain"
+    domain.template_name = "default"
   end
-  domain_id = default_domain.id
-  puts "No domain ID specified, using default domain: #{default_domain.name} (ID: #{domain_id})"
+
+  domain2 = Domain.find_or_create_by!(host: "localhost") do |domain|
+    domain.name = "Localhost Domain"
+    domain.template_name = "3ilm"
+  end
+
+  puts "Using domains:"
+  puts "  - #{domain1.name} (#{domain1.host}) with template '#{domain1.template_name}' (ID: #{domain1.id})"
+  puts "  - #{domain2.name} (#{domain2.host}) with template '#{domain2.template_name}' (ID: #{domain2.id})"
+
+  [ domain1.id, domain2.id ]
 end
 
 puts "Running seeders for: #{parts.join(', ')}"
@@ -30,7 +38,7 @@ puts "Running seeders for: #{parts.join(', ')}"
 parts.each do |part|
   seeder = SEEDERS[part.strip]
   if seeder
-    seeder.seed(from: starting_from, domain_id: domain_id)
+    seeder.seed(from: starting_from, domain_ids: domain_ids)
   else
     puts "⚠️ Unknown seed part: #{part}"
   end

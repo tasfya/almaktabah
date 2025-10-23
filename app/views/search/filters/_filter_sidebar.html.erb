@@ -1,0 +1,48 @@
+<%# Mobile Toggle Button - Visible only on mobile %>
+<div class="lg:hidden mb-4">
+  <button
+    data-filter-sidebar-target="toggle"
+    data-action="click->filter-sidebar#toggle"
+    class="btn btn-primary btn-outline w-full justify-start gap-2"
+    aria-label="Toggle search filters"
+    aria-expanded="false">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-5 h-5 stroke-current">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+    <span>Search Filters</span>
+    <% if @selected_scholars.present? || @selected_content_types.present? %>
+      <div class="badge badge-primary badge-sm">
+        <%= @selected_scholars.to_a.count + @selected_content_types.to_a.count %>
+      </div>
+    <% end %>
+  </button>
+</div>
+<%# Drawer Overlay for Mobile %>
+<div
+  data-filter-sidebar-target="overlay"
+  class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"
+  data-action="click->filter-sidebar#close">
+</div>
+<%# Sidebar Drawer %>
+<div
+  data-filter-sidebar-target="sidebar"
+  data-controller="filter-sidebar"
+  class="drawer drawer-close lg:drawer-open h-auto lg:h-auto lg:static lg:translate-x-0 fixed top-0 left-0 z-50 w-80 max-w-[80vw] h-full bg-base-100 lg:bg-transparent lg:border-r lg:border-base-300 lg:shadow-none shadow-2xl transform transition-transform duration-300 ease-in-out overflow-y-auto"
+  role="complementary"
+  aria-label="Search filters sidebar">
+  <div class="drawer-content flex flex-col h-full p-4 lg:p-0">
+    <%# Mobile Header with Close Button %>
+    <div class="flex items-center justify-between mb-6 lg:hidden">
+      <h2 class="text-lg font-semibold">Search Filters</h2>
+      <button
+        data-action="click->filter-sidebar#close"
+        class="btn btn-circle btn-ghost btn-sm"
+        aria-label="Close filters">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 stroke-current">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <%= render "search/filters/filters" %>
+  </div>
+</div>

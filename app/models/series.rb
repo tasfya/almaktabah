@@ -11,6 +11,7 @@ class Series < ApplicationRecord
 
     typesense enqueue: true, if: :published? do
         attribute :title
+        attribute :slug
         attribute :description
         attribute :content_text do
             description.present? ? description : ""
@@ -32,9 +33,16 @@ class Series < ApplicationRecord
         attribute :domain_ids do
             domain_assignments.pluck(:domain_id)
         end
+        attribute :published_at do
+          published_at.to_i
+        end
+        attribute :created_at do
+          created_at.to_i
+        end
 
         predefined_fields [
             { "name" => "title", "type" => "string", "locale" => "ar" },
+            { "name" => "slug", "type" => "string" },
             { "name" => "description", "type" => "string", "locale" => "ar" },
             { "name" => "content_text", "type" => "string", "locale" => "ar" },
             { "name" => "content_type", "type" => "string", "facet" => true },

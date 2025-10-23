@@ -57,13 +57,22 @@ module Seeds
       ) do |scholar|
         scholar.published = true
       end
+
+      # Assign the default scholar to all domains
+
+      domain_ids = Domain.pluck(:id)
+      assign_to_domain(@default_scholar, domain_ids) if domain_ids.any?
+
+      @default_scholar
     end
 
-    def self.assign_to_domain(record, domain_id)
-      return unless domain_id
+    def self.assign_to_domain(record, domain_ids)
+      return unless domain_ids
 
-      # Directly create the domain assignment without querying the domain
-      record.domain_assignments.find_or_create_by!(domain_id: domain_id)
+      Array(domain_ids).each do |domain_id|
+        # Directly create the domain assignment without querying the domain
+        record.domain_assignments.find_or_create_by!(domain_id: domain_id)
+      end
     end
   end
 end

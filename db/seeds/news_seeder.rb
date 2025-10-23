@@ -3,7 +3,7 @@ require 'active_support/inflector'
 
 module Seeds
   class NewsSeeder < Base
-    def self.seed(from: nil, domain_id: nil)
+    def self.seed(from: nil, domain_ids: nil)
       puts "📰 Seeding news..."
 
       news_array = load_json('data/news.json')
@@ -38,7 +38,7 @@ module Seeds
 
           if news.save
             processed += 1
-            assign_to_domain(news, domain_id)
+            assign_to_domain(news, domain_ids)
             print "." if processed % 10 == 0
           else
             errors << "❌ Failed to save news: #{title} — #{news.errors.full_messages.join(', ')}"

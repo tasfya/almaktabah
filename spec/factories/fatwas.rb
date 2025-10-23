@@ -4,12 +4,13 @@ FactoryBot.define do
       title { Faker::Book.title }
       question { Faker::Lorem.paragraph }
       answer { Faker::Lorem.paragraphs(number: 20).join("\n\n") }
-      published { true }
+      published
       category { Faker::Book.genre }
       created_at { Time.now }
       updated_at { Time.now }
       audio { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
       video { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'test_video.mp4'), 'video/mp4') }
+
 
       transient do
         assign_domain { true }

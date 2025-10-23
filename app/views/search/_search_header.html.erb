@@ -1,0 +1,108 @@
+<%# Search Header Partial - Desktop search title, form, and active filters %>
+<div class="hidden lg:block">
+  <%# Desktop Search Title and Results Count %>
+  <div class="card bg-base-100 shadow-sm mb-6">
+    <div class="card-body">
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="card-title text-2xl">
+          <%= t('navigation.search') %>
+          <% if @total_results.present? && @total_results > 0 %>
+            <span class="badge badge-primary badge-lg ml-2">
+              <%= number_with_delimiter(@total_results) %> <%= t('search.results.count', default: 'results') %>
+            </span>
+          <% end %>
+        </h1>
+        <%# Active Filters Summary %>
+        <% if @selected_scholars.present? || @selected_content_types.present? %>
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-600">
+              <%= t('search.filters.active', default: 'Active filters:') %>
+            </span>
+            <div class="badge badge-outline">
+              <%= @selected_scholars.to_a.count + @selected_content_types.to_a.count %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <%# Desktop Search Form %>
+      <div class="mb-6">
+        <%= form_with url: search_path, method: :get, local: true,
+          class: "flex gap-2", data: { controller: "search-form" } do |form| %>
+          <div class="flex-1">
+            <%= form.search_field :q, value: @search_query,
+            placeholder: t('forms.search_placeholder'),
+            class: "input input-bordered w-full focus:ring-2 focus:ring-primary focus:border-transparent",
+            data: {
+              action: "input->search-form#search",
+              "search-form-target": "input"
+            } %>
+          </div>
+          <%= form.submit t('forms.search'), class: "btn btn-primary" %>
+        <% end %>
+      </div>
+      <%# Active Filters Display for Desktop %>
+      <% if @selected_scholars.present? || @selected_content_types.present? %>
+        <div class="bg-base-200 rounded-lg p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold text-sm">
+              <%= t('search.filters.active_title', default: 'Active Filters') %>
+            </h3>
+            <%= link_to search_path(q: @search_query),
+                class: "btn btn-outline btn-xs" do %>
+              <%= t('search.filters.clear_all', default: 'Clear All') %>
+            <% end %>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <% @selected_scholars&.each do |scholar_id| %>
+              <% scholar = Scholar.find_by(id: scholar_id) %>
+              <% if scholar %>
+                <div class="badge badge-primary gap-2">
+                  <%= scholar.name %>
+                  <%= link_to search_path(q: @search_query, scholars: params[:scholars]&.reject { |s| s == scholar_id }),
+                      class: "hover:text-white/80",
+                      aria: { label: "Remove #{scholar.name} filter" } do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-3 h-3 stroke-current">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  <% end %>
+                </div>
+              <% end %>
+            <% end %>
+            <% @selected_content_types&.each do |content_type| %>
+              <div class="badge badge-secondary gap-2">
+                <%= content_type.humanize %>
+                <%= link_to search_path(q: @search_query, content_types: params[:content_types]&.reject { |c| c == content_type }),
+                    class: "hover:text-white/80",
+                    aria: { label: "Remove #{content_type.humanize} filter" } do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-3 h-3 stroke-current">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<%# Mobile Search Form (Hidden by default, shown when needed) %>
+<div class="lg:hidden mb-4">
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body p-4">
+      <%= form_with url: search_path, method: :get, local: true,
+        class: "flex gap-2", data: { controller: "search-form" } do |form| %>
+        <div class="flex-1">
+          <%= form.search_field :q, value: @search_query,
+          placeholder: t('forms.search_placeholder'),
+          class: "input input-bordered input-sm w-full focus:ring-2 focus:ring-primary focus:border-transparent",
+          data: {
+            action: "input->search-form#search",
+            "search-form-target": "input"
+          } %>
+        </div>
+        <%= form.submit t('forms.search'), class: "btn btn-primary btn-sm" %>
+      <% end %>
+    </div>
+  </div>
+</div>

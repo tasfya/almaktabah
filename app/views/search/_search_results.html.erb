@@ -1,0 +1,90 @@
+<%# Search Results Partial - Results display logic and no results state %>
+<div id="search_results" data-turbo-frame="search_results">
+  <% if @search_results.present? && @total_found > 0 %>
+    <%# Results Summary %>
+    <div class="mb-6">
+      <div class="flex items-center justify-between">
+        <p class="text-gray-600">
+          <%= t('search.results.showing',
+                default: 'Showing %{count} of %{total} results',
+                count: number_with_delimiter(@total_hits),
+                total: number_with_delimiter(@total_found)) %>
+        </p>
+        <%# Sort Options (if needed) %>
+        <% if @search_query.present? %>
+          <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-outline btn-sm">
+              <%= t('search.sort.label', default: 'Sort') %>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 ml-1">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </label>
+            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+              <li><%= link_to t('search.sort.relevance', default: 'Relevance'), search_path(q: @search_query, scholars: params[:scholars], content_types: params[:content_types], sort: 'relevance') %></li>
+              <li><%= link_to t('search.sort.newest', default: 'Newest'), search_path(q: @search_query, scholars: params[:scholars], content_types: params[:content_types], sort: 'newest') %></li>
+              <li><%= link_to t('search.sort.oldest', default: 'Oldest'), search_path(q: @search_query, scholars: params[:scholars], content_types: params[:content_types], sort: 'oldest') %></li>
+            </ul>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <%# Search Results by Content Type %>
+    <div class="space-y-8">
+      <% @search_results.each do |model_name, data| %>
+        <% next unless data["hits"].present? %>
+        <%= render "search/search_section", model_name: model_name, data: data %>
+      <% end %>
+    </div>
+    <%# Pagination (if needed) %>
+    <% if @pagy && @pagy.pages > 1 %>
+      <div class="flex justify-center mt-8">
+        <%== pagy_nav(@pagy) %>
+      </div>
+    <% end %>
+  <% else %>
+    <%# No Results State %>
+    <div class="flex flex-col items-center justify-center py-12 text-center">
+      <div class="mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-16 h-16 text-gray-400 mx-auto">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+      <h3 class="text-xl font-semibold text-gray-900 mb-2">
+        <%= t('.no_results_title', default: 'No results found') %>
+      </h3>
+      <p class="text-gray-600 mb-6 max-w-md">
+        <%= t('.no_results_description', default: 'We couldn\'t find any results matching your search. Try adjusting your filters or search terms.') %>
+      </p>
+      <%# Clear Filters Button (if filters are active) %>
+      <% if @selected_scholars.present? || @selected_content_types.present? || @search_query.present? %>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <% if @selected_scholars.present? || @selected_content_types.present? %>
+            <%= link_to search_path(q: @search_query),
+                class: "btn btn-outline" do %>
+              <%= t('search.filters.clear_all', default: 'Clear Filters') %>
+            <% end %>
+          <% end %>
+          <% if @search_query.present? %>
+            <%= link_to search_path,
+                class: "btn btn-primary" do %>
+              <%= t('search.new_search', default: 'New Search') %>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <%# Search Suggestions %>
+        <div class="bg-base-200 rounded-lg p-6 max-w-lg">
+          <h4 class="font-semibold mb-3">
+            <%= t('search.suggestions.title', default: 'Search Suggestions') %>
+          </h4>
+          <ul class="text-left space-y-2 text-sm">
+            <li>• <%= t('search.suggestions.try_different', default: 'Try different keywords') %></li>
+            <li>• <%= t('search.suggestions.check_spelling', default: 'Check your spelling') %></li>
+            <li>• <%= t('search.suggestions.use_fewer', default: 'Use fewer filters') %></li>
+            <li>• <%= t('search.suggestions.browse_content', default: 'Browse all content') %></li>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,27 @@
+<div class="card bg-base-100 shadow-sm">
+  <div class="card-body">
+    <h2 class="card-title">
+      <%= link_to series['title'], series_path(series['slug']), class: "hover:text-primary" %>
+    </h2>
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-sm text-base-content/70">
+        <%= series['scholar'] %>
+      </span>
+    </div>
+    <div class="flex gap-2 mb-2">
+      <div class="badge badge-outline">
+        <%= icon "book-open", class: "w-3 h-3 mr-1" %>
+        <%= series['lesson_count'] %> <%= t('activerecord.model_names.lessons') %>
+      </div>
+    </div>
+    <% if series['description'].present? %>
+      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(series['description']), length: 150) %></p>
+    <% end %>
+    <div class="card-actions justify-end mt-4">
+      <%= link_to series_path(series['slug']), class: "btn btn-primary btn-sm" do %>
+        <%= icon "folder", class: "w-4 h-4 mr-1" %>
+        <%= t('buttons.view') %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -4,7 +4,7 @@ FactoryBot.define do
     description { Faker::Lorem.paragraph }
     category { Faker::Book.genre }
     scholar { association(:scholar) }
-    published { true }
+    published
 
 
     trait :with_lessons do
