@@ -22,7 +22,9 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :category, as: :text, sortable: true, searchable: true
     field :content, as: :trix
     field :published, as: :boolean, sortable: true
-    field :scholar, as: :belongs_to, sortable: true, searchable: true, use_resource: Avo::Resources::Scholar, placeholder: "Search scholars…"
+    field :scholar, as: :belongs_to, attach_scope: -> {
+      query.joins(:users).where(users: { id: Avo::Current.user.id }).limit(50)
+    }
     field :kind, as: :select, enum: Lecture.kinds, sortable: true
     field :youtube_url, as: :text, help: "YouTube URL for video lessons"
     field :video_url, as: :text, help: "URL for video lessons"
