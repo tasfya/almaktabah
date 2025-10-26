@@ -1,2 +1,2 @@
 web: bin/rails server
-typesense: docker-compose up typesense
+typesense: docker compose up typesense

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_14_095132) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_26_142524) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -347,6 +347,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_14_095132) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "user_scholars", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "scholar_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scholar_id"], name: "index_user_scholars_on_scholar_id"
+    t.index ["user_id"], name: "index_user_scholars_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -377,4 +386,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_14_095132) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "user_scholars", "scholars"
+  add_foreign_key "user_scholars", "users"
 end

@@ -22,7 +22,9 @@ class Avo::Resources::Fatwa < Avo::BaseResource
     field :question, as: :trix
     field :answer, as: :trix
     field :published, as: :boolean, sortable: true
-    field :scholar, as: :belongs_to, sortable: true, searchable: true, use_resource: Avo::Resources::Scholar, placeholder: "Search scholars…"
+    field :scholar, as: :belongs_to, attach_scope: -> {
+      query.joins(:users).where(users: { id: Avo::Current.user.id }).limit(50)
+    }
     field :published_at, as: :date_time, help: "The date and time when this fatwa was published", hide_on: [ :new, :edit ], sortable: true
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes
