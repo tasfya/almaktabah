@@ -66,4 +66,8 @@ class Series < ApplicationRecord
     def self.ransackable_associations(auth_object = nil)
       [ "lessons", "scholar" ]
     end
+
+    def seo_show_title
+      "#{title} - #{scholar.full_name}"
+    end
 end
