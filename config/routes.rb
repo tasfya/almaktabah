@@ -5,26 +5,22 @@ Rails.application.routes.draw do
     mount MissionControl::Jobs::Engine => "/jobs"
   end
 
-  resources :books, only: [ :index ]
-  resources :lectures, only: [ :index ]
-  resources :series, only: [ :index ]
-  resources :articles, only: [ :index ]
+  resources :books, only: [ :index ], path: I18n.t("routes.books", default: "books")
+  resources :lectures, only: [ :index ], path: I18n.t("routes.lectures", default: "lectures")
+  resources :series, only: [ :index ], path: I18n.t("routes.series", default: "series")
+  resources :articles, only: [ :index ], path: I18n.t("routes.articles", default: "articles")
 
   scope ":scholar_id" do
-    resources :books, only: [ :show ]
-    resources :articles, only: [ :show ]
-    resources :series, only: [ :show ]
-    get "lectures(/:kind)/:id", to: "lectures#show", as: "lecture"
+    resources :books, only: [ :show ], path: I18n.t("routes.books", default: "books")
+    resources :articles, only: [ :show ], path: I18n.t("routes.articles", default: "articles")
+    resources :series, only: [ :show ], path: I18n.t("routes.series", default: "series")
+    get "#{I18n.t("routes.lectures", default: "lectures")}/(:kind)/:id", to: "lectures#show", as: "lecture"
   end
 
-
-  resources :books, only: [ :index, :show ]
-  resources :lectures, only: [ :index, :show ]
-  resources :series, only: [ :index, :show ]
-  resources :lessons, only: [ :index, :show ]
-  resources :news, only: [ :index, :show ]
-  resources :scholars, only: [ :index, :show ]
-  resources :fatwas, only: [ :index, :show ]
+  resources :lessons, only: [ :index, :show ], path: I18n.t("routes.lessons", default: "lessons")
+  resources :news, only: [ :index, :show ], path: I18n.t("routes.news", default: "news")
+  resources :scholars, only: [ :index, :show ], path: I18n.t("routes.scholars", default: "scholars")
+  resources :fatwas, only: [ :index, :show ], path: I18n.t("routes.fatwas", default: "fatwas")
 
   # Generic play route for all playable resources
   post "play/:resource_type/:id", to: "play#show", as: "play"
