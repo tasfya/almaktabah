@@ -101,4 +101,12 @@ class Lecture < ApplicationRecord
   def generate_optimize_audio_bucket_key
     "all-audios/#{scholar.name}/lectures/#{kind}/#{title}.mp3"
   end
+
+  def kind_translated
+    I18n.t("activerecord.attributes.lecture.kind.#{kind}")
+  end
+
+  def seo_show_title
+    "#{kind_translated} - #{title} - #{scholar.full_name}"
+  end
 end
