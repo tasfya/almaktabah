@@ -24,7 +24,9 @@ class Avo::Resources::Book < Avo::BaseResource
     field :downloads, as: :number, sortable: true
     field :file, as: :file
     field :cover_image, as: :file
-    field :scholar, as: :belongs_to, resource: "Scholar", sortable: true, searchable: true
+    field :scholar, as: :belongs_to, attach_scope: -> {
+      query.joins(:users).where(users: { id: Avo::Current.user.id }).limit(50)
+    }
     field :created_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
     field :updated_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
   end

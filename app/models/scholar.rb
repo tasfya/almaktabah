@@ -3,6 +3,8 @@ class Scholar < ApplicationRecord
   include Publishable
   include Sluggable
 
+  has_many :user_scholars, dependent: :destroy
+  has_many :users, through: :user_scholars
   has_many :articles, foreign_key: :author_id, dependent: :restrict_with_error
   has_many :books, foreign_key: :author_id, dependent: :restrict_with_error
   has_many :lectures, dependent: :restrict_with_error
