@@ -96,3 +96,11 @@ en:
     scholars: "Scholars"
     about: "About"
     contact: "Contact"
+  routes:
+    books: "books"
+    articles: "articles"
+    series: "series"
+    lectures: "lectures"
+    news: "news"
+    scholars: "scholars"
+    fatwas: "fatwas"
