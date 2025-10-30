@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     get "#{I18n.t("routes.lectures", default: "lectures")}/(:kind)/:id", to: "lectures#show", as: "lecture"
   end
 
-  resources :lessons, only: [ :index, :show ], path: I18n.t("routes.lectures", default: "lectures")
+  resources :lessons, only: [ :index, :show ], path: I18n.t("routes.lessons", default: "lessons")
   resources :news, only: [ :index, :show ], path: I18n.t("routes.news", default: "news")
   resources :scholars, only: [ :index, :show ], path: I18n.t("routes.scholars", default: "scholars")
   resources :fatwas, only: [ :index, :show ], path: I18n.t("routes.fatwas", default: "fatwas")
