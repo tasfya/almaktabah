@@ -65,7 +65,7 @@ class Scholar < ApplicationRecord
 
   # Helper method to get full name
   def name
-    "#{first_name} #{last_name}".strip
+    "#{full_name}".strip
   end
 
   def self.ransackable_attributes(auth_object = nil)
