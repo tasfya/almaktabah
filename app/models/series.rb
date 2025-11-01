@@ -32,6 +32,12 @@ class Series < ApplicationRecord
         attribute :domain_ids do
             domain_assignments.pluck(:domain_id)
         end
+        attribute :published_at do
+            published_at&.to_i
+        end
+        attribute :created_at do
+            created_at.to_i
+        end
 
         predefined_fields [
             { "name" => "title", "type" => "string", "locale" => "ar" },

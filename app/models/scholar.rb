@@ -41,6 +41,12 @@ class Scholar < ApplicationRecord
     attribute :media_type do
       "text"
     end
+    attribute :published_at do
+      published_at&.to_i
+    end
+    attribute :created_at do
+      created_at.to_i
+    end
 
     predefined_fields [
       { "name" => "name", "type" => "string", "locale" => "ar", "facet" => true },
