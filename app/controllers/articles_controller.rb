@@ -27,12 +27,16 @@ class ArticlesController < ApplicationController
       breadcrumb_for(t("breadcrumbs.articles"), articles_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.articles"), articles_path)
-      breadcrumb_for(@article.title, article_path(@article))
+      breadcrumb_for(@article.title, article_path(@scholar, @article))
     end
   end
 
   def set_article
-    @article = Article.for_domain_id(@domain.id).published.find(params[:id])
+    @scholar = Scholar.friendly.find(params[:scholar_id])
+    @article = @scholar.articles.friendly
+                       .for_domain_id(@domain.id)
+                       .published
+                       .find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to articles_path, alert: t("messages.article_not_found")
   end

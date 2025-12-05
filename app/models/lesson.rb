@@ -22,8 +22,14 @@ class Lesson < ApplicationRecord
     attribute :content_type do
       "lesson"
     end
+    attribute :slug do
+      id.to_s  # Lessons use id for URL, not friendly_id
+    end
     attribute :series_title do
       series.title
+    end
+    attribute :series_slug do
+      series.slug
     end
     attribute :series_id
     attribute :position
@@ -40,13 +46,21 @@ class Lesson < ApplicationRecord
     attribute :domain_ids do
       domain_assignments.pluck(:domain_id)
     end
+    attribute :published_at do
+      published_at&.to_i
+    end
+    attribute :created_at do
+      created_at&.to_i
+    end
 
     predefined_fields [
       { "name" => "title", "type" => "string", "locale" => "ar" },
       { "name" => "description", "type" => "string", "locale" => "ar" },
       { "name" => "content_text", "type" => "string", "locale" => "ar" },
       { "name" => "content_type", "type" => "string", "facet" => true },
+      { "name" => "slug", "type" => "string" },
       { "name" => "series_title", "type" => "string", "facet" => true },
+      { "name" => "series_slug", "type" => "string" },
       { "name" => "series_id", "type" => "int32", "facet" => true },
       { "name" => "position", "type" => "int32" },
       { "name" => "duration", "type" => "int32" },

@@ -1,7 +1,15 @@
 ar:
+  content_types:
+    book: "كتاب"
+    lecture: "محاضرة"
+    lesson: "درس"
+    series: "سلسلة"
+    fatwa: "فتوى"
+    news: "خبر"
+    scholar: "عالم"
+    article: "مقال"
   search:
     index:
-      search_too_short: "يجب أن يكون البحث مكونًا من حرفين على الأقل"
       results_found: "تم العثور على %{count} نتيجة للبحث عن"
       no_results_title: "لم يتم العثور على نتائج"
       no_results_description: "جرب البحث بكلمات مختلفة أو تحقق من الكتابة الصحيحة"
@@ -52,6 +60,13 @@ ar:
       question: "السؤال"
       answer: "الإجابة"
       send_question_desc: "يمكنك إرسال أسئلتك إلى الشيخ من خلال صفحة التواصل"
+  articles:
+    index:
+      title: "المقالات"
+      description: "تصفح مجموعة من المقالات العلمية والدينية"
+      no_articles: "لا توجد مقالات متاحة حالياً"
+    show:
+      share_article: "شارك المقال"
   lectures:
     index:
       title: "المحاضرات والكلمات"
@@ -203,6 +218,7 @@ ar:
     lessons: "الدروس العلمية"
     series: "السلاسل"
     scholars: "العلماء"
+    articles: "المقالات"
     search: "البحث"
     quick_links: "روابط سريعة"
     content: "المحتوى"
@@ -243,6 +259,7 @@ ar:
     link: "الرابط"
     share_on: "شارك عبر"
     book_not_found: "الكتاب غير موجود"
+    article_not_found: "المقال غير موجود"
     lecture_not_found: "المحاضرة غير موجودة"
     lesson_not_found: "الدرس غير موجود"
     series_not_found: "السلسلة غير موجودة"
@@ -408,6 +425,7 @@ ar:
   messages:
     contact_success: "تم إرسال رسالتك بنجاح. سنقوم بالرد عليك في أقرب وقت ممكن."
     book_not_found: "الكتاب غير موجود"
+    article_not_found: "المقال غير موجود"
     lecture_not_found: "المحاضرة غير موجودة"
     lesson_not_found: "الدرس غير موجود"
     series_not_found: "السلسلة غير موجودة"
@@ -440,6 +458,7 @@ ar:
     fatwas: "الفتاوى"
     series: "السلاسل العلمية"
     news: "الأخبار"
+    articles: "المقالات"
     scholars: "العلماء"
     about: "حول"
     contact: "اتصل بنا"

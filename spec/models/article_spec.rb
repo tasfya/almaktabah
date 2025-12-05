@@ -20,7 +20,7 @@ RSpec.describe Article, type: :model do
   describe 'scopes and ransack' do
     describe '.ransackable_attributes' do
       it 'includes expected attributes' do
-        expected_attributes = [ "id", "title", "author_id", "published", "published_at", "created_at", "updated_at" ]
+        expected_attributes = [ "id", "title", "description", "slug", "author_id", "published", "published_at", "created_at", "updated_at" ]
         expect(Article.ransackable_attributes).to match_array(expected_attributes)
       end
     end
