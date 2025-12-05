@@ -22,7 +22,7 @@
           <% if @article.content.present? %>
             <section class="mb-8">
               <div class="prose prose-lg max-w-none">
-                <%= @article.content %>
+                <%= @article.content.to_s %>
               </div>
             </section>
           <% end %>
