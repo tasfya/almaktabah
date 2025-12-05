@@ -13,7 +13,7 @@ xdescribe 'Lectures API', type: :request do
     host! domain.host
   end
 
-  path '/lectures' do
+  path '/%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A7%D8%AA' do
     get 'List lectures' do
       tags 'Lectures'
       produces 'application/json'

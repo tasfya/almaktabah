@@ -12,7 +12,7 @@ xdescribe 'Fatwas API', type: :request do
     host! domain.host
   end
 
-  path '/fatwas' do
+  path '/%D8%A7%D9%84%D9%81%D8%AA%D8%A7%D9%88%D9%89' do
     get 'List fatwas' do
       tags 'Fatwas'
       produces 'application/json'

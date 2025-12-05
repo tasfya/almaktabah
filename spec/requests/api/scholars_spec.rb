@@ -3,7 +3,7 @@ require 'openapi_helper'
 xdescribe 'Scholars API', type: :request do
   let!(:scholar) { create(:scholar, :published) }
 
-  path '/scholars' do
+  path '/%D8%A7%D9%84%D8%B9%D9%84%D9%85%D8%A7%D8%A1' do
     get 'List scholars' do
       tags 'Scholars'
       produces 'application/json'

@@ -13,7 +13,7 @@ xdescribe 'News API', type: :request do
     host! domain.host
   end
 
-  path '/news' do
+  path '/%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1' do
     get 'List news' do
       tags 'News'
       produces 'application/json'
