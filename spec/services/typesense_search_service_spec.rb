@@ -88,27 +88,21 @@ RSpec.describe TypesenseSearchService, type: :service do
     end
 
     context 'with valid query' do
+      # Results order must match CONTENT_COLLECTIONS: News, Fatwa, Lecture, Lesson, Series, Article, Book
       let(:typesense_response) do
         {
           "results" => [
             {
-              "request_params" => { "collection" => "Book_test" },
-              "found" => 2,
-              "hits" => [
-                {
-                  "document" => { "id" => "1", "title" => "Test Book", "content_type" => "book" },
-                  "highlights" => [ { "field" => "title", "snippet" => "<mark>Test</mark> Book" } ],
-                  "text_match" => 100
-                },
-                {
-                  "document" => { "id" => "2", "title" => "Another Test", "content_type" => "book" },
-                  "highlights" => [],
-                  "text_match" => 90
-                }
-              ],
-              "facet_counts" => [
-                { "field_name" => "content_type", "counts" => [ { "value" => "book", "count" => 2 } ] }
-              ]
+              "request_params" => { "collection" => "News_test" },
+              "found" => 0,
+              "hits" => [],
+              "facet_counts" => []
+            },
+            {
+              "request_params" => { "collection" => "Fatwa_test" },
+              "found" => 0,
+              "hits" => [],
+              "facet_counts" => []
             },
             {
               "request_params" => { "collection" => "Lecture_test" },
@@ -129,18 +123,6 @@ RSpec.describe TypesenseSearchService, type: :service do
               "facet_counts" => []
             },
             {
-              "request_params" => { "collection" => "Fatwa_test" },
-              "found" => 0,
-              "hits" => [],
-              "facet_counts" => []
-            },
-            {
-              "request_params" => { "collection" => "News_test" },
-              "found" => 0,
-              "hits" => [],
-              "facet_counts" => []
-            },
-            {
               "request_params" => { "collection" => "Article_test" },
               "found" => 1,
               "hits" => [
@@ -152,6 +134,25 @@ RSpec.describe TypesenseSearchService, type: :service do
               ],
               "facet_counts" => [
                 { "field_name" => "content_type", "counts" => [ { "value" => "article", "count" => 1 } ] }
+              ]
+            },
+            {
+              "request_params" => { "collection" => "Book_test" },
+              "found" => 2,
+              "hits" => [
+                {
+                  "document" => { "id" => "1", "title" => "Test Book", "content_type" => "book" },
+                  "highlights" => [ { "field" => "title", "snippet" => "<mark>Test</mark> Book" } ],
+                  "text_match" => 100
+                },
+                {
+                  "document" => { "id" => "2", "title" => "Another Test", "content_type" => "book" },
+                  "highlights" => [],
+                  "text_match" => 90
+                }
+              ],
+              "facet_counts" => [
+                { "field_name" => "content_type", "counts" => [ { "value" => "book", "count" => 2 } ] }
               ]
             }
           ]
