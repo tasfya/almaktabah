@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_15_173451) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_05_075738) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -65,8 +65,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_15_173451) do
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
     t.datetime "published_at"
+    t.string "slug"
     t.index ["author_id"], name: "index_articles_on_author_id"
     t.index ["published"], name: "index_articles_on_published"
+    t.index ["slug"], name: "index_articles_on_slug", unique: true
   end
 
   create_table "books", force: :cascade do |t|

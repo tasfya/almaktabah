@@ -6,7 +6,8 @@ SEEDERS = {
   "lessons" => Seeds::LessonsSeeder,
   "lectures" => Seeds::LecturesSeeder,
   "news" => Seeds::NewsSeeder,
-  "fatwas" => Seeds::FatwasSeeder
+  "fatwas" => Seeds::FatwasSeeder,
+  "articles" => Seeds::ArticlesSeeder
 }
 
 parts = ENV["PARTS"]&.split(",") || SEEDERS.keys

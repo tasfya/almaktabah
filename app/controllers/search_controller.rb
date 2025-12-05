@@ -4,15 +4,7 @@
 
     def index
       @query = params[:q]&.strip
-      @results = {}
-      @total_results = 0
-
-      if @query.present? && @query.length >= 2
-        search_all_models
-        @total_results = @results.values.map(&:count).sum
-      elsif @query.present? && @query.length < 2
-        flash.now[:alert] = "يجب أن يكون البحث مكونًا من حرفين على الأقل"
-      end
+      perform_typesense_search
     end
 
     private
@@ -21,55 +13,20 @@
       breadcrumb_for(t("navigation.search"), search_path)
     end
 
-    def search_all_models
-      @results[:books] = search_books
-      @results[:lectures] = search_lectures
-      @results[:lessons] = search_lessons
-      @results[:series] = search_series
-      @results[:news] = search_news
-      @results[:fatwas] = search_fatwas
-      @results[:scholars] = search_scholars # TODO: only for 3ilm.org
+    def perform_typesense_search
+      result = TypesenseSearchService.new(search_params).search
+
+      @facets = result.facets
+      @total_results = result.total_found
+      @results = result.grouped_hits  # Pass SearchHit objects directly, no DB lookup
     end
 
-    def search_books
-      Book.includes(:scholar).published.for_domain_id(@domain).ransack(
-        title_or_description_cont: @query
-      ).result(distinct: true).recent.limit(5)
-    end
-
-    def search_lectures
-      Lecture.published.for_domain_id(@domain).published.ransack(
-        title_or_description_cont: @query
-      ).result(distinct: true).recent.limit(5)
-    end
-
-    def search_lessons
-      Lesson.includes(:series).published.for_domain_id(@domain).ransack(
-        title_or_description_cont: @query
-      ).result(distinct: true).limit(5)
-    end
-
-    def search_series
-      Series.published.for_domain_id(@domain).ransack(
-        title_or_description_cont: @query
-      ).result(distinct: true).recent.limit(5)
-    end
-
-    def search_news
-      News.published.for_domain_id(@domain).ransack(
-        title_or_description_cont: @query
-      ).result(distinct: true).recent.limit(5)
-    end
-
-    def search_fatwas
-      Fatwa.published.for_domain_id(@domain).ransack(
-        title_cont: @query
-      ).result(distinct: true).order(created_at: :desc).limit(5)
-    end
-
-    def search_scholars
-      Scholar.published.ransack(
-        first_name_or_last_name_cont: @query
-      ).result(distinct: true).order(:first_name).limit(5)
+    def search_params
+      {
+        q: @query,
+        domain_id: @domain&.id,
+        page: params[:page],
+        per_page: 5
+      }
     end
   end
