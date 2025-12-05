@@ -7,7 +7,6 @@ RSpec.describe TypesenseSearchService::SearchHit do
         "id" => "123",
         "title" => "Test Title",
         "description" => "Test description",
-        "content_type" => "book",
         "slug" => "test-book",
         "scholar_name" => "Test Scholar",
         "scholar_slug" => "test-scholar",
@@ -60,18 +59,18 @@ RSpec.describe TypesenseSearchService::SearchHit do
       expect(hit.title).to eq("Test Title")
     end
 
-    context 'for scholar' do
-      let(:scholar_hit_data) do
+    context 'when title is absent but name exists' do
+      let(:name_hit_data) do
         {
-          "document" => { "id" => "1", "name" => "Scholar Name", "content_type" => "scholar" },
+          "document" => { "id" => "1", "name" => "Some Name" },
           "highlights" => [],
           "text_match" => 50
         }
       end
 
       it 'falls back to name field' do
-        scholar_hit = described_class.new(scholar_hit_data, "scholar")
-        expect(scholar_hit.title).to eq("Scholar Name")
+        name_hit = described_class.new(name_hit_data, "book")
+        expect(name_hit.title).to eq("Some Name")
       end
     end
   end
@@ -157,30 +156,6 @@ RSpec.describe TypesenseSearchService::SearchHit do
     end
   end
 
-  describe '#first_name and #last_name' do
-    let(:scholar_hit_data) do
-      {
-        "document" => {
-          "id" => "1",
-          "first_name" => "Ahmad",
-          "last_name" => "Ibn Taymiyyah",
-          "slug" => "ahmad-ibn-taymiyyah"
-        },
-        "highlights" => []
-      }
-    end
-
-    it 'returns first_name from document' do
-      scholar_hit = described_class.new(scholar_hit_data, "scholar")
-      expect(scholar_hit.first_name).to eq("Ahmad")
-    end
-
-    it 'returns last_name from document' do
-      scholar_hit = described_class.new(scholar_hit_data, "scholar")
-      expect(scholar_hit.last_name).to eq("Ibn Taymiyyah")
-    end
-  end
-
   describe '#series_title and #series_slug' do
     let(:lesson_hit_data) do
       {
@@ -221,7 +196,7 @@ RSpec.describe TypesenseSearchService::SearchHit do
 
     it 'returns correct URL for lesson (Arabic route)' do
       lesson_hit = described_class.new(
-        { "document" => { "slug" => "1", "series_slug" => "my-series" }, "highlights" => [] },
+        { "document" => { "slug" => "1" }, "highlights" => [] },
         "lesson"
       )
       expect(lesson_hit.url).to eq("/الدروس/1")
@@ -233,14 +208,6 @@ RSpec.describe TypesenseSearchService::SearchHit do
         "series"
       )
       expect(series_hit.url).to eq("/scholar-name/السلاسل/my-series")
-    end
-
-    it 'returns correct URL for scholar (Arabic route)' do
-      scholar_hit = described_class.new(
-        { "document" => { "slug" => "scholar-name" }, "highlights" => [] },
-        "scholar"
-      )
-      expect(scholar_hit.url).to eq("/العلماء/scholar-name")
     end
 
     it 'returns correct URL for fatwa (Arabic route)' do
@@ -257,6 +224,14 @@ RSpec.describe TypesenseSearchService::SearchHit do
         "news"
       )
       expect(news_hit.url).to eq("/الأخبار/my-news")
+    end
+
+    it 'returns correct URL for article (Arabic route)' do
+      article_hit = described_class.new(
+        { "document" => { "slug" => "my-article", "scholar_slug" => "scholar-name" }, "highlights" => [] },
+        "article"
+      )
+      expect(article_hit.url).to eq("/scholar-name/المقالات/my-article")
     end
 
     it 'raises ArgumentError for unknown content_type' do
@@ -279,14 +254,6 @@ RSpec.describe TypesenseSearchService::SearchHit do
         "lesson"
       )
       expect(lesson_hit.label).to eq("Tafsir Series")
-    end
-
-    it 'returns full name for scholar' do
-      scholar_hit = described_class.new(
-        { "document" => { "first_name" => "Ahmad", "last_name" => "Ibn Taymiyyah" }, "highlights" => [] },
-        "scholar"
-      )
-      expect(scholar_hit.label).to eq("Ahmad Ibn Taymiyyah")
     end
   end
 end

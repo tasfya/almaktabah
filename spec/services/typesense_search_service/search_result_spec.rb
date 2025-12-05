@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe TypesenseSearchService::SearchResult do
   let(:empty_grouped_hits) do
-    { books: [], lectures: [], lessons: [], series: [], fatwas: [], news: [], scholars: [] }
+    { books: [], lectures: [], lessons: [], series: [], fatwas: [], news: [], articles: [] }
   end
 
   describe '#total_pages' do
