@@ -22,11 +22,27 @@ class News < ApplicationRecord
     attribute :content_type do
       "news"
     end
+    attribute :slug
+    attribute :scholar_name do
+      scholar&.name
+    end
+    attribute :scholar_slug do
+      scholar&.slug
+    end
+    attribute :scholar_id do
+      scholar_id
+    end
     attribute :media_type do
       "text"
     end
     attribute :domain_ids do
       domain_assignments.pluck(:domain_id)
+    end
+    attribute :published_at do
+      published_at&.to_i
+    end
+    attribute :created_at do
+      created_at&.to_i
     end
 
     predefined_fields [
@@ -34,6 +50,10 @@ class News < ApplicationRecord
       { "name" => "description", "type" => "string", "locale" => "ar" },
       { "name" => "content_text", "type" => "string", "locale" => "ar" },
       { "name" => "content_type", "type" => "string", "facet" => true },
+      { "name" => "slug", "type" => "string" },
+      { "name" => "scholar_name", "type" => "string", "facet" => true, "optional" => true },
+      { "name" => "scholar_slug", "type" => "string", "optional" => true },
+      { "name" => "scholar_id", "type" => "int32", "facet" => true, "optional" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
       { "name" => "published_at", "type" => "int64" },

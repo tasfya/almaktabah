@@ -9,29 +9,7 @@
   </div>
   <div class="p-6">
     <div class="space-y-4">
-      <% results.each do |result| %>
-        <%=
-          case result
-          when Lesson
-            link_target = lesson_path(result)
-            link_label  = result.series.title
-          when Scholar
-            link_target = scholar_path(result)
-            link_label  = "#{result.first_name} #{result.last_name}"
-          when Lecture
-            link_target = lecture_path(result.scholar, result)
-            link_label  = result.title
-          when Book
-            link_target = book_path(result.scholar, result)
-            link_label  = result.title
-          when Series
-            link_target = series_path(result.scholar, result)
-            link_label  = result.title
-          else
-            link_target = polymorphic_path(result)
-            link_label  = result.try(:title) || result.to_s
-          end
-        %>
+      <% results.each do |hit| %>
         <div class="mt-3 card card-border bg-base-100 shadow-sm hover:shadow-md transition-colors">
           <div class="card-body">
             <div class="flex items-start gap-4">
@@ -52,22 +30,24 @@
                   <%= icon "scale", class: "size-6" %>
                 <% when :scholars %>
                   <%= icon "user", class: "size-6" %>
+                <% when :articles %>
+                  <%= icon "document-text", class: "size-6" %>
                 <% end %>
               </div>
               <!-- Main content -->
               <div class="flex-1 min-w-0">
                 <h4 class="card-title">
-                  <%= link_to link_label, link_target, class: "transition-colors" %>
+                  <%= link_to hit.label, hit.url, class: "transition-colors" %>
                 </h4>
-                <% if result.respond_to?(:description) && result.description.present? %>
+                <% if hit.description.present? %>
                   <p class="text-sm line-clamp-2">
-                    <%= truncate(strip_tags(result.description), length: 150) %>
+                    <%= truncate(strip_tags(hit.description.to_s), length: 150) %>
                   </p>
                 <% end %>
               </div>
               <!-- View button -->
               <div class="card-actions justify-end">
-                <%= link_to link_target, class: "btn btn-secondary" do %>
+                <%= link_to hit.url, class: "btn btn-secondary" do %>
                   <%= t('.view') %>
                   <%= icon "arrow-left", class: "size-3" %>
                 <% end %>
