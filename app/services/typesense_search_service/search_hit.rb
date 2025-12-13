@@ -78,7 +78,7 @@ class TypesenseSearchService
     end
 
     def published_at
-      Time.at(document["published_at"]) if document["published_at"]
+      Time.at(document["published_at_ts"]) if document["published_at_ts"]
     end
 
     # URL for linking to this result - built from stored slugs, no DB access

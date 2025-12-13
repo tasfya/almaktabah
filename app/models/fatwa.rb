@@ -40,10 +40,10 @@ class Fatwa < ApplicationRecord
     attribute :domain_ids do
       domain_assignments.pluck(:domain_id)
     end
-    attribute :published_at do
+    attribute :published_at_ts do
       published_at&.to_i
     end
-    attribute :created_at do
+    attribute :created_at_ts do
       created_at&.to_i
     end
 
@@ -57,11 +57,11 @@ class Fatwa < ApplicationRecord
       { "name" => "scholar_id", "type" => "int32", "facet" => true, "optional" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
-      { "name" => "published_at", "type" => "int64" },
-      { "name" => "created_at", "type" => "int64" }
+      { "name" => "published_at_ts", "type" => "int64" },
+      { "name" => "created_at_ts", "type" => "int64" }
     ]
 
-    default_sorting_field "published_at"
+    default_sorting_field "published_at_ts"
 
     symbols_to_index [ "-", "_" ]
     token_separators [ "-", "_" ]

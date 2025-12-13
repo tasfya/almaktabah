@@ -40,11 +40,11 @@ class Book < ApplicationRecord
       domain_assignments.pluck(:domain_id)
     end
 
-    # Timestamp fields for sorting
-    attribute :published_at do
+    # Timestamp fields for sorting (named _ts to avoid overriding model attributes)
+    attribute :published_at_ts do
       published_at&.to_i
     end
-    attribute :created_at do
+    attribute :created_at_ts do
       created_at&.to_i
     end
 
@@ -60,11 +60,11 @@ class Book < ApplicationRecord
       { "name" => "scholar_id", "type" => "int32", "facet" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
-      { "name" => "published_at", "type" => "int64" },
-      { "name" => "created_at", "type" => "int64" }
+      { "name" => "published_at_ts", "type" => "int64" },
+      { "name" => "created_at_ts", "type" => "int64" }
     ]
 
-    default_sorting_field "published_at"
+    default_sorting_field "published_at_ts"
 
     # Arabic language optimizations
     symbols_to_index [ "-", "_" ]

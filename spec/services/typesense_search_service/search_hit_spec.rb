@@ -12,7 +12,7 @@ RSpec.describe TypesenseSearchService::SearchHit do
         "scholar_slug" => "test-scholar",
         "scholar_id" => 456,
         "media_type" => "text",
-        "published_at" => 1700000000
+        "published_at_ts" => 1700000000
       },
       "highlights" => [
         { "field" => "title", "snippet" => "<mark>Test</mark> Title" },
