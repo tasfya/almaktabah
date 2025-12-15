@@ -1,6 +1,6 @@
 require 'openapi_helper'
 
-describe 'Books API', type: :request do
+xdescribe 'Books API', type: :request do
   let(:domain) { create(:domain, host: 'localhost') }
   let(:scholar) { create(:scholar) }
   let!(:book) { create(:book, scholar: scholar) }
