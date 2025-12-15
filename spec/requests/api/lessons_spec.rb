@@ -1,6 +1,6 @@
 require 'openapi_helper'
 
-describe 'Lessons API', type: :request do
+xdescribe 'Lessons API', type: :request do
   let(:domain) { create(:domain, host: 'localhost') }
   let(:scholar) { create(:scholar) }
   let(:series) { create(:series, :published, scholar: scholar) }

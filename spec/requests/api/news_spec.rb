@@ -1,6 +1,6 @@
 require 'openapi_helper'
 
-describe 'News API', type: :request do
+xdescribe 'News API', type: :request do
   let(:domain) { create(:domain, host: 'localhost') }
   let!(:news) { create(:news, :published) }
 

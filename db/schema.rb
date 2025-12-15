@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_26_142524) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_15_173451) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -347,6 +347,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_26_142524) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "track_series", force: :cascade do |t|
+    t.integer "track_id", null: false
+    t.integer "series_id", null: false
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["series_id"], name: "index_track_series_on_series_id"
+    t.index ["track_id"], name: "index_track_series_on_track_id"
+  end
+
+  create_table "tracks", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.integer "difficulty_level"
+    t.integer "estimated_hours"
+    t.integer "position"
+    t.boolean "published"
+    t.string "slug"
+    t.integer "category"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "user_scholars", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "scholar_id", null: false
@@ -386,6 +409,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_26_142524) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "track_series", "series"
+  add_foreign_key "track_series", "tracks"
   add_foreign_key "user_scholars", "scholars"
   add_foreign_key "user_scholars", "users"
 end

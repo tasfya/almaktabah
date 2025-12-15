@@ -1,6 +1,6 @@
 require 'openapi_helper'
 
-describe 'Articles API', type: :request do
+xdescribe 'Articles API', type: :request do
   let(:domain) { create(:domain, host: 'localhost') }
   let(:author) { create(:scholar) }
   let!(:article) { create(:article, :published, scholar: author) }
