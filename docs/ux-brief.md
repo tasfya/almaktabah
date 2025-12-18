@@ -12,7 +12,7 @@
 
    - Full name (first_name + last_name)
    - Biographical information (rich text)
-   - Associated with lectures, books, and fatwas
+   - Associated with lectures, books, benefits, and fatwas
 
 2. **Books** - Islamic literature and texts
 
@@ -23,7 +23,7 @@
 
 3. **Lectures** - Audio/video lectures by scholars
 
-   - Types: Sermon, Conference
+   - Types: Sermon, Conference, Benefit
    - Audio/video files with thumbnails
    - Rich text content and descriptions
    - Duration tracking
@@ -116,10 +116,11 @@
   - Fatwa (Islamic legal rulings)
   - Sermon (religious speeches)
   - Conference (scholarly gatherings)
+  - Benefit (short spiritual reminders)
 
 - **Media Type Filter:** Content format options
 
-  - Audio (podcasts, lectures)
+  - Audio (podcasts, lectures, benefits)
   - Video (recorded lectures, lessons)
   - Text (books, articles, fatwas)
 
@@ -214,6 +215,7 @@
 
 - Sermon
 - Conference
+- Benefit
 
 **Read Section:**
 
@@ -237,7 +239,7 @@
 
 1. **Continue Learning** - Personalized recommendations based on user history
 2. **Popular Series** - Featured courses with compelling imagery
-3. **Daily Reminders** - Short audio for spiritual growth
+3. **Daily Reminders** - Short benefits/audio for spiritual growth
 4. **Recent Lectures** - Latest scholarly content
 5. **Essential Books** - Core Islamic texts
 6. **Latest Additions by Category:**
@@ -269,7 +271,8 @@ Islamic Knowledge Platform
 │   └── Scholars
 ├── Listen (Audio Content)
 │   ├── Sermon
-│   └── Conference
+│   ├── Conference
+│   └── Benefit
 ├── Read (Text Content)
 │   ├── Books by Category
 │   ├── Articles
@@ -288,7 +291,7 @@ Islamic Knowledge Platform
 
 **Lectures:**
 
-- By Type: Sermon, Conference
+- By Type: Sermon, Conference, Benefit
 - By Scholar
 - By Topic/Category
 
