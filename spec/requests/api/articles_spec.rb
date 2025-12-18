@@ -14,7 +14,7 @@ xdescribe 'Articles API', type: :request do
     host! domain.host
   end
 
-  path '/articles' do
+  path '/%D8%A7%D9%84%D9%85%D9%82%D8%A7%D9%84%D8%A7%D8%AA' do
     get 'List articles' do
       tags 'Articles'
       produces 'application/json'

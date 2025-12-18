@@ -1,0 +1,54 @@
+<% content_for :title, @article.title %>
+<div class="min-h-screen py-8">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 gap-8">
+      <div class="lg:col-span-2">
+        <article class="border border-base-300 rounded-lg shadow-md p-8">
+          <header class="mb-8">
+            <h1 class="text-3xl font-bold mb-4">
+              <%= @article.title %>
+            </h1>
+            <% if @article.scholar.present? %>
+              <p class="text-xl mb-4">
+                <%= @article.scholar.name %>
+              </p>
+            <% end %>
+            <% if @article.published_at.present? %>
+              <p class="text-sm text-gray-500 mb-4">
+                <%= l(@article.published_at, format: :long) %>
+              </p>
+            <% end %>
+          </header>
+          <% if @article.content.present? %>
+            <section class="mb-8">
+              <div class="prose prose-lg max-w-none">
+                <%= @article.content.to_s %>
+              </div>
+            </section>
+          <% end %>
+          <section class="mb-8">
+            <div class="border-t pt-6">
+              <h3 class="text-lg font-semibold mb-4">
+                <%= t('.share_article') %>
+              </h3>
+              <div class="flex items-center gap-4">
+                <button class="btn btn-primary"
+                        data-controller="share-trigger"
+                        data-share-trigger-modal-id-value="article_share_modal"
+                        data-action="click->share-trigger#open">
+                  <%= icon "share", class: "size-4" %>
+                  <%= t('buttons.share') %>
+                </button>
+              </div>
+            </div>
+          </section>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+<%= render 'shared/share_modal',
+    modal_id: 'article_share_modal',
+    url: request.original_url,
+    title: html_escape(@article.title),
+    text: html_escape(@article.title) %>

@@ -19,11 +19,15 @@ class Series < ApplicationRecord
         attribute :content_type do
             "series"
         end
+        attribute :slug
         attribute :lesson_count do
             lessons.count
         end
         attribute :scholar_name do
             scholar.name
+        end
+        attribute :scholar_slug do
+            scholar.slug
         end
         attribute :scholar_id
         attribute :media_type do
@@ -32,22 +36,30 @@ class Series < ApplicationRecord
         attribute :domain_ids do
             domain_assignments.pluck(:domain_id)
         end
+        attribute :published_at_ts do
+            published_at&.to_i
+        end
+        attribute :created_at_ts do
+            created_at&.to_i
+        end
 
         predefined_fields [
             { "name" => "title", "type" => "string", "locale" => "ar" },
             { "name" => "description", "type" => "string", "locale" => "ar" },
             { "name" => "content_text", "type" => "string", "locale" => "ar" },
             { "name" => "content_type", "type" => "string", "facet" => true },
+            { "name" => "slug", "type" => "string" },
             { "name" => "lesson_count", "type" => "int32" },
             { "name" => "scholar_name", "type" => "string", "facet" => true },
+            { "name" => "scholar_slug", "type" => "string" },
             { "name" => "scholar_id", "type" => "int32", "facet" => true },
             { "name" => "media_type", "type" => "string", "facet" => true },
             { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
-            { "name" => "published_at", "type" => "int64" },
-            { "name" => "created_at", "type" => "int64" }
+            { "name" => "published_at_ts", "type" => "int64" },
+            { "name" => "created_at_ts", "type" => "int64" }
         ]
 
-        default_sorting_field "published_at"
+        default_sorting_field "published_at_ts"
 
         symbols_to_index [ "-", "_" ]
         token_separators [ "-", "_" ]

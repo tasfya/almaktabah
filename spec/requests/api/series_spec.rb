@@ -14,7 +14,7 @@ xdescribe 'Series API', type: :request do
     host! domain.host
   end
 
-  path '/series' do
+  path '/%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D8%B3%D9%84' do
     get 'List series' do
       tags 'Series'
       produces 'application/json'

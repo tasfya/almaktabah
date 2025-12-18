@@ -22,8 +22,14 @@ class Lesson < ApplicationRecord
     attribute :content_type do
       "lesson"
     end
+    attribute :slug do
+      id.to_s  # Lessons use id for URL, not friendly_id
+    end
     attribute :series_title do
       series.title
+    end
+    attribute :series_slug do
+      series.slug
     end
     attribute :series_id
     attribute :position
@@ -40,13 +46,22 @@ class Lesson < ApplicationRecord
     attribute :domain_ids do
       domain_assignments.pluck(:domain_id)
     end
+    # Timestamp fields for sorting (named _ts to avoid overriding model attributes)
+    attribute :published_at_ts do
+      published_at&.to_i
+    end
+    attribute :created_at_ts do
+      created_at&.to_i
+    end
 
     predefined_fields [
       { "name" => "title", "type" => "string", "locale" => "ar" },
       { "name" => "description", "type" => "string", "locale" => "ar" },
       { "name" => "content_text", "type" => "string", "locale" => "ar" },
       { "name" => "content_type", "type" => "string", "facet" => true },
+      { "name" => "slug", "type" => "string" },
       { "name" => "series_title", "type" => "string", "facet" => true },
+      { "name" => "series_slug", "type" => "string" },
       { "name" => "series_id", "type" => "int32", "facet" => true },
       { "name" => "position", "type" => "int32" },
       { "name" => "duration", "type" => "int32" },
@@ -54,11 +69,11 @@ class Lesson < ApplicationRecord
       { "name" => "scholar_id", "type" => "int32", "facet" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
-      { "name" => "published_at", "type" => "int64" },
-      { "name" => "created_at", "type" => "int64" }
+      { "name" => "published_at_ts", "type" => "int64" },
+      { "name" => "created_at_ts", "type" => "int64" }
     ]
 
-    default_sorting_field "published_at"
+    default_sorting_field "published_at_ts"
 
     symbols_to_index [ "-", "_" ]
     token_separators [ "-", "_" ]

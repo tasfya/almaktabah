@@ -10,6 +10,9 @@
   elsif resource.is_a?(Lecture)
     share_url = lecture_url(resource.scholar, resource, kind: t("activerecord.attributes.lecture.kind.#{resource.kind}", default: resource.kind))
     resource_link = lecture_path(resource.scholar, resource, kind: t("activerecord.attributes.lecture.kind.#{resource.kind}", default: resource.kind))
+  elsif resource.is_a?(Article)
+    share_url = article_url(resource.scholar, resource)
+    resource_link = article_path(resource.scholar, resource)
   else
     share_url = polymorphic_url(resource)
     resource_link = polymorphic_path(resource)

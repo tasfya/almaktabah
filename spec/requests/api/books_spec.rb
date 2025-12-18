@@ -14,7 +14,7 @@ xdescribe 'Books API', type: :request do
     host! domain.host
   end
 
-  path '/books' do
+  path '/%D8%A7%D9%84%D9%83%D8%AA%D8%A8' do
     get 'List books' do
       tags 'Books'
       produces 'application/json'
