@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  mount Rswag::Ui::Engine => "/api-docs"
-  mount Rswag::Api::Engine => "/api-docs"
   authenticate :user, ->(u) { u.admin? } do
     mount MissionControl::Jobs::Engine => "/jobs"
   end

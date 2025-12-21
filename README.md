@@ -50,25 +50,3 @@ For upgrading daisyUI, we use the bundle file method. Follow these steps from th
    curl -sLo app/assets/tailwind/daisyui.js https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js
    curl -sLo app/assets/tailwind/daisyui-theme.js https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js
    ```
-
-## API Documentation
-
-This application uses [Rswag](https://github.com/rswag/rswag) to generate and serve Swagger UI for API documentation.
-
-### Accessing Swagger UI
-
-In development, the Swagger UI is available at:
-
-```
-http://localhost:3000/api-docs
-```
-
-### Updating API Documentation
-
-When you make changes to API endpoints or data structures, update the Swagger documentation by running:
-
-```bash
-bundle exec rake rswag
-```
-
-This command generates the OpenAPI JSON files from your RSpec API tests, which are then served by the Swagger UI.

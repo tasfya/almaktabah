@@ -6,19 +6,10 @@ class SeriesController < ApplicationController
   def index
     @q = Series.for_domain_id(@domain.id).published.order(published_at: :desc).includes(:lessons).ransack(params[:q])
     @pagy, @series = pagy(@q.result(distinct: true))
-
-    respond_to do |format|
-      format.html
-      format.json { render json: SeriesSerializer.render_as_hash(@series) }
-    end
   end
 
   def show
     @lessons = @series.lessons.for_domain_id(@domain.id).published.ordered_by_lesson_number
-
-    respond_to do |format|
-      format.html
-    end
   end
 
   private
