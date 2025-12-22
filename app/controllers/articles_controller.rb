@@ -6,17 +6,9 @@ class ArticlesController < ApplicationController
   def index
     @q = Article.for_domain_id(@domain.id).published.order(published_at: :desc).includes(:scholar).ransack(params[:q])
     @pagy, @articles = pagy(@q.result(distinct: true))
-
-    respond_to do |format|
-      format.html
-      format.json { render json: ArticleSerializer.render_as_hash(@articles) }
-    end
   end
 
   def show
-    respond_to do |format|
-      format.html
-    end
   end
 
   private

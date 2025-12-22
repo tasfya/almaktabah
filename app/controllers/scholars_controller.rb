@@ -6,11 +6,6 @@ class ScholarsController < ApplicationController
   def index
     @q = Scholar.published.order(:first_name).ransack(params[:q])
     @pagy, @scholars = pagy(@q.result(distinct: true))
-
-    respond_to do |format|
-      format.html
-      format.json { render json: ScholarSerializer.render_as_hash(@scholars) }
-    end
   end
 
   def show
@@ -25,10 +20,6 @@ class ScholarsController < ApplicationController
                    .where(scholar: @scholar)
                    .order(published_at: :desc)
                    .limit(6)
-
-    respond_to do |format|
-      format.html
-    end
   end
 
   private

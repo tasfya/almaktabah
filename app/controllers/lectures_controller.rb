@@ -6,11 +6,6 @@ class LecturesController < ApplicationController
   def index
     @q = Lecture.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
     @pagy, @lectures = pagy(@q.result(distinct: true))
-
-    respond_to do |format|
-      format.html
-      format.json { render json: LectureSerializer.render_as_hash(@lectures) }
-    end
   end
 
   def show
@@ -19,10 +14,6 @@ class LecturesController < ApplicationController
                                .where.not(id: @lecture.id)
                                .recent
                                .limit(4)
-
-    respond_to do |format|
-      format.html
-    end
   end
 
   private

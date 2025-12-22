@@ -12,12 +12,6 @@ class LessonsController < ApplicationController
       .with_attached_video
       .ransack(params[:q])
     @pagy, @lessons = pagy(@q.result(distinct: true))
-
-
-    respond_to do |format|
-      format.html
-      format.json { render json: LessonSerializer.render_as_hash(@lessons) }
-    end
   end
 
   def show
@@ -27,10 +21,6 @@ class LessonsController < ApplicationController
                              .where.not(id: @lesson.id)
                              .recent
                              .limit(4)
-
-    respond_to do |format|
-      format.html
-    end
   end
 
   private
