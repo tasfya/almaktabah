@@ -44,6 +44,11 @@
                     <%= truncate(strip_tags(hit.description.to_s), length: 150) %>
                   </p>
                 <% end %>
+                <p class="text-sm line-clamp-2">
+                  <span class="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
+                    <%= hit.scholar_name %>
+                  </span>
+                </p>
               </div>
               <!-- View button -->
               <div class="card-actions justify-end">
