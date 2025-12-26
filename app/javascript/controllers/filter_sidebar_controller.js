@@ -271,9 +271,9 @@ export default class extends Controller {
 
   trapFocus() {
     if (!this.hasSidebarTarget) return;
+    this.originalFocusElement = document.activeElement;
     this.sidebarTarget.setAttribute("tabindex", "-1");
     this.sidebarTarget.focus();
-    this.originalFocusElement = document.activeElement;
   }
 
   removeFocusTrap() {

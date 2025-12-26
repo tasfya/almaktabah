@@ -14,7 +14,7 @@
       <div class="flex gap-2 mb-2">
         <div class="badge badge-outline">
           <%= icon "book-open", class: "w-3 h-3 mr-1" %>
-          <%= series.lesson_count %> <%= t('activerecord.model_names.lessons') %>
+          <%= t('scholars.show.lessons_count', count: series.lesson_count) %>
         </div>
       </div>
     <% end %>

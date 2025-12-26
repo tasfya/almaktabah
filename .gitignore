@@ -62,3 +62,4 @@ db/backups
 .playwright-mcp
 .mcp.json
 opencode.json
+.claude/
