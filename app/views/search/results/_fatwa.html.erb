@@ -2,7 +2,7 @@
   <div class="card-body">
     <h2 class="card-title">
       <%= link_to fatwa.url, class: "hover:text-primary stretched-link", data: { turbo_frame: "_top" } do %>
-        <%= fatwa.highlighted_title.html_safe %>
+        <%= sanitize(fatwa.highlighted_title, tags: %w[mark]) %>
       <% end %>
     </h2>
     <% if fatwa.scholar_name.present? %>

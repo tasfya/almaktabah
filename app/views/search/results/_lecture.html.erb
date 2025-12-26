@@ -2,7 +2,7 @@
   <div class="card-body">
     <h2 class="card-title">
       <%= link_to lecture.url, class: "hover:text-primary stretched-link", data: { turbo_frame: "_top" } do %>
-        <%= lecture.highlighted_title.html_safe %>
+        <%= sanitize(lecture.highlighted_title, tags: %w[mark]) %>
       <% end %>
       <% if lecture.kind.present? %>
         <div class="badge badge-secondary"><%= t("activerecord.attributes.lecture.kind.#{lecture.kind}") %></div>

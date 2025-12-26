@@ -7,7 +7,7 @@
   <div class="card-body">
     <h2 class="card-title">
       <%= link_to news.url, class: "hover:text-primary line-clamp-2 stretched-link", data: { turbo_frame: "_top" } do %>
-        <%= news.highlighted_title.html_safe %>
+        <%= sanitize(news.highlighted_title, tags: %w[mark]) %>
       <% end %>
     </h2>
     <% if news.scholar_name.present? %>

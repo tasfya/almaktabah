@@ -12,8 +12,10 @@ module Seeds
       end
 
       if admin_user.save
+        existing_ids = admin_user.domain_assignments.pluck(:domain_id)
         Array(domain_ids).each do |domain_id|
-          DomainAssignment.find_or_create_by!(domain_id: domain_id, assignable: admin_user)
+          next if existing_ids.include?(domain_id)
+          DomainAssignment.create!(domain_id: domain_id, assignable: admin_user)
         end
         puts "✅ Admin user created: #{admin_user.email}"
       else

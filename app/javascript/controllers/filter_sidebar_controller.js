@@ -24,26 +24,38 @@ export default class extends Controller {
     this.boundHandleKeydown = this.handleKeydown.bind(this);
     this.boundHandleClickOutside = this.handleClickOutside.bind(this);
     this.boundHandleResize = this.handleResize.bind(this);
+    this.boundHandleCheckboxToggle = this.handleCheckboxToggle.bind(this);
 
     document.addEventListener("keydown", this.boundHandleKeydown);
     document.addEventListener("click", this.boundHandleClickOutside);
     window.addEventListener("resize", this.boundHandleResize);
 
     if (this.hasCheckboxToggleTarget) {
-      this.checkboxToggleTarget.addEventListener("change", () => {
-        this.openValue = this.checkboxToggleTarget.checked;
-        this.updateSidebarState();
-      });
+      this.checkboxToggleTarget.addEventListener(
+        "change",
+        this.boundHandleCheckboxToggle
+      );
     }
 
     this.initializeFromUrl();
     this.setInitialSidebarState();
   }
 
+  handleCheckboxToggle() {
+    this.openValue = this.checkboxToggleTarget.checked;
+    this.updateSidebarState();
+  }
+
   disconnect() {
     document.removeEventListener("keydown", this.boundHandleKeydown);
     document.removeEventListener("click", this.boundHandleClickOutside);
     window.removeEventListener("resize", this.boundHandleResize);
+    if (this.hasCheckboxToggleTarget) {
+      this.checkboxToggleTarget.removeEventListener(
+        "change",
+        this.boundHandleCheckboxToggle
+      );
+    }
     if (this.debounceTimeout) clearTimeout(this.debounceTimeout);
   }
 

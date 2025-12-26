@@ -6,7 +6,7 @@ class Domain < ApplicationRecord
   has_one_attached :favicon_svg, service: Rails.application.config.public_storage
   has_one_attached :apple_touch_icon, service: Rails.application.config.public_storage
   has_many :domain_assignments, dependent: :destroy
-  has_many :scholars, foreign_key: :default_domain_id
+  has_many :scholars, foreign_key: :default_domain_id, dependent: :nullify
 
   validate :template_name_must_be_valid
 
