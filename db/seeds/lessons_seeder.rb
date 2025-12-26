@@ -1,4 +1,5 @@
 require_relative './base'
+require 'streamio-ffmpeg'
 
 module Seeds
   class LessonsSeeder < Base
