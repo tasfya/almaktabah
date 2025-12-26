@@ -10,7 +10,7 @@ RSpec.describe TypesenseSearchService, type: :service do
       expect(service.instance_variable_get(:@query)).to eq('')
       expect(service.instance_variable_get(:@domain_id)).to be_nil
       expect(service.instance_variable_get(:@page)).to eq(1)
-      expect(service.instance_variable_get(:@per_page)).to eq(5)
+      expect(service.instance_variable_get(:@per_page)).to eq(6)
     end
 
     it 'strips and stores query' do
@@ -88,7 +88,7 @@ RSpec.describe TypesenseSearchService, type: :service do
     end
 
     context 'with valid query' do
-      # Results order must match CONTENT_COLLECTIONS: News, Fatwa, Lecture, Lesson, Series, Article, Book
+      # Results order must match CONTENT_COLLECTIONS: News, Fatwa, Lecture, Series, Article, Book
       let(:typesense_response) do
         {
           "results" => [
@@ -106,12 +106,6 @@ RSpec.describe TypesenseSearchService, type: :service do
             },
             {
               "request_params" => { "collection" => "Lecture_test" },
-              "found" => 0,
-              "hits" => [],
-              "facet_counts" => []
-            },
-            {
-              "request_params" => { "collection" => "Lesson_test" },
               "found" => 0,
               "hits" => [],
               "facet_counts" => []
@@ -241,7 +235,7 @@ RSpec.describe TypesenseSearchService, type: :service do
       it 'builds domain filter for content collections' do
         service = described_class.new(q: 'test', domain_id: 123)
 
-        filter = service.send(:content_filter_string)
+        filter = service.send(:build_filter_string)
         expect(filter).to eq("domain_ids:=[123]")
       end
     end
@@ -250,7 +244,7 @@ RSpec.describe TypesenseSearchService, type: :service do
       it 'returns empty filter string' do
         service = described_class.new(q: 'test')
 
-        expect(service.send(:content_filter_string)).to eq("")
+        expect(service.send(:build_filter_string)).to eq("")
       end
     end
   end

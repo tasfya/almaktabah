@@ -1,0 +1,55 @@
+<div class="card card-border bg-base-100 relative hover:bg-base-200/50 transition-colors">
+  <div class="card-body">
+    <h2 class="card-title">
+      <%= link_to fatwa.url, class: "hover:text-primary stretched-link", data: { turbo_frame: "_top" } do %>
+        <%= fatwa.highlighted_title.html_safe %>
+      <% end %>
+    </h2>
+    <% if fatwa.scholar_name.present? %>
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-sm text-base-content/70"><%= t('search.results.sheikh') %> <%= fatwa.scholar_name %></span>
+      </div>
+    <% end %>
+    <div class="flex gap-2 mb-2">
+      <% if fatwa.audio_url.present? %>
+        <div class="badge badge-info"><%= t('common.audio') %></div>
+      <% end %>
+      <div class="badge badge-neutral"><%= t('buttons.read') %></div>
+    </div>
+    <% if fatwa.description.present? %>
+      <p class="text-sm line-clamp-3">
+        <%= truncate(strip_tags(fatwa.description), length: 120) %>
+      </p>
+    <% end %>
+    <div class="card-actions justify-end mt-4">
+      <% if fatwa.audio_url.present? %>
+        <%= form_with url: play_path(resource_type: "fatwa", id: fatwa.id),
+                      local: false,
+                      class: "relative z-10",
+                      data: {
+                        turbo_stream: true,
+                        player_id: "fatwa_#{fatwa.id}_player_content",
+                        currently_playing: "false",
+                        controller: "play-button",
+                        action: "submit->play-button#handleSubmit"
+                      } do |form| %>
+          <%= form.button type: "submit",
+                          class: "btn btn-primary btn-sm",
+                          data: {
+                            play_button_target: "button"
+                          } do %>
+            <span data-play-button-target="playIcon">
+              <%= icon "play", class: "w-4 h-4" %>
+            </span>
+            <span data-play-button-target="pauseIcon" class="hidden">
+              <%= icon "pause", class: "w-4 h-4" %>
+            </span>
+            <span data-play-button-target="loadingIcon" class="hidden">
+              <%= icon "arrow-path", class: "w-4 h-4 animate-spin" %>
+            </span>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -26,7 +26,7 @@
           class="btn btn-ghost btn-secondary text-primary-content hover:text-secondary-content focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
           aria-controls="mobile-menu"
           aria-expanded="false"
-          aria-label="<%= t('buttons.menu', default: 'Menu') %>">
+          aria-label="<%= t('buttons.menu') %>">
           <%= icon "bars-3", class: "size-5"%>
         </button>
       </div>
@@ -52,7 +52,7 @@
     data-navigation-target="menu"
     class="hidden md:hidden fixed top-(--header-height) left-0 right-0 bg-white shadow-lg border-t z-50"
     role="navigation"
-    aria-label="<%= t('navigation.mobile_menu', default: 'Mobile menu') %>">
+    aria-label="<%= t('navigation.mobile_menu') %>">
     <div class="px-4 py-2 space-y-2">
       <%= link_to search_path, class: "btn btn-secondary btn-sm w-full" do %>
         <%= icon "magnifying-glass", class: "size-4" %>

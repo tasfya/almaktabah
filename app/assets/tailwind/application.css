@@ -145,3 +145,20 @@
     transform: scale(1.1);
   }
 }
+
+#console {
+  direction: ltr;
+}
+
+/* Stretched link - makes entire card clickable via title link */
+.stretched-link::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+}
+
+.card-actions {
+  position: relative;
+  z-index: 2;
+}

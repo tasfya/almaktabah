@@ -33,7 +33,9 @@ class Lesson < ApplicationRecord
     end
     attribute :series_id
     attribute :position
-    attribute :duration
+    attribute :duration do
+      duration || 0
+    end
     attribute :scholar_name do
       scholar.name
     end

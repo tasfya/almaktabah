@@ -1,0 +1,22 @@
+<div class="card card-border bg-base-100 card-sm overflow-hidden relative hover:bg-base-200/50 transition-colors">
+  <% if book.thumbnail_url.present? %>
+    <figure class="h-56">
+      <%= image_tag book.thumbnail_url, alt: book.title, class: "w-full h-full object-cover" %>
+    </figure>
+  <% end %>
+  <div class="card-body">
+    <h2 class="card-title">
+      <%= link_to book.url, class: "hover:text-primary stretched-link", data: { turbo_frame: "_top" } do %>
+        <%= book.highlighted_title.html_safe %>
+      <% end %>
+    </h2>
+    <% if book.scholar_name.present? %>
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-sm text-base-content/70"><%= t('search.results.sheikh') %> <%= book.scholar_name %></span>
+      </div>
+    <% end %>
+    <% if book.description.present? %>
+      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(book.description), length: 150) %></p>
+    <% end %>
+  </div>
+</div>

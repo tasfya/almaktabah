@@ -1,65 +1,35 @@
-<div class="rounded-lg shadow-md border border-base-300 overflow-hidden">
-  <div class="bg-background-subtle px-6 py-4 border-b border-base-300">
-    <h3 class="text-lg font-semibold">
-      <%= t("navigation.#{model_name}") %>
-      <span class="text-sm font-normal">
-        (<%= results.count %> <%= t(".result_count", count: results.count) %>)
-      </span>
-    </h3>
-  </div>
-  <div class="p-6">
-    <div class="space-y-4">
-      <% results.each do |hit| %>
-        <div class="mt-3 card card-border bg-base-100 shadow-sm hover:shadow-md transition-colors">
-          <div class="card-body">
-            <div class="flex items-start gap-4">
-              <!-- Icon -->
-              <div class="flex-shrink-0">
-                <% case model_name %>
-                <% when :books %>
-                  <%= icon "book-open", class: "size-6" %>
-                <% when :lectures %>
-                  <%= icon "play", class: "size-6 text-secondary-500" %>
-                <% when :lessons %>
-                  <%= icon "graduation-cap", library: "lucide", class: "size-6" %>
-                <% when :series %>
-                  <%= icon "folder", class: "size-6" %>
-                <% when :news %>
-                  <%= icon "newspaper", class: "size-6" %>
-                <% when :fatwas %>
-                  <%= icon "scale", class: "size-6" %>
-                <% when :scholars %>
-                  <%= icon "user", class: "size-6" %>
-                <% when :articles %>
-                  <%= icon "document-text", class: "size-6" %>
-                <% end %>
-              </div>
-              <!-- Main content -->
-              <div class="flex-1 min-w-0">
-                <h4 class="card-title">
-                  <%= link_to hit.label, hit.url, class: "transition-colors" %>
-                </h4>
-                <% if hit.description.present? %>
-                  <p class="text-sm line-clamp-2">
-                    <%= truncate(strip_tags(hit.description.to_s), length: 150) %>
-                  </p>
-                <% end %>
-                <p class="text-sm line-clamp-2">
-                  <span class="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
-                    <%= hit.scholar_name %>
-                  </span>
-                </p>
-              </div>
-              <!-- View button -->
-              <div class="card-actions justify-end">
-                <%= link_to hit.url, class: "btn btn-secondary" do %>
-                  <%= t('.view') %>
-                  <%= icon "arrow-left", class: "size-3" %>
-                <% end %>
-              </div>
-            </div>
-          </div>
-        </div>
+<%
+  partial_name = model_name.to_s.singularize
+  section_title = I18n.exists?("navigation.#{model_name}") ? t("navigation.#{model_name}") : t("content_types.#{partial_name}")
+  content_type_icons = {
+    "articles" => "document-text",
+    "books" => "book-open",
+    "lectures" => "microphone",
+    "fatwas" => "scale",
+    "news" => "newspaper",
+    "series" => "queue-list",
+    "lessons" => "academic-cap"
+  }
+  section_icon = content_type_icons[model_name.to_s] || "folder"
+%>
+<div class="search-section">
+  <div class="">
+    <div class="flex justify-between mb-4">
+      <h3 class="text-lg font-semibold flex items-center gap-2">
+        <%= icon section_icon, class: "w-5 h-5" %>
+        <%= section_title %>
+        <span class="text-sm font-normal">
+          (<%= hits.size %> <%= t(".result_count", count: hits.size) %>)
+        </span>
+      </h3>
+      <%= link_to t('search.view_all'),
+                url_for(controller: model_name.to_s, action: 'index'),
+                class: "btn btn-outline btn-sm",
+                data: { turbo_frame: "_top" } %>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% hits.each do |hit| %>
+        <%= render "search/results/#{partial_name}", partial_name.to_sym => hit %>
       <% end %>
     </div>
   </div>

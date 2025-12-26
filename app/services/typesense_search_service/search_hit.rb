@@ -3,36 +3,24 @@
 class TypesenseSearchService
   # Value object wrapping Typesense hit data - NO database access
   class SearchHit
-    # Arabic route path segments (must match config/routes.rb)
-    ROUTE_PATHS = {
-      "book" => "الكتب",
-      "lecture" => "المحاضرات",
-      "series" => "السلاسل",
-      "lesson" => "الدروس",
-      "fatwa" => "الفتاوى",
-      "news" => "الأخبار",
-      "article" => "المقالات"
-    }.freeze
-
-    attr_reader :document, :highlights, :text_match, :content_type
+    attr_reader :highlights, :content_type
 
     def initialize(hit_data, content_type)
       @document = hit_data["document"]
       @highlights = hit_data["highlights"] || []
-      @text_match = hit_data["text_match"]
       @content_type = content_type
     end
 
     def id
-      document["id"]
+      @document["id"]
     end
 
     def slug
-      document["slug"]
+      @document["slug"]
     end
 
     def title
-      document["title"] || document["name"]
+      @document["title"] || @document["name"]
     end
 
     def highlighted_title
@@ -40,71 +28,55 @@ class TypesenseSearchService
     end
 
     def description
-      document["description"] || document["content_text"]
+      @document["description"] || @document["content_text"]
     end
 
     def highlighted_description
       find_highlight("description") || find_highlight("content_text") || description
     end
 
-    # Scholar fields (for content types with scholar association)
     def scholar_name
-      document["scholar_name"]
+      @document["scholar_name"]
     end
 
     def scholar_slug
-      document["scholar_slug"]
-    end
-
-    def scholar_id
-      document["scholar_id"]
-    end
-
-    # Lesson-specific fields
-    def series_title
-      document["series_title"]
-    end
-
-    def series_slug
-      document["series_slug"]
-    end
-
-    def series_id
-      document["series_id"]
+      @document["scholar_slug"]
     end
 
     def media_type
-      document["media_type"]
+      @document["media_type"]
     end
 
-    def published_at
-      Time.at(document["published_at_ts"]) if document["published_at_ts"]
+    def read_time
+      @document["read_time"]
     end
 
-    # URL for linking to this result - built from stored slugs, no DB access
+    def thumbnail_url
+      @document["thumbnail_url"]
+    end
+
+    def audio_url
+      @document["audio_url"]
+    end
+
+    def video_url
+      @document["video_url"]
+    end
+
+    def duration
+      @document["duration"]
+    end
+
+    def kind
+      @document["kind"]
+    end
+
+    def lesson_count
+      @document["lesson_count"]
+    end
+
     def url
-      path = ROUTE_PATHS.fetch(content_type) do
-        raise ArgumentError, "Unknown content_type: #{content_type}"
-      end
-
-      case content_type
-      when "lesson", "fatwa", "news"
-        "/#{path}/#{slug}"
-      when "book", "lecture", "series", "article"
-        "/#{scholar_slug}/#{path}/#{slug}"
-      else
-        raise ArgumentError, "Unhandled content_type in url: #{content_type}"
-      end
-    end
-
-    # Display label for this result
-    def label
-      case content_type
-      when "lesson"
-        series_title
-      else
-        title
-      end
+      @document["url"]
     end
 
     private

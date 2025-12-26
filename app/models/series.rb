@@ -42,6 +42,9 @@ class Series < ApplicationRecord
         attribute :created_at_ts do
             created_at&.to_i
         end
+        attribute :url do
+            Rails.application.routes.url_helpers.series_path(self, scholar_id: scholar.slug)
+        end
 
         predefined_fields [
             { "name" => "title", "type" => "string", "locale" => "ar" },
@@ -56,7 +59,8 @@ class Series < ApplicationRecord
             { "name" => "media_type", "type" => "string", "facet" => true },
             { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
             { "name" => "published_at_ts", "type" => "int64" },
-            { "name" => "created_at_ts", "type" => "int64" }
+            { "name" => "created_at_ts", "type" => "int64" },
+            { "name" => "url", "type" => "string" }
         ]
 
         default_sorting_field "published_at_ts"

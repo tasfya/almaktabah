@@ -24,7 +24,9 @@ class Lecture < ApplicationRecord
     end
     attribute :slug
     attribute :kind
-    attribute :duration
+    attribute :duration do
+      duration || 0
+    end
     attribute :scholar_name do
       scholar.name
     end
@@ -35,6 +37,15 @@ class Lecture < ApplicationRecord
     attribute :media_type do
       video.attached? ? "video" : "audio"
     end
+    attribute :audio_url do
+      attachment_url(optimized_audio.attached? ? optimized_audio : audio)
+    end
+    attribute :video_url do
+      attachment_url(video)
+    end
+    attribute :thumbnail_url do
+      attachment_url(thumbnail)
+    end
     attribute :domain_ids do
       domain_assignments.pluck(:domain_id)
     end
@@ -43,6 +54,9 @@ class Lecture < ApplicationRecord
     end
     attribute :created_at_ts do
       created_at&.to_i
+    end
+    attribute :url do
+      Rails.application.routes.url_helpers.lecture_path(self, scholar_id: scholar.slug, kind: kind)
     end
 
     predefined_fields [
@@ -57,9 +71,13 @@ class Lecture < ApplicationRecord
       { "name" => "scholar_slug", "type" => "string" },
       { "name" => "scholar_id", "type" => "int32", "facet" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
+      { "name" => "audio_url", "type" => "string", "optional" => true },
+      { "name" => "video_url", "type" => "string", "optional" => true },
+      { "name" => "thumbnail_url", "type" => "string", "optional" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
       { "name" => "published_at_ts", "type" => "int64" },
-      { "name" => "created_at_ts", "type" => "int64" }
+      { "name" => "created_at_ts", "type" => "int64" },
+      { "name" => "url", "type" => "string" }
     ]
 
     default_sorting_field "published_at_ts"

@@ -3,59 +3,51 @@ require 'active_support/inflector'
 
 module Seeds
   class NewsSeeder < Base
-    def self.seed(from: nil, domain_id: nil)
-      puts "📰 Seeding news..."
+    ALFAWZAN_NEWS = [
+      {
+        'name' => 'إعلان عن محاضرة جديدة للشيخ صالح الفوزان',
+        'description' => 'يسر موقع العلامة صالح الفوزان أن يعلن عن محاضرة جديدة في شرح كتاب التوحيد'
+      }
+    ].freeze
 
-      news_array = load_json('data/news.json')
+    def self.seed(from: nil, domain_ids: nil, scholar: nil)
+      scholar ||= default_scholar
+      news_array = if scholar.last_name.include?("الفوزان")
+        ALFAWZAN_NEWS
+      else
+        load_json('data/news.json')
+      end
+
+      puts "📰 Seeding news for #{scholar.first_name} #{scholar.last_name}..."
       processed = 0
-      errors = []
 
-      news_array.each_with_index do |data, index|
-        puts "Processing ##{index + 1}: #{data['name']}" if data['name'].present?
-        next if data['name'].blank? || data['name'] =~ /^\d+$/
+      news_array.each do |data|
+        name = data['name']
+        next if name.blank? || name =~ /^\d+$/
 
-        begin
-          title = data['name'].strip
-          content_text = data['description'].presence || title
+        title = name.strip
+        slug = title.parameterize
+        next if News.exists?(slug: slug)
 
-          news = News.find_or_initialize_by(title: title, slug: title.parameterize)
-          news.description ||= title
-          news.published_at ||= Date.today
-          news.content = content_text if news.content.blank?
-          news.published_at = Date.today
-          news.published = true
+        news = News.new(
+          title: title,
+          slug: slug,
+          description: data['description'].presence,
+          content: data['description'].presence || title,
+          published_at: Date.today,
+          published: true,
+          scholar: scholar
+        )
 
-          # Attach thumbnail if provided
-          if data['url'].present? && !news.thumbnail.attached?
-            path = Rails.root.join('storage', 'audio', "news_#{data['id']}_thumbnail#{File.extname(data['url'])}")
-            downloaded = download_file(data['url'], path)
-            if downloaded
-              news.thumbnail.attach(io: File.open(downloaded), filename: File.basename(downloaded))
-            else
-              errors << "❌ Failed to download thumbnail for: #{title}"
-            end
-          end
-
-          if news.save
-            processed += 1
-            assign_to_domain(news, domain_id)
-            print "." if processed % 10 == 0
-          else
-            errors << "❌ Failed to save news: #{title} — #{news.errors.full_messages.join(', ')}"
-          end
-
-        rescue => e
-          errors << "❌ Exception for '#{data['name']}': #{e.message}"
+        if news.save
+          attach_fixture(news, :thumbnail, :thumbnail)
+          assign_to_domains(news, domain_ids)
+          processed += 1
+          print "."
         end
       end
 
       puts "\n✅ Seeded #{processed} news items"
-      if errors.any?
-        puts "\n⚠️ Completed with #{errors.count} errors:"
-        errors.each { |err| puts "  - #{err}" }
-      else
-        puts "✅ No errors encountered."
-      end
     end
   end
 end

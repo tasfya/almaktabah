@@ -1,7 +1,7 @@
 ar:
   content_types:
     book: "كتاب"
-    lecture: "محاضرة"
+    lecture: "خطب ومحاضرات وفوائد"
     lesson: "درس"
     series: "سلسلة"
     fatwa: "فتوى"
@@ -9,6 +9,10 @@ ar:
     scholar: "عالم"
     article: "مقال"
   search:
+    view_all: "عرض الكل"
+    read_time:
+      one: "دقيقة قراءة"
+      other: "%{count} دقائق قراءة"
     index:
       results_found: "تم العثور على %{count} نتيجة للبحث عن"
       no_results_title: "لم يتم العثور على نتائج"
@@ -21,6 +25,30 @@ ar:
         one: "نتيجة"
         other: "نتائج"
       view_all_in: "عرض جميع النتائج في %{type}"
+    results:
+      showing: "عرض %{count} من %{total} نتيجة"
+      count: "نتيجة"
+      sheikh: "الشيخ"
+    sort:
+      label: "ترتيب"
+      relevance: "الأكثر صلة"
+      newest: "الأحدث"
+      oldest: "الأقدم"
+    filters:
+      title: "الفلاتر"
+      scholars: "العلماء"
+      content_types: "أنواع المحتوى"
+      apply: "تطبيق الفلاتر"
+      clear_all: "مسح الفلاتر"
+    new_search: "بحث جديد"
+    suggestions:
+      title: "اقتراحات البحث"
+      try_different: "جرب كلمات مختلفة"
+      check_spelling: "تحقق من الكتابة الصحيحة"
+      use_fewer: "استخدم فلاتر أقل"
+      browse_content: "تصفح جميع المحتوى"
+    no_active_filters: "لا توجد فلاتر نشطة"
+    loading: "جاري التحميل..."
   audio_player:
     select_audio_clip: "اختر مقطع صوتي"
     library: "المكتبة"
@@ -69,7 +97,7 @@ ar:
       share_article: "شارك المقال"
   lectures:
     index:
-      title: "المحاضرات والكلمات"
+      title: "الخطب والمحاضرات والفوائد"
       no_lectures: "لا توجد محاضرات متاحة حالياً"
     show:
       download_options: "خيارات التحميل"
@@ -161,6 +189,7 @@ ar:
         birth_year: "مواليد 1384 هـ"
         contact_button: "تواصل معنا"
   buttons:
+    menu: "القائمة"
     watch_on_youtube: "شاهد على يوتيوب"
     watch_video: "شاهد الفيديو"
     watch_youtube_video: "شاهد على يوتيوب"
@@ -212,7 +241,7 @@ ar:
     news: "الأخبار"
     fatwas: "الفتاوى"
     about_sheikh: "مع الشيخ"
-    lectures: "المحاضرات والكلمات"
+    lectures: "الخطب والمحاضرات والفوائد"
     scientific_series: "السلاسل العلمية"
     contact: "تواصل معنا"
     lessons: "الدروس العلمية"

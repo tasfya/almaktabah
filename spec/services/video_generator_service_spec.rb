@@ -7,9 +7,9 @@ RSpec.describe VideoGeneratorService, type: :service do
   let(:english_title) { "Introduction to Islamic Studies" }
   let(:description) { "الدرس الأول - مقدمة في الفقه الإسلامي" }
   let(:english_description) { "First lesson - Introduction to Islamic jurisprudence" }
-  let(:audio_file_path) { Rails.root.join('spec', 'files', 'test_audio.mp3') }
-  let(:logo_file_path)  { Rails.root.join('spec', 'files', 'logo.png') }
-  let(:temp_dir)       { Rails.root.join('tmp', 'test_video_generation') }
+  let(:temp_dir)        { Rails.root.join('tmp', 'test_video_generation') }
+  let(:audio_file_path) { temp_dir.join('test_audio.mp3') }
+  let(:logo_file_path)  { temp_dir.join('logo.png') }
 
   let(:mock_audio_file) { double('audio_file') }
   let(:mock_logo_file)  { double('logo_file') }
@@ -24,11 +24,9 @@ RSpec.describe VideoGeneratorService, type: :service do
   end
 
   before do
-    FileUtils.mkdir_p(File.dirname(audio_file_path))
-    FileUtils.mkdir_p(File.dirname(logo_file_path))
-    FileUtils.touch(audio_file_path) unless File.exist?(audio_file_path)
-    FileUtils.touch(logo_file_path)  unless File.exist?(logo_file_path)
-    FileUtils.rm_rf(temp_dir) if Dir.exist?(temp_dir)
+    FileUtils.mkdir_p(temp_dir)
+    FileUtils.touch(audio_file_path)
+    FileUtils.touch(logo_file_path)
   end
 
   after do

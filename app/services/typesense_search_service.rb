@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 class TypesenseSearchService
-  CONTENT_COLLECTIONS = %w[News Fatwa Lecture Lesson Series Article Book].freeze
+  CONTENT_COLLECTIONS = %w[News Fatwa Lecture Series Article Book].freeze
 
   # Maps content types to their plural symbol keys for results grouping
   COLLECTION_KEYS = {
     "Book" => :books,
     "Lecture" => :lectures,
-    "Lesson" => :lessons,
     "Series" => :series,
     "Fatwa" => :fatwas,
     "News" => :news,
@@ -18,33 +17,24 @@ class TypesenseSearchService
   SEARCHABLE_FIELDS = {
     "Book" => "title,description,content_text",
     "Lecture" => "title,description,content_text",
-    "Lesson" => "title,description,content_text",
     "Series" => "title,description,content_text",
     "Fatwa" => "title,content_text",  # No description field
     "News" => "title,description,content_text",
     "Article" => "title,content_text"  # No description field
   }.freeze
 
-  # Facet fields per collection
-  FACET_FIELDS = {
-    "Book" => "content_type,scholar_id,media_type",
-    "Lecture" => "content_type,scholar_id,media_type",
-    "Lesson" => "content_type,scholar_id,media_type",
-    "Series" => "content_type,scholar_id,media_type",
-    "Fatwa" => "content_type,scholar_id,media_type",
-    "News" => "content_type,scholar_id,media_type",
-    "Article" => "content_type,scholar_id,media_type"
-  }.freeze
+  FACET_FIELDS = "content_type,scholar_name,media_type"
 
-  DEFAULT_PER_PAGE = 5
+  DEFAULT_PER_PAGE = 6
   MAX_PER_PAGE = 50
 
   def initialize(params = {})
     @query = params[:q].to_s.strip
     @domain_id = params[:domain_id]
+    @content_types = normalize_content_types(params[:content_types])
+    @scholars = Array(params[:scholars]).map(&:to_s).reject(&:blank?)
     @page = [ params[:page].to_i, 1 ].max
-    @per_page = [ [ params[:per_page].to_i, DEFAULT_PER_PAGE ].max, MAX_PER_PAGE ].min
-    @per_page = DEFAULT_PER_PAGE if params[:per_page].to_i.zero?
+    @per_page = params[:per_page].to_i.positive? ? params[:per_page].to_i.clamp(1, MAX_PER_PAGE) : DEFAULT_PER_PAGE
   end
 
   def search
@@ -73,14 +63,20 @@ class TypesenseSearchService
   end
 
   def build_searches
-    CONTENT_COLLECTIONS.map do |collection|
+    collections_to_search.map do |collection|
       {
         "collection" => collection,
         "query_by" => SEARCHABLE_FIELDS[collection],
-        "facet_by" => FACET_FIELDS[collection],
-        "filter_by" => content_filter_string
+        "facet_by" => FACET_FIELDS,
+        "filter_by" => build_filter_string
       }
     end
+  end
+
+  def collections_to_search
+    return CONTENT_COLLECTIONS if @content_types.empty?
+
+    CONTENT_COLLECTIONS.select { |c| @content_types.include?(c.downcase) }
   end
 
   def common_params
@@ -101,10 +97,19 @@ class TypesenseSearchService
     browsing? ? "published_at_ts:desc" : "_text_match:desc,published_at_ts:desc"
   end
 
-  def content_filter_string
-    return "" if @domain_id.blank?
+  def build_filter_string
+    filters = []
+    filters << "domain_ids:=[#{@domain_id}]" if @domain_id.present?
+    filters << "scholar_name:=[#{@scholars.map { |n| "`#{sanitize_filter_value(n)}`" }.join(',')}]" if @scholars.present?
+    filters.join(" && ")
+  end
 
-    "domain_ids:=[#{@domain_id}]"
+  def normalize_content_types(content_types)
+    Array(content_types).map(&:to_s).map(&:downcase).reject(&:blank?)
+  end
+
+  def sanitize_filter_value(value)
+    value.delete("`")
   end
 
   def build_result(response)
@@ -124,10 +129,8 @@ class TypesenseSearchService
   def group_hits_by_type(response)
     results = response["results"]
 
-    # Results are in same order as searches
-    CONTENT_COLLECTIONS.each_with_index.each_with_object({}) do |(collection, index), grouped|
-      key = COLLECTION_KEYS[collection]
-      grouped[key] = extract_hits_at(results, index, collection.downcase)
+    collections_to_search.each_with_index.to_h do |collection, index|
+      [ COLLECTION_KEYS[collection], extract_hits_at(results, index, collection.downcase) ]
     end
   end
 

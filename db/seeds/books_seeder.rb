@@ -2,18 +2,30 @@ require_relative './base'
 
 module Seeds
   class BooksSeeder < Base
-    def self.seed(from: nil, domain_id: nil)
-      puts "Seeding books..."
-      scholar = default_scholar
-      books_data = load_json('data/books.json').find { |item| item['type'] == 'table' }['data']
+    ALFAWZAN_BOOKS = [
+      { name: "الإرشاد إلى صحيح الاعتقاد" },
+      { name: "شرح كتاب التوحيد" },
+      { name: "الملخص الفقهي" }
+    ].freeze
+
+    def self.seed(from: nil, domain_ids: nil, scholar: nil)
+      scholar ||= default_scholar
+      books_data = if scholar.last_name.include?("الفوزان")
+        ALFAWZAN_BOOKS
+      else
+        load_json('data/books.json').find { |item| item['type'] == 'table' }['data']
+      end
+
+      puts "Seeding books for #{scholar.first_name} #{scholar.last_name}..."
       processed = 0
 
       books_data.each do |data|
-        next if data['name'].blank? || data['name'] =~ /^\d+$/
+        name = data['name'] || data[:name]
+        next if name.blank? || name =~ /^\d+$/
 
-        book = Book.find_or_initialize_by(title: data['name']) do |b|
+        book = Book.find_or_initialize_by(title: name) do |b|
           b.scholar = scholar
-          b.description = "كتاب #{data['name']} للشيخ محمد بن رمزان الهاجري"
+          b.description = "كتاب #{name} للشيخ #{scholar.first_name} #{scholar.last_name}"
           b.category = "الكتب"
           b.published_at = Date.today
           b.published = true
@@ -22,21 +34,11 @@ module Seeds
         book.downloads ||= 0
         book.pages ||= 0
 
-        if data['image'].present? && !book.cover_image.attached?
-          path = Rails.root.join('storage', 'covers', "book_#{data['id']}_cover#{File.extname(data['image'])}")
-          downloaded = download_file(data['image'], path)
-          book.cover_image.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
-        end
-
-        if data['url'].present? && !book.file.attached?
-          path = Rails.root.join('storage', 'books', "book_#{data['id']}#{File.extname(data['url'])}")
-          downloaded = download_file(data['url'], path)
-          book.file.attach(io: File.open(downloaded), filename: File.basename(downloaded)) if downloaded
-        end
-
         if book.save
+          attach_fixture(book, :cover_image, :cover) unless book.cover_image.attached?
+          attach_fixture(book, :file, :pdf) unless book.file.attached?
           processed += 1
-          assign_to_domain(book, domain_id)
+          assign_to_domains(book, domain_ids)
         end
         print "." if processed % 5 == 0
       end

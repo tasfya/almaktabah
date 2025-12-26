@@ -8,7 +8,7 @@
       <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto" do %>
         <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
       <% end %>
-      <label for="sidebar-drawer" class="btn btn-ghost drawer-button lg:hidden">
+      <label for="sidebar-drawer" class="btn btn-ghost text-primary-content hover:text-secondary-content drawer-button lg:hidden">
         <%= icon "menu", library: "lucide", class: "size-5" %>
       </label>
       <div class="hidden md:flex flex-row-reverse gap-2 items-center w-full flex-1 mr-auto">

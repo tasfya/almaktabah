@@ -1,0 +1,25 @@
+<div class="card card-border bg-base-100 relative hover:bg-base-200/50 transition-colors">
+  <div class="card-body">
+    <h2 class="card-title">
+      <%= link_to article.url, class: "hover:text-primary stretched-link", data: { turbo_frame: "_top" } do %>
+        <%= article.highlighted_title.html_safe %>
+      <% end %>
+    </h2>
+    <% if article.scholar_name.present? %>
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-sm text-base-content/70"><%= t('search.results.sheikh') %> <%= article.scholar_name %></span>
+      </div>
+    <% end %>
+    <% if article.read_time.present? && article.read_time > 0 %>
+      <div class="flex flex-wrap items-center gap-2 mb-2">
+        <div class="badge badge-outline badge-sm gap-1">
+          <%= icon "book-open", class: "w-3 h-3" %>
+          <%= t('search.read_time', count: article.read_time) %>
+        </div>
+      </div>
+    <% end %>
+    <% if article.description.present? %>
+      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(article.description), length: 150) %></p>
+    <% end %>
+  </div>
+</div>
