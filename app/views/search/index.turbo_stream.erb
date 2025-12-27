@@ -1,0 +1,11 @@
+<%= turbo_stream.update "search_results" do %>
+  <%= render "search/search_results_content" %>
+<% end %>
+
+<%= turbo_stream.replace "search_filters_content_desktop" do %>
+  <%= render "search/filters/filters_content", filter_location: "desktop" %>
+<% end %>
+
+<%= turbo_stream.replace "search_filters_content_mobile" do %>
+  <%= render "search/filters/filters_content", filter_location: "mobile" %>
+<% end %>

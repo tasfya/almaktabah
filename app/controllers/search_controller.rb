@@ -6,6 +6,11 @@
       @search_filters = { scholars: params[:scholars], content_types: params[:content_types] }
       @all_content_types = TypesenseSearchService::CONTENT_COLLECTIONS
       perform_typesense_search
+
+      respond_to do |format|
+        format.html
+        format.turbo_stream
+      end
     end
 
     private

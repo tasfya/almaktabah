@@ -5,7 +5,6 @@ export default class extends Controller {
     "sidebar",
     "toggle",
     "overlay",
-    "form",
     "checkbox",
     "clearButton",
     "submitButton",
@@ -89,66 +88,40 @@ export default class extends Controller {
   onCheckboxChange(event) {
     const checkbox = event.target;
     this.updateUrlParameter(checkbox.name, checkbox.value, checkbox.checked);
-    this.debouncedSubmit(checkbox.closest("form"));
+    this.debouncedSubmit();
   }
 
-  debouncedSubmit(form) {
+  debouncedSubmit() {
     if (this.debounceTimeout) clearTimeout(this.debounceTimeout);
+    this.debounceTimeout = setTimeout(() => this.fetchResults(), 300);
+  }
 
-    this.debounceTimeout = setTimeout(() => {
-      if (!form) {
-        this.submitForm();
+  async submitForm() {
+    await this.fetchResults();
+  }
+
+  async fetchResults() {
+    this.setLoadingState(true);
+
+    try {
+      const response = await fetch(window.location.href, {
+        headers: {
+          Accept: "text/vnd.turbo-stream.html",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Filter request failed:", response.status);
         return;
       }
 
-      this.setLoadingState(true);
-
-      const frameId = form.dataset.turboFrame;
-      const frame = frameId && document.getElementById(frameId);
-
-      if (frame) {
-        const params = new URLSearchParams();
-
-        form
-          .querySelectorAll('input[type="checkbox"]:checked')
-          .forEach((cb) => {
-            if (cb.name && cb.value) params.append(cb.name, cb.value);
-          });
-
-        form.querySelectorAll('input[type="hidden"]').forEach((field) => {
-          if (field.name && field.value) params.append(field.name, field.value);
-        });
-
-        const onFrameLoad = () => {
-          this.setLoadingState(false);
-          frame.removeEventListener("turbo:frame-load", onFrameLoad);
-        };
-        frame.addEventListener("turbo:frame-load", onFrameLoad);
-
-        frame.src = `${form.action}?${params.toString()}`;
-      } else {
-        const onSubmitEnd = () => {
-          this.setLoadingState(false);
-          form.removeEventListener("turbo:submit-end", onSubmitEnd);
-        };
-        form.addEventListener("turbo:submit-end", onSubmitEnd);
-
-        form.requestSubmit();
-      }
-    }, 300);
-  }
-
-  submitForm() {
-    if (this.hasFormTarget) {
-      this.setLoadingState(true);
-
-      const onSubmitEnd = () => {
-        this.setLoadingState(false);
-        this.formTarget.removeEventListener("turbo:submit-end", onSubmitEnd);
-      };
-      this.formTarget.addEventListener("turbo:submit-end", onSubmitEnd);
-
-      this.formTarget.requestSubmit();
+      const html = await response.text();
+      window.Turbo.renderStreamMessage(html);
+    } catch (error) {
+      console.error("Filter request error:", error);
+    } finally {
+      this.setLoadingState(false);
     }
   }
 

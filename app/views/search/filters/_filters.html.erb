@@ -1,84 +1,16 @@
 <%# Filter Form %>
-<%= form_with url: search_path, method: :get,
-        data: { filter_sidebar_target: "form", turbo_frame: "search_results" },
-        class: "space-y-6" do |form| %>
+<%= form_with url: search_path, method: :get, class: "space-y-6" do |form| %>
   <%# Hidden field for search query %>
   <%= form.hidden_field :q, value: @query if @query.present? %>
-  <%# Scholars Filter Section - Only show if more than one scholar in results %>
-  <% scholar_facets = @facets&.dig("scholar_name") || [] %>
-  <% if scholar_facets.size > 1 %>
-    <div class="card bg-base-100 border border-base-300 shadow-sm">
-      <div class="card-body p-4">
-        <h2 class="card-title text-lg font-medium justify-between">
-          <%= t('search.filters.scholars') %>
-        </h2>
-        <div class="space-y-3 max-h-64 overflow-y-auto pr-2">
-          <% scholar_facets.each_with_index do |facet, index| %>
-            <div class="form-control">
-              <label class="label cursor-pointer justify-start gap-3 p-0 hover:bg-base-200 rounded-lg transition-colors">
-                <input
-                  type="checkbox"
-                  name="scholars[]"
-                  value="<%= facet[:value] %>"
-                  data-filter-sidebar-target="checkbox"
-                  data-action="change->filter-sidebar#onCheckboxChange"
-                  id="scholar_<%= index %>"
-                  class="checkbox checkbox-primary checkbox-sm"
-                  <%= 'checked' if @search_filters[:scholars]&.include?(facet[:value]) %>>
-                <span class="label-text flex-1">
-                  <%= facet[:value] %>
-                </span>
-                <span class="badge badge-ghost badge-sm">
-                  <%= facet[:count] %>
-                </span>
-              </label>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  <% end %>
-    <%# Content Types Filter Section %>
-    <div class="card bg-base-100 border border-base-300 shadow-sm mt-4">
-      <div class="card-body p-4">
-        <h2 class="card-title text-lg font-medium justify-between">
-          <%= t('search.filters.content_types') %>
-        </h2>
-        <div class="space-y-3">
-          <% @all_content_types.each do |content_type| %>
-            <% facet_count = @facets&.dig("content_type")&.find { |f| f[:value].downcase == content_type.downcase }&.dig(:count) || 0 %>
-            <div class="form-control">
-              <label class="label cursor-pointer justify-start gap-3 p-0 hover:bg-base-200 rounded-lg transition-colors">
-                <input
-                    type="checkbox"
-                    name="content_types[]"
-                    value="<%= content_type.downcase %>"
-                    data-filter-sidebar-target="checkbox"
-                    data-action="change->filter-sidebar#onCheckboxChange"
-                  id="content_type_<%= content_type.downcase %>"
-                  class="checkbox checkbox-primary checkbox-sm"
-                  <%= 'checked' if @search_filters[:content_types]&.include?(content_type.downcase) %>
-                  <%= 'disabled' if facet_count == 0 %>>
-                  <span class="label-text flex-1 <%= 'text-gray-400' if facet_count == 0 %>">
-                    <%= t("content_types.#{content_type.downcase}") %>
-                  </span>
-                  <span class="badge badge-ghost badge-sm <%= 'opacity-50' if facet_count == 0 %>">
-                    <%= facet_count %>
-                  </span>
-                </label>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      <%# Apply Filters Button - Visible on mobile only %>
-      <div class="mt-6 lg:hidden">
-        <button
-          data-filter-sidebar-target="submitButton"
-          data-action="click->filter-sidebar#submitForm"
-          type="submit"
-          class="btn btn-primary btn-block w-full">
-          <%= t('search.filters.apply') %>
-        </button>
-      </div>
-    <% end %>
+  <%= render "search/filters/filters_content", filter_location: local_assigns[:filter_location] %>
+  <%# Apply Filters Button - Visible on mobile only %>
+  <div class="mt-6 lg:hidden">
+    <button
+      data-filter-sidebar-target="submitButton"
+      data-action="click->filter-sidebar#submitForm"
+      type="button"
+      class="btn btn-primary btn-block w-full">
+      <%= t('search.filters.apply') %>
+    </button>
+  </div>
+<% end %>
