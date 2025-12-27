@@ -119,20 +119,36 @@ export default class extends Controller {
           if (field.name && field.value) params.append(field.name, field.value);
         });
 
+        const onFrameLoad = () => {
+          this.setLoadingState(false);
+          frame.removeEventListener("turbo:frame-load", onFrameLoad);
+        };
+        frame.addEventListener("turbo:frame-load", onFrameLoad);
+
         frame.src = `${form.action}?${params.toString()}`;
       } else {
+        const onSubmitEnd = () => {
+          this.setLoadingState(false);
+          form.removeEventListener("turbo:submit-end", onSubmitEnd);
+        };
+        form.addEventListener("turbo:submit-end", onSubmitEnd);
+
         form.requestSubmit();
       }
-
-      setTimeout(() => this.setLoadingState(false), 1000);
     }, 300);
   }
 
   submitForm() {
     if (this.hasFormTarget) {
       this.setLoadingState(true);
+
+      const onSubmitEnd = () => {
+        this.setLoadingState(false);
+        this.formTarget.removeEventListener("turbo:submit-end", onSubmitEnd);
+      };
+      this.formTarget.addEventListener("turbo:submit-end", onSubmitEnd);
+
       this.formTarget.requestSubmit();
-      setTimeout(() => this.setLoadingState(false), 1000);
     }
   }
 
@@ -223,7 +239,17 @@ export default class extends Controller {
 
   clearUrlParameters() {
     const url = new URL(window.location);
-    url.search = "";
+    const params = new URLSearchParams(url.search);
+
+    // Only remove filter parameters, preserve others like 'q' (search query)
+    if (this.hasCheckboxTarget) {
+      const filterNames = [
+        ...new Set(this.checkboxTargets.map((cb) => cb.name)),
+      ];
+      filterNames.forEach((name) => params.delete(name));
+    }
+
+    url.search = params.toString();
     window.history.replaceState({}, "", url);
   }
 
@@ -231,8 +257,11 @@ export default class extends Controller {
     if (!this.hasSidebarTarget) return;
 
     if (this.openValue) {
-      document.body.classList.add("overflow-hidden");
-      this.trapFocus();
+      // Only apply modal-like behavior on mobile
+      if (window.innerWidth < 1024) {
+        document.body.classList.add("overflow-hidden");
+        this.trapFocus();
+      }
     } else {
       document.body.classList.remove("overflow-hidden");
       this.removeFocusTrap();
@@ -242,7 +271,6 @@ export default class extends Controller {
   setInitialSidebarState() {
     if (window.innerWidth >= 1024) {
       this.openValue = true;
-      this.updateSidebarState();
     }
   }
 
