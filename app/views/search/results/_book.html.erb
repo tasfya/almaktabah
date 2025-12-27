@@ -1,4 +1,4 @@
-<div class="card card-border bg-base-100 card-sm overflow-hidden relative hover:bg-base-200/50 transition-colors">
+<div class="card card-border bg-base-100 card-sm overflow-hidden relative shadow-sm hover:shadow-lg transition-shadow">
   <% if book.thumbnail_url.present? %>
     <figure class="h-56">
       <%= image_tag book.thumbnail_url, alt: book.title, class: "w-full h-full object-cover" %>
