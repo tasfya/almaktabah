@@ -1,0 +1,62 @@
+<%# Search Header for 3ilm - includes collapsible filters on desktop %>
+<div class="hidden lg:block">
+  <div class="card bg-base-100 shadow-sm mb-6">
+    <div class="card-body">
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="card-title text-2xl">
+          <%= t('navigation.search') %>
+          <% if @total_results.present? && @total_results > 0 %>
+            <span class="badge badge-primary badge-lg ml-2">
+              <%= number_with_delimiter(@total_results) %> <%= t('search.results.count') %>
+            </span>
+          <% end %>
+        </h1>
+      </div>
+      <div class="mb-4">
+        <%= form_with url: search_path, method: :get, local: true,
+          class: "flex gap-2", data: { controller: "search-form" } do |form| %>
+          <div class="flex-1">
+            <%= form.search_field :q, value: @query,
+            placeholder: t('forms.search_placeholder'),
+            class: "input input-bordered w-full focus:ring-2 focus:ring-primary focus:border-transparent",
+            data: { action: "input->search-form#search", "search-form-target": "input" } %>
+          </div>
+          <%= form.submit t('forms.search'), class: "btn btn-primary" %>
+        <% end %>
+      </div>
+      <%# Collapsible Filters %>
+      <div class="collapse collapse-arrow bg-base-200 rounded-box">
+        <input type="checkbox" name="filter-accordion" />
+        <div class="collapse-title font-medium flex items-center gap-2">
+          <%= t('search.filters.title') %>
+          <% active_count = @search_filters[:scholars].to_a.count + @search_filters[:content_types].to_a.count %>
+          <% if active_count > 0 %>
+            <span class="badge badge-primary badge-sm"><%= active_count %></span>
+          <% end %>
+        </div>
+        <div class="collapse-content">
+          <div class="pt-2">
+            <%= render 'search/filters/filters' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%# Mobile Search Form %>
+<div class="lg:hidden mb-4">
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body p-4">
+      <%= form_with url: search_path, method: :get, local: true,
+        class: "flex gap-2", data: { controller: "search-form" } do |form| %>
+        <div class="flex-1">
+          <%= form.search_field :q, value: @query,
+          placeholder: t('forms.search_placeholder'),
+          class: "input input-bordered input-sm w-full focus:ring-2 focus:ring-primary focus:border-transparent",
+          data: { action: "input->search-form#search", "search-form-target": "input" } %>
+        </div>
+        <%= form.submit t('forms.search'), class: "btn btn-primary btn-sm" %>
+      <% end %>
+    </div>
+  </div>
+</div>

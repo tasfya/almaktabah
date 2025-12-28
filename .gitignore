@@ -58,3 +58,8 @@ db/backups
 
 # VS Code
 .vscode/*
+/*.local.*
+.playwright-mcp
+.mcp.json
+opencode.json
+.claude/

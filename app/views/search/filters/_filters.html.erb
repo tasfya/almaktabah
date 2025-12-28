@@ -1,0 +1,16 @@
+<%# Filter Form %>
+<%= form_with url: search_path, method: :get, class: "space-y-6" do |form| %>
+  <%# Hidden field for search query %>
+  <%= form.hidden_field :q, value: @query if @query.present? %>
+  <%= render "search/filters/filters_content", filter_location: local_assigns[:filter_location] %>
+  <%# Apply Filters Button - Visible on mobile only %>
+  <div class="mt-6 lg:hidden">
+    <button
+      data-filter-sidebar-target="submitButton"
+      data-action="click->filter-sidebar#submitForm"
+      type="button"
+      class="btn btn-primary btn-block w-full">
+      <%= t('search.filters.apply') %>
+    </button>
+  </div>
+<% end %>

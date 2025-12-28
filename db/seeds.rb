@@ -10,31 +10,43 @@ SEEDERS = {
   "articles" => Seeds::ArticlesSeeder
 }
 
+CONTENT_SEEDERS = SEEDERS.except("users")
+
 parts = ENV["PARTS"]&.split(",") || SEEDERS.keys
 starting_from = ENV["FROM"]&.strip
 
-domain_id = ENV["DOMAIN_ID"]
-
-if domain_id
-  Domain.find(domain_id) || raise("Domain with ID #{domain_id} not found")
-else
-  # Ensure a default domain for "localhost" exists
-  default_domain = Domain.find_or_create_by!(host: "127.0.0.1") do |domain|
-    domain.name = "localhost"
-  end
-  domain_id = default_domain.id
-  puts "No domain ID specified, using default domain: #{default_domain.name} (ID: #{domain_id})"
+domain1 = Domain.find_or_create_by!(host: "127.0.0.1") do |domain|
+  domain.name = "127.0.0.1"
 end
 
-puts "Running seeders for: #{parts.join(', ')}"
+domain2 = Domain.find_or_create_by!(host: "localhost") do |domain|
+  domain.name = "localhost"
+  domain.template_name = "3ilm"
+end
+
+hajri_scholar = Seeds::Base.default_scholar
+alfawzan_scholar = Seeds::Base.alfawzan_scholar(default_domain: domain2)
+
+puts "=== Seeding Hajri content (both domains) ==="
 
 parts.each do |part|
   seeder = SEEDERS[part.strip]
   if seeder
-    seeder.seed(from: starting_from, domain_id: domain_id)
+    seeder.seed(from: starting_from, domain_ids: [ domain1.id, domain2.id ], scholar: hajri_scholar)
   else
     puts "⚠️ Unknown seed part: #{part}"
   end
 end
 
+puts "\n=== Seeding Alfawzan content (localhost only) ==="
+
+(parts.map(&:strip) & CONTENT_SEEDERS.keys).each do |part|
+  seeder = CONTENT_SEEDERS[part]
+  seeder&.seed(from: starting_from, domain_ids: [ domain2.id ], scholar: alfawzan_scholar)
+end
+
 puts "✅ Seeding complete."
+
+puts "🔍 Triggering Typesense reindex..."
+Rake::Task["typesense:reindex"].invoke
+puts "✅ Typesense reindex complete."

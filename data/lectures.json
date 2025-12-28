@@ -5,7 +5,8 @@
     "video_url": null,
     "audio_url": "upload/upload1680334571489.mp3",
     "youtube_url": null,
-    "category": " العقيدة"
+    "category": " العقيدة",
+    "kind": "conference"
   },
   {
     "id": "2",
@@ -13,13 +14,119 @@
     "video_url": null,
     "audio_url": "upload/upload1680334571489.mp3",
     "youtube_url": null,
-    "category": " السيرة النبوية"
+    "category": " السيرة النبوية",
+    "kind": "conference"
   },
   {
     "id": "3",
     "name": "أركان الإسلام",
     "video_url": null,
     "audio_url": "upload/upload1680334571489.mp3",
-    "youtube_url": null
+    "youtube_url": null,
+    "kind": "conference"
+  },
+  {
+    "id": "1585",
+    "name": "خطبة تحقيق ثمرات التوحيد.  للشيخ محمد بن رمزان الهاجري",
+    "video_url": null,
+    "audio_url": "upload/upload1685899657385.mp3",
+    "youtube_url": null,
+    "kind": "sermon"
+  },
+  {
+    "id": "2533",
+    "name": "محاسبة النفس ",
+    "video_url": null,
+    "audio_url": "upload/upload1723564993658.mp3",
+    "youtube_url": null,
+    "kind": "benefit"
+  },
+  {
+    "id": "803",
+    "name": "آثار الذنوب والمعاصي  للشيخ محمد بن رمزان الهاجري",
+    "video_url": null,
+    "audio_url": "upload/upload1682494322157.mp3",
+    "youtube_url": null,
+    "kind": "conference"
+  },
+  {
+    "id": "1748",
+    "name": "التوبة النصوح - محاضرة في مسجد الخيف بمكة المكرمة ١٢ - ١٢ - ١٤٤٤هـ",
+    "video_url": null,
+    "audio_url": "upload/upload1688155443703.mp3",
+    "youtube_url": null,
+    "kind": "conference"
+  },
+  {
+    "id": "801",
+    "name": "المرأة المسلمة بين انضباط الشرع وانفلات الغرب.  للشيخ محمد بن رمزان الهاجري",
+    "video_url": null,
+    "audio_url": "upload/upload1682494260398.mp3",
+    "youtube_url": null,
+    "kind": "conference"
+  },
+  {
+    "id": "802",
+    "name": "سلامة القلوب محاضرة الشيخ محمد بن رمزان الهاجري",
+    "video_url": null,
+    "audio_url": "upload/upload1682494307727.mp3",
+    "youtube_url": null,
+    "kind": "conference"
+  },
+  {
+    "id": "800",
+    "name": "فاستقم كما أمرت ",
+    "video_url": null,
+    "audio_url": "upload/upload1682494179835.mp3",
+    "youtube_url": null,
+    "kind": "conference"
+  },
+  {
+    "id": "805",
+    "name": "فضل العشر الأواخر ",
+    "video_url": null,
+    "audio_url": "upload/upload1682494519786.mp3",
+    "youtube_url": null,
+    "kind": "conference"
+  },
+  {
+    "id": "804",
+    "name": "محاسبة النفس  ",
+    "video_url": null,
+    "audio_url": "upload/upload1682494438493.mp3",
+    "youtube_url": null,
+    "kind": "conference"
+  },
+  {
+    "id": "807",
+    "name": "محبة النبي الله عليه وسلم",
+    "video_url": null,
+    "audio_url": "upload/upload1682494806446.mp3",
+    "youtube_url": null,
+    "kind": "conference"
+  },
+  {
+    "id": "809",
+    "name": "وسائل الثبات في زمن الفتن ",
+    "video_url": null,
+    "audio_url": "upload/upload1682495068625.mp3",
+    "youtube_url": null,
+    "kind": "conference"
+  },
+  {
+    "id": "806",
+    "name": "يا باغي الخير أقبل",
+    "video_url": null,
+    "audio_url": "upload/upload1682494576107.mp3",
+    "youtube_url": null,
+    "kind": "conference"
+  },
+  {
+    "id": "808",
+    "name": "يا عبد الله هذا هو الرياء فاحذره ",
+    "video_url": null,
+    "audio_url": "upload/upload1682495045131.mp3",
+    "youtube_url": null,
+    "kind": "conference"
   }
 ]

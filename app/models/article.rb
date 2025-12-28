@@ -32,6 +32,9 @@ class Article < ApplicationRecord
     attribute :media_type do
       "text"
     end
+    attribute :read_time do
+      read_time_minutes
+    end
     attribute :domain_ids do
       domain_assignments.pluck(:domain_id)
     end
@@ -41,6 +44,9 @@ class Article < ApplicationRecord
     end
     attribute :created_at_ts do
       created_at&.to_i
+    end
+    attribute :url do
+      Rails.application.routes.url_helpers.article_path(self, scholar_id: scholar.slug)
     end
 
     predefined_fields [
@@ -52,9 +58,11 @@ class Article < ApplicationRecord
       { "name" => "scholar_slug", "type" => "string" },
       { "name" => "scholar_id", "type" => "int32", "facet" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
+      { "name" => "read_time", "type" => "int32" },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
       { "name" => "published_at_ts", "type" => "int64" },
-      { "name" => "created_at_ts", "type" => "int64" }
+      { "name" => "created_at_ts", "type" => "int64" },
+      { "name" => "url", "type" => "string" }
     ]
 
     default_sorting_field "published_at_ts"
@@ -64,6 +72,12 @@ class Article < ApplicationRecord
   end
 
   scope :recent, -> { order(published_at: :desc) }
+
+  def read_time_minutes
+    return 0 unless content.present?
+    words = content.to_plain_text.split.size
+    (words / 200.0).ceil
+  end
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)

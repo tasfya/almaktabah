@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 class TypesenseSearchService
-  CONTENT_COLLECTIONS = %w[News Fatwa Lecture Lesson Series Article Book].freeze
+  CONTENT_COLLECTIONS = %w[News Fatwa Lecture Series Article Book].freeze
 
   # Maps content types to their plural symbol keys for results grouping
   COLLECTION_KEYS = {
     "Book" => :books,
     "Lecture" => :lectures,
-    "Lesson" => :lessons,
     "Series" => :series,
     "Fatwa" => :fatwas,
     "News" => :news,
@@ -18,33 +17,24 @@ class TypesenseSearchService
   SEARCHABLE_FIELDS = {
     "Book" => "title,description,content_text",
     "Lecture" => "title,description,content_text",
-    "Lesson" => "title,description,content_text",
     "Series" => "title,description,content_text",
     "Fatwa" => "title,content_text",  # No description field
     "News" => "title,description,content_text",
     "Article" => "title,content_text"  # No description field
   }.freeze
 
-  # Facet fields per collection
-  FACET_FIELDS = {
-    "Book" => "content_type,scholar_id,media_type",
-    "Lecture" => "content_type,scholar_id,media_type",
-    "Lesson" => "content_type,scholar_id,media_type",
-    "Series" => "content_type,scholar_id,media_type",
-    "Fatwa" => "content_type,scholar_id,media_type",
-    "News" => "content_type,scholar_id,media_type",
-    "Article" => "content_type,scholar_id,media_type"
-  }.freeze
+  FACET_FIELDS = "content_type,scholar_name,media_type"
 
-  DEFAULT_PER_PAGE = 5
+  DEFAULT_PER_PAGE = 6
   MAX_PER_PAGE = 50
 
   def initialize(params = {})
     @query = params[:q].to_s.strip
     @domain_id = params[:domain_id]
+    @content_types = normalize_content_types(params[:content_types])
+    @scholars = Array(params[:scholars]).map(&:to_s).reject(&:blank?)
     @page = [ params[:page].to_i, 1 ].max
-    @per_page = [ [ params[:per_page].to_i, DEFAULT_PER_PAGE ].max, MAX_PER_PAGE ].min
-    @per_page = DEFAULT_PER_PAGE if params[:per_page].to_i.zero?
+    @per_page = params[:per_page].to_i.positive? ? params[:per_page].to_i.clamp(1, MAX_PER_PAGE) : DEFAULT_PER_PAGE
   end
 
   def search
@@ -73,14 +63,44 @@ class TypesenseSearchService
   end
 
   def build_searches
-    CONTENT_COLLECTIONS.map do |collection|
-      {
+    selected = selected_collections
+    searches = collections_to_search.map do |collection|
+      search = {
         "collection" => collection,
         "query_by" => SEARCHABLE_FIELDS[collection],
-        "facet_by" => FACET_FIELDS[collection],
-        "filter_by" => content_filter_string
+        "facet_by" => FACET_FIELDS,
+        "filter_by" => build_filter_string
       }
+      # Unselected collections: only fetch facet counts, no hits
+      search["per_page"] = 0 unless selected.include?(collection)
+      search
     end
+
+    # For disjunctive scholar faceting: add queries without scholar filter
+    if @scholars.present?
+      selected.each do |collection|
+        searches << {
+          "collection" => collection,
+          "query_by" => SEARCHABLE_FIELDS[collection],
+          "facet_by" => "scholar_name",
+          "filter_by" => build_filter_string_without_scholars,
+          "per_page" => 0
+        }
+      end
+    end
+
+    searches
+  end
+
+  # Always search all collections to get accurate facet counts
+  def collections_to_search
+    CONTENT_COLLECTIONS
+  end
+
+  def selected_collections
+    return CONTENT_COLLECTIONS if @content_types.empty?
+
+    CONTENT_COLLECTIONS.select { |c| @content_types.include?(c.downcase) }
   end
 
   def common_params
@@ -101,16 +121,40 @@ class TypesenseSearchService
     browsing? ? "published_at_ts:desc" : "_text_match:desc,published_at_ts:desc"
   end
 
-  def content_filter_string
-    return "" if @domain_id.blank?
+  def build_filter_string
+    filters = []
+    filters << "domain_ids:=[#{@domain_id}]" if @domain_id.present?
+    filters << "scholar_name:=[#{@scholars.map { |n| "`#{sanitize_filter_value(n)}`" }.join(',')}]" if @scholars.present?
+    filters.join(" && ")
+  end
 
-    "domain_ids:=[#{@domain_id}]"
+  def build_filter_string_without_scholars
+    filters = []
+    filters << "domain_ids:=[#{@domain_id}]" if @domain_id.present?
+    # Include content_types so scholar counts reflect the current content type filter
+    filters << build_content_type_filter if @content_types.present?
+    filters.join(" && ")
+  end
+
+  def build_content_type_filter
+    return nil if @content_types.empty?
+
+    values = @content_types.map { |t| "`#{t}`" }.join(",")
+    "content_type:=[#{values}]"
+  end
+
+  def normalize_content_types(content_types)
+    Array(content_types).map(&:to_s).map(&:downcase).reject(&:blank?)
+  end
+
+  def sanitize_filter_value(value)
+    value.delete("`")
   end
 
   def build_result(response)
     grouped_hits = group_hits_by_type(response)
     facets = merge_facets(response)
-    total_found = response["results"].sum { |r| r["found"] || 0 }
+    total_found = calculate_total_found(response)
 
     SearchResult.new(
       grouped_hits: grouped_hits,
@@ -121,13 +165,21 @@ class TypesenseSearchService
     )
   end
 
+  def calculate_total_found(response)
+    # Only count results from selected content types
+    selected_collections.sum do |collection|
+      index = CONTENT_COLLECTIONS.index(collection)
+      response["results"][index]["found"] || 0
+    end
+  end
+
   def group_hits_by_type(response)
     results = response["results"]
 
-    # Results are in same order as searches
-    CONTENT_COLLECTIONS.each_with_index.each_with_object({}) do |(collection, index), grouped|
-      key = COLLECTION_KEYS[collection]
-      grouped[key] = extract_hits_at(results, index, collection.downcase)
+    # Only include hits from selected content types (but all collections were searched for facets)
+    selected_collections.to_h do |collection|
+      index = CONTENT_COLLECTIONS.index(collection)
+      [ COLLECTION_KEYS[collection], extract_hits_at(results, index, collection.downcase) ]
     end
   end
 
@@ -140,10 +192,17 @@ class TypesenseSearchService
 
   def merge_facets(response)
     merged = Hash.new { |h, k| h[k] = Hash.new(0) }
+    main_results_count = CONTENT_COLLECTIONS.size
+    selected_indices = selected_collections.map { |c| CONTENT_COLLECTIONS.index(c) }.to_set
 
-    response["results"].each do |result|
+    response["results"].each_with_index do |result, index|
+      is_extra_scholar_query = index >= main_results_count
+      is_selected_collection = selected_indices.include?(index)
+
       result["facet_counts"]&.each do |facet|
         field = facet["field_name"]
+        next unless include_facet?(field, is_extra_scholar_query, is_selected_collection)
+
         facet["counts"].each do |count|
           merged[field][count["value"]] += count["count"]
         end
@@ -154,6 +213,20 @@ class TypesenseSearchService
       counts.map { |value, count| { value: value, count: count } }
             .sort_by { |f| -f[:count] }
     end
+  end
+
+  # Determines whether to include a facet based on filter state and query type.
+  # Scholar facets need special handling for disjunctive counts.
+  def include_facet?(field, is_extra_scholar_query, is_selected_collection)
+    return true unless field == "scholar_name"
+
+    # When scholars filter active: use extra disjunctive queries only
+    return is_extra_scholar_query if @scholars.present?
+
+    # When content_types filter active: use only selected collections
+    return is_selected_collection if @content_types.present?
+
+    true
   end
 
   def empty_result

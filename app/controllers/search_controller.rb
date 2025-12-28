@@ -1,10 +1,16 @@
   class SearchController < ApplicationController
-    include Filterable
     before_action :setup_search_breadcrumbs
 
     def index
       @query = params[:q]&.strip
+      @search_filters = { scholars: params[:scholars], content_types: params[:content_types] }
+      @all_content_types = TypesenseSearchService::CONTENT_COLLECTIONS
       perform_typesense_search
+
+      respond_to do |format|
+        format.html
+        format.turbo_stream
+      end
     end
 
     private
@@ -25,8 +31,10 @@
       {
         q: @query,
         domain_id: @domain&.id,
+        content_types: params[:content_types],
+        scholars: params[:scholars],
         page: params[:page],
-        per_page: 5
+        per_page: params[:per_page]
       }
     end
   end

@@ -1,0 +1,25 @@
+<div class="card card-border bg-base-100 relative shadow-sm hover:shadow-lg transition-shadow">
+  <div class="card-body">
+    <h2 class="card-title">
+      <%= link_to series.url, class: "hover:text-primary stretched-link", data: { turbo_frame: "_top" } do %>
+        <%= sanitize(series.highlighted_title, tags: %w[mark]) %>
+      <% end %>
+    </h2>
+    <% if series.scholar_name.present? %>
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-sm text-base-content/70"><%= t('search.results.sheikh') %> <%= series.scholar_name %></span>
+      </div>
+    <% end %>
+    <% if series.lesson_count.present? %>
+      <div class="flex gap-2 mb-2">
+        <div class="badge badge-outline">
+          <%= icon "book-open", class: "w-3 h-3 mr-1" %>
+          <%= t('scholars.show.lessons_count', count: series.lesson_count) %>
+        </div>
+      </div>
+    <% end %>
+    <% if series.description.present? %>
+      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(series.description), length: 150) %></p>
+    <% end %>
+  </div>
+</div>

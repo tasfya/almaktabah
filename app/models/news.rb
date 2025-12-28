@@ -44,6 +44,12 @@ class News < ApplicationRecord
     attribute :created_at_ts do
       created_at&.to_i
     end
+    attribute :thumbnail_url do
+      attachment_url(thumbnail)
+    end
+    attribute :url do
+      Rails.application.routes.url_helpers.news_path(self)
+    end
 
     predefined_fields [
       { "name" => "title", "type" => "string", "locale" => "ar" },
@@ -57,7 +63,9 @@ class News < ApplicationRecord
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
       { "name" => "published_at_ts", "type" => "int64" },
-      { "name" => "created_at_ts", "type" => "int64" }
+      { "name" => "created_at_ts", "type" => "int64" },
+      { "name" => "thumbnail_url", "type" => "string", "optional" => true },
+      { "name" => "url", "type" => "string" }
     ]
 
     default_sorting_field "published_at_ts"

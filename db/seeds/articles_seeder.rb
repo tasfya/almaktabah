@@ -2,7 +2,7 @@ require_relative './base'
 
 module Seeds
   class ArticlesSeeder < Base
-    SAMPLE_ARTICLES = [
+    HAJRI_ARTICLES = [
       {
         title: "فضل طلب العلم الشرعي",
         content: <<~CONTENT
@@ -74,25 +74,65 @@ module Seeds
       }
     ].freeze
 
-    def self.seed(from: nil, domain_id: nil)
-      puts "📝 Seeding articles..."
+    ALFAWZAN_ARTICLES = [
+      {
+        title: "شرح أصول الإيمان",
+        content: <<~CONTENT
+          الإيمان في اللغة التصديق، وفي الشرع تصديق القلب وقول اللسان وعمل الجوارح.
+
+          وأصول الإيمان ستة كما جاء في حديث جبريل: أن تؤمن بالله وملائكته وكتبه ورسله واليوم الآخر والقدر خيره وشره.
+
+          والإيمان يزيد بالطاعة وينقص بالمعصية، وهذا مذهب أهل السنة والجماعة.
+        CONTENT
+      },
+      {
+        title: "التحذير من البدع",
+        content: <<~CONTENT
+          البدعة كل ما أُحدث في الدين مما ليس منه، وقد حذر النبي صلى الله عليه وسلم من البدع أشد التحذير.
+
+          قال صلى الله عليه وسلم: "من أحدث في أمرنا هذا ما ليس منه فهو رد" متفق عليه.
+
+          وقال: "إياكم ومحدثات الأمور، فإن كل محدثة بدعة، وكل بدعة ضلالة".
+
+          فعلى المسلم أن يلتزم بالسنة ويحذر من البدع والمحدثات.
+        CONTENT
+      },
+      {
+        title: "فضل العلم وأهله",
+        content: <<~CONTENT
+          العلم الشرعي من أشرف ما يُطلب، وأهله هم ورثة الأنبياء.
+
+          قال تعالى: "يرفع الله الذين آمنوا منكم والذين أوتوا العلم درجات".
+
+          وقال النبي صلى الله عليه وسلم: "إن العلماء ورثة الأنبياء، وإن الأنبياء لم يورثوا دينارًا ولا درهمًا، إنما ورثوا العلم".
+
+          فينبغي تعظيم أهل العلم واحترامهم والأخذ عنهم.
+        CONTENT
+      }
+    ].freeze
+
+    def self.seed(from: nil, domain_ids: nil, scholar: nil)
+      scholar ||= default_scholar
+      articles_data = scholar.last_name.include?("الفوزان") ? ALFAWZAN_ARTICLES : HAJRI_ARTICLES
+
+      puts "📝 Seeding articles for #{scholar.first_name} #{scholar.last_name}..."
 
       processed = 0
       errors = []
 
-      SAMPLE_ARTICLES.each_with_index do |data, index|
+      articles_data.each_with_index do |data, index|
         puts "Processing ##{index + 1}: #{data[:title]}"
 
         begin
           article = Article.find_or_initialize_by(title: data[:title])
-          article.scholar = default_scholar
+          article.scholar = scholar
           article.content = data[:content] if article.content.blank?
           article.published = true
           article.published_at ||= Date.today - index.days
 
           if article.save
             processed += 1
-            assign_to_domain(article, domain_id)
+            assign_to_domains(article, domain_ids)
           else
             errors << "Failed to save article: #{data[:title]} — #{article.errors.full_messages.join(', ')}"
           end

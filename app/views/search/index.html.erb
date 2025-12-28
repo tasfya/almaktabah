@@ -1,64 +1,24 @@
 <% content_for :title, t('navigation.search') %>
-<div class="container mx-auto">
-  <div class="card bg-base-100 shadow-sm">
-    <div class="card-body">
-      <h1 class="card-title">
-        <%= t('navigation.search') %>
-      </h1>
-      <div class="mb-6">
-        <%= form_with url: search_path, method: :get, local: true,
-          class: "flex gap-2", data: { controller: "search-form" } do |form| %>
-          <div class="flex-1">
-            <%= form.search_field :q, value: @query,
-            placeholder: t('forms.search_placeholder'),
-            class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent",
-            data: {
-              action: "input->search-form#search",
-              "search-form-target": "input"
-            } %>
-          </div>
-          <%= form.submit t('forms.search'), class: "btn btn-primary px-4 py-2 rounded-lg whitespace-nowrap" %>
-        <% end %>
-      </div>
-      <% if @total_results > 0 %>
-        <% if @query.present? %>
-          <div class="mb-6">
-            <p class="text-gray-600">
-              <%= t('.results_found', count: @total_results) %>
-              "<span class="font-semibold text-gray-900"><%= h(@query) %></span>"</p>
-          </div>
-        <% end %>
-        <% if @facets.present? %>
-          <div class="mb-6 flex flex-wrap gap-2">
-            <% @facets.dig("content_type")&.each do |facet| %>
-              <span class="badge badge-outline gap-1">
-                <%= t("content_types.#{facet[:value]}", default: facet[:value]) %>
-                <span class="text-xs opacity-70">(<%= facet[:count] %>)</span>
-              </span>
-            <% end %>
-          </div>
-        <% end %>
-        <div class="space-y-6">
-          <% @results.each do |model_name, results| %>
-            <% if results.present? %>
-              <%= render "search_section",
-                model_name: model_name,
-                results: results %>
-            <% end %>
-          <% end %>
-        </div>
-      <% elsif @query.present? %>
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
-          <div class="mb-4">
-            <%= icon "magnifying-glass", class: "w-12 h-12 text-gray-400 mx-auto" %>
-          </div>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">
-            <%= t('.no_results_title') %>
-          </h3>
-          <p class="text-gray-600">
-            <%= t('.no_results_description') %>
-          </p>
-        </div>
-      <% end %>
+<div class="container mx-auto"
+     data-controller="filter-sidebar"
+     data-filter-sidebar-apply-filters-value="<%= t('search.filters.apply') %>"
+     data-filter-sidebar-loading-value="<%= t('search.loading') %>"
+     data-filter-sidebar-clear-all-value="<%= t('search.filters.clear_all') %>">
+  <%# Mobile Header - Sticky on mobile, hidden on desktop %>
+  <%= render 'search/mobile_header' %>
+  <%# Mobile Drawer - Overlay and sidebar for mobile filters %>
+  <%= render 'search/filters/mobile_drawer' %>
+  <%# Desktop Search Header - Search form, title, and active filters %>
+  <%= render 'search/search_header' %>
+  <%# Main Content Area with Sidebar Layout %>
+  <div class="flex flex-col lg:flex-row gap-6">
+    <%# Desktop Sidebar - Filter sidebar (hidden on mobile) %>
+    <div class="hidden lg:block lg:w-80 lg:flex-shrink-0">
+      <%= render 'search/filters/filter_sidebar' %>
+    </div>
+    <%# Main Content - Search Results %>
+    <div class="flex-1 min-w-0">
+      <%= render 'search/search_results' %>
     </div>
   </div>
+</div>
