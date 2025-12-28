@@ -89,6 +89,8 @@ group :development, :test do
   gem "fuubar", require: false
   gem "rails-controller-testing"
   gem "rspec-github", require: false
+  gem "capybara"
+  gem "capybara-playwright-driver"
 end
 
 group :development do
