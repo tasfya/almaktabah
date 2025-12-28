@@ -1,4 +1,5 @@
-# Typesense test helpers for system specs
+# Typesense test helpers for system specs that mock TypesenseSearchService
+# responses so system tests don't require a running Typesense instance.
 
 module TypesenseTestHelpers
   # Build a mock SearchHit from simple attributes

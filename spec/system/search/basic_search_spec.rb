@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe "Basic Search", type: :system, js: true do
+  before do
+    create(:domain, host: "www.example.com")
+  end
+
   it "displays search results" do
     article_hit = build_search_hit(
       type: :article,
