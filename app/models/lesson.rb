@@ -148,4 +148,8 @@ class Lesson < ApplicationRecord
     key = position? ? position : title
     "all-audios/#{scholar.full_name}/series/#{series_title}/#{key}.mp3"
   end
+
+  def scholar
+    series.scholar
+  end
 end
