@@ -62,6 +62,9 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
       - name: migrate database
         run: bin/rails db:create db:migrate RAILS_ENV=test
 
