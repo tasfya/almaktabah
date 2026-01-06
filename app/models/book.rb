@@ -66,13 +66,11 @@ class Book < ApplicationRecord
       { "name" => "scholar_id", "type" => "int32", "facet" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
-      { "name" => "published_at_ts", "type" => "int64" },
+      { "name" => "published_at_ts", "type" => "int64", "optional" => true },
       { "name" => "created_at_ts", "type" => "int64" },
       { "name" => "thumbnail_url", "type" => "string", "optional" => true },
       { "name" => "url", "type" => "string" }
     ]
-
-    default_sorting_field "published_at_ts"
 
     # Arabic language optimizations
     symbols_to_index [ "-", "_" ]

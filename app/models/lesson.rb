@@ -71,11 +71,9 @@ class Lesson < ApplicationRecord
       { "name" => "scholar_id", "type" => "int32", "facet" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
-      { "name" => "published_at_ts", "type" => "int64" },
+      { "name" => "published_at_ts", "type" => "int64", "optional" => true },
       { "name" => "created_at_ts", "type" => "int64" }
     ]
-
-    default_sorting_field "published_at_ts"
 
     symbols_to_index [ "-", "_" ]
     token_separators [ "-", "_" ]

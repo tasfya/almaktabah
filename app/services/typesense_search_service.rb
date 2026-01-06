@@ -118,7 +118,7 @@ class TypesenseSearchService
   end
 
   def sort_order
-    browsing? ? "published_at_ts:desc" : "_text_match:desc,published_at_ts:desc"
+    browsing? ? "title:asc" : "_text_match:desc,title:asc"
   end
 
   def build_filter_string
