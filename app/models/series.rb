@@ -11,7 +11,9 @@ class Series < ApplicationRecord
 
     typesense enqueue: true, if: :published? do
         attribute :title
-        attribute :description
+        attribute :description do
+            description || ""
+        end
         attribute :content_text do
             description.present? ? description : ""
         end
