@@ -14,7 +14,9 @@ class News < ApplicationRecord
 
   typesense enqueue: true, if: :published? do
     attribute :title
-    attribute :description
+    attribute :description do
+      description || ""
+    end
     attribute :content_text do
       content.present? ? content.to_plain_text : ""
     end
