@@ -1,54 +1,26 @@
-<%# Search Header Partial - Desktop search title, form, and active filters %>
-<div class="hidden lg:block">
-  <%# Desktop Search Title and Results Count %>
-  <div class="card bg-base-100 shadow-sm mb-6">
-    <div class="card-body">
-      <div class="flex items-center justify-between mb-4">
-        <h1 class="card-title text-2xl">
-          <%= t('navigation.search') %>
-          <% if @total_results.present? && @total_results > 0 %>
-            <span class="badge badge-primary badge-lg ml-2">
-              <%= number_with_delimiter(@total_results) %> <%= t('search.results.count') %>
-            </span>
-          <% end %>
-        </h1>
-      </div>
-      <%# Desktop Search Form %>
-      <div class="mb-6">
-        <%= form_with url: search_path, method: :get, local: true,
-          class: "flex gap-2", data: { controller: "search-form" } do |form| %>
-          <div class="flex-1">
-            <%= form.search_field :q, value: @query,
-            placeholder: t('forms.search_placeholder'),
-            class: "input input-bordered w-full focus:ring-2 focus:ring-primary focus:border-transparent",
-            data: {
-              action: "input->search-form#search",
-              "search-form-target": "input"
-            } %>
-          </div>
-          <%= form.submit t('forms.search'), class: "btn btn-primary" %>
-        <% end %>
-      </div>
-    </div>
-  </div>
-</div>
-<%# Mobile Search Form (Hidden by default, shown when needed) %>
-<div class="lg:hidden mb-4">
-  <div class="card bg-base-100 shadow-sm">
-    <div class="card-body p-4">
-      <%= form_with url: search_path, method: :get, local: true,
-        class: "flex gap-2", data: { controller: "search-form" } do |form| %>
-        <div class="flex-1">
-          <%= form.search_field :q, value: @query,
-          placeholder: t('forms.search_placeholder'),
-          class: "input input-bordered input-sm w-full focus:ring-2 focus:ring-primary focus:border-transparent",
-          data: {
-            action: "input->search-form#search",
-            "search-form-target": "input"
-          } %>
-        </div>
-        <%= form.submit t('forms.search'), class: "btn btn-primary btn-sm" %>
+<%# Search Header Partial - Page title and results count (search form moved to navbar) %>
+<% show_sidebar = local_assigns.fetch(:show_sidebar, true) %>
+<div class="mb-6 flex items-center gap-3">
+  <%# Mobile Filter Toggle Button - Hidden on desktop %>
+  <% if show_sidebar %>
+    <button
+      data-filter-sidebar-target="toggle"
+      data-action="click->filter-sidebar#toggle"
+      class="btn btn-primary btn-outline btn-sm lg:hidden gap-2"
+      aria-label="Toggle search filters">
+      <%= icon "settings", library: "lucide", class: "size-4" %>
+      <% active_filters_count = @search_filters[:scholars].to_a.count + @search_filters[:content_types].to_a.count %>
+      <% if active_filters_count > 0 %>
+        <div class="badge badge-primary badge-xs"><%= active_filters_count %></div>
       <% end %>
-    </div>
-  </div>
+    </button>
+  <% end %>
+  <h1 class="text-2xl font-bold">
+    <%= t("navigation.#{controller_name}") %>
+    <% if @total_results.present? && @total_results > 0 %>
+      <span class="text-base font-normal text-base-content/60">
+        (<%= number_with_delimiter(@total_results) %>)
+      </span>
+    <% end %>
+  </h1>
 </div>

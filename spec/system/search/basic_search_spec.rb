@@ -16,7 +16,7 @@ RSpec.describe "Basic Search", type: :system, js: true do
       total: 1
     ))
 
-    visit search_path(q: "Test")
+    visit root_path(q: "Test")
 
     expect(page).to have_content("Test Article")
   end
@@ -24,7 +24,7 @@ RSpec.describe "Basic Search", type: :system, js: true do
   it "shows no results message for empty search" do
     stub_typesense_search(empty_search_result)
 
-    visit search_path(q: "nonexistent")
+    visit root_path(q: "nonexistent")
 
     expect(page).to have_content(I18n.t("search.index.no_results_title"))
   end

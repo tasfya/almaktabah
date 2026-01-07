@@ -1,21 +1,29 @@
-<% content_for :title, t('navigation.search') %>
-<div class="container mx-auto"
+<% content_for :title, t("navigation.#{controller_name}") %>
+<%# Determine if sidebar has meaningful filters to show %>
+<% scholar_facets = @facets&.dig("scholar_name") || [] %>
+<% scholars_filter_active = @search_filters[:scholars].present? %>
+<% show_scholars_filter = scholar_facets.size > 1 || scholars_filter_active %>
+<% show_content_type_filter = !@hide_content_type_filter %>
+<% show_sidebar = show_scholars_filter || show_content_type_filter %>
+<div class="container mx-auto pt-6"
      data-controller="filter-sidebar"
      data-filter-sidebar-apply-filters-value="<%= t('search.filters.apply') %>"
      data-filter-sidebar-loading-value="<%= t('search.loading') %>"
      data-filter-sidebar-clear-all-value="<%= t('search.filters.clear_all') %>">
-  <%# Mobile Header - Sticky on mobile, hidden on desktop %>
-  <%= render 'search/mobile_header' %>
-  <%# Mobile Drawer - Overlay and sidebar for mobile filters %>
-  <%= render 'search/filters/mobile_drawer' %>
-  <%# Desktop Search Header - Search form, title, and active filters %>
-  <%= render 'search/search_header' %>
+  <% if show_sidebar %>
+    <%# Mobile Drawer - Overlay and sidebar for mobile filters %>
+    <%= render 'search/filters/mobile_drawer' %>
+  <% end %>
+  <%# Search Header - Page title with mobile filter button %>
+  <%= render 'search/search_header', show_sidebar: show_sidebar %>
   <%# Main Content Area with Sidebar Layout %>
-  <div class="flex flex-col lg:flex-row gap-6">
-    <%# Desktop Sidebar - Filter sidebar (hidden on mobile) %>
-    <div class="hidden lg:block lg:w-80 lg:flex-shrink-0">
-      <%= render 'search/filters/filter_sidebar' %>
-    </div>
+  <div class="flex flex-col lg:flex-row gap-6 <%= 'max-w-4xl mx-auto' unless show_sidebar %>">
+    <% if show_sidebar %>
+      <%# Desktop Sidebar - Filter sidebar (hidden on mobile) %>
+      <div class="hidden lg:block lg:w-80 lg:flex-shrink-0">
+        <%= render 'search/filters/filter_sidebar' %>
+      </div>
+    <% end %>
     <%# Main Content - Search Results %>
     <div class="flex-1 min-w-0">
       <%= render 'search/search_results' %>

@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 class FatwasController < ApplicationController
-  include Filterable
+  include TypesenseListable
   before_action :set_fatwa, only: [ :show ]
   before_action :setup_fatwas_breadcrumbs
+
   def index
-    @q = Fatwa.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
-    results = @q.result(distinct: true).includes(:scholar, :rich_text_question, :rich_text_answer)
-    @pagy, @fatwas = pagy(results)
+    typesense_search(content_type: "fatwa")
   end
+
   def show
   end
 

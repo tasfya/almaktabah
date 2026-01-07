@@ -1,0 +1,67 @@
+<%# Typesense Search Pagination - daisyUI join component %>
+<% return if @total_pages <= 1 %>
+
+<% window = 2 %>
+<% start_page = [1, @page - window].max %>
+<% end_page = [@total_pages, @page + window].min %>
+
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 my-8 pt-6 border-t border-base-300">
+  <p class="text-sm text-base-content/70">
+    <% from = ((@page - 1) * @per_page) + 1 %>
+    <% to = [@page * @per_page, @total_results].min %>
+    <%= t('common.showing_results', from: from, to: to, count: @total_results) %>
+  </p>
+
+  <nav class="join" aria-label="<%= t('pagination.aria_label') %>">
+    <%# Previous button %>
+    <% if @page > 1 %>
+      <%= link_to url_for(page: @page - 1), class: "join-item btn btn-sm", data: { turbo_frame: "search_results" } do %>
+        <span class="hidden sm:inline"><%= t('buttons.previous') %></span>
+        <span class="sm:hidden">«</span>
+      <% end %>
+    <% else %>
+      <span class="join-item btn btn-sm btn-disabled">
+        <span class="hidden sm:inline"><%= t('buttons.previous') %></span>
+        <span class="sm:hidden">«</span>
+      </span>
+    <% end %>
+
+    <%# First page + ellipsis if needed %>
+    <% if start_page > 1 %>
+      <%= link_to "1", url_for(page: 1), class: "join-item btn btn-sm", data: { turbo_frame: "search_results" } %>
+      <% if start_page > 2 %>
+        <span class="join-item btn btn-sm btn-disabled">…</span>
+      <% end %>
+    <% end %>
+
+    <%# Page numbers %>
+    <% (start_page..end_page).each do |p| %>
+      <% if p == @page %>
+        <span class="join-item btn btn-sm btn-active" aria-current="page"><%= p %></span>
+      <% else %>
+        <%= link_to p.to_s, url_for(page: p), class: "join-item btn btn-sm", data: { turbo_frame: "search_results" } %>
+      <% end %>
+    <% end %>
+
+    <%# Last page + ellipsis if needed %>
+    <% if end_page < @total_pages %>
+      <% if end_page < @total_pages - 1 %>
+        <span class="join-item btn btn-sm btn-disabled">…</span>
+      <% end %>
+      <%= link_to @total_pages.to_s, url_for(page: @total_pages), class: "join-item btn btn-sm", data: { turbo_frame: "search_results" } %>
+    <% end %>
+
+    <%# Next button %>
+    <% if @page < @total_pages %>
+      <%= link_to url_for(page: @page + 1), class: "join-item btn btn-sm", data: { turbo_frame: "search_results" } do %>
+        <span class="hidden sm:inline"><%= t('buttons.next') %></span>
+        <span class="sm:hidden">»</span>
+      <% end %>
+    <% else %>
+      <span class="join-item btn btn-sm btn-disabled">
+        <span class="hidden sm:inline"><%= t('buttons.next') %></span>
+        <span class="sm:hidden">»</span>
+      </span>
+    <% end %>
+  </nav>
+</div>

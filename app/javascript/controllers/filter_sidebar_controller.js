@@ -98,6 +98,9 @@ export default class extends Controller {
 
   async submitForm() {
     await this.fetchResults();
+    if (window.innerWidth < 1024) {
+      this.close();
+    }
   }
 
   async fetchResults() {

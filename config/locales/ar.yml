@@ -9,6 +9,8 @@ ar:
     scholar: "عالم"
     article: "مقال"
   search:
+    content_types:
+      all: "الكل"
     view_all: "عرض الكل"
     read_time:
       one: "دقيقة قراءة"
@@ -21,13 +23,9 @@ ar:
       prompt_description: "يمكنك البحث في الكتب، المحاضرات، الدروس، الفتاوى، والمزيد"
     search_section:
       view: "عرض"
-      result_count:
-        one: "نتيجة"
-        other: "نتائج"
       view_all_in: "عرض جميع النتائج في %{type}"
     results:
       showing: "عرض %{count} من %{total} نتيجة"
-      count: "نتيجة"
       sheikh: "الشيخ"
     sort:
       label: "ترتيب"
@@ -61,6 +59,7 @@ ar:
     close: "إغلاق"
   pagination:
     results_info: "عرض %{from}-%{to} من %{count} نتيجة"
+    aria_label: "التنقل بين الصفحات"
   footer:
     contact_title: "تواصل معنا"
     contact_description: "للاستفسارات والتواصل"
