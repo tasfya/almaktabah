@@ -9,35 +9,29 @@
           <%= t('sheikh.description') %>
         </p>
       </div>
+      <% if available_content_types.any? %>
+        <div class="<%= available_content_types.size > 4 ? 'md:col-span-2' : '' %>">
+          <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('navigation.quick_links') %></h4>
+          <ul class="space-y-2 <%= available_content_types.size > 4 ? 'grid grid-cols-2 gap-x-8 gap-y-2' : '' %>">
+            <li><%= link_to t('navigation.home'), root_path, class: "btn hover:underline btn-primary" %></li>
+            <% available_content_types.each do |ct| %>
+              <li><%= link_to t("navigation.#{content_type_nav_key(ct[:type])}"), content_type_path(ct[:type]), class: "btn hover:underline btn-primary" %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
       <div>
-        <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('navigation.quick_links') %></h4>
-        <ul class="space-y-2">
-          <li><%= link_to t('navigation.home'), root_path, class: "btn hover:underline btn-primary" %></li>
-          <li><%= link_to t('navigation.books'), books_path, class: "btn hover:underline btn-primary" %></li>
-          <li><%= link_to t('navigation.lectures'), lectures_path, class: "btn hover:underline btn-primary" %></li>
-          <li><%= link_to t('navigation.series'), series_index_path, class: "btn hover:underline btn-primary" %></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('navigation.content') %></h4>
-        <ul class="space-y-2">
-          <li><%= link_to t('navigation.recent_books'), books_path(recent: true), class: "btn hover:underline btn-primary" %></li>
-          <li><%= link_to t('navigation.recent_lectures'), lectures_path(recent: true), class: "btn hover:underline btn-primary" %></li>
-          <%# <li><%= link_to t('navigation.about_sheikh_alt'), about_path, class: "btn hover:underline btn-primary" %></li>
-      </ul>
-    </div>
-    <div>
-      <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('footer.contact_title') %></h4>
-      <div class="mt-4 flex gap-4">
-        <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
-          <%= icon "youtube", library: "lucide", class: "size-5" %>
-        <% end %>
-        <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
-          <%= icon "twitter", library: "lucide", class: "size-5" %>
-        <% end %>
+        <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('footer.contact_title') %></h4>
+        <div class="mt-4 flex gap-4">
+          <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
+            <%= icon "youtube", library: "lucide", class: "size-5" %>
+          <% end %>
+          <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
+            <%= icon "twitter", library: "lucide", class: "size-5" %>
+          <% end %>
+        </div>
       </div>
     </div>
-  </div>
   <div class="border-t border-base-300 mt-8 pt-8 text-center">
     <p class="text-sm text-primary-content">
       &copy; <%= Date.current.year %> <%= t('footer.copyright') %>

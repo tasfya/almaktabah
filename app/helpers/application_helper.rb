@@ -2,6 +2,36 @@ module ApplicationHelper
   include Pagy::Frontend
   include FaviconHelper
 
+  CONTENT_TYPE_ROUTES = {
+    "book" => :books_path,
+    "lecture" => :lectures_path,
+    "series" => :series_index_path,
+    "fatwa" => :fatwas_path,
+    "news" => :news_index_path,
+    "article" => :articles_path
+  }.freeze
+
+  CONTENT_TYPE_NAV_KEYS = {
+    "book" => "books",
+    "lecture" => "lectures",
+    "series" => "scientific_series",
+    "fatwa" => "fatwas",
+    "news" => "news",
+    "article" => "articles"
+  }.freeze
+
+  def available_content_types
+    @available_content_types ||= DomainContentTypesService.for_domain(@domain&.id)
+  end
+
+  def content_type_path(type)
+    send(CONTENT_TYPE_ROUTES[type])
+  end
+
+  def content_type_nav_key(type)
+    CONTENT_TYPE_NAV_KEYS[type]
+  end
+
   def parse_integer(value)
     Integer(value) rescue nil
   end
