@@ -21,6 +21,7 @@ end
 
 domain2 = Domain.find_or_create_by!(host: "localhost") do |domain|
   domain.name = "localhost"
+  domain.template_name = "3ilm"
 end
 
 hajri_scholar = Seeds::Base.default_scholar

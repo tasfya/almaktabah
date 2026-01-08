@@ -9,7 +9,7 @@
       class="btn btn-primary btn-outline btn-sm lg:hidden gap-2"
       aria-label="Toggle search filters">
       <%= icon "settings", library: "lucide", class: "size-4" %>
-      <% active_filters_count = @search_filters[:scholars].to_a.count + @search_filters[:content_types].to_a.count %>
+      <% active_filters_count = @search_filters&.dig(:scholars).to_a.count + @search_filters&.dig(:content_types).to_a.count %>
       <% if active_filters_count > 0 %>
         <div class="badge badge-primary badge-xs"><%= active_filters_count %></div>
       <% end %>

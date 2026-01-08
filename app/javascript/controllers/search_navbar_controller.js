@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { Turbo } from "@hotwired/turbo-rails";
 
 export default class extends Controller {
   static targets = ["contentType", "query"];
@@ -6,12 +7,8 @@ export default class extends Controller {
   navigate() {
     const path = this.contentTypeTarget.value;
     const query = this.queryTarget.value.trim();
-
-    if (query) {
-      window.location.href = `${path}?q=${encodeURIComponent(query)}`;
-    } else {
-      window.location.href = path;
-    }
+    const url = query ? `${path}?q=${encodeURIComponent(query)}` : path;
+    Turbo.visit(url);
   }
 
   submit(event) {
