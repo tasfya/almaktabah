@@ -6,7 +6,7 @@ module TypesenseListable
   private
 
   def typesense_search(content_type: nil)
-    @query = params[:q]&.strip
+    @query = params[:q].is_a?(String) ? params[:q].strip : nil
     content_types = content_type.present? ? [ content_type ] : Array(params[:content_types]).compact_blank.presence
     @search_filters = { scholars: params[:scholars], content_types: content_types }
     @all_content_types = TypesenseSearchService::CONTENT_COLLECTIONS

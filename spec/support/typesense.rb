@@ -58,4 +58,5 @@ end
 
 RSpec.configure do |config|
   config.include TypesenseTestHelpers, type: :system
+  config.include TypesenseTestHelpers, type: :controller
 end

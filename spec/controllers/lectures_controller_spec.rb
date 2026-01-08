@@ -1,10 +1,13 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 RSpec.describe LecturesController, type: :controller do
   before(:each) do
     Faker::UniqueGenerator.clear
     request.host = "localhost"
   end
+
   let(:domain) { create(:domain, host: "localhost") }
   let(:other_domain) { create(:domain) }
   let!(:scholar) { create(:scholar) }
@@ -17,75 +20,26 @@ RSpec.describe LecturesController, type: :controller do
 
     create(:domain_assignment, domain: domain, assignable: published_lecture)
     create(:domain_assignment, domain: domain, assignable: unpublished_lecture)
-    create(:domain_assignment, domain: other_domain, assignable: create(:lecture, published: true, published_at: 1.day.ago))
   end
 
   describe "GET #index" do
-    context "HTML format" do
-      let!(:lecture1) { create(:lecture, published: true, published_at: 1.day.ago) }
-      let!(:lecture2) { create(:lecture, published: true, published_at: 2.days.ago) }
-      let!(:lecture3) { create(:lecture, published: false) }
-      let!(:other_domain_lecture) { create(:lecture, published: true) }
+    before do
+      stub_typesense_search(empty_search_result)
+    end
 
-      before do
-        [ lecture1, lecture2, lecture3 ].each do |lecture|
-          create(:domain_assignment, domain: domain, assignable: lecture)
-        end
-        create(:domain_assignment, domain: other_domain, assignable: other_domain_lecture)
-      end
+    it "returns a successful response" do
+      get :index
+      expect(response).to be_successful
+    end
 
-      it "returns a successful response" do
-        get :index
-        expect(response).to be_successful
-      end
+    it "renders search/index template" do
+      get :index
+      expect(response).to render_template("search/index")
+    end
 
-      it "assigns paginated, published lectures for the current domain" do
-        get :index
-
-        expect(assigns(:lectures)).to include(lecture1, lecture2)
-        expect(assigns(:lectures)).not_to include(lecture3, other_domain_lecture)
-        expect(assigns(:pagy)).to be_present
-      end
-
-      it "orders lectures by published_at descending" do
-        get :index
-        lectures = assigns(:lectures)
-        expect(lectures.first).to eq(lecture1)
-        expect(lectures.last).to eq(lecture2)
-      end
-
-      it "paginates lectures with limit of 12" do
-        create_list(:lecture, 15, published: true, published_at: 1.day.ago) do |l|
-          create(:domain_assignment, domain: domain, assignable: l)
-        end
-
-        get :index
-        expect(assigns(:lectures).count).to eq(12)
-        expect(assigns(:pagy).limit).to eq(12)
-      end
-
-      it "supports ransack search" do
-        matching = create(:lecture, title: "Test Search", published: true)
-        non_matching = create(:lecture, title: "Another", published: true)
-        [ matching, non_matching ].each do |lecture|
-          create(:domain_assignment, domain: domain, assignable: lecture)
-        end
-
-        get :index, params: { q: { title_cont: "Test" } }
-        expect(assigns(:lectures)).to include(matching)
-        expect(assigns(:lectures)).not_to include(non_matching)
-      end
-
-      it "sets up breadcrumbs" do
-        expect(controller).to receive(:breadcrumb_for).with(I18n.t("breadcrumbs.lectures"), lectures_path)
-        get :index
-      end
-
-      it "renders index template" do
-        get :index
-        expect(response).to render_template(:index)
-        expect(response).to have_http_status(:ok)
-      end
+    it "sets up breadcrumbs" do
+      expect(controller).to receive(:breadcrumb_for).with(I18n.t("breadcrumbs.lectures"), lectures_path)
+      get :index
     end
   end
 
