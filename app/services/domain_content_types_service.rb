@@ -1,25 +1,12 @@
 # frozen_string_literal: true
 
 class DomainContentTypesService
-  CACHE_TTL = 10.minutes
-  CACHE_KEY_PREFIX = "domain_content_types"
-
   CONTENT_COLLECTIONS = TypesenseSearchService::CONTENT_COLLECTIONS
 
   def self.for_domain(domain_id)
     return [] if domain_id.blank?
 
-    Rails.cache.fetch(cache_key(domain_id), expires_in: CACHE_TTL) do
-      new(domain_id).fetch
-    end
-  end
-
-  def self.cache_key(domain_id)
-    "#{CACHE_KEY_PREFIX}/#{domain_id}"
-  end
-
-  def self.invalidate_cache(domain_id)
-    Rails.cache.delete(cache_key(domain_id))
+    new(domain_id).fetch
   end
 
   def initialize(domain_id)

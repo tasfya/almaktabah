@@ -36,7 +36,6 @@ RSpec.describe DomainContentTypesService do
       before do
         allow_any_instance_of(Typesense::Client).to receive(:multi_search)
           .and_return(double(perform: typesense_response))
-        Rails.cache.clear
       end
 
       it "returns content types sorted by count descending" do
@@ -57,17 +56,12 @@ RSpec.describe DomainContentTypesService do
         expect(result.find { |ct| ct[:type] == "fatwa" }[:count]).to eq(500)
         expect(result.find { |ct| ct[:type] == "lecture" }[:count]).to eq(100)
       end
-
-      it "uses correct cache key format" do
-        expect(described_class.cache_key(domain.id)).to eq("domain_content_types/#{domain.id}")
-      end
     end
 
     context "when Typesense errors" do
       before do
         allow_any_instance_of(Typesense::Client).to receive(:multi_search)
           .and_raise(Typesense::Error.new("Connection failed"))
-        Rails.cache.clear
       end
 
       it "returns empty array" do
@@ -78,33 +72,6 @@ RSpec.describe DomainContentTypesService do
         expect(Rails.logger).to receive(:error).with(/DomainContentTypesService error/)
         described_class.for_domain(domain.id)
       end
-    end
-  end
-
-  describe ".invalidate_cache" do
-    it "removes the cached result for the domain" do
-      cache_key = "domain_content_types/#{domain.id}"
-      Rails.cache.write(cache_key, [ { type: "book", count: 10 } ])
-
-      described_class.invalidate_cache(domain.id)
-
-      expect(Rails.cache.read(cache_key)).to be_nil
-    end
-  end
-
-  describe "cache invalidation via DomainAssignment" do
-    let(:book) { create(:book, :without_domain) }
-
-    it "calls invalidate_cache when content is assigned to domain" do
-      expect(described_class).to receive(:invalidate_cache).with(domain.id)
-      book.assign_to(domain)
-    end
-
-    it "calls invalidate_cache when content is unassigned from domain" do
-      book.assign_to(domain)
-
-      expect(described_class).to receive(:invalidate_cache).with(domain.id)
-      book.unassign_from(domain)
     end
   end
 end
