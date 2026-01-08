@@ -29,11 +29,11 @@ export default class extends Controller {
     if (this.compact) {
       this.element.classList.add("header--compact");
       if (this.hasLogoTarget) this.logoTarget.classList.add("hidden");
-      if (this.hasNavTarget) this.navTarget.classList.add("hidden");
+      if (this.hasNavTarget) this.navTarget.classList.add("header--nav-hidden");
     } else {
       this.element.classList.remove("header--compact");
       if (this.hasLogoTarget) this.logoTarget.classList.remove("hidden");
-      if (this.hasNavTarget) this.navTarget.classList.remove("hidden");
+      if (this.hasNavTarget) this.navTarget.classList.remove("header--nav-hidden");
     }
   }
 }

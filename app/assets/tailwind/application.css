@@ -173,3 +173,10 @@
     display: flex;
   }
 }
+
+/* Hide nav when scrolled (compact mode) - only on md+ where nav is visible */
+@media (min-width: 768px) {
+  .header--nav-hidden {
+    display: none !important;
+  }
+}
