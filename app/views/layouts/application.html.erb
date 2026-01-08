@@ -27,7 +27,7 @@
   <body class="bg-base-200 text-base-content">
     <%= render 'shared/header' %>
     <%= render 'shared/theme_switcher' %>
-    <%= render 'shared/news_bar' %>
+    <%= render 'shared/news_bar' if controller_name == 'home' %>
     <main class="min-h-screen w-full pb-16 md:pb-0">
       <% unless controller_name == 'home' %>
         <div class="container">

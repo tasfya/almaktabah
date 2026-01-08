@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 class ArticlesController < ApplicationController
-  include Filterable
+  include TypesenseListable
   before_action :set_article, only: [ :show ]
   before_action :setup_articles_breadcrumbs
 
   def index
-    @q = Article.for_domain_id(@domain.id).published.order(published_at: :desc).includes(:scholar).ransack(params[:q])
-    @pagy, @articles = pagy(@q.result(distinct: true))
+    typesense_search(content_type: "article")
   end
 
   def show

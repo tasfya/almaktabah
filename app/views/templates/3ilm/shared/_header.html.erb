@@ -11,18 +11,12 @@
       <label for="sidebar-drawer" class="btn btn-ghost text-primary-content hover:text-secondary-content drawer-button lg:hidden">
         <%= icon "menu", library: "lucide", class: "size-5" %>
       </label>
-      <div class="hidden md:flex flex-row-reverse gap-2 items-center w-full flex-1 mr-auto">
-        <div class="hidden md:flex items-center gap-1">
-          <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-secondary text-primary-content hover:text-secondary-content btn-sm p-1" do %>
-            <%= icon "youtube", library: "lucide", class: "size-5" %>
-          <% end %>
-          <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-secondary text-primary-content hover:text-secondary-content btn-sm p-1" do %>
-            <%= icon "twitter", library: "lucide", class: "size-5" %>
-          <% end %>
-        </div>
-        <%= link_to search_path, class: "btn btn-secondary btn-sm" do %>
-          <%= icon "magnifying-glass", class: "size-4" %>
-          <span><%= t('buttons.search_button') %></span>
+      <div class="hidden md:flex items-center gap-1 mr-auto">
+        <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-secondary text-primary-content hover:text-secondary-content btn-sm p-1" do %>
+          <%= icon "youtube", library: "lucide", class: "size-5" %>
+        <% end %>
+        <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-secondary text-primary-content hover:text-secondary-content btn-sm p-1" do %>
+          <%= icon "twitter", library: "lucide", class: "size-5" %>
         <% end %>
       </div>
     </div>

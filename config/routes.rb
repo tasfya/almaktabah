@@ -24,8 +24,6 @@ Rails.application.routes.draw do
   post "play/:resource_type/:id", to: "play#show", as: "play"
   delete "play/stop", to: "play#stop", as: "stop_play"
 
-  get "search", to: "search#index"
-
   # Static pages
   get "about", to: "about#index"
 

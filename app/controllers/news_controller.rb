@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 class NewsController < ApplicationController
-  include Filterable
+  include TypesenseListable
   before_action :set_news, only: [ :show ]
   before_action :setup_news_breadcrumbs
 
   def index
-    @q = News.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
-    @pagy, @news = pagy(@q.result(distinct: true))
+    typesense_search(content_type: "news")
   end
 
   def show

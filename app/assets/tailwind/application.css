@@ -162,3 +162,14 @@
   position: relative;
   z-index: 2;
 }
+
+/* Header compact state for mobile scroll */
+@media (max-width: 767px) {
+  .header--show-when-compact {
+    display: none;
+  }
+
+  .header--compact .header--show-when-compact {
+    display: flex;
+  }
+}

@@ -62,9 +62,4 @@
       </div>
     <% end %>
   </div>
-  <% if lecture.thumbnail_url.present? %>
-    <figure class="w-32 h-32 flex-shrink-0">
-      <%= image_tag lecture.thumbnail_url, alt: lecture.title, class: "rounded-xl w-full h-full object-cover", loading: "lazy", width: 128, height: 128 %>
-    </figure>
-  <% end %>
 </div>

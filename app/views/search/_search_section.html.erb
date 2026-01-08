@@ -1,4 +1,5 @@
 <%
+  total_count = local_assigns.fetch(:total_count, hits.size)
   partial_name = model_name.to_s.singularize
   section_title = I18n.exists?("navigation.#{model_name}") ? t("navigation.#{model_name}") : t("content_types.#{partial_name}")
   content_type_icons = {
@@ -14,19 +15,21 @@
 %>
 <div class="search-section">
   <div class="">
-    <div class="flex justify-between mb-4">
-      <h3 class="text-lg font-semibold flex items-center gap-2">
-        <%= icon section_icon, class: "w-5 h-5" %>
-        <%= section_title %>
-        <span class="text-sm font-normal">
-          (<%= hits.size %> <%= t(".result_count", count: hits.size) %>)
-        </span>
-      </h3>
-      <%= link_to t('search.view_all'),
-                url_for(controller: model_name.to_s, action: 'index'),
-                class: "btn btn-outline btn-sm",
-                data: { turbo_frame: "_top" } %>
-    </div>
+    <% unless @hide_section_header %>
+      <div class="flex justify-between mb-4">
+        <h3 class="text-lg font-semibold flex items-center gap-2">
+          <%= icon section_icon, class: "w-5 h-5" %>
+          <%= section_title %>
+          <span class="text-sm font-normal text-base-content/60">
+            (<%= hits.size %><% if total_count > hits.size %> / <%= total_count %><% end %>)
+          </span>
+        </h3>
+        <%= link_to t('search.view_all'),
+                  url_for(controller: model_name.to_s, action: 'index'),
+                  class: "btn btn-outline btn-sm",
+                  data: { turbo_frame: "_top" } %>
+      </div>
+    <% end %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <% hits.each do |hit| %>
         <%= render "search/results/#{partial_name}", partial_name.to_sym => hit %>

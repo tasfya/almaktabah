@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 class SeriesController < ApplicationController
-  include Filterable
+  include TypesenseListable
   before_action :set_series, only: [ :show ]
   before_action :setup_series_breadcrumbs
 
   def index
-    @q = Series.for_domain_id(@domain.id).published.order(published_at: :desc).includes(:lessons).ransack(params[:q])
-    @pagy, @series = pagy(@q.result(distinct: true))
+    typesense_search(content_type: "series")
   end
 
   def show

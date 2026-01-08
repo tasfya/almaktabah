@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 class LecturesController < ApplicationController
-  include Filterable
+  include TypesenseListable
   before_action :set_lecture, only: [ :show ]
   before_action :setup_lectures_breadcrumbs
 
   def index
-    @q = Lecture.for_domain_id(@domain.id).published.order(published_at: :desc).ransack(params[:q])
-    @pagy, @lectures = pagy(@q.result(distinct: true))
+    typesense_search(content_type: "lecture")
   end
 
   def show

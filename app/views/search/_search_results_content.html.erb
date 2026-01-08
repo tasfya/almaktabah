@@ -3,9 +3,17 @@
   <div class="space-y-8">
     <% @results.each do |model_name, hits| %>
       <% next unless hits.present? %>
-      <%= render "search/search_section", model_name: model_name, hits: hits %>
+      <%
+        facet_key = model_name.to_s.singularize
+        section_total = @facets.dig("content_type")&.find { |f| f[:value] == facet_key }&.dig(:count) || hits.size
+      %>
+      <%= render "search/search_section", model_name: model_name, hits: hits, total_count: section_total %>
     <% end %>
   </div>
+  <%# Show pagination only when single content_type is selected %>
+  <% if @hide_content_type_filter %>
+    <%= render "search/pagination" %>
+  <% end %>
 <% else %>
   <%# No Results State %>
   <div class="flex flex-col items-center justify-center py-12 text-center">
@@ -24,13 +32,13 @@
     <% if @search_filters[:scholars].present? || @search_filters[:content_types].present? || @query.present? %>
       <div class="flex flex-col sm:flex-row gap-3 justify-center">
         <% if @search_filters[:scholars].present? || @search_filters[:content_types].present? %>
-          <%= link_to search_path(q: @query),
+          <%= link_to url_for(q: @query),
               class: "btn btn-outline" do %>
             <%= t('search.filters.clear_all') %>
           <% end %>
         <% end %>
         <% if @query.present? %>
-          <%= link_to search_path,
+          <%= link_to url_for(only_path: true),
               class: "btn btn-primary" do %>
             <%= t('search.new_search') %>
           <% end %>

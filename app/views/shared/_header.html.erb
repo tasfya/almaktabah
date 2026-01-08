@@ -1,24 +1,44 @@
-<header class="bg-base-200 shadow-sm sticky top-0 left-0 right-0 z-50" data-controller="navigation" data-action="click@window->navigation#clickOutside">
-  <div class="bg-primary">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-(--header-height)">
-      <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto" do %>
+<header class="bg-base-200 shadow-sm sticky top-0 left-0 right-0 z-50"
+  data-controller="navigation header-scroll"
+  data-action="click@window->navigation#clickOutside">
+  <%# Main header row with logo, search, and social icons %>
+  <div class="bg-primary" data-header-scroll-target="logo">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 h-(--header-height)">
+      <%# Logo %>
+      <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto shrink-0" do %>
         <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
       <% end %>
-      <div class="hidden md:flex flex-row-reverse gap-2 items-center w-full flex-1 mr-auto">
-        <div class="hidden md:flex items-center gap-1">
-          <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-secondary text-primary-content hover:text-secondary-content btn-sm p-1" do %>
-            <%= icon "youtube", library: "lucide", class: "size-5" %>
-          <% end %>
-          <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-secondary text-primary-content hover:text-secondary-content btn-sm p-1" do %>
-            <%= icon "twitter", library: "lucide", class: "size-5" %>
-          <% end %>
-        </div>
-        <%= link_to search_path, class: "btn btn-secondary btn-sm" do %>
-          <%= icon "magnifying-glass", class: "size-4" %>
-          <span><%= t('buttons.search_button') %></span>
-        <% end %>
+      <%# Desktop search bar - hidden on mobile %>
+      <div class="hidden md:flex flex-1 max-w-2xl">
+        <form data-controller="search-navbar"
+          data-action="submit->search-navbar#submit"
+          class="flex items-center w-full">
+          <select
+            data-search-navbar-target="contentType"
+            data-action="change->search-navbar#navigate"
+            class="select select-bordered select-sm bg-base-100 text-base-content rounded-s-lg rounded-e-none border-e-0 w-[80px] px-1">
+            <option value="<%= root_path %>" <%= 'selected' if controller_name == 'home' %>><%= t('search.content_types.all') %></option>
+            <option value="<%= books_path %>" <%= 'selected' if controller_name == 'books' %>><%= t('navigation.books') %></option>
+            <option value="<%= lectures_path %>" <%= 'selected' if controller_name == 'lectures' %>><%= t('navigation.lectures') %></option>
+            <option value="<%= series_index_path %>" <%= 'selected' if controller_name == 'series' %>><%= t('navigation.series') %></option>
+            <option value="<%= articles_path %>" <%= 'selected' if controller_name == 'articles' %>><%= t('navigation.articles') %></option>
+            <option value="<%= news_index_path %>" <%= 'selected' if controller_name == 'news' %>><%= t('navigation.news') %></option>
+            <option value="<%= fatwas_path %>" <%= 'selected' if controller_name == 'fatwas' %>><%= t('navigation.fatwas') %></option>
+          </select>
+          <input
+            type="search"
+            name="q"
+            value="<%= params[:q] %>"
+            placeholder="<%= t('forms.search_placeholder') %>"
+            data-search-navbar-target="query"
+            class="input input-bordered input-sm flex-1 bg-base-100 text-base-content rounded-none border-s-0 border-e-0" />
+          <button type="submit" class="btn btn-secondary btn-sm rounded-s-none rounded-e-lg">
+            <%= icon "search", library: "lucide", class: "size-4" %>
+          </button>
+        </form>
       </div>
-      <div class="flex md:hidden items-center flex-row-reverse gap-1">
+      <%# Mobile menu button %>
+      <div class="flex md:hidden items-center">
         <button
           type="button"
           data-navigation-target="menuButton"
@@ -32,7 +52,51 @@
       </div>
     </div>
   </div>
-  <nav class="hidden bg-secondary md:flex border-t py-3">
+  <%# Mobile search bar row - only visible on mobile %>
+  <div class="md:hidden bg-primary border-t border-primary-content/10">
+    <div class="container mx-auto px-4 py-2">
+      <form data-controller="search-navbar"
+        data-action="submit->search-navbar#submit"
+        class="flex items-center gap-2">
+        <%# Mobile menu button - shown when scrolled (in compact mode) %>
+        <button
+          type="button"
+          data-navigation-target="menuButton"
+          data-action="click->navigation#toggleMobileMenu"
+          class="hidden btn btn-ghost btn-sm text-primary-content hover:text-secondary-content header--show-when-compact"
+          aria-controls="mobile-menu"
+          aria-label="<%= t('buttons.menu') %>">
+          <%= icon "bars-3", class: "size-5"%>
+        </button>
+        <select
+          data-search-navbar-target="contentType"
+          data-action="change->search-navbar#navigate"
+          class="select select-bordered select-sm bg-base-100 text-base-content w-[80px] px-1">
+          <option value="<%= root_path %>" <%= 'selected' if controller_name == 'home' %>><%= t('search.content_types.all') %></option>
+          <option value="<%= books_path %>" <%= 'selected' if controller_name == 'books' %>><%= t('navigation.books') %></option>
+          <option value="<%= lectures_path %>" <%= 'selected' if controller_name == 'lectures' %>><%= t('navigation.lectures') %></option>
+          <option value="<%= series_index_path %>" <%= 'selected' if controller_name == 'series' %>><%= t('navigation.series') %></option>
+          <option value="<%= articles_path %>" <%= 'selected' if controller_name == 'articles' %>><%= t('navigation.articles') %></option>
+          <option value="<%= news_index_path %>" <%= 'selected' if controller_name == 'news' %>><%= t('navigation.news') %></option>
+          <option value="<%= fatwas_path %>" <%= 'selected' if controller_name == 'fatwas' %>><%= t('navigation.fatwas') %></option>
+        </select>
+        <div class="flex-1">
+          <input
+            type="search"
+            name="q"
+            value="<%= params[:q] %>"
+            placeholder="<%= t('forms.search_placeholder') %>"
+            data-search-navbar-target="query"
+            class="input input-bordered input-sm w-full bg-base-100 text-base-content" />
+        </div>
+        <button type="submit" class="btn btn-secondary btn-sm">
+          <%= icon "search", library: "lucide", class: "size-4" %>
+        </button>
+      </form>
+    </div>
+  </div>
+  <%# Navigation row - desktop only %>
+  <nav class="hidden bg-secondary md:flex border-t py-3" data-header-scroll-target="nav">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex gap-6 text-sm">
       <%= link_to t('navigation.home'), root_path, class: "text-secondary-content hover:link" %>
       <%= link_to t('navigation.scientific_series'), series_index_path, class: "text-secondary-content hover:link" %>
@@ -54,10 +118,6 @@
     role="navigation"
     aria-label="<%= t('navigation.mobile_menu') %>">
     <div class="px-4 py-2 space-y-2">
-      <%= link_to search_path, class: "btn btn-secondary btn-sm w-full" do %>
-        <%= icon "magnifying-glass", class: "size-4" %>
-        <span><%= t('buttons.search_button') %></span>
-      <% end %>
       <%= link_to t('navigation.home'), root_path, class: "block py-2 hover:link" %>
       <%= link_to t('navigation.scientific_series'), series_index_path, class: "block py-2 hover:link" %>
       <%= link_to t('navigation.lectures'), lectures_path, class: "block py-2 hover:link" %>

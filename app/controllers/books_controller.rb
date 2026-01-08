@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 class BooksController < ApplicationController
-  include Filterable
+  include TypesenseListable
   before_action :set_book, only: [ :show ]
   before_action :setup_books_breadcrumbs
 
   def index
-    @q = Book.for_domain_id(@domain.id).published.includes(:scholar).ransack(params[:q])
-    @pagy, @books = pagy(@q.result(distinct: true))
+    typesense_search(content_type: "book")
   end
 
   def show
