@@ -25,11 +25,14 @@ module ApplicationHelper
   end
 
   def content_type_path(type)
-    send(CONTENT_TYPE_ROUTES[type])
+    route_method = CONTENT_TYPE_ROUTES[type]
+    return root_path unless route_method
+
+    send(route_method)
   end
 
   def content_type_nav_key(type)
-    CONTENT_TYPE_NAV_KEYS[type]
+    CONTENT_TYPE_NAV_KEYS[type] || type.to_s
   end
 
   def parse_integer(value)

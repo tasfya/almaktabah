@@ -6,7 +6,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 h-(--header-height)">
       <%# Logo %>
       <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto shrink-0" do %>
-        <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" class="max-h-12 w-auto" />
+        <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="max-h-12 w-auto" />
       <% end %>
       <%# Desktop search bar - hidden on mobile %>
       <div class="hidden md:flex flex-1 max-w-2xl">
@@ -19,7 +19,7 @@
             class="select select-bordered select-sm bg-base-100 text-base-content rounded-s-lg rounded-e-none border-e-0 w-[80px] px-1">
             <option value="<%= root_path %>" <%= 'selected' if controller_name == 'home' %>><%= t('search.content_types.all') %></option>
             <% available_content_types.each do |ct| %>
-              <option value="<%= content_type_path(ct[:type]) %>" <%= 'selected' if controller_name == ct[:type].downcase.pluralize %>><%= t("navigation.#{content_type_nav_key(ct[:type])}") %></option>
+              <option value="<%= content_type_path(ct[:type]) %>" <%= 'selected' if current_page?(content_type_path(ct[:type])) %>><%= t("navigation.#{content_type_nav_key(ct[:type])}") %></option>
             <% end %>
           </select>
           <input
@@ -71,7 +71,7 @@
           class="select select-bordered select-sm bg-base-100 text-base-content w-[80px] px-1">
           <option value="<%= root_path %>" <%= 'selected' if controller_name == 'home' %>><%= t('search.content_types.all') %></option>
           <% available_content_types.each do |ct| %>
-            <option value="<%= content_type_path(ct[:type]) %>" <%= 'selected' if controller_name == ct[:type].downcase.pluralize %>><%= t("navigation.#{content_type_nav_key(ct[:type])}") %></option>
+            <option value="<%= content_type_path(ct[:type]) %>" <%= 'selected' if current_page?(content_type_path(ct[:type])) %>><%= t("navigation.#{content_type_nav_key(ct[:type])}") %></option>
           <% end %>
         </select>
         <div class="flex-1">

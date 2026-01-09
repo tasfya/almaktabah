@@ -55,11 +55,12 @@
                       data-action="change->filter-sidebar#onCheckboxChange"
                       id="content_type_<%= local_assigns[:filter_location] || 'desktop' %>_<%= ct[:type].downcase %>"
                       class="checkbox checkbox-primary checkbox-sm"
-                      <%= 'checked' if @search_filters[:content_types]&.include?(ct[:type].downcase) %>>
-                      <span class="label-text flex-1">
+                      <%= 'checked' if @search_filters[:content_types]&.include?(ct[:type].downcase) %>
+                      <%= 'disabled' if facet_count.zero? %>>
+                      <span class="label-text flex-1 <%= 'text-gray-400' if facet_count.zero? %>">
                         <%= t("content_types.#{ct[:type].downcase}") %>
                       </span>
-                      <span class="badge badge-ghost badge-sm">
+                      <span class="badge badge-ghost badge-sm <%= 'opacity-50' if facet_count.zero? %>">
                         <%= facet_count %>
                       </span>
                     </label>

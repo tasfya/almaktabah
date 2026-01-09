@@ -1,6 +1,60 @@
 require 'rails_helper'
 
 RSpec.describe ApplicationHelper, type: :helper do
+  describe "#content_type_path" do
+    before do
+      allow(helper).to receive(:books_path).and_return("/books")
+      allow(helper).to receive(:lectures_path).and_return("/lectures")
+      allow(helper).to receive(:root_path).and_return("/")
+    end
+
+    it "returns path for valid type" do
+      expect(helper.content_type_path("book")).to eq("/books")
+    end
+
+    it "returns root_path for unknown type" do
+      expect(helper.content_type_path("unknown")).to eq("/")
+    end
+
+    it "returns root_path for nil type" do
+      expect(helper.content_type_path(nil)).to eq("/")
+    end
+  end
+
+  describe "#content_type_nav_key" do
+    it "returns nav key for valid type" do
+      expect(helper.content_type_nav_key("book")).to eq("books")
+      expect(helper.content_type_nav_key("series")).to eq("scientific_series")
+    end
+
+    it "returns type as string for unknown type" do
+      expect(helper.content_type_nav_key("unknown")).to eq("unknown")
+    end
+
+    it "returns empty string for nil type" do
+      expect(helper.content_type_nav_key(nil)).to eq("")
+    end
+  end
+
+  describe "#available_content_types" do
+    let(:domain) { create(:domain) }
+
+    before do
+      allow(helper).to receive(:instance_variable_get).with(:@domain).and_return(domain)
+      helper.instance_variable_set(:@domain, domain)
+    end
+
+    it "delegates to DomainContentTypesService" do
+      expect(DomainContentTypesService).to receive(:for_domain).with(domain.id).and_return([])
+      helper.available_content_types
+    end
+
+    it "memoizes the result" do
+      expect(DomainContentTypesService).to receive(:for_domain).once.and_return([])
+      2.times { helper.available_content_types }
+    end
+  end
+
   describe "#format_date" do
     let(:date) { Date.new(2023, 12, 25) }
 

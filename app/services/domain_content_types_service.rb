@@ -16,8 +16,8 @@ class DomainContentTypesService
   def fetch
     response = perform_multi_search
     extract_content_type_counts(response)
-  rescue Typesense::Error => e
-    Rails.logger.error("DomainContentTypesService error: #{e.message}")
+  rescue StandardError => e
+    Rails.logger.error("DomainContentTypesService error (#{e.class}): #{e.message}")
     []
   end
 

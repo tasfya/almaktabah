@@ -10,9 +10,10 @@
         </p>
       </div>
       <% if available_content_types.any? %>
-        <div class="<%= available_content_types.size > 4 ? 'md:col-span-2' : '' %>">
+        <% many_content_types = available_content_types.size > 4 %>
+        <div class="<%= many_content_types ? 'md:col-span-2' : '' %>">
           <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('navigation.quick_links') %></h4>
-          <ul class="space-y-2 <%= available_content_types.size > 4 ? 'grid grid-cols-2 gap-x-8 gap-y-2' : '' %>">
+          <ul class="space-y-2 <%= many_content_types ? 'grid grid-cols-2 gap-x-8 gap-y-2' : '' %>">
             <li><%= link_to t('navigation.home'), root_path, class: "btn hover:underline btn-primary" %></li>
             <% available_content_types.each do |ct| %>
               <li><%= link_to t("navigation.#{content_type_nav_key(ct[:type])}"), content_type_path(ct[:type]), class: "btn hover:underline btn-primary" %></li>
