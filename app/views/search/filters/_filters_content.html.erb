@@ -36,37 +36,39 @@
     <% end %>
     <%# Content Types Filter Section - Hidden on category pages %>
     <% unless @hide_content_type_filter %>
-      <div class="card bg-base-100 border border-base-300 shadow-sm mt-4">
-        <div class="card-body p-4">
-          <h2 class="card-title text-lg font-medium justify-between">
-            <%= t('search.filters.content_types') %>
-          </h2>
-          <div class="space-y-3">
-            <% @all_content_types.each do |content_type| %>
-              <% facet_count = @facets&.dig("content_type")&.find { |f| f[:value].downcase == content_type.downcase }&.dig(:count) || 0 %>
-              <div class="form-control">
-                <label class="label cursor-pointer justify-start gap-3 p-0 hover:bg-base-200 rounded-lg transition-colors">
-                  <input
-                    type="checkbox"
-                    name="content_types[]"
-                    value="<%= content_type.downcase %>"
-                    data-filter-sidebar-target="checkbox"
-                    data-action="change->filter-sidebar#onCheckboxChange"
-                    id="content_type_<%= local_assigns[:filter_location] || 'desktop' %>_<%= content_type.downcase %>"
-                    class="checkbox checkbox-primary checkbox-sm"
-                    <%= 'checked' if @search_filters[:content_types]&.include?(content_type.downcase) %>
-                    <%= 'disabled' if facet_count == 0 %>>
-                    <span class="label-text flex-1 <%= 'text-gray-400' if facet_count == 0 %>">
-                      <%= t("content_types.#{content_type.downcase}") %>
-                    </span>
-                    <span class="badge badge-ghost badge-sm <%= 'opacity-50' if facet_count == 0 %>">
-                      <%= facet_count %>
-                    </span>
-                  </label>
-                </div>
-              <% end %>
+      <% if available_content_types.any? %>
+        <div class="card bg-base-100 border border-base-300 shadow-sm mt-4">
+          <div class="card-body p-4">
+            <h2 class="card-title text-lg font-medium justify-between">
+              <%= t('search.filters.content_types') %>
+            </h2>
+            <div class="space-y-3">
+              <% available_content_types.each do |ct| %>
+                <% facet_count = @facets&.dig("content_type")&.find { |f| f[:value].downcase == ct[:type].downcase }&.dig(:count) || 0 %>
+                <div class="form-control">
+                  <label class="label cursor-pointer justify-start gap-3 p-0 hover:bg-base-200 rounded-lg transition-colors">
+                    <input
+                      type="checkbox"
+                      name="content_types[]"
+                      value="<%= ct[:type].downcase %>"
+                      data-filter-sidebar-target="checkbox"
+                      data-action="change->filter-sidebar#onCheckboxChange"
+                      id="content_type_<%= local_assigns[:filter_location] || 'desktop' %>_<%= ct[:type].downcase %>"
+                      class="checkbox checkbox-primary checkbox-sm"
+                      <%= 'checked' if @search_filters[:content_types]&.include?(ct[:type].downcase) %>
+                      <%= 'disabled' if facet_count.zero? %>>
+                      <span class="label-text flex-1 <%= 'text-gray-400' if facet_count.zero? %>">
+                        <%= t("content_types.#{ct[:type].downcase}") %>
+                      </span>
+                      <span class="badge badge-ghost badge-sm <%= 'opacity-50' if facet_count.zero? %>">
+                        <%= facet_count %>
+                      </span>
+                    </label>
+                  </div>
+                <% end %>
+              </div>
             </div>
           </div>
-        </div>
+        <% end %>
       <% end %>
     </div>

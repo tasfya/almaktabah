@@ -6,7 +6,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 h-(--header-height)">
       <%# Logo %>
       <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto shrink-0" do %>
-        <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
+        <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="max-h-12 w-auto" />
       <% end %>
       <%# Desktop search bar - hidden on mobile %>
       <div class="hidden md:flex flex-1 max-w-2xl">
@@ -18,12 +18,9 @@
             data-action="change->search-navbar#navigate"
             class="select select-bordered select-sm bg-base-100 text-base-content rounded-s-lg rounded-e-none border-e-0 w-[80px] px-1">
             <option value="<%= root_path %>" <%= 'selected' if controller_name == 'home' %>><%= t('search.content_types.all') %></option>
-            <option value="<%= books_path %>" <%= 'selected' if controller_name == 'books' %>><%= t('navigation.books') %></option>
-            <option value="<%= lectures_path %>" <%= 'selected' if controller_name == 'lectures' %>><%= t('navigation.lectures') %></option>
-            <option value="<%= series_index_path %>" <%= 'selected' if controller_name == 'series' %>><%= t('navigation.series') %></option>
-            <option value="<%= articles_path %>" <%= 'selected' if controller_name == 'articles' %>><%= t('navigation.articles') %></option>
-            <option value="<%= news_index_path %>" <%= 'selected' if controller_name == 'news' %>><%= t('navigation.news') %></option>
-            <option value="<%= fatwas_path %>" <%= 'selected' if controller_name == 'fatwas' %>><%= t('navigation.fatwas') %></option>
+            <% available_content_types.each do |ct| %>
+              <option value="<%= content_type_path(ct[:type]) %>" <%= 'selected' if current_page?(content_type_path(ct[:type])) %>><%= t("navigation.#{content_type_nav_key(ct[:type])}") %></option>
+            <% end %>
           </select>
           <input
             type="search"
@@ -73,12 +70,9 @@
           data-action="change->search-navbar#navigate"
           class="select select-bordered select-sm bg-base-100 text-base-content w-[80px] px-1">
           <option value="<%= root_path %>" <%= 'selected' if controller_name == 'home' %>><%= t('search.content_types.all') %></option>
-          <option value="<%= books_path %>" <%= 'selected' if controller_name == 'books' %>><%= t('navigation.books') %></option>
-          <option value="<%= lectures_path %>" <%= 'selected' if controller_name == 'lectures' %>><%= t('navigation.lectures') %></option>
-          <option value="<%= series_index_path %>" <%= 'selected' if controller_name == 'series' %>><%= t('navigation.series') %></option>
-          <option value="<%= articles_path %>" <%= 'selected' if controller_name == 'articles' %>><%= t('navigation.articles') %></option>
-          <option value="<%= news_index_path %>" <%= 'selected' if controller_name == 'news' %>><%= t('navigation.news') %></option>
-          <option value="<%= fatwas_path %>" <%= 'selected' if controller_name == 'fatwas' %>><%= t('navigation.fatwas') %></option>
+          <% available_content_types.each do |ct| %>
+            <option value="<%= content_type_path(ct[:type]) %>" <%= 'selected' if current_page?(content_type_path(ct[:type])) %>><%= t("navigation.#{content_type_nav_key(ct[:type])}") %></option>
+          <% end %>
         </select>
         <div class="flex-1">
           <input
@@ -96,34 +90,34 @@
     </div>
   </div>
   <%# Navigation row - desktop only %>
-  <nav class="hidden bg-secondary md:flex border-t py-3" data-header-scroll-target="nav">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex gap-6 text-sm">
-      <%= link_to t('navigation.home'), root_path, class: "text-secondary-content hover:link" %>
-      <%= link_to t('navigation.scientific_series'), series_index_path, class: "text-secondary-content hover:link" %>
-      <%= link_to t('navigation.lectures'), lectures_path, class: "text-secondary-content hover:link" %>
-      <%= link_to t('navigation.books'), books_path, class: "text-secondary-content hover:link" %>
-      <%= link_to t('navigation.news'), news_index_path, class: "text-secondary-content hover:link" %>
-      <%= link_to t('navigation.fatwas'), fatwas_path, class: "text-secondary-content hover:link" %>
-    </div>
-  </nav>
+  <% if available_content_types.any? %>
+    <nav class="hidden bg-secondary md:flex border-t py-3" data-header-scroll-target="nav">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex gap-6 text-sm">
+        <%= link_to t('navigation.home'), root_path, class: "text-secondary-content hover:link" %>
+        <% available_content_types.each do |ct| %>
+          <%= link_to t("navigation.#{content_type_nav_key(ct[:type])}"), content_type_path(ct[:type]), class: "text-secondary-content hover:link" %>
+        <% end %>
+      </div>
+    </nav>
+  <% end %>
   <!-- Overlay for mobile menu -->
   <div
     data-navigation-target="overlay"
     class="fixed top-(--header-height) left-0 right-0 bottom-0 bg-black/50 backdrop-blur-sm hidden md:hidden z-40 pointer-events-auto">
   </div>
-  <div
-    id="mobile-menu"
-    data-navigation-target="menu"
-    class="hidden md:hidden fixed top-(--header-height) left-0 right-0 bg-white shadow-lg border-t z-50"
-    role="navigation"
-    aria-label="<%= t('navigation.mobile_menu') %>">
-    <div class="px-4 py-2 space-y-2">
-      <%= link_to t('navigation.home'), root_path, class: "block py-2 hover:link" %>
-      <%= link_to t('navigation.scientific_series'), series_index_path, class: "block py-2 hover:link" %>
-      <%= link_to t('navigation.lectures'), lectures_path, class: "block py-2 hover:link" %>
-      <%= link_to t('navigation.books'), books_path, class: "block py-2 hover:link" %>
-      <%= link_to t('navigation.news'), news_index_path, class: "block py-2 hover:link" %>
-      <%= link_to t('navigation.fatwas'), fatwas_path, class: "block py-2 hover:link" %>
+  <% if available_content_types.any? %>
+    <div
+      id="mobile-menu"
+      data-navigation-target="menu"
+      class="hidden md:hidden fixed top-(--header-height) left-0 right-0 bg-white shadow-lg border-t z-50"
+      role="navigation"
+      aria-label="<%= t('navigation.mobile_menu') %>">
+      <div class="px-4 py-2 space-y-2">
+        <%= link_to t('navigation.home'), root_path, class: "block py-2 hover:link" %>
+        <% available_content_types.each do |ct| %>
+          <%= link_to t("navigation.#{content_type_nav_key(ct[:type])}"), content_type_path(ct[:type]), class: "block py-2 hover:link" %>
+        <% end %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </header>
