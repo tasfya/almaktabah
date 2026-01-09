@@ -83,6 +83,15 @@ class Series < ApplicationRecord
       [ "lessons", "scholar" ]
     end
 
+    def assign_to(domain)
+      super(domain)
+
+      # Propagate the domain assignment to all lessons in this series
+      lessons.find_each do |lesson|
+        lesson.assign_to(domain)
+      end
+    end
+
     def seo_show_title
       "#{title} - #{scholar.full_name}"
     end

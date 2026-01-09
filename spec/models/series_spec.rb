@@ -126,5 +126,31 @@ RSpec.describe Series, type: :model do
     it 'returns assigned domains' do
       expect(test_series.assigned_domains).to include(domain)
     end
+
+    context 'propagation to lessons' do
+      let!(:series_with_lessons) { create(:series, :without_domain) }
+      let!(:lesson1) { create(:lesson, series: series_with_lessons) }
+      let!(:lesson2) { create(:lesson, series: series_with_lessons) }
+
+      it 'assigns domain to all lessons when series is assigned (domain object)' do
+        series_with_lessons.assign_to(domain)
+
+        expect(lesson1.reload.domains).to include(domain)
+        expect(lesson2.reload.domains).to include(domain)
+      end
+
+      it 'assigns domain when passed a domain id' do
+        series_with_lessons.assign_to(domain)
+
+        expect(lesson1.reload.domains).to include(domain)
+      end
+
+      it 'does not error if some lessons already assigned' do
+        lesson1.assign_to(domain)
+        expect { series_with_lessons.assign_to(domain) }.not_to raise_error
+        expect(lesson1.reload.domains).to include(domain)
+        expect(lesson2.reload.domains).to include(domain)
+      end
+    end
   end
 end
