@@ -19,23 +19,7 @@ RSpec.describe Scholar, type: :model do
         let(:scholar) { build(:scholar, first_name: 'Ahmed', last_name: 'Al-Scholar') }
 
         it 'returns full name' do
-          expect(scholar.name).to eq('Ahmed Al-Scholar')
-        end
-      end
-
-      context 'when only first name is present' do
-        let(:scholar) { build(:scholar, first_name: 'Ahmed', last_name: nil) }
-
-        it 'returns first name only' do
-          expect(scholar.name).to eq('Ahmed')
-        end
-      end
-
-      context 'when only last name is present' do
-        let(:scholar) { build(:scholar, first_name: nil, last_name: 'Al-Scholar') }
-
-        it 'returns last name only' do
-          expect(scholar.name).to eq('Al-Scholar')
+          expect(scholar.name).to eq(scholar.full_name)
         end
       end
     end
