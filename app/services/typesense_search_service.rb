@@ -15,12 +15,12 @@ class TypesenseSearchService
 
   # Searchable fields per collection (based on actual schema)
   SEARCHABLE_FIELDS = {
-    "Book" => "title,description,content_text",
-    "Lecture" => "title,description,content_text",
-    "Series" => "title,description,content_text",
-    "Fatwa" => "title,content_text",  # No description field
-    "News" => "title,description,content_text",
-    "Article" => "title,content_text"  # No description field
+    "Book" => "title,description,content_text,scholar_name",
+    "Lecture" => "title,description,content_text,scholar_name",
+    "Series" => "title,description,content_text,scholar_name",
+    "Fatwa" => "title,content_text,scholar_name",  # No description field
+    "News" => "title,description,content_text,scholar_name",
+    "Article" => "title,content_text,scholar_name"  # No description field
   }.freeze
 
   FACET_FIELDS = "content_type,scholar_name,media_type"
