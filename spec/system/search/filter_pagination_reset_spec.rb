@@ -10,7 +10,7 @@ RSpec.describe "Filter pagination reset", type: :system, js: true do
     stub_typesense_search(build_search_result(
       hits_by_type: { articles: hits },
       facets: {
-        "scholar_name" => [ { value: "Scholar A", count: 2 }, { value: "Scholar B", count: 1 } ],
+        "scholar_name" => [ { value: "Scholar A", count: 3 }, { value: "Scholar B", count: 1 } ],
         "content_type" => [ { value: "article", count: 3 } ]
       },
       total: 3
@@ -30,7 +30,7 @@ RSpec.describe "Filter pagination reset", type: :system, js: true do
     stub_typesense_search(build_search_result(
       hits_by_type: { articles: hits },
       facets: {
-        "scholar_name" => [ { value: "Scholar A", count: 2 }, { value: "Scholar B", count: 1 } ],
+        "scholar_name" => [ { value: "Scholar A", count: 3 }, { value: "Scholar B", count: 1 } ],
         "content_type" => [ { value: "article", count: 3 } ]
       },
       total: 3
