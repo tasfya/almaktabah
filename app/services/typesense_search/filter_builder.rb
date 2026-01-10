@@ -15,10 +15,11 @@ module TypesenseSearch
       filters.join(" && ")
     end
 
+    # Returns filter without scholar constraint (for disjunctive faceting)
+    # Note: No content_types_filter because extra queries target specific collections
     def without_scholars
       filters = []
       filters << domain_filter if @domain_id.present?
-      filters << content_types_filter if @content_types.present?
       filters.join(" && ")
     end
 

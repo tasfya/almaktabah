@@ -79,7 +79,8 @@ module TypesenseSearch
             "query_by" => Collections::SEARCHABLE_FIELDS[collection],
             "facet_by" => "scholar_name",
             "filter_by" => @filter_builder.without_scholars,
-            "per_page" => 0
+            "per_page" => 0,
+            "max_facet_values" => 100
           }
         end
       end
@@ -96,11 +97,13 @@ module TypesenseSearch
     def build_result(hits_response, facets_response)
       mixed_hits = extract_mixed_hits(hits_response)
       selected_indices = selected_collections.map { |c| Collections.index_for(c) }.to_set
+
       facets = FacetMerger.new(
         facets_response,
         selected_indices: selected_indices,
         scholars_filtered: @scholars.present?,
-        content_types_filtered: @content_types.present?
+        content_types_filtered: @content_types.present?,
+        selected_scholars: @scholars
       ).merge
 
       SearchResult.new(

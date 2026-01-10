@@ -88,26 +88,28 @@ RSpec.describe TypesenseSearch::FacetMerger do
         # Main query result (with scholar filter applied)
         results[0] = build_result(facet_counts: [
           build_facet("content_type", { "news" => 2 }),
-          build_facet("scholar_name", { "Scholar A" => 2 }) # filtered count
+          build_facet("scholar_name", { "Scholar A" => 2 }) # accurate count for selected scholar
         ])
         # Extra disjunctive query (without scholar filter)
         results << build_result(facet_counts: [
-          build_facet("scholar_name", { "Scholar A" => 5, "Scholar B" => 3 }) # unfiltered counts
+          build_facet("scholar_name", { "Scholar A" => 5, "Scholar B" => 3 }) # counts for other scholars
         ])
         { "results" => results }
       end
 
-      it "uses scholar counts from extra disjunctive queries only" do
+      it "uses main query for selected scholar and extra query for others" do
         merger = described_class.new(
           response,
           selected_indices: Set.new([ 0 ]),
-          scholars_filtered: true
+          scholars_filtered: true,
+          selected_scholars: [ "Scholar A" ]
         )
         result = merger.merge
 
-        # Scholar counts should come from extra query (index >= collections_count)
+        # Scholar A: from main query (2) - accurate count for selected scholar
+        # Scholar B: from extra query (3) - disjunctive count for other scholars
         expect(result["scholar_name"]).to contain_exactly(
-          { value: "Scholar A", count: 5 },
+          { value: "Scholar A", count: 2 },
           { value: "Scholar B", count: 3 }
         )
       end
@@ -116,11 +118,73 @@ RSpec.describe TypesenseSearch::FacetMerger do
         merger = described_class.new(
           response,
           selected_indices: Set.new([ 0 ]),
-          scholars_filtered: true
+          scholars_filtered: true,
+          selected_scholars: [ "Scholar A" ]
         )
         result = merger.merge
 
         expect(result["content_type"]).to eq([ { value: "news", count: 2 } ])
+      end
+    end
+
+    context "with both scholars_filtered and content_types_filtered (multiple selected types)" do
+      let(:response) do
+        results = Array.new(collections_count) { build_result }
+        # Main queries (indices 0-5) with scholar filter applied
+        # News (index 0) - selected
+        results[0] = build_result(facet_counts: [
+          build_facet("content_type", { "news" => 1 }),
+          build_facet("scholar_name", { "Scholar A" => 1 })
+        ])
+        # Lecture (index 2) - selected
+        results[2] = build_result(facet_counts: [
+          build_facet("content_type", { "lecture" => 3 }),
+          build_facet("scholar_name", { "Scholar A" => 3 })
+        ])
+        # Extra disjunctive queries (without scholar filter) for selected collections
+        # News extra query (index 6)
+        results << build_result(facet_counts: [
+          build_facet("scholar_name", { "Scholar A" => 1, "Scholar B" => 2 })
+        ])
+        # Lecture extra query (index 7)
+        results << build_result(facet_counts: [
+          build_facet("scholar_name", { "Scholar A" => 3, "Scholar B" => 5 })
+        ])
+        { "results" => results }
+      end
+
+      it "uses main queries for selected scholar and extra queries for others" do
+        merger = described_class.new(
+          response,
+          selected_indices: Set.new([ 0, 2 ]), # News and Lecture selected
+          scholars_filtered: true,
+          content_types_filtered: true,
+          selected_scholars: [ "Scholar A" ]
+        )
+        result = merger.merge
+
+        # Scholar A: from main queries (1 + 3 = 4) - accurate count
+        # Scholar B: from extra queries (2 + 5 = 7) - disjunctive count
+        expect(result["scholar_name"]).to contain_exactly(
+          { value: "Scholar A", count: 4 },
+          { value: "Scholar B", count: 7 }
+        )
+      end
+
+      it "uses content_type from main queries of selected collections" do
+        merger = described_class.new(
+          response,
+          selected_indices: Set.new([ 0, 2 ]),
+          scholars_filtered: true,
+          content_types_filtered: true,
+          selected_scholars: [ "Scholar A" ]
+        )
+        result = merger.merge
+
+        expect(result["content_type"]).to contain_exactly(
+          { value: "news", count: 1 },
+          { value: "lecture", count: 3 }
+        )
       end
     end
 

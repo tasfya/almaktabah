@@ -81,45 +81,27 @@ RSpec.describe TypesenseSearch::FilterBuilder do
     end
 
     context "with content_types" do
-      it "builds content_type filter" do
+      it "ignores content_types (extra queries target specific collections)" do
         builder = described_class.new(content_types: %w[book lecture])
 
-        expect(builder.without_scholars).to eq("content_type:=[`book`,`lecture`]")
-      end
-
-      it "normalizes content types to lowercase" do
-        builder = described_class.new(content_types: %w[Book LECTURE])
-
-        expect(builder.without_scholars).to eq("content_type:=[`book`,`lecture`]")
+        expect(builder.without_scholars).to eq("")
       end
     end
 
     context "with domain_id and content_types" do
-      it "combines filters with &&" do
+      it "returns only domain filter (content_types ignored)" do
         builder = described_class.new(domain_id: 123, content_types: [ "book" ])
 
-        expect(builder.without_scholars).to eq("domain_ids:=[123] && content_type:=[`book`]")
+        expect(builder.without_scholars).to eq("domain_ids:=[123]")
       end
     end
-  end
 
-  describe "#content_types_filter (via without_scholars)" do
-    it "returns nil when no content types" do
-      builder = described_class.new
+    context "with all filters" do
+      it "returns only domain filter (scholars and content_types excluded)" do
+        builder = described_class.new(domain_id: 123, scholars: [ "Ibn Baz" ], content_types: [ "book" ])
 
-      expect(builder.without_scholars).to eq("")
-    end
-
-    it "builds content type filter" do
-      builder = described_class.new(content_types: %w[book article])
-
-      expect(builder.without_scholars).to eq("content_type:=[`book`,`article`]")
-    end
-
-    it "sanitizes backticks in content types" do
-      builder = described_class.new(content_types: [ "book`test" ])
-
-      expect(builder.without_scholars).to eq("content_type:=[`booktest`]")
+        expect(builder.without_scholars).to eq("domain_ids:=[123]")
+      end
     end
   end
 end
