@@ -20,7 +20,7 @@ RSpec.describe "Filter pagination reset", type: :system, js: true do
 
     expect(page.current_url).to include("page=2")
 
-    check "Scholar A"
+    within("#search_filters_content_desktop") { check "Scholar A" }
 
     expect(page.current_url).not_to include("page=")
   end
@@ -40,7 +40,7 @@ RSpec.describe "Filter pagination reset", type: :system, js: true do
 
     expect(page.current_url).to include("page=2")
 
-    uncheck "Scholar A"
+    within("#search_filters_content_desktop") { uncheck "Scholar A" }
 
     expect(page.current_url).not_to include("page=")
   end
