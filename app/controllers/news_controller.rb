@@ -6,7 +6,7 @@ class NewsController < ApplicationController
   before_action :setup_news_breadcrumbs
 
   def index
-    typesense_search(content_type: "news")
+    typesense_collection_search("news")
   end
 
   def show

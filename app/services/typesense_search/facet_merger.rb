@@ -1,0 +1,76 @@
+# frozen_string_literal: true
+
+module TypesenseSearch
+  # Merges facet counts from multiple Typesense search results.
+  #
+  # Multi-search returns separate results per collection. This class aggregates
+  # facet counts across all results, with special handling for disjunctive faceting.
+  #
+  # == Disjunctive Faceting
+  # When a filter is active (e.g., scholar="Ibn Baz"), we want the scholar facet
+  # to show counts for OTHER scholars too, so users can expand their selection.
+  # To achieve this, services send extra queries WITHOUT the scholar filter.
+  #
+  # Response structure example (with scholars filter):
+  #   results[0..5] = main queries for each collection (with scholar filter)
+  #   results[6..N] = extra queries for selected collections (without scholar filter)
+  #
+  # The extra queries only fetch scholar_name facets with per_page=0 (no hits).
+  class FacetMerger
+    # @param response [Hash] Typesense multi_search response
+    # @param selected_indices [Set<Integer>] indices of collections user selected (for content_type filter)
+    # @param scholars_filtered [Boolean] true if scholar filter is active
+    # @param content_types_filtered [Boolean] true if content_type filter is active
+    def initialize(response, selected_indices:, scholars_filtered: false, content_types_filtered: false)
+      @response = response
+      @selected_indices = selected_indices
+      @scholars_filtered = scholars_filtered
+      @content_types_filtered = content_types_filtered
+    end
+
+    # @return [Hash] facets by field name, e.g. { "scholar_name" => [{ value: "X", count: 5 }, ...] }
+    def merge
+      merged = Hash.new { |h, k| h[k] = Hash.new(0) }
+      main_results_count = Collections::NAMES.size
+
+      @response["results"].each_with_index do |result, index|
+        # Extra scholar queries are appended after the main collection queries
+        is_extra_scholar_query = index >= main_results_count
+        is_selected = @selected_indices.include?(index)
+
+        result["facet_counts"]&.each do |facet|
+          field = facet["field_name"]
+          next unless include_facet?(field, is_extra_scholar_query, is_selected)
+
+          facet["counts"].each do |count|
+            merged[field][count["value"]] += count["count"]
+          end
+        end
+      end
+
+      merged.transform_values do |counts|
+        counts.map { |value, count| { value: value, count: count } }
+              .sort_by { |f| -f[:count] }
+      end
+    end
+
+    private
+
+    # Determines which facets to include based on filter state.
+    # Scholar facets need special handling for disjunctive counts.
+    def include_facet?(field, is_extra_scholar_query, is_selected)
+      # Non-scholar facets: always include from all results
+      return true unless field == "scholar_name"
+
+      # Scholar filter active: use ONLY the extra disjunctive queries (unfiltered counts)
+      return is_extra_scholar_query if @scholars_filtered
+
+      # Content type filter active: use only selected collections to avoid
+      # showing scholars from unselected content types
+      return is_selected if @content_types_filtered
+
+      # No filters: include all scholar facets
+      true
+    end
+  end
+end

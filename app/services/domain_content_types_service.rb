@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DomainContentTypesService
-  CONTENT_COLLECTIONS = TypesenseSearch::Collections::ALL
+  CONTENT_COLLECTIONS = TypesenseSearch::Collections::NAMES
 
   def self.for_domain(domain_id)
     return [] if domain_id.blank?

@@ -6,7 +6,7 @@ class BooksController < ApplicationController
   before_action :setup_books_breadcrumbs
 
   def index
-    typesense_search(content_type: "book")
+    typesense_collection_search("book")
   end
 
   def show

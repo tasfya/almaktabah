@@ -209,6 +209,7 @@ export default class extends Controller {
         .forEach((v) => params.append(name, v));
     }
 
+    params.delete("page");
     url.search = params.toString();
     window.history.replaceState({}, "", url);
   }
@@ -225,6 +226,7 @@ export default class extends Controller {
       filterNames.forEach((name) => params.delete(name));
     }
 
+    params.delete("page");
     url.search = params.toString();
     window.history.replaceState({}, "", url);
   }

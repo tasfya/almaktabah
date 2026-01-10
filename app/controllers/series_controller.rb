@@ -6,7 +6,7 @@ class SeriesController < ApplicationController
   before_action :setup_series_breadcrumbs
 
   def index
-    typesense_search(content_type: "series")
+    typesense_collection_search("series")
   end
 
   def show

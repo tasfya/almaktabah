@@ -25,7 +25,7 @@
           </span>
         </h3>
         <%= link_to t('search.view_all'),
-                  url_for(controller: model_name.to_s, action: 'index'),
+                  url_for(controller: model_name.to_s, action: 'index', scholars: params[:scholars]),
                   class: "btn btn-outline btn-sm",
                   data: { turbo_frame: "_top" } %>
       </div>

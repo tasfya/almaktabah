@@ -6,7 +6,7 @@ class FatwasController < ApplicationController
   before_action :setup_fatwas_breadcrumbs
 
   def index
-    typesense_search(content_type: "fatwa")
+    typesense_collection_search("fatwa")
   end
 
   def show

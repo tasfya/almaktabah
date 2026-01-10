@@ -6,7 +6,7 @@ class LecturesController < ApplicationController
   before_action :setup_lectures_breadcrumbs
 
   def index
-    typesense_search(content_type: "lecture")
+    typesense_collection_search("lecture")
   end
 
   def show
