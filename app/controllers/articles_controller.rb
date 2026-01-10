@@ -6,7 +6,7 @@ class ArticlesController < ApplicationController
   before_action :setup_articles_breadcrumbs
 
   def index
-    typesense_search(content_type: "article")
+    typesense_collection_search("article")
   end
 
   def show

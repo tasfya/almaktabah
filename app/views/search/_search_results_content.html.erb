@@ -1,18 +1,30 @@
 <%# Search Results Content - Results display logic and no results state %>
 <% if @results.present? && @total_results > 0 %>
-  <div class="space-y-8">
-    <% @results.each do |model_name, hits| %>
-      <% next unless hits.present? %>
-      <%
-        facet_key = model_name.to_s.singularize
-        section_total = @facets.dig("content_type")&.find { |f| f[:value] == facet_key }&.dig(:count) || hits.size
-      %>
-      <%= render "search/search_section", model_name: model_name, hits: hits, total_count: section_total %>
-    <% end %>
-  </div>
-  <%# Show pagination only when single content_type is selected %>
-  <% if @hide_content_type_filter %>
+  <% if @results[:mixed].present? %>
+    <%# Mixed search results - single list sorted by relevance %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% @results[:mixed].each do |hit| %>
+        <% partial_name = hit.content_type.to_s.singularize %>
+        <%= render "search/results/#{partial_name}", partial_name.to_sym => hit %>
+      <% end %>
+    </div>
     <%= render "search/pagination" %>
+  <% else %>
+    <%# Grouped results by content type %>
+    <div class="space-y-8">
+      <% @results.each do |model_name, hits| %>
+        <% next unless hits.present? %>
+        <%
+          facet_key = model_name.to_s.singularize
+          section_total = @facets.dig("content_type")&.find { |f| f[:value] == facet_key }&.dig(:count) || hits.size
+        %>
+        <%= render "search/search_section", model_name: model_name, hits: hits, total_count: section_total %>
+      <% end %>
+    </div>
+    <%# Show pagination only when single content_type is selected %>
+    <% if @hide_content_type_filter %>
+      <%= render "search/pagination" %>
+    <% end %>
   <% end %>
 <% else %>
   <%# No Results State %>
