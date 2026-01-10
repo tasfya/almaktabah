@@ -68,7 +68,8 @@ module TypesenseSearch
           "collection" => collection,
           "query_by" => Collections::SEARCHABLE_FIELDS[collection],
           "facet_by" => Collections::FACET_FIELDS,
-          "filter_by" => @filter_builder.build
+          "filter_by" => @filter_builder.build,
+          "max_facet_values" => 999
         }
         search["per_page"] = 0 unless selected.include?(collection)
         search
