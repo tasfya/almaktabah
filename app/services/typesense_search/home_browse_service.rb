@@ -7,7 +7,7 @@ module TypesenseSearch
       @domain_id = domain_id
       @content_types = normalize_content_types(content_types)
       @scholars = Array(scholars).map(&:to_s).reject(&:blank?)
-      @per_page = per_page
+      @per_page = per_page.to_i.clamp(1, Collections::MAX_PER_PAGE)
       @filter_builder = FilterBuilder.new(
         domain_id: @domain_id,
         scholars: @scholars,
@@ -52,7 +52,8 @@ module TypesenseSearch
             "query_by" => Collections::SEARCHABLE_FIELDS[collection],
             "facet_by" => "scholar_name",
             "filter_by" => @filter_builder.without_scholars,
-            "per_page" => 0
+            "per_page" => 0,
+            "max_facet_values" => 100
           }
         end
       end

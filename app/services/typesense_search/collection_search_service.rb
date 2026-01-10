@@ -4,7 +4,7 @@ module TypesenseSearch
   # Search within a single collection (for collection listing pages)
   class CollectionSearchService
     def initialize(collection:, query: nil, domain_id: nil, scholars: [], page: 1, per_page: Collections::DEFAULT_PER_PAGE)
-      @collection = collection.to_s.capitalize
+      @collection = normalize_collection(collection)
       @query = query.to_s.strip.presence
       @domain_id = domain_id
       @scholars = Array(scholars).map(&:to_s).reject(&:blank?)
@@ -106,8 +106,8 @@ module TypesenseSearch
 
     def extract_facets(result)
       (result["facet_counts"] || []).to_h do |facet|
-        counts = facet["counts"].map { |c| { value: c["value"], count: c["count"] } }
-                                .sort_by { |f| -f[:count] }
+        counts = Array(facet["counts"]).map { |c| { value: c["value"], count: c["count"] } }
+                                       .sort_by { |f| -f[:count] }
         [ facet["field_name"], counts ]
       end
     end
@@ -115,6 +115,11 @@ module TypesenseSearch
     def empty_result
       key = Collections.key_for(@collection)
       SearchResult.new(grouped_hits: { key => [] }, facets: {}, total_found: 0, page: 1, per_page: @per_page)
+    end
+
+    def normalize_collection(collection)
+      name = collection.to_s.capitalize
+      Collections::NAMES.include?(name) ? name : raise(ArgumentError, "Unknown collection: #{name}")
     end
   end
 end
