@@ -50,7 +50,7 @@
 
     <%# Structured Data (JSON-LD) %>
     <script type="application/ld+json">
-      <%= structured_data_organization %>
+      <%= structured_data_organization.html_safe %>
     </script>
     <%= yield :structured_data %>
   </head>
