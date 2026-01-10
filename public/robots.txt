@@ -10,5 +10,5 @@ Disallow: /users/sign_in
 Disallow: /users/sign_up
 Disallow: /users/password
 
-# Sitemap location
-Sitemap: https://almaktabah.com/sitemap.xml
+# Sitemap location (relative URL works for all domains)
+Sitemap: /sitemap.xml

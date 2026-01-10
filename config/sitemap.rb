@@ -33,8 +33,11 @@ SitemapGenerator::Sitemap.create do
 
   # Lectures
   add lectures_path, priority: 0.9, changefreq: "daily"
-  Lecture.published.find_each do |lecture|
-    add lecture_path(lecture, scholar_id: lecture.scholar.slug, kind: lecture.kind),
+  Lecture.published.includes(series: :scholar).find_each do |lecture|
+    scholar = lecture.scholar
+    next unless scholar
+
+    add lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind),
         lastmod: lecture.updated_at,
         priority: 0.8,
         changefreq: "weekly"
@@ -42,7 +45,9 @@ SitemapGenerator::Sitemap.create do
 
   # Books
   add books_path, priority: 0.9, changefreq: "weekly"
-  Book.published.find_each do |book|
+  Book.published.includes(:scholar).find_each do |book|
+    next unless book.scholar
+
     add book_path(book.scholar, book),
         lastmod: book.updated_at,
         priority: 0.8,
@@ -51,7 +56,9 @@ SitemapGenerator::Sitemap.create do
 
   # Articles
   add articles_path, priority: 0.9, changefreq: "weekly"
-  Article.published.find_each do |article|
+  Article.published.includes(:scholar).find_each do |article|
+    next unless article.scholar
+
     add article_path(article.scholar, article),
         lastmod: article.updated_at,
         priority: 0.7,
@@ -69,7 +76,9 @@ SitemapGenerator::Sitemap.create do
 
   # Fatwas
   add fatwas_path, priority: 0.9, changefreq: "weekly"
-  Fatwa.published.find_each do |fatwa|
+  Fatwa.published.includes(:scholar).find_each do |fatwa|
+    next unless fatwa.scholar
+
     add fatwa_path(fatwa.scholar, fatwa),
         lastmod: fatwa.updated_at,
         priority: 0.7,
@@ -87,7 +96,7 @@ SitemapGenerator::Sitemap.create do
 
   # Series
   add series_index_path, priority: 0.8, changefreq: "weekly"
-  Series.find_each do |series|
+  Series.includes(:scholar).find_each do |series|
     scholar = series.scholar
     next unless scholar
 

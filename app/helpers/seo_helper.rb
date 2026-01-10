@@ -2,7 +2,7 @@
 
 module SeoHelper
   def meta_title
-    [content_for(:title), site_name].compact.join(" | ")
+    [content_for(:title).presence, site_name].compact.join(" | ")
   end
 
   def meta_description
@@ -29,6 +29,14 @@ module SeoHelper
     "#{request.base_url}/icon.png"
   end
 
+  def twitter_handle
+    return nil unless site_info[:twitter_url].present?
+
+    # Extract handle from URL (e.g., "https://x.com/Moh1Rz2H3?ref" -> "@Moh1Rz2H3")
+    handle = site_info[:twitter_url].split("/").last&.split("?")&.first
+    handle.present? ? "@#{handle.delete_prefix("@")}" : nil
+  end
+
   def structured_data_organization
     {
       "@context": "https://schema.org",
@@ -45,13 +53,14 @@ module SeoHelper
 
   def structured_data_for_lecture(lecture)
     return unless lecture
+    return unless lecture.scholar
 
     {
       "@context": "https://schema.org",
       "@type": "VideoObject",
       "name": lecture.title,
       "description": lecture.description.presence || lecture.title,
-      "thumbnailUrl": lecture.thumbnail.attached? ? url_for(lecture.thumbnail) : default_image,
+      "thumbnailUrl": lecture.thumbnail.attached? ? rails_blob_url(lecture.thumbnail, only_path: false) : default_image,
       "uploadDate": lecture.published_at&.iso8601 || lecture.created_at.iso8601,
       "duration": lecture.duration ? "PT#{lecture.duration}S" : nil,
       "contentUrl": lecture_url(lecture, scholar_id: lecture.scholar.slug, kind: lecture.kind),
@@ -78,7 +87,7 @@ module SeoHelper
       "@type": "Article",
       "headline": article.title,
       "description": article.description.presence || article.title,
-      "image": article.thumbnail.attached? ? url_for(article.thumbnail) : default_image,
+      "image": article.thumbnail.attached? ? rails_blob_url(article.thumbnail, only_path: false) : default_image,
       "datePublished": article.published_at&.iso8601 || article.created_at.iso8601,
       "dateModified": article.updated_at.iso8601,
       "author": {
@@ -104,7 +113,7 @@ module SeoHelper
       "@type": "NewsArticle",
       "headline": news_item.title,
       "description": news_item.description.presence || news_item.title,
-      "image": news_item.thumbnail.attached? ? url_for(news_item.thumbnail) : default_image,
+      "image": news_item.thumbnail.attached? ? rails_blob_url(news_item.thumbnail, only_path: false) : default_image,
       "datePublished": news_item.published_at&.iso8601 || news_item.created_at.iso8601,
       "dateModified": news_item.updated_at.iso8601,
       "author": {
@@ -130,7 +139,7 @@ module SeoHelper
       "@type": "Book",
       "name": book.title,
       "description": book.description.presence || book.title,
-      "image": book.thumbnail.attached? ? url_for(book.thumbnail) : default_image,
+      "image": book.cover_image.attached? ? rails_blob_url(book.cover_image, only_path: false) : default_image,
       "author": {
         "@type": "Person",
         "name": book.scholar&.full_name || "Unknown"

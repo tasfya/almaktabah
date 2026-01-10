@@ -26,8 +26,8 @@
     <meta name="twitter:title" content="<%= meta_title %>">
     <meta name="twitter:description" content="<%= meta_description %>">
     <meta name="twitter:image" content="<%= meta_image %>">
-    <% if site_info[:twitter_url].present? %>
-      <meta name="twitter:site" content="@Moh1Rz2H3">
+    <% if twitter_handle.present? %>
+      <meta name="twitter:site" content="<%= twitter_handle %>">
     <% end %>
 
     <%= csrf_meta_tags %>
@@ -50,7 +50,7 @@
 
     <%# Structured Data (JSON-LD) %>
     <script type="application/ld+json">
-      <%= structured_data_organization.html_safe %>
+      <%= structured_data_organization %>
     </script>
     <%= yield :structured_data %>
   </head>

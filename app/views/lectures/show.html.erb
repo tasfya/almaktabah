@@ -5,7 +5,7 @@
 <% end %>
 <% content_for :structured_data do %>
   <script type="application/ld+json">
-    <%= structured_data_for_lecture(@lecture).html_safe %>
+    <%= structured_data_for_lecture(@lecture) %>
   </script>
 <% end %>
 <div class="min-h-screen py-8">
