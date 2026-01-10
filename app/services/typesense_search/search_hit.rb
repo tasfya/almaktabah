@@ -5,7 +5,7 @@ module TypesenseSearch
     attr_reader :highlights, :content_type
 
     def initialize(hit_data, content_type)
-      @document = hit_data["document"]
+      @document = hit_data["document"] || {}
       @highlights = hit_data["highlights"] || []
       @content_type = content_type
     end

@@ -18,6 +18,8 @@ module TypesenseSearch
     end
 
     def call
+      return empty_result if selected_collections.empty?
+
       hits_response = fetch_union_hits
       # Union search doesn't support facets, so we need a separate call
       facets_response = fetch_facets

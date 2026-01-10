@@ -40,7 +40,7 @@ module TypesenseSearch
         result["facet_counts"]&.each do |facet|
           field = facet["field_name"]
 
-          facet["counts"].each do |count|
+          facet["counts"]&.each do |count|
             scholar_name = count["value"]
             next unless include_facet?(field, is_extra_scholar_query, is_selected, scholar_name)
 

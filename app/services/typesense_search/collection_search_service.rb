@@ -80,14 +80,15 @@ module TypesenseSearch
     end
 
     def build_result(response)
-      main_result = response["results"][0]
+      results = response["results"] || []
+      main_result = results[0] || {}
       hits = main_result["hits"]&.map { |h| SearchHit.new(h, @collection.downcase) } || []
 
       facets = if @scholars.present?
         # Main result facets (excluding scholar_name since it's filtered)
         main_facets = extract_facets(main_result).except("scholar_name")
         # Scholar facets from extra query (without scholar filter for disjunctive counts)
-        scholar_facets = extract_facets(response["results"][1])
+        scholar_facets = extract_facets(results[1] || {})
         main_facets.merge(scholar_facets)
       else
         extract_facets(main_result)

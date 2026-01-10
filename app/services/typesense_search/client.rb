@@ -2,8 +2,14 @@
 
 module TypesenseSearch
   module Client
+    @mutex = Mutex.new
+
     def self.instance
-      @instance ||= ::Typesense::Client.new(::Typesense.configuration)
+      return @instance if @instance
+
+      @mutex.synchronize do
+        @instance ||= ::Typesense::Client.new(::Typesense.configuration)
+      end
     end
 
     def self.multi_search
@@ -11,7 +17,7 @@ module TypesenseSearch
     end
 
     def self.reset!
-      @instance = nil
+      @mutex.synchronize { @instance = nil }
     end
   end
 end

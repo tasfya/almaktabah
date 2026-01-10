@@ -96,18 +96,20 @@ module TypesenseSearch
     end
 
     def extract_grouped_hits(response)
-      results = response["results"]
+      results = response["results"] || []
       selected_collections.to_h do |collection|
         index = Collections.index_for(collection)
-        hits = results[index]["hits"]&.map { |h| SearchHit.new(h, collection.downcase) } || []
+        result = results[index] || {}
+        hits = result["hits"]&.map { |h| SearchHit.new(h, collection.downcase) } || []
         [ Collections.key_for(collection), hits ]
       end
     end
 
     def calculate_total(response)
+      results = response["results"] || []
       selected_collections.sum do |collection|
         index = Collections.index_for(collection)
-        response["results"][index]["found"] || 0
+        (results[index] || {})["found"] || 0
       end
     end
 
