@@ -1,11 +1,35 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ar" data-theme="<%= @domain&.name.presence || 'default' %>">
   <head>
-    <title><%= content_for(:title) %></title>
+    <title><%= meta_title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta charset="utf-8">
+
+    <%# SEO Meta Tags %>
+    <meta name="description" content="<%= meta_description %>">
+    <link rel="canonical" href="<%= canonical_url %>">
+    <link rel="alternate" hreflang="ar" href="<%= canonical_url %>">
+
+    <%# Open Graph Meta Tags %>
+    <meta property="og:title" content="<%= meta_title %>">
+    <meta property="og:description" content="<%= meta_description %>">
+    <meta property="og:image" content="<%= meta_image %>">
+    <meta property="og:url" content="<%= canonical_url %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%= site_name %>">
+    <meta property="og:locale" content="ar_AR">
+
+    <%# Twitter Card Meta Tags %>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= meta_title %>">
+    <meta name="twitter:description" content="<%= meta_description %>">
+    <meta name="twitter:image" content="<%= meta_image %>">
+    <% if site_info[:twitter_url].present? %>
+      <meta name="twitter:site" content="@Moh1Rz2H3">
+    <% end %>
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= yield :head %>
@@ -23,6 +47,12 @@
     <% end %>
     <%= javascript_importmap_tags %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
+
+    <%# Structured Data (JSON-LD) %>
+    <script type="application/ld+json">
+      <%= structured_data_organization.html_safe %>
+    </script>
+    <%= yield :structured_data %>
   </head>
   <body class="bg-base-200 text-base-content">
     <%= render 'shared/header' %>

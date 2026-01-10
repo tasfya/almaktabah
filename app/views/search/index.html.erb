@@ -1,4 +1,9 @@
 <% content_for :title, t("navigation.#{controller_name}") %>
+<% if @query.present? %>
+  <% content_for :description, "نتائج البحث عن: #{@query} - #{@total_results} نتيجة في المكتبة الإسلامية" %>
+<% else %>
+  <% content_for :description, "تصفح المكتبة الإسلامية - محاضرات، دروس، كتب، فتاوى ومقالات لعلماء أهل السنة والجماعة" %>
+<% end %>
 <%# Determine if sidebar has meaningful filters to show %>
 <% scholar_facets = @facets&.dig("scholar_name") || [] %>
 <% scholars_filter_active = @search_filters[:scholars].present? %>

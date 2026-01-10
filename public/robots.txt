@@ -1,1 +1,14 @@
 # See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+
+# Allow all search engines
+User-agent: *
+Allow: /
+
+# Disallow admin and authentication pages
+Disallow: /admin/
+Disallow: /users/sign_in
+Disallow: /users/sign_up
+Disallow: /users/password
+
+# Sitemap location
+Sitemap: https://almaktabah.com/sitemap.xml
