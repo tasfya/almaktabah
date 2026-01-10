@@ -82,7 +82,7 @@ module TypesenseSearch
             "facet_by" => "scholar_name",
             "filter_by" => @filter_builder.without_scholars,
             "per_page" => 0,
-            "max_facet_values" => 100
+            "max_facet_values" => 999
           }
         end
       end
