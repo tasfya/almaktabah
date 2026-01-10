@@ -1,4 +1,13 @@
 <% content_for :title, @book.title %>
+<% content_for :description, @book.description.presence || @book.title %>
+<% if @book.cover_image.attached? %>
+  <% content_for :image, url_for(@book.cover_image) %>
+<% end %>
+<% content_for :structured_data do %>
+  <script type="application/ld+json">
+    <%= structured_data_for_book(@book).html_safe %>
+  </script>
+<% end %>
 <div class="min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">
