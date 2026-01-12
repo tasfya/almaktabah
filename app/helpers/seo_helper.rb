@@ -2,7 +2,7 @@
 
 module SeoHelper
   def meta_title
-    [content_for(:title).presence, site_name].compact.join(" | ")
+    [ content_for(:title).presence, site_name ].compact.join(" | ")
   end
 
   def meta_description
