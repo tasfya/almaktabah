@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 # Set the host name for URL creation
-SitemapGenerator::Sitemap.default_host = "https://almaktabah.com"
+SitemapGenerator::Sitemap.default_host = ENV.fetch("SITEMAP_HOST", "https://almaktabah.com")
 SitemapGenerator::Sitemap.sitemaps_path = "sitemaps/"
+
+# Get domain ID for filtering content (if specified)
+domain_host = ENV.fetch("SITEMAP_DOMAIN_HOST", nil)
+domain_id = domain_host ? Domain.find_by(host: domain_host)&.id : nil
 
 SitemapGenerator::Sitemap.create do
   # Put links creation logic here.
@@ -33,7 +37,9 @@ SitemapGenerator::Sitemap.create do
 
   # Lectures
   add lectures_path, priority: 0.9, changefreq: "daily"
-  Lecture.published.includes(series: :scholar).find_each do |lecture|
+  lectures = Lecture.published.includes(series: :scholar)
+  lectures = lectures.for_domain_id(domain_id) if domain_id
+  lectures.find_each do |lecture|
     scholar = lecture.scholar
     next unless scholar
 
@@ -45,7 +51,9 @@ SitemapGenerator::Sitemap.create do
 
   # Books
   add books_path, priority: 0.9, changefreq: "weekly"
-  Book.published.includes(:scholar).find_each do |book|
+  books = Book.published.includes(:scholar)
+  books = books.for_domain_id(domain_id) if domain_id
+  books.find_each do |book|
     next unless book.scholar
 
     add book_path(book.scholar, book),
@@ -56,7 +64,9 @@ SitemapGenerator::Sitemap.create do
 
   # Articles
   add articles_path, priority: 0.9, changefreq: "weekly"
-  Article.published.includes(:scholar).find_each do |article|
+  articles = Article.published.includes(:scholar)
+  articles = articles.for_domain_id(domain_id) if domain_id
+  articles.find_each do |article|
     next unless article.scholar
 
     add article_path(article.scholar, article),
@@ -67,7 +77,9 @@ SitemapGenerator::Sitemap.create do
 
   # News
   add news_index_path, priority: 0.9, changefreq: "daily"
-  News.published.find_each do |news_item|
+  news_items = News.published
+  news_items = news_items.for_domain_id(domain_id) if domain_id
+  news_items.find_each do |news_item|
     add news_path(news_item),
         lastmod: news_item.updated_at,
         priority: 0.7,
@@ -76,7 +88,9 @@ SitemapGenerator::Sitemap.create do
 
   # Fatwas
   add fatwas_path, priority: 0.9, changefreq: "weekly"
-  Fatwa.published.includes(:scholar).find_each do |fatwa|
+  fatwas = Fatwa.published.includes(:scholar)
+  fatwas = fatwas.for_domain_id(domain_id) if domain_id
+  fatwas.find_each do |fatwa|
     next unless fatwa.scholar
 
     add fatwa_path(fatwa.scholar, fatwa),
@@ -87,7 +101,19 @@ SitemapGenerator::Sitemap.create do
 
   # Scholars
   add scholars_path, priority: 0.8, changefreq: "monthly"
-  Scholar.find_each do |scholar|
+  scholars = Scholar.all
+  # If filtering by domain, only include scholars who have content in that domain
+  if domain_id
+    scholar_ids = [
+      Lecture.for_domain_id(domain_id).distinct.pluck(:scholar_id),
+      Book.for_domain_id(domain_id).distinct.pluck(:author_id),
+      Article.for_domain_id(domain_id).distinct.pluck(:author_id),
+      Fatwa.for_domain_id(domain_id).distinct.pluck(:scholar_id),
+      Series.for_domain_id(domain_id).distinct.pluck(:scholar_id)
+    ].flatten.uniq
+    scholars = scholars.where(id: scholar_ids)
+  end
+  scholars.find_each do |scholar|
     add scholar_path(scholar),
         lastmod: scholar.updated_at,
         priority: 0.6,
@@ -96,7 +122,9 @@ SitemapGenerator::Sitemap.create do
 
   # Series
   add series_index_path, priority: 0.8, changefreq: "weekly"
-  Series.includes(:scholar).find_each do |series|
+  series_collection = Series.includes(:scholar)
+  series_collection = series_collection.for_domain_id(domain_id) if domain_id
+  series_collection.find_each do |series|
     scholar = series.scholar
     next unless scholar
 

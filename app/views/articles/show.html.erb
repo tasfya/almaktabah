@@ -1,7 +1,7 @@
 <% content_for :title, @article.title %>
 <% content_for :description, @article.description.presence || @article.title %>
 <% if @article.thumbnail.attached? %>
-  <% content_for :image, url_for(@article.thumbnail) %>
+  <% content_for :image, rails_blob_url(@article.thumbnail, only_path: false) %>
 <% end %>
 <% content_for :structured_data do %>
   <script type="application/ld+json">

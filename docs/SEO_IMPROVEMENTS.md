@@ -145,13 +145,39 @@ After installing the `sitemap_generator` gem:
 # Install dependencies
 bundle install
 
-# Generate sitemap
+# Generate sitemap for default domain (almaktabah.com)
 rake sitemap:refresh
+
+# Generate sitemap for a specific domain
+SITEMAP_HOST=https://binramzan.net SITEMAP_DOMAIN_HOST=binramzan.net rake sitemap:refresh
 
 # In production, the sitemap will be generated at public/sitemaps/
 ```
 
 The sitemap should be regenerated periodically (e.g., via cron job) to keep it up-to-date.
+
+#### Domain-Specific Sitemaps
+
+The application supports multiple domains, and the sitemap can be filtered by domain to only include content assigned to that domain:
+
+- `SITEMAP_HOST`: The base URL for the sitemap (e.g., `https://binramzan.net`)
+- `SITEMAP_DOMAIN_HOST`: The domain host to filter content by (e.g., `binramzan.net`)
+
+When `SITEMAP_DOMAIN_HOST` is not specified, the sitemap will include all published content regardless of domain assignment.
+
+**Example for each domain:**
+```bash
+# almaktabah.com (default)
+SITEMAP_HOST=https://almaktabah.com rake sitemap:refresh
+
+# binramzan.net
+SITEMAP_HOST=https://binramzan.net SITEMAP_DOMAIN_HOST=binramzan.net rake sitemap:refresh
+
+# 3ilm.org and subdomains
+SITEMAP_HOST=https://3ilm.org SITEMAP_DOMAIN_HOST=3ilm.org rake sitemap:refresh
+SITEMAP_HOST=https://zayd.3ilm.org SITEMAP_DOMAIN_HOST=zayd.3ilm.org rake sitemap:refresh
+# ... and so on for other domains
+```
 
 ### Submitting Sitemap to Search Engines
 

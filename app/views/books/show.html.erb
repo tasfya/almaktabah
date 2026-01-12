@@ -1,7 +1,7 @@
 <% content_for :title, @book.title %>
 <% content_for :description, @book.description.presence || @book.title %>
 <% if @book.cover_image.attached? %>
-  <% content_for :image, url_for(@book.cover_image) %>
+  <% content_for :image, rails_blob_url(@book.cover_image, only_path: false) %>
 <% end %>
 <% content_for :structured_data do %>
   <script type="application/ld+json">
