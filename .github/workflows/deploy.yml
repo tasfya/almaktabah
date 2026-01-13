@@ -69,4 +69,5 @@ jobs:
           KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           KAMAL_REGISTRY_USERNAME: mohamedrez

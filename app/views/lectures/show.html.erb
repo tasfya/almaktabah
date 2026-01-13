@@ -62,6 +62,36 @@
               </div>
             </section>
           <% end %>
+          <% if user_signed_in? && current_user.admin? && @lecture.transcription_json.present? %>
+            <section class="mb-8">
+              <div class="border-t border-base-300 pt-6">
+                <h2 class="text-2xl font-bold mb-4">
+                  <%= t('.transcription') %>
+                </h2>
+                <div class="prose prose-lg max-w-none p-6 bg-base-200 rounded-lg mb-4">
+                  <% begin %>
+                    <% transcription = JSON.parse(@lecture.transcription_json) %>
+                    <p class="whitespace-pre-wrap"><%= transcription['text'] %></p>
+                  <% rescue JSON::ParserError => e %>
+                    <p class="text-error">Error parsing transcription: <%= e.message %></p>
+                  <% end %>
+                </div>
+                <div class="collapse collapse-arrow bg-base-200 rounded-lg">
+                  <input type="checkbox" />
+                  <div class="collapse-title text-lg font-semibold">
+                    <%= t('.view_full_json') %>
+                  </div>
+                  <div class="collapse-content">
+                    <pre class="bg-base-300 p-4 rounded-lg overflow-x-auto text-sm"><code><% begin %>
+<%= JSON.pretty_generate(JSON.parse(@lecture.transcription_json)) %>
+<% rescue JSON::ParserError => e %>
+Error parsing JSON: <%= e.message %>
+<% end %></code></pre>
+                  </div>
+                </div>
+              </div>
+            </section>
+          <% end %>
         </article>
       </div>
     </div>

@@ -87,6 +87,8 @@ ar:
       question: "السؤال"
       answer: "الإجابة"
       send_question_desc: "يمكنك إرسال أسئلتك إلى الشيخ من خلال صفحة التواصل"
+      transcription: "النص المكتوب"
+      view_full_json: "عرض JSON الكامل"
   articles:
     index:
       title: "المقالات"
@@ -100,6 +102,8 @@ ar:
       no_lectures: "لا توجد محاضرات متاحة حالياً"
     show:
       download_options: "خيارات التحميل"
+      transcription: "النص المكتوب"
+      view_full_json: "عرض JSON الكامل"
   news:
     index:
       title: "الأخبار"
