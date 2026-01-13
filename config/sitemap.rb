@@ -93,7 +93,7 @@ SitemapGenerator::Sitemap.create do
   fatwas.find_each do |fatwa|
     next unless fatwa.scholar
 
-    add fatwa_path(fatwa.scholar, fatwa),
+    add fatwa_path(fatwa),
         lastmod: fatwa.updated_at,
         priority: 0.7,
         changefreq: "monthly"

@@ -11,4 +11,4 @@ Disallow: /users/sign_up
 Disallow: /users/password
 
 # Sitemap location (relative URL works for all domains)
-Sitemap: /sitemap.xml
+Sitemap: /sitemaps/sitemap.xml
