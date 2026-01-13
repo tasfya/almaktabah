@@ -43,17 +43,7 @@ class AudioTranscriptionService
   end
 
   def get_audio_url
-    return nil unless audio_attachment&.attached?
-
-    # Try to get URL using attachment_url method if record includes AttachmentSerializable
-    if @record.respond_to?(:attachment_url)
-      @record.attachment_url(audio_attachment)
-    elsif @record.respond_to?(:audio_url)
-      @record.audio_url
-    else
-      # Fallback to direct Active Storage URL
-      audio_attachment.url
-    end
+    @record.audio_url
   end
 
   def transcribe_with_groq!(audio_url)
