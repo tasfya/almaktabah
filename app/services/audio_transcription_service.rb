@@ -5,7 +5,7 @@ class AudioTranscriptionService
   GROQ_API_BASE_URL = "https://api.groq.com/openai/v1".freeze
   GROQ_DEFAULT_MODEL = "whisper-large-v3-turbo".freeze
 
-  def initialize(record, language: "ar")
+  def initialize(record: nil, language: "ar")
     @record = record
     @language = language
   end
@@ -21,16 +21,13 @@ class AudioTranscriptionService
     transcript_json
   end
 
-  private
-
-
   def transcribe_with_groq!(audio_url)
     Rails.logger.info "Transcribing with Groq API for #{@record.class.name}##{@record.id}: #{@record.audio_url}"
 
     # Build multipart form data body matching the curl example
     body = {
       model: GROQ_DEFAULT_MODEL,
-      url: @record.audio_url,
+      url: audio_url,
       language: @language,
       temperature: 0,
       response_format: "verbose_json"
