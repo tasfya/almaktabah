@@ -2,10 +2,6 @@ class AudioTranscriptionJob < ApplicationJob
   queue_as :default
 
   def perform(record)
-    return unless record.present?
-    return unless record.respond_to?(:audio) && record.audio.attached?
-    return if record.respond_to?(:transcription_json) && record.transcription_json.present?
-
     Rails.logger.info "Starting audio transcription for #{record.class.name}##{record.id}"
 
     begin
