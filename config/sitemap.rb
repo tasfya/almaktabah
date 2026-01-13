@@ -37,7 +37,7 @@ SitemapGenerator::Sitemap.create do
 
   # Lectures
   add lectures_path, priority: 0.9, changefreq: "daily"
-  lectures = Lecture.published.includes(series: :scholar)
+  lectures = Lecture.published.includes(:scholar)
   lectures = lectures.for_domain_id(domain_id) if domain_id
   lectures.find_each do |lecture|
     scholar = lecture.scholar

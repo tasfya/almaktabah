@@ -1,8 +1,5 @@
 <% content_for :title, @lecture.seo_show_title %>
 <% content_for :description, @lecture.description.presence || @lecture.title %>
-<% if @lecture.thumbnail.attached? %>
-  <% content_for :image, rails_blob_url(@lecture.thumbnail, only_path: false) %>
-<% end %>
 <% content_for :structured_data do %>
   <script type="application/ld+json">
     <%= structured_data_for_lecture(@lecture) %>

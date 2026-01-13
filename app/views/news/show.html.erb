@@ -1,8 +1,5 @@
 <% content_for :title, @news.title %>
 <% content_for :description, @news.description.presence || @news.title %>
-<% if @news.thumbnail.attached? %>
-  <% content_for :image, rails_blob_url(@news.thumbnail, only_path: false) %>
-<% end %>
 <% content_for :structured_data do %>
   <script type="application/ld+json">
     <%= structured_data_for_news(@news) %>

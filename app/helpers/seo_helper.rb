@@ -60,7 +60,6 @@ module SeoHelper
       "@type": "VideoObject",
       "name": lecture.title,
       "description": lecture.description.presence || lecture.title,
-      "thumbnailUrl": lecture.thumbnail.attached? ? rails_blob_url(lecture.thumbnail, only_path: false) : default_image,
       "uploadDate": lecture.published_at&.iso8601 || lecture.created_at.iso8601,
       "duration": lecture.duration ? "PT#{lecture.duration}S" : nil,
       "contentUrl": lecture_url(lecture, scholar_id: lecture.scholar.slug, kind: lecture.kind),
@@ -87,7 +86,7 @@ module SeoHelper
       "@type": "Article",
       "headline": article.title,
       "description": article.description.presence || article.title,
-      "image": article.thumbnail.attached? ? rails_blob_url(article.thumbnail, only_path: false) : default_image,
+      "image": default_image,
       "datePublished": article.published_at&.iso8601 || article.created_at.iso8601,
       "dateModified": article.updated_at.iso8601,
       "author": {
@@ -113,7 +112,7 @@ module SeoHelper
       "@type": "NewsArticle",
       "headline": news_item.title,
       "description": news_item.description.presence || news_item.title,
-      "image": news_item.thumbnail.attached? ? rails_blob_url(news_item.thumbnail, only_path: false) : default_image,
+      "image": default_image,
       "datePublished": news_item.published_at&.iso8601 || news_item.created_at.iso8601,
       "dateModified": news_item.updated_at.iso8601,
       "author": {
