@@ -5,7 +5,7 @@ class AudioTranscriptionJob < ApplicationJob
     Rails.logger.info "Starting audio transcription for #{record.class.name}##{record.id}"
 
     begin
-      service = AudioTranscriptionService.new(record)
+      service = AudioTranscriptionService.new(record: record, language: "ar")
       service.transcribe!
 
       Rails.logger.info "Successfully transcribed audio for #{record.class.name}##{record.id}"
