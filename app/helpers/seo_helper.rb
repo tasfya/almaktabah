@@ -48,7 +48,7 @@ module SeoHelper
         site_info[:twitter_url],
         site_info[:youtube_url]
       ].compact
-    }.to_json.gsub("</", "<\\/")
+    }.to_json.gsub("</", "<\\/").html_safe
   end
 
   def structured_data_for_lecture(lecture)
@@ -76,7 +76,7 @@ module SeoHelper
           "url": default_image
         }
       }
-    }.compact.to_json.gsub("</", "<\\/")
+    }.compact.to_json.gsub("</", "<\\/").html_safe
   end
 
   def structured_data_for_article(article)
@@ -102,7 +102,7 @@ module SeoHelper
           "url": default_image
         }
       }
-    }.to_json.gsub("</", "<\\/")
+    }.to_json.gsub("</", "<\\/").html_safe
   end
 
   def structured_data_for_news(news_item)
@@ -128,7 +128,7 @@ module SeoHelper
           "url": default_image
         }
       }
-    }.to_json.gsub("</", "<\\/")
+    }.to_json.gsub("</", "<\\/").html_safe
   end
 
   def structured_data_for_book(book)
@@ -149,6 +149,6 @@ module SeoHelper
         "name": site_name
       },
       "datePublished": book.published_at&.iso8601 || book.created_at.iso8601
-    }.to_json.gsub("</", "<\\/")
+    }.to_json.gsub("</", "<\\/").html_safe
   end
 end
