@@ -11,12 +11,9 @@ class AudioTranscriptionService
   end
 
   def transcribe!
-    return unless audio_attachment
+    return unless @record.audio_url.present?
 
-    audio_url = get_audio_url
-    raise "Could not get public URL for audio attachment" unless audio_url.present?
-
-    transcript_json = transcribe_with_groq!(audio_url)
+    transcript_json = transcribe_with_groq!(@record.audio_url)
     raise "No transcript generated for #{@record.class.name}##{@record.id}" if transcript_json.blank?
 
     attach_transcript_to_record(transcript_json)
@@ -26,47 +23,23 @@ class AudioTranscriptionService
 
   private
 
-  def groq_api_key
-    ENV["GROQ_API_KEY"]
-  end
-
-  def audio_attachment
-    return @audio_attachment if defined?(@audio_attachment)
-
-    if @record.respond_to?(:best_audio)
-      @audio_attachment = @record.best_audio
-    elsif @record.respond_to?(:audio) && @record.audio.attached?
-      @audio_attachment = @record.audio
-    else
-      @audio_attachment = nil
-    end
-  end
-
-  def get_audio_url
-    @record.audio_url
-  end
 
   def transcribe_with_groq!(audio_url)
-    api_key = groq_api_key
-    raise "Groq API key not configured. Set GROQ_API_KEY environment variable" unless api_key.present?
-
-    Rails.logger.info "Transcribing with Groq API for #{@record.class.name}##{@record.id}: #{audio_url}"
+    Rails.logger.info "Transcribing with Groq API for #{@record.class.name}##{@record.id}: #{@record.audio_url}"
 
     # Build multipart form data body matching the curl example
     body = {
       model: GROQ_DEFAULT_MODEL,
-      url: audio_url,
+      url: @record.audio_url,
+      language: @language,
       temperature: 0,
       response_format: "verbose_json"
     }
 
-    # TODO: Add timestamp_granularities support if needed
-    # Arrays in multipart need special handling: timestamp_granularities[]=segment&timestamp_granularities[]=word
-
     response = HTTParty.post(
       "#{GROQ_API_BASE_URL}/audio/transcriptions",
       headers: {
-        "Authorization" => "Bearer #{api_key}"
+        "Authorization" => "Bearer #{ENV["GROQ_API_KEY"]}"
       },
       body: body,
       multipart: true,
