@@ -1,0 +1,22 @@
+<%# Partial: Transcript list for a given resource (expects local `resource`) %>
+<% return unless resource.respond_to?(:transcription_segments) && resource.transcription_segments.present? %>
+
+<div data-controller="transcript" data-transcript-player-id-value="<%= dom_id(resource) %>" class="mt-4 bg-white border rounded-md p-3 text-sm">
+  <h2 class="text-xs text-gray-500 mb-2">الترجمة / النقاط الزمنية</h2>
+
+  <div class="grid gap-2">
+    <% resource.transcription_segments.each do |seg| %>
+      <% start_time = seg[:start] %>
+      <% end_time = seg[:end] %>
+      <button type="button"
+              class="flex items-start gap-3 text-right hover:bg-gray-50 px-2 py-1 rounded transition-colors focus:outline-none"
+              data-action="click->transcript#seek"
+              data-transcript-target="segment"
+              data-start-value="<%= start_time %>"
+              data-end-value="<%= end_time %>">
+        <time class="text-xs text-gray-500 w-16 flex-shrink-0" aria-hidden="true"><%= resource.format_timestamp(start_time) %></time>
+        <span class="text-gray-700 leading-tight"><%= seg[:text] %></span>
+      </button>
+    <% end %>
+  </div>
+</div>
