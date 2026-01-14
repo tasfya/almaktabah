@@ -2,7 +2,7 @@
 <% return unless resource.respond_to?(:transcription_segments) && resource.transcription_segments.present? %>
 
 <div data-controller="transcript" data-transcript-player-id-value="<%= dom_id(resource) %>" class="mt-4 bg-white border rounded-md p-3 text-sm">
-  <h2 class="text-xs text-gray-500 mb-2">الترجمة / النقاط الزمنية</h2>
+  <h2 class="text-xs text-gray-500 mb-2">تفريغ آلي — قد يحتوي على أخطاء</h2>
 
   <div class="grid gap-2">
     <% resource.transcription_segments.each do |seg| %>
