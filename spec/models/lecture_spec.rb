@@ -186,7 +186,7 @@ RSpec.describe Lecture, type: :model do
 
       it 'parses transcription json and formats timestamps' do
         l = Lecture.new
-        l.transcription_json = [ { start: 2.2, end: 4.4, text: 'مرحبا' } ].to_json
+        l.transcription_json = { segments: [ { start: 2.2, end: 4.4, text: 'مرحبا' } ] }.to_json
         segs = l.transcription_segments
         expect(segs.length).to eq(1)
         expect(segs.first[:start]).to eq(2.2)
