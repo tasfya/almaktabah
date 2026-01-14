@@ -177,6 +177,27 @@ RSpec.describe Lecture, type: :model do
       end
     end
 
+    describe '#transcription_segments and #format_timestamp' do
+      it 'returns empty array when no transcription_json' do
+        l = Lecture.new
+        l.transcription_json = nil
+        expect(l.transcription_segments).to eq([])
+      end
+
+      it 'parses transcription json and formats timestamps' do
+        l = Lecture.new
+        l.transcription_json = [ { start: 2.2, end: 4.4, text: 'مرحبا' } ].to_json
+        segs = l.transcription_segments
+        expect(segs.length).to eq(1)
+        expect(segs.first[:start]).to eq(2.2)
+        expect(segs.first[:end]).to eq(4.4)
+        expect(segs.first[:text]).to eq('مرحبا')
+
+        expect(l.format_timestamp(65)).to eq('1:05')
+        expect(l.format_timestamp(3665)).to eq('1:01:05')
+      end
+    end
+
     describe '#generate_optimize_audio_bucket_key' do
       let(:scholar) { create(:scholar, first_name: 'محمد', last_name: 'العثيمين') }
       let(:lecture) { create(:lecture, title: 'محاضرة في الفقه', scholar: scholar) }

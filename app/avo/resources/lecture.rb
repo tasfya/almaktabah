@@ -19,6 +19,7 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :id, as: :id, sortable: true
     field :title, as: :text, sortable: true, searchable: true
     field :description, as: :textarea, searchable: true
+    field :transcription_json, as: :textarea
     field :category, as: :text, sortable: true, searchable: true
     field :content, as: :trix
     field :published, as: :boolean, sortable: true
