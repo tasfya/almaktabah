@@ -265,6 +265,8 @@ ar:
     video: "فيديو"
     audio: "صوتي"
     site_contents: "محتويات الموقع"
+    ai_transcript_disclaimer: "تفريغ آلي — قد يحتوي على أخطاء"
+    ai_transcript_disclaimer_title: "تفريغ آلي — قد يحتوي على أخطاء"
     no_items_available: "لا توجد %{items} متاحة حالياً"
     no_lessons_in_series: "لا توجد دروس في هذه السلسلة حالياً"
     no_related_items: "لا توجد %{items} أخرى حالياً"
