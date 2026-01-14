@@ -83,7 +83,6 @@
     <div class="px-3 py-3 bg-gray-50 sticky bottom-0">
       <% if resource.has_any_audio? %>
         <%= audio_tag resource.best_audio,
-            id: resource.best_audio_dom_id,
             class: "w-full h-10 rounded-lg",
             controls: true,
             preload: "metadata",
