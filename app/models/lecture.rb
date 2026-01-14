@@ -147,7 +147,7 @@ class Lecture < ApplicationRecord
 
     @transcription_segments ||= begin
       parsed = JSON.parse(transcription_json)
-      Array(parsed).map do |seg|
+      Array(parsed["segments"]).map do |seg|
         {
           start: (seg["start"] || seg[:start] || 0).to_f,
           end:   (seg["end"]   || seg[:end]   || 0).to_f,
