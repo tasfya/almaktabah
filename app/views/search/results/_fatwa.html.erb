@@ -1,10 +1,13 @@
 <div class="card card-border bg-base-100 relative shadow-sm hover:shadow-lg transition-shadow">
   <div class="card-body">
-    <h2 class="card-title">
-      <%= link_to fatwa.url, class: "hover:text-primary stretched-link", data: { turbo_frame: "_top" } do %>
-        <%= sanitize(fatwa.highlighted_title, tags: %w[mark]) %>
-      <% end %>
-    </h2>
+    <div class="flex items-center gap-2 mb-2">
+      <%= icon "scale", class: "w-5 h-5 text-primary" %>
+      <h2 class="card-title">
+        <%= link_to fatwa.url, class: "hover:text-primary stretched-link", data: { turbo_frame: "_top" } do %>
+          <%= sanitize(fatwa.highlighted_title, tags: %w[mark]) %>
+        <% end %>
+      </h2>
+    </div>
     <% if fatwa.scholar_name.present? %>
       <div class="flex items-center gap-2 mb-2">
         <span class="text-sm text-base-content/70"><%= t('search.results.sheikh') %> <%= fatwa.scholar_name %></span>
