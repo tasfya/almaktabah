@@ -1,6 +1,7 @@
 module ApplicationHelper
   include Pagy::Frontend
   include FaviconHelper
+  include SeoHelper
 
   CONTENT_TYPE_ROUTES = {
     "book" => :books_path,
