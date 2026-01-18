@@ -6,26 +6,14 @@
         <%= link_to lecture.url, class: "hover:text-primary stretched-link", data: { turbo_frame: "_top" } do %>
           <%= sanitize(lecture.highlighted_title, tags: %w[mark]) %>
         <% end %>
-        <% if lecture.kind.present? %>
-          <div class="badge badge-secondary"><%= t("activerecord.attributes.lecture.kind.#{lecture.kind}") %></div>
-        <% end %>
       </h2>
     </div>
-    <% if lecture.scholar_name.present? %>
-      <div class="flex items-center gap-2 mb-2">
-        <span class="text-sm text-base-content/70"><%= t('search.results.sheikh') %> <%= lecture.scholar_name %></span>
-      </div>
+    <% if lecture.description.present? %>
+      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(lecture.description), length: 150) %></p>
     <% end %>
-    <div class="flex flex-wrap items-center gap-2 mb-2">
-      <% if lecture.video_url.present? %>
-        <div class="badge badge-primary">
-          <%= icon "video-camera", class: "w-3 h-3" %>
-        </div>
-      <% end %>
-      <% if lecture.video_url.blank? && lecture.audio_url.blank? %>
-        <div class="badge badge-neutral">
-          <%= icon "book-open", class: "w-3 h-3" %>
-        </div>
+    <div class="flex items-center gap-2 mb-2">
+      <% if lecture.scholar_name.present? %>
+        <span class="text-sm text-base-content/70"><%= t('search.results.sheikh') %> <%= lecture.scholar_name %></span>
       <% end %>
       <% if lecture.duration.present? && lecture.duration > 0 %>
         <div class="badge badge-outline badge-sm gap-1">
@@ -33,37 +21,34 @@
           <%= format_duration(lecture.duration) %>
         </div>
       <% end %>
-    </div>
-    <% if lecture.description.present? %>
-      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(lecture.description), length: 150) %></p>
-    <% end %>
-    <% if lecture.audio_url.present? %>
-      <div class="card-actions mt-auto pt-2">
-        <%= form_with url: play_path(resource_type: "lecture", id: lecture.id),
-                      local: false,
-                      class: "relative z-10",
-                      data: {
-                        turbo_stream: true,
-                        player_id: "lecture_#{lecture.id}_player_content",
-                        currently_playing: "false",
-                        controller: "play-button",
-                        action: "submit->play-button#handleSubmit"
-                      } do |form| %>
-          <%= form.button type: "submit",
-                          class: "btn btn-primary btn-sm gap-2",
-                          data: { play_button_target: "button" } do %>
-            <span data-play-button-target="playIcon">
-              <%= icon "play", class: "w-4 h-4" %>
-            </span>
-            <span data-play-button-target="pauseIcon" class="hidden">
-              <%= icon "pause", class: "w-4 h-4" %>
-            </span>
-            <span data-play-button-target="loadingIcon" class="hidden">
-              <%= icon "arrow-path", class: "w-4 h-4 animate-spin" %>
-            </span>
+      <% if lecture.audio_url.present? %>
+        <div class="card-actions mt-auto pt-2">
+          <%= form_with url: play_path(resource_type: "lecture", id: lecture.id),
+                        local: false,
+                        class: "relative z-10",
+                        data: {
+                          turbo_stream: true,
+                          player_id: "lecture_#{lecture.id}_player_content",
+                          currently_playing: "false",
+                          controller: "play-button",
+                          action: "submit->play-button#handleSubmit"
+                        } do |form| %>
+            <%= form.button type: "submit",
+                            class: "btn btn-primary btn-sm gap-2",
+                            data: { play_button_target: "button" } do %>
+              <span data-play-button-target="playIcon">
+                <%= icon "play", class: "w-4 h-4" %>
+              </span>
+              <span data-play-button-target="pauseIcon" class="hidden">
+                <%= icon "pause", class: "w-4 h-4" %>
+              </span>
+              <span data-play-button-target="loadingIcon" class="hidden">
+                <%= icon "arrow-path", class: "w-4 h-4 animate-spin" %>
+              </span>
+            <% end %>
           <% end %>
-        <% end %>
-      </div>
-    <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
