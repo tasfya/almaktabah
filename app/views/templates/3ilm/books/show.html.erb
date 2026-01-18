@@ -1,4 +1,5 @@
 <% content_for :title, @book.title %>
+<%= json_ld_tag(book_json_ld(@book)) %>
 <article class="bg-white border border-base-300 rounded-lg shadow-md p-8">
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
     <div class="md:col-span-1">

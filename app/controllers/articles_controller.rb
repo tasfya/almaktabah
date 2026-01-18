@@ -10,6 +10,18 @@ class ArticlesController < ApplicationController
   end
 
   def show
+    description = @article.content.present? ? @article.content.to_plain_text.truncate(155) : ""
+    set_meta_tags(
+      title: @article.title,
+      description: description,
+      canonical: canonical_url,
+      og: {
+        title: @article.title,
+        description: description,
+        type: "article",
+        url: canonical_url
+      }
+    )
   end
 
   private

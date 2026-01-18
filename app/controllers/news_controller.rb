@@ -10,6 +10,20 @@ class NewsController < ApplicationController
   end
 
   def show
+    description = @news.description.presence || (@news.content.present? ? @news.content.to_plain_text.truncate(155) : "")
+    image_url = @news.thumbnail.attached? ? url_for(@news.thumbnail) : nil
+    set_meta_tags(
+      title: @news.title,
+      description: description,
+      canonical: canonical_url,
+      og: {
+        title: @news.title,
+        description: description,
+        type: "article",
+        url: canonical_url,
+        image: image_url
+      }
+    )
   end
 
   private

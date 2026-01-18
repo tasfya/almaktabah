@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "/robots.txt", to: "robots#show", defaults: { format: "text" }
+  get "/sitemap.xml", to: "sitemaps#show", defaults: { format: "xml" }
+
   authenticate :user, ->(u) { u.admin? } do
     mount MissionControl::Jobs::Engine => "/jobs"
   end

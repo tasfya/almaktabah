@@ -1,4 +1,5 @@
 <% content_for :title, @lecture.seo_show_title %>
+<%= json_ld_tag(lecture_json_ld(@lecture)) %>
 <div class="min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">

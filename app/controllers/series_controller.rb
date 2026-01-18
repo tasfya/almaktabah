@@ -11,6 +11,19 @@ class SeriesController < ApplicationController
 
   def show
     @lessons = @series.lessons.for_domain_id(@domain.id).published.ordered_by_lesson_number
+
+    description = @series.description.to_s.truncate(155)
+    set_meta_tags(
+      title: @series.seo_show_title,
+      description: description,
+      canonical: canonical_url,
+      og: {
+        title: @series.seo_show_title,
+        description: description,
+        type: "article",
+        url: canonical_url
+      }
+    )
   end
 
   private
