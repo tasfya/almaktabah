@@ -2,7 +2,7 @@
 <% if @results.present? && @total_results > 0 %>
   <% if @results[:mixed].present? %>
     <%# Mixed search results - single list sorted by relevance %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="flex flex-col space-y-4">
       <% @results[:mixed].each do |hit| %>
         <% partial_name = hit.content_type.to_s.singularize %>
         <%= render "search/results/#{partial_name}", partial_name.to_sym => hit %>

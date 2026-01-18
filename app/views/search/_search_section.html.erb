@@ -30,7 +30,7 @@
                   data: { turbo_frame: "_top" } %>
       </div>
     <% end %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="flex flex-col space-y-4">
       <% hits.each do |hit| %>
         <%= render "search/results/#{partial_name}", partial_name.to_sym => hit %>
       <% end %>
