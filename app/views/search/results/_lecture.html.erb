@@ -18,13 +18,14 @@
     <% end %>
     <div class="flex flex-wrap items-center gap-2 mb-2">
       <% if lecture.video_url.present? %>
-        <div class="badge badge-primary"><%= t('common.video') %></div>
-      <% end %>
-      <% if lecture.audio_url.present? %>
-        <div class="badge badge-info"><%= t('common.audio') %></div>
+        <div class="badge badge-primary">
+          <%= icon "video-camera", class: "w-3 h-3" %>
+        </div>
       <% end %>
       <% if lecture.video_url.blank? && lecture.audio_url.blank? %>
-        <div class="badge badge-neutral"><%= t('buttons.read') %></div>
+        <div class="badge badge-neutral">
+          <%= icon "book-open", class: "w-3 h-3" %>
+        </div>
       <% end %>
       <% if lecture.duration.present? && lecture.duration > 0 %>
         <div class="badge badge-outline badge-sm gap-1">

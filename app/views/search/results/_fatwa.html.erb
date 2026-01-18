@@ -13,12 +13,6 @@
         <span class="text-sm text-base-content/70"><%= t('search.results.sheikh') %> <%= fatwa.scholar_name %></span>
       </div>
     <% end %>
-    <div class="flex gap-2 mb-2">
-      <% if fatwa.audio_url.present? %>
-        <div class="badge badge-info"><%= t('common.audio') %></div>
-      <% end %>
-      <div class="badge badge-neutral"><%= t('buttons.read') %></div>
-    </div>
     <% if fatwa.description.present? %>
       <p class="text-sm line-clamp-3">
         <%= truncate(strip_tags(fatwa.description), length: 120) %>
