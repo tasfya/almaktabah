@@ -75,7 +75,7 @@ class VideoGeneratorService
   def add_logo_to_image(base_image, logo_path)
     return base_image unless File.exist?(logo_path)
     logo = MiniMagick::Image.open(logo_path)
-    logo.resize "400x400>"
+    logo.resize "600x600>"
     x_offset = (1920 - logo.width) / 2
     base_image.composite(logo) { |c| c.compose "Over"; c.geometry "+#{x_offset}+150" }
   rescue => e
