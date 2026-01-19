@@ -6,10 +6,12 @@ class LecturesController < ApplicationController
   before_action :setup_lectures_breadcrumbs
 
   def index
+    expires_in 1.hour, public: true
     typesense_collection_search("lecture")
   end
 
   def show
+    expires_in 1.hour, public: true
     @related_lectures = Lecture.for_domain_id(@domain.id)
                                .published.by_category(@lecture.category)
                                .where.not(id: @lecture.id)
