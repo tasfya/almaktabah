@@ -6,6 +6,7 @@ class Fatwa < ApplicationRecord
   include MediaHandler
   include AudioFallback
   include AttachmentSerializable
+  include TranscriptionConcern
 
   belongs_to :scholar, optional: true, inverse_of: :fatwas
   has_one_attached :audio, service: Rails.application.config.public_storage
