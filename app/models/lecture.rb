@@ -140,13 +140,4 @@ class Lecture < ApplicationRecord
   def seo_show_title
     "#{kind_translated} - #{title} - #{scholar.full_name}"
   end
-
-  # Format seconds into H:MM:SS or M:SS as appropriate.
-  def format_timestamp(seconds)
-    total = seconds.to_i
-    h = total / 3600
-    m = (total % 3600) / 60
-    s = total % 60
-    h.positive? ? "%d:%02d:%02d" % [ h, m, s ] : "%d:%02d" % [ m, s ]
-  end
 end
