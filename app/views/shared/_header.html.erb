@@ -6,7 +6,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 h-(--header-height)">
       <%# Logo %>
       <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto shrink-0" do %>
-        <img src="<%= @logo_url %>" alt="<%= @domain&.title %>" width="200" height="200" class="max-h-12 w-auto" />
+        <img src="<%= @logo_url %>" alt="<%= @domain&.title.presence || 'Logo' %>" width="200" height="200" class="max-h-12 w-auto" />
       <% end %>
       <%# Desktop search bar - hidden on mobile %>
       <div class="hidden md:flex flex-1 max-w-2xl">

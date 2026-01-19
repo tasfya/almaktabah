@@ -155,7 +155,7 @@ module JsonLdHelper
   def publisher_json_ld
     {
       "@type": "Organization",
-      "name": @domain&.title,
+      "name": @domain&.title.presence || request.host,
       "url": root_url(host: request.host)
     }
   end
