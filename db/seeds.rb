@@ -17,10 +17,14 @@ starting_from = ENV["FROM"]&.strip
 
 domain1 = Domain.find_or_create_by!(host: "127.0.0.1") do |domain|
   domain.name = "127.0.0.1"
+  domain.title = "الشيخ محمد بن رمزان الهاجري"
+  domain.description = "الموقع الرسمي لفضيلة الشيخ محمد بن رمزان الهاجري - كتب ومحاضرات ودروس وفتاوى"
 end
 
 domain2 = Domain.find_or_create_by!(host: "localhost") do |domain|
   domain.name = "localhost"
+  domain.title = "العلم"
+  domain.description = "موقع العلم الشرعي - مجموعة من الكتب والمحاضرات والدروس"
 end
 
 hajri_scholar = Seeds::Base.default_scholar

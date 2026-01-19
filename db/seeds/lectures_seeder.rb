@@ -22,13 +22,13 @@ module Seeds
 
     def self.seed(from: nil, domain_ids: nil, scholar: nil)
       scholar ||= default_scholar
-      lecture_array = if scholar.last_name.include?("الفوزان")
+      lecture_array = if scholar.full_name&.include?("الفوزان")
         ALFAWZAN_LECTURES
       else
         load_json('data/lectures.json')
       end
 
-      puts "📚 Seeding audio lectures for #{scholar.first_name} #{scholar.last_name}..."
+      puts "📚 Seeding audio lectures for #{scholar.full_name}..."
       total = lecture_array.size
 
       processed = []
