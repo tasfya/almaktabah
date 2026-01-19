@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<% @records.each do |record| -%>
+  <url>
+    <loc><%= url_for_sitemap_record(record) %></loc>
+<% lastmod = record.respond_to?(:updated_at) ? record.updated_at : Time.current -%>
+<% if lastmod -%>
+    <lastmod><%= lastmod.strftime("%Y-%m-%d") %></lastmod>
+<% end -%>
+    <changefreq><%= changefreq_for(@type) %></changefreq>
+    <priority><%= priority_for(@type) %></priority>
+  </url>
+<% end -%>
+</urlset>

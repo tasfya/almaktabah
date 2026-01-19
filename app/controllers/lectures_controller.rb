@@ -17,6 +17,22 @@ class LecturesController < ApplicationController
                                .where.not(id: @lecture.id)
                                .recent
                                .limit(4)
+
+    description = @lecture.description.to_s.truncate(MetaTags.config.description_limit)
+    image_url = @lecture.thumbnail.attached? ? url_for(@lecture.thumbnail) : nil
+    og_type = @lecture.video.attached? ? "video.other" : "music.song"
+    set_meta_tags(
+      title: @lecture.seo_show_title,
+      description: description,
+      canonical: canonical_url,
+      og: {
+        title: @lecture.seo_show_title,
+        description: description,
+        type: og_type,
+        url: canonical_url,
+        image: image_url
+      }
+    )
   end
 
   private

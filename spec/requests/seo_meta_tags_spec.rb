@@ -1,0 +1,216 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe "SEO Meta Tags", type: :request do
+  let!(:domain) { create(:domain, host: "www.example.com", name: "Test Site") }
+  let!(:scholar) { create(:scholar, full_name: "الشيخ محمد") }
+
+  before do
+    host! "www.example.com"
+  end
+
+  describe "Articles" do
+    let!(:article) do
+      article = create(:article,
+        title: "Test Article Title",
+        scholar: scholar,
+        published: true,
+        published_at: 1.day.ago
+      )
+      article.content = ActionText::RichText.new(body: "This is the article content for testing meta descriptions.")
+      article.save!
+      article.domains << domain
+      article
+    end
+
+    it "includes title meta tag" do
+      get article_path(article, scholar_id: scholar.slug)
+      expect(response.body).to include("<title>Test Article Title")
+    end
+
+    it "includes description meta tag" do
+      get article_path(article, scholar_id: scholar.slug)
+      expect(response.body).to include('name="description"')
+    end
+
+    it "includes canonical URL" do
+      get article_path(article, scholar_id: scholar.slug)
+      expect(response.body).to include('rel="canonical"')
+    end
+
+    it "includes Open Graph title" do
+      get article_path(article, scholar_id: scholar.slug)
+      expect(response.body).to include('property="og:title"')
+    end
+
+    it "includes Open Graph type" do
+      get article_path(article, scholar_id: scholar.slug)
+      expect(response.body).to include('property="og:type"')
+      expect(response.body).to include("article")
+    end
+
+    it "includes JSON-LD structured data" do
+      get article_path(article, scholar_id: scholar.slug)
+      expect(response.body).to include('type="application/ld+json"')
+      expect(response.body).to include('"@type":"Article"')
+    end
+  end
+
+  describe "Books" do
+    let!(:book) do
+      book = create(:book, title: "Test Book Title", description: "Book description text", scholar: scholar, published: true, published_at: 1.day.ago)
+      book.domains << domain
+      book
+    end
+
+    it "includes title meta tag" do
+      get book_path(book, scholar_id: scholar.slug)
+      expect(response.body).to include("<title>Test Book Title")
+    end
+
+    it "includes description meta tag from book description" do
+      get book_path(book, scholar_id: scholar.slug)
+      expect(response.body).to include('name="description"')
+    end
+
+    it "includes Open Graph type as book" do
+      get book_path(book, scholar_id: scholar.slug)
+      expect(response.body).to include('property="og:type"')
+      expect(response.body).to include("book")
+    end
+
+    it "includes JSON-LD structured data" do
+      get book_path(book, scholar_id: scholar.slug)
+      expect(response.body).to include('type="application/ld+json"')
+      expect(response.body).to include('"@type":"Book"')
+    end
+  end
+
+  describe "Lectures" do
+    let!(:lecture) do
+      lecture = create(:lecture, title: "Test Lecture Title", description: "Lecture description", scholar: scholar, published: true, published_at: 1.day.ago)
+      lecture.domains << domain
+      lecture
+    end
+
+    it "includes title meta tag" do
+      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind)
+      expect(response.body).to include("<title>")
+      expect(response.body).to include("Test Lecture Title")
+    end
+
+    it "includes description meta tag" do
+      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind)
+      expect(response.body).to include('name="description"')
+    end
+
+    it "includes JSON-LD structured data for video/audio" do
+      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind)
+      expect(response.body).to include('type="application/ld+json"')
+      expect(response.body).to match(/"@type":"(VideoObject|AudioObject)"/)
+    end
+  end
+
+  describe "Scholars" do
+    it "includes title meta tag with scholar name" do
+      get scholar_path(scholar)
+      expect(response.body).to include("<title>")
+      expect(response.body).to include(scholar.full_name)
+    end
+
+    it "includes Open Graph type as profile" do
+      get scholar_path(scholar)
+      expect(response.body).to include('property="og:type"')
+      expect(response.body).to include("profile")
+    end
+
+    it "includes JSON-LD structured data" do
+      get scholar_path(scholar)
+      expect(response.body).to include('type="application/ld+json"')
+      expect(response.body).to include('"@type":"Person"')
+    end
+  end
+
+  describe "Fatwas" do
+    let!(:fatwa) do
+      fatwa = create(:fatwa, title: "Test Fatwa Title", scholar: scholar, published: true, published_at: 1.day.ago)
+      fatwa.domains << domain
+      fatwa
+    end
+
+    it "includes title meta tag" do
+      get fatwa_path(fatwa)
+      expect(response.body).to include("<title>Test Fatwa Title")
+    end
+
+    it "includes JSON-LD FAQPage structured data" do
+      get fatwa_path(fatwa)
+      expect(response.body).to include('type="application/ld+json"')
+      expect(response.body).to include('"@type":"FAQPage"')
+    end
+  end
+
+  describe "Series" do
+    let!(:series) do
+      series = create(:series, title: "Test Series Title", description: "Series description", scholar: scholar, published: true, published_at: 1.day.ago)
+      series.domains << domain
+      series
+    end
+
+    it "includes title meta tag" do
+      get series_path(series, scholar_id: scholar.slug)
+      expect(response.body).to include("<title>")
+      expect(response.body).to include("Test Series Title")
+    end
+
+    it "includes JSON-LD Course structured data" do
+      get series_path(series, scholar_id: scholar.slug)
+      expect(response.body).to include('type="application/ld+json"')
+      expect(response.body).to include('"@type":"Course"')
+    end
+  end
+
+  describe "News" do
+    let!(:news) do
+      news = create(:news, title: "Test News Title", description: "News description", published: true, published_at: 1.day.ago)
+      news.domains << domain
+      news
+    end
+
+    it "includes title meta tag" do
+      get news_path(news)
+      expect(response.body).to include("<title>Test News Title")
+    end
+
+    it "includes JSON-LD NewsArticle structured data" do
+      get news_path(news)
+      expect(response.body).to include('type="application/ld+json"')
+      expect(response.body).to include('"@type":"NewsArticle"')
+    end
+  end
+
+  describe "Default meta tags" do
+    let!(:fatwa) do
+      fatwa = create(:fatwa, title: "Test", scholar: scholar, published: true, published_at: 1.day.ago)
+      fatwa.domains << domain
+      fatwa
+    end
+
+    it "includes site name in meta tags" do
+      get fatwa_path(fatwa)
+      expect(response.body).to include('property="og:site_name"')
+    end
+
+    it "includes Twitter card meta tag" do
+      get fatwa_path(fatwa)
+      expect(response.body).to include('name="twitter:card"')
+    end
+
+    it "includes locale in Open Graph" do
+      get fatwa_path(fatwa)
+      expect(response.body).to include('property="og:locale"')
+      expect(response.body).to include("ar_AR")
+    end
+  end
+end

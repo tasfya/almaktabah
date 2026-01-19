@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<% @content_pages.each do |content_page| -%>
+  <sitemap>
+    <loc><%= sitemap_content_url(type: content_page[:type], page: (content_page[:page] if content_page[:page] > 1), host: request.host) %></loc>
+<% if (last_mod = @sitemap_service.latest_updated_at(content_page[:type])) -%>
+    <lastmod><%= last_mod.strftime("%Y-%m-%d") %></lastmod>
+<% end -%>
+  </sitemap>
+<% end -%>
+</sitemapindex>

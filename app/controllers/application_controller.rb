@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   before_action :setup_breadcrumbs
   before_action :set_domain
+  before_action :set_default_meta_tags
   before_action :latest_news
   after_action { pagy_headers_merge(@pagy) if @pagy }
   include BreadcrumbHelper
@@ -34,4 +35,26 @@ class ApplicationController < ActionController::Base
 
     @latest_news ||= News.for_domain_id(@domain.id).published.order(published_at: :desc).limit(5)
   end
+
+  def set_default_meta_tags
+    site_name = @domain&.name || t("site.name")
+    set_meta_tags(
+      site: site_name,
+      reverse: true,
+      separator: "|",
+      og: {
+        site_name: site_name,
+        type: "website",
+        locale: "ar_AR"
+      },
+      twitter: {
+        card: "summary_large_image"
+      }
+    )
+  end
+
+  def canonical_url
+    request.original_url.split(/[?#]/).first
+  end
+  helper_method :canonical_url
 end

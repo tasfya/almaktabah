@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  get "/robots.txt", to: "robots#show", defaults: { format: "text" }
+  get "/sitemap.xml", to: "sitemaps#index", defaults: { format: "xml" }
+  get "/sitemaps/:type(-:page).xml", to: "sitemaps#show",
+      defaults: { format: "xml" },
+      constraints: { type: Regexp.new(SitemapService::CONTENT_TYPES.keys.join("|")), page: /\d+/ },
+      as: :sitemap_content
+
   authenticate :user, ->(u) { u.admin? } do
     mount MissionControl::Jobs::Engine => "/jobs"
   end

@@ -10,6 +10,18 @@ class FatwasController < ApplicationController
   end
 
   def show
+    description = @fatwa.question.present? ? @fatwa.question.to_plain_text.truncate(MetaTags.config.description_limit) : ""
+    set_meta_tags(
+      title: @fatwa.title,
+      description: description,
+      canonical: canonical_url,
+      og: {
+        title: @fatwa.title,
+        description: description,
+        type: "article",
+        url: canonical_url
+      }
+    )
   end
 
   private

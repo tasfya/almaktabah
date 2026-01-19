@@ -63,3 +63,4 @@ db/backups
 .mcp.json
 opencode.json
 .claude/
+/justfile

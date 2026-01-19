@@ -15,6 +15,21 @@ class BooksController < ApplicationController
                          .where.not(id: @book.id)
                          .recent
                          .limit(4)
+
+    description = @book.description.to_s.truncate(MetaTags.config.description_limit)
+    image_url = @book.cover_image.attached? ? url_for(@book.cover_image) : nil
+    set_meta_tags(
+      title: @book.title,
+      description: description,
+      canonical: canonical_url,
+      og: {
+        title: @book.title,
+        description: description,
+        type: "book",
+        url: canonical_url,
+        image: image_url
+      }
+    )
   end
 
   private

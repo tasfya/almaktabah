@@ -75,8 +75,7 @@ module Seeds
 
     def self.default_scholar
       @default_scholar ||= Scholar.find_or_create_by(
-        first_name: "محمد",
-        last_name: "بن رمزان الهاجري"
+        full_name: "محمد بن رمزان الهاجري"
       ) do |scholar|
         scholar.published = true
       end
@@ -84,8 +83,7 @@ module Seeds
 
     def self.alfawzan_scholar(default_domain: nil)
       @alfawzan_scholar ||= Scholar.find_or_create_by(
-        first_name: "صالح",
-        last_name: "الفوزان"
+        full_name: "صالح الفوزان"
       ) do |scholar|
         scholar.published = true
         scholar.default_domain = default_domain

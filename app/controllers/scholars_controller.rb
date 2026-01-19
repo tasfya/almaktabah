@@ -20,6 +20,19 @@ class ScholarsController < ApplicationController
                    .where(scholar: @scholar)
                    .order(published_at: :desc)
                    .limit(6)
+
+    description = @scholar.bio.present? ? @scholar.bio.to_plain_text.truncate(MetaTags.config.description_limit) : ""
+    set_meta_tags(
+      title: @scholar.full_name,
+      description: description,
+      canonical: canonical_url,
+      og: {
+        title: @scholar.full_name,
+        description: description,
+        type: "profile",
+        url: canonical_url
+      }
+    )
   end
 
   private
