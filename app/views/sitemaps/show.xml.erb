@@ -3,8 +3,9 @@
 <% @records.each do |record| -%>
   <url>
     <loc><%= url_for_sitemap_record(record) %></loc>
-<% if record.respond_to?(:updated_at) && record.updated_at -%>
-    <lastmod><%= record.updated_at.strftime("%Y-%m-%d") %></lastmod>
+<% lastmod = record.respond_to?(:updated_at) ? record.updated_at : Time.current -%>
+<% if lastmod -%>
+    <lastmod><%= lastmod.strftime("%Y-%m-%d") %></lastmod>
 <% end -%>
     <changefreq><%= changefreq_for(@type) %></changefreq>
     <priority><%= priority_for(@type) %></priority>
