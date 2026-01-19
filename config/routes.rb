@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
   resources :lessons, only: [ :index, :show ], path: I18n.t("routes.lessons", default: "lessons")
   resources :news, only: [ :index, :show ], path: I18n.t("routes.news", default: "news")
-  resources :scholars, only: [ :index, :show ], path: I18n.t("routes.scholars", default: "scholars")
+  # resources :scholars, only: [ :index, :show ], path: I18n.t("routes.scholars", default: "scholars")
   resources :fatwas, only: [ :index, :show ], path: I18n.t("routes.fatwas", default: "fatwas")
 
   # Generic play route for all playable resources

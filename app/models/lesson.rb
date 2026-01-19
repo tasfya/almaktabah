@@ -5,6 +5,7 @@ class Lesson < ApplicationRecord
   include DomainAssignable
   include AudioFallback
   include AttachmentSerializable
+  include TranscriptionConcern
 
 
   belongs_to :series

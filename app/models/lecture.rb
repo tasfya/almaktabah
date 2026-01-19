@@ -6,6 +6,7 @@ class Lecture < ApplicationRecord
   include Publishable
   include AudioFallback
   include AttachmentSerializable
+  include TranscriptionConcern
 
   enum :kind, { sermon: 1, conference: 2, benefit: 3 }
 
@@ -138,25 +139,6 @@ class Lecture < ApplicationRecord
 
   def seo_show_title
     "#{kind_translated} - #{title} - #{scholar.full_name}"
-  end
-
-  # Returns an array of segments parsed from +transcription_json+.
-  # Each segment is a Hash with keys :start, :end, :text (all symbol keys).
-  def transcription_segments
-    return [] unless transcription_json.present?
-
-    @transcription_segments ||= begin
-      parsed = JSON.parse(transcription_json)
-      Array(parsed["segments"]).map do |seg|
-        {
-          start: (seg["start"] || seg[:start] || 0).to_f,
-          end:   (seg["end"]   || seg[:end]   || 0).to_f,
-          text:  (seg["text"]  || seg[:text]  || "")
-        }
-      end
-    rescue JSON::ParserError
-      []
-    end
   end
 
   # Format seconds into H:MM:SS or M:SS as appropriate.
