@@ -61,7 +61,7 @@ class SitemapService
   end
 
   def compute_latest_updated_at(type)
-    return Time.current if type.to_sym == :static
+    return @domain.updated_at if type.to_sym == :static
 
     config = CONTENT_TYPES[type.to_sym]
     return nil unless config && config[:model]
