@@ -65,6 +65,7 @@ module ApplicationHelper
 
   def site_info
     {
+      name: @domain&.title,
       support_email: "",
       twitter_url: "https://x.com/Moh1Rz2H3?ref",
       youtube_url: "https://www.youtube.com/@bin-ramzan"

@@ -6,7 +6,7 @@
   <div class="bg-primary">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-[var(--header-height)]">
       <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto" do %>
-        <img src="<%= @logo_url %>" alt="<%= t('site.name') %> Logo" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
+        <img src="<%= @logo_url %>" alt="<%= @domain&.title.presence || 'Logo' %>" width="200" height="200" class="w-[200px] h-[150px] object-contain" />
       <% end %>
       <label for="sidebar-drawer" class="btn btn-ghost text-primary-content hover:text-secondary-content drawer-button lg:hidden">
         <%= icon "menu", library: "lucide", class: "size-5" %>

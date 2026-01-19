@@ -113,9 +113,9 @@ module Seeds
 
     def self.seed(from: nil, domain_ids: nil, scholar: nil)
       scholar ||= default_scholar
-      articles_data = scholar.last_name.include?("الفوزان") ? ALFAWZAN_ARTICLES : HAJRI_ARTICLES
+      articles_data = scholar.full_name&.include?("الفوزان") ? ALFAWZAN_ARTICLES : HAJRI_ARTICLES
 
-      puts "📝 Seeding articles for #{scholar.first_name} #{scholar.last_name}..."
+      puts "📝 Seeding articles for #{scholar.full_name}..."
 
       processed = 0
       errors = []

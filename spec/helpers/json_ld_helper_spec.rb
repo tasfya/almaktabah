@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe JsonLdHelper, type: :helper do
-  let(:domain) { create(:domain, host: "localhost", name: "Test Site") }
+  let(:domain) { create(:domain, host: "localhost", name: "Test Site", title: "Test Site") }
   let(:scholar) { create(:scholar, full_name: "Test Scholar") }
 
   before do

@@ -23,13 +23,13 @@ module Seeds
 
     def self.seed(from: nil, domain_ids: nil, scholar: nil)
       scholar ||= default_scholar
-      lesson_array = if scholar.last_name.include?("الفوزان")
+      lesson_array = if scholar.full_name&.include?("الفوزان")
         ALFAWZAN_LESSONS
       else
         load_json('data/lessons.json')
       end
 
-      puts "📚 Seeding audio lessons for #{scholar.first_name} #{scholar.last_name}..."
+      puts "📚 Seeding audio lessons for #{scholar.full_name}..."
       total = lesson_array.size
 
       processed = []
@@ -51,7 +51,7 @@ module Seeds
 
         series = Series.find_or_initialize_by(title: data["series_name"])
         if series.new_record?
-          series.description = "مجموعة #{data['series_name']} للشيخ #{scholar.first_name} #{scholar.last_name}"
+          series.description = "مجموعة #{data['series_name']} للشيخ #{scholar.full_name}"
           series.category = data["series_name"]
           series.scholar = scholar
           series.published_at = Date.today

@@ -12,13 +12,13 @@ module Seeds
 
     def self.seed(from: nil, domain_ids: nil, scholar: nil)
       scholar ||= default_scholar
-      news_array = if scholar.last_name.include?("الفوزان")
+      news_array = if scholar.full_name&.include?("الفوزان")
         ALFAWZAN_NEWS
       else
         load_json('data/news.json')
       end
 
-      puts "📰 Seeding news for #{scholar.first_name} #{scholar.last_name}..."
+      puts "📰 Seeding news for #{scholar.full_name}..."
       processed = 0
 
       news_array.each do |data|

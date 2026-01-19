@@ -37,9 +37,10 @@ class ApplicationController < ActionController::Base
   end
 
   def set_default_meta_tags
-    site_name = @domain&.name || t("site.name")
+    site_name = @domain&.title.presence || request.host
     set_meta_tags(
       site: site_name,
+      description: @domain&.description.presence,
       reverse: true,
       separator: "|",
       og: {

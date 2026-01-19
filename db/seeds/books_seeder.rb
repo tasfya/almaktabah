@@ -10,13 +10,13 @@ module Seeds
 
     def self.seed(from: nil, domain_ids: nil, scholar: nil)
       scholar ||= default_scholar
-      books_data = if scholar.last_name.include?("الفوزان")
+      books_data = if scholar.full_name&.include?("الفوزان")
         ALFAWZAN_BOOKS
       else
         load_json('data/books.json').find { |item| item['type'] == 'table' }['data']
       end
 
-      puts "Seeding books for #{scholar.first_name} #{scholar.last_name}..."
+      puts "Seeding books for #{scholar.full_name}..."
       processed = 0
 
       books_data.each do |data|
@@ -25,7 +25,7 @@ module Seeds
 
         book = Book.find_or_initialize_by(title: name) do |b|
           b.scholar = scholar
-          b.description = "كتاب #{name} للشيخ #{scholar.first_name} #{scholar.last_name}"
+          b.description = "كتاب #{name} للشيخ #{scholar.full_name}"
           b.category = "الكتب"
           b.published_at = Date.today
           b.published = true

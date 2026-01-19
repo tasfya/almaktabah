@@ -58,9 +58,9 @@ module Seeds
 
     def self.seed(from: nil, domain_ids: nil, scholar: nil)
       scholar ||= default_scholar
-      fatwas_data = scholar.last_name.include?("الفوزان") ? ALFAWZAN_FATWAS : HAJRI_FATWAS
+      fatwas_data = scholar.full_name&.include?("الفوزان") ? ALFAWZAN_FATWAS : HAJRI_FATWAS
 
-      puts "Seeding fatwas for #{scholar.first_name} #{scholar.last_name}..."
+      puts "Seeding fatwas for #{scholar.full_name}..."
       processed = 0
 
       fatwas_data.each do |data|
