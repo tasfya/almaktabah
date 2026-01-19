@@ -12,7 +12,7 @@ class SeriesController < ApplicationController
   def show
     @lessons = @series.lessons.for_domain_id(@domain.id).published.ordered_by_lesson_number
 
-    description = @series.description.to_s.truncate(155)
+    description = @series.description.to_s.truncate(MetaTags.config.description_limit)
     set_meta_tags(
       title: @series.seo_show_title,
       description: description,

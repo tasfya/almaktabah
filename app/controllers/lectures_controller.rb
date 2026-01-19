@@ -16,7 +16,7 @@ class LecturesController < ApplicationController
                                .recent
                                .limit(4)
 
-    description = @lecture.description.to_s.truncate(155)
+    description = @lecture.description.to_s.truncate(MetaTags.config.description_limit)
     image_url = @lecture.thumbnail.attached? ? url_for(@lecture.thumbnail) : nil
     og_type = @lecture.video.attached? ? "video.other" : "music.song"
     set_meta_tags(

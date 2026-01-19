@@ -10,7 +10,7 @@ class ArticlesController < ApplicationController
   end
 
   def show
-    description = @article.content.present? ? @article.content.to_plain_text.truncate(155) : ""
+    description = @article.content.present? ? @article.content.to_plain_text.truncate(MetaTags.config.description_limit) : ""
     set_meta_tags(
       title: @article.title,
       description: description,

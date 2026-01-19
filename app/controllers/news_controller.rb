@@ -10,7 +10,7 @@ class NewsController < ApplicationController
   end
 
   def show
-    description = @news.description.presence || (@news.content.present? ? @news.content.to_plain_text.truncate(155) : "")
+    description = @news.description.presence || (@news.content.present? ? @news.content.to_plain_text.truncate(MetaTags.config.description_limit) : "")
     image_url = @news.thumbnail.attached? ? url_for(@news.thumbnail) : nil
     set_meta_tags(
       title: @news.title,

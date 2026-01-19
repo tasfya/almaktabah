@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get "/sitemap.xml", to: "sitemaps#index", defaults: { format: "xml" }
   get "/sitemaps/:type(-:page).xml", to: "sitemaps#show",
       defaults: { format: "xml" },
-      constraints: { type: /articles|books|lectures|series|fatwas|news|lessons|scholars|static/, page: /\d+/ },
+      constraints: { type: Regexp.new(SitemapService::CONTENT_TYPES.keys.join("|")), page: /\d+/ },
       as: :sitemap_content
 
   authenticate :user, ->(u) { u.admin? } do

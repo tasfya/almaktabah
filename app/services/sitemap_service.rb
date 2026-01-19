@@ -16,6 +16,7 @@ class SitemapService
   }.freeze
 
   def initialize(domain)
+    raise ArgumentError, "domain is required" if domain.nil?
     @domain = domain
   end
 

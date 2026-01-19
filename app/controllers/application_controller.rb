@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
   end
 
   def canonical_url
-    request.original_url.split("?").first
+    request.original_url.split(/[?#]/).first
   end
   helper_method :canonical_url
 end

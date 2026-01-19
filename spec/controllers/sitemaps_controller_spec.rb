@@ -78,7 +78,11 @@ RSpec.describe SitemapsController, type: :controller do
     end
 
     context "with type=books" do
-      let!(:book) { create(:book, scholar: scholar, published: true, published_at: 1.day.ago) }
+      let!(:book) do
+        book = create(:book, scholar: scholar, published: true, published_at: 1.day.ago)
+        book.domains << domain
+        book
+      end
 
       it "includes book URLs" do
         get :show, params: { type: "books" }, format: :xml
@@ -96,7 +100,11 @@ RSpec.describe SitemapsController, type: :controller do
     end
 
     context "with type=series" do
-      let!(:series) { create(:series, scholar: scholar, published: true, published_at: 1.day.ago) }
+      let!(:series) do
+        series = create(:series, scholar: scholar, published: true, published_at: 1.day.ago)
+        series.domains << domain
+        series
+      end
 
       it "includes series URLs" do
         get :show, params: { type: "series" }, format: :xml
@@ -105,7 +113,11 @@ RSpec.describe SitemapsController, type: :controller do
     end
 
     context "with type=fatwas" do
-      let!(:fatwa) { create(:fatwa, scholar: scholar, published: true, published_at: 1.day.ago) }
+      let!(:fatwa) do
+        fatwa = create(:fatwa, scholar: scholar, published: true, published_at: 1.day.ago)
+        fatwa.domains << domain
+        fatwa
+      end
 
       it "includes fatwa URLs" do
         get :show, params: { type: "fatwas" }, format: :xml
@@ -114,7 +126,11 @@ RSpec.describe SitemapsController, type: :controller do
     end
 
     context "with type=news" do
-      let!(:news_item) { create(:news, published: true, published_at: 1.day.ago) }
+      let!(:news_item) do
+        news = create(:news, published: true, published_at: 1.day.ago)
+        news.domains << domain
+        news
+      end
 
       it "includes news URLs" do
         get :show, params: { type: "news" }, format: :xml

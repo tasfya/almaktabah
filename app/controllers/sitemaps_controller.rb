@@ -9,9 +9,14 @@ class SitemapsController < ApplicationController
   end
 
   def show
-    @type = params[:type].to_sym
+    @type = params[:type]&.to_sym
     @page = (params[:page] || 1).to_i
     @sitemap_service = SitemapService.new(@domain)
+
+    unless SitemapService::CONTENT_TYPES.key?(@type)
+      head :not_found
+      return
+    end
 
     if @page < 1 || @page > @sitemap_service.page_count(@type)
       head :not_found

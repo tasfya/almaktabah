@@ -16,7 +16,7 @@ class BooksController < ApplicationController
                          .recent
                          .limit(4)
 
-    description = @book.description.to_s.truncate(155)
+    description = @book.description.to_s.truncate(MetaTags.config.description_limit)
     image_url = @book.cover_image.attached? ? url_for(@book.cover_image) : nil
     set_meta_tags(
       title: @book.title,

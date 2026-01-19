@@ -8,7 +8,7 @@ class RobotsController < ApplicationController
       Disallow: /avo/
       Disallow: /jobs/
 
-      Sitemap: #{request.protocol}#{request.host}/sitemap.xml
+      Sitemap: #{request.protocol}#{request.host_with_port}/sitemap.xml
     ROBOTS
   end
 end

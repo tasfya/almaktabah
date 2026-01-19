@@ -1,5 +1,7 @@
 <% content_for :title, @fatwa.title %>
-<%= json_ld_tag(fatwa_json_ld(@fatwa)) %>
+<% if (json_ld = fatwa_json_ld(@fatwa)) %>
+  <%= json_ld_tag(json_ld) %>
+<% end %>
 <div class="min-h-screen py-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 gap-8">

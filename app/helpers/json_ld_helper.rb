@@ -7,23 +7,26 @@ module JsonLdHelper
   end
 
   def article_json_ld(article)
-    {
+    data = {
       "@context": "https://schema.org",
       "@type": "Article",
       "headline": article.title,
       "datePublished": article.published_at&.iso8601,
       "dateModified": article.updated_at&.iso8601,
-      "author": {
-        "@type": "Person",
-        "name": article.scholar.full_name,
-        "url": scholar_url(article.scholar, host: request.host)
-      },
       "publisher": publisher_json_ld,
       "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": canonical_url
       }
-    }.compact
+    }
+    if article.scholar.present?
+      data[:author] = {
+        "@type": "Person",
+        "name": article.scholar.full_name,
+        "url": scholar_url(article.scholar, host: request.host)
+      }
+    end
+    data.compact
   end
 
   def book_json_ld(book)
@@ -33,15 +36,17 @@ module JsonLdHelper
       "name": book.title,
       "description": book.description,
       "datePublished": book.published_at&.strftime("%Y"),
-      "author": {
-        "@type": "Person",
-        "name": book.scholar.full_name,
-        "url": scholar_url(book.scholar, host: request.host)
-      },
       "publisher": publisher_json_ld,
       "url": canonical_url
     }
-    data[:image] = url_for(book.cover_image) if book.cover_image.attached?
+    if book.scholar.present?
+      data[:author] = {
+        "@type": "Person",
+        "name": book.scholar.full_name,
+        "url": scholar_url(book.scholar, host: request.host)
+      }
+    end
+    data[:image] = safe_attachment_url(book.cover_image)
     data.compact
   end
 
@@ -54,17 +59,18 @@ module JsonLdHelper
       "description": lecture.description,
       "datePublished": lecture.published_at&.iso8601,
       "duration": lecture.duration.present? ? "PT#{lecture.duration}S" : nil,
-      "author": {
-        "@type": "Person",
-        "name": lecture.scholar.full_name,
-        "url": scholar_url(lecture.scholar, host: request.host)
-      },
       "publisher": publisher_json_ld,
       "url": canonical_url
     }
-    data[:thumbnailUrl] = url_for(lecture.thumbnail) if lecture.thumbnail.attached?
-    data[:contentUrl] = url_for(lecture.video) if lecture.video.attached?
-    data[:contentUrl] ||= url_for(lecture.audio) if lecture.audio.attached?
+    if lecture.scholar.present?
+      data[:author] = {
+        "@type": "Person",
+        "name": lecture.scholar.full_name,
+        "url": scholar_url(lecture.scholar, host: request.host)
+      }
+    end
+    data[:thumbnailUrl] = safe_attachment_url(lecture.thumbnail)
+    data[:contentUrl] = safe_attachment_url(lecture.video) || safe_attachment_url(lecture.audio)
     data.compact
   end
 
@@ -80,7 +86,9 @@ module JsonLdHelper
 
   def fatwa_json_ld(fatwa)
     question_text = fatwa.question.present? ? fatwa.question.to_plain_text : fatwa.title
-    answer_text = fatwa.answer.present? ? fatwa.answer.to_plain_text : ""
+    answer_text = fatwa.answer.present? ? fatwa.answer.to_plain_text : nil
+
+    return nil unless answer_text.present?
 
     {
       "@context": "https://schema.org",
@@ -99,18 +107,21 @@ module JsonLdHelper
   end
 
   def series_json_ld(series)
-    {
+    data = {
       "@context": "https://schema.org",
       "@type": "Course",
       "name": series.title,
       "description": series.description,
-      "provider": {
+      "url": canonical_url
+    }
+    if series.scholar.present?
+      data[:provider] = {
         "@type": "Person",
         "name": series.scholar.full_name,
         "url": scholar_url(series.scholar, host: request.host)
-      },
-      "url": canonical_url
-    }.compact
+      }
+    end
+    data.compact
   end
 
   def news_json_ld(news)
@@ -127,12 +138,19 @@ module JsonLdHelper
         "@id": canonical_url
       }
     }
-    data[:image] = url_for(news.thumbnail) if news.thumbnail.attached?
-    data[:author] = { "@type": "Person", "name": news.scholar.full_name } if news.scholar.present?
+    data[:image] = safe_attachment_url(news.thumbnail)
+    data[:author] = { "@type": "Person", "name": news.scholar&.full_name } if news.scholar.present?
     data.compact
   end
 
   private
+
+  def safe_attachment_url(attachment)
+    return nil unless attachment&.attached?
+    url_for(attachment)
+  rescue StandardError
+    nil
+  end
 
   def publisher_json_ld
     {
