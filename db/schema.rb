@@ -416,8 +416,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_13_160812) do
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "track_series", "series"
   add_foreign_key "track_series", "tracks"
-  add_foreign_key "track_steps", "series"
-  add_foreign_key "track_steps", "tracks"
   add_foreign_key "user_scholars", "scholars"
   add_foreign_key "user_scholars", "users"
 end
