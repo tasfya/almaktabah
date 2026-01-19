@@ -362,16 +362,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_13_160812) do
     t.index ["track_id"], name: "index_track_series_on_track_id"
   end
 
-  create_table "track_steps", force: :cascade do |t|
-    t.integer "track_id", null: false
-    t.integer "series_id", null: false
-    t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["series_id"], name: "index_track_steps_on_series_id"
-    t.index ["track_id"], name: "index_track_steps_on_track_id"
-  end
-
   create_table "tracks", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -426,8 +416,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_13_160812) do
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "track_series", "series"
   add_foreign_key "track_series", "tracks"
-  add_foreign_key "track_steps", "series"
-  add_foreign_key "track_steps", "tracks"
   add_foreign_key "user_scholars", "scholars"
   add_foreign_key "user_scholars", "users"
 end
