@@ -2,6 +2,8 @@
 
 class HomeController < ApplicationController
   def index
+    expires_in 1.hour, public: true
+
     @query = params[:q].is_a?(String) ? params[:q].strip.presence : nil
     @search_filters = { scholars: params[:scholars], content_types: params[:content_types] }
     @all_content_types = TypesenseSearch::Collections::NAMES
