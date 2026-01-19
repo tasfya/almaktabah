@@ -1,78 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<% @records.each do |record| -%>
   <url>
-    <loc><%= root_url(host: request.host) %></loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <loc><%= url_for_sitemap_record(record) %></loc>
+<% if record.respond_to?(:updated_at) && record.updated_at -%>
+    <lastmod><%= record.updated_at.strftime("%Y-%m-%d") %></lastmod>
+<% end -%>
+    <changefreq><%= changefreq_for(@type) %></changefreq>
+    <priority><%= priority_for(@type) %></priority>
   </url>
-
-  <%# Articles %>
-  <% @articles.each do |article| %>
-    <url>
-      <loc><%= article_url(article, scholar_id: article.scholar.slug, host: request.host) %></loc>
-      <lastmod><%= article.updated_at.strftime("%Y-%m-%d") %></lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  <% end %>
-
-  <%# Books %>
-  <% @books.each do |book| %>
-    <url>
-      <loc><%= book_url(book, scholar_id: book.scholar.slug, host: request.host) %></loc>
-      <lastmod><%= book.updated_at.strftime("%Y-%m-%d") %></lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  <% end %>
-
-  <%# Lectures %>
-  <% @lectures.each do |lecture| %>
-    <url>
-      <loc><%= lecture_url(lecture, scholar_id: lecture.scholar.slug, kind: lecture.kind, host: request.host) %></loc>
-      <lastmod><%= lecture.updated_at.strftime("%Y-%m-%d") %></lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  <% end %>
-
-  <%# Series %>
-  <% @series.each do |s| %>
-    <url>
-      <loc><%= series_url(s, scholar_id: s.scholar.slug, host: request.host) %></loc>
-      <lastmod><%= s.updated_at.strftime("%Y-%m-%d") %></lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.7</priority>
-    </url>
-  <% end %>
-
-  <%# Fatwas %>
-  <% @fatwas.each do |fatwa| %>
-    <url>
-      <loc><%= fatwa_url(fatwa, host: request.host) %></loc>
-      <lastmod><%= fatwa.updated_at.strftime("%Y-%m-%d") %></lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.7</priority>
-    </url>
-  <% end %>
-
-  <%# News %>
-  <% @news.each do |n| %>
-    <url>
-      <loc><%= news_url(n, host: request.host) %></loc>
-      <lastmod><%= n.updated_at.strftime("%Y-%m-%d") %></lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.6</priority>
-    </url>
-  <% end %>
-
-  <%# Scholars %>
-  <% @scholars.each do |scholar| %>
-    <url>
-      <loc><%= scholar_url(scholar, host: request.host) %></loc>
-      <lastmod><%= scholar.updated_at.strftime("%Y-%m-%d") %></lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.9</priority>
-    </url>
-  <% end %>
+<% end -%>
 </urlset>
