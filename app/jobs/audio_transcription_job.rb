@@ -1,5 +1,5 @@
 class AudioTranscriptionJob < ApplicationJob
-  queue_as :default
+  queue_as :low
 
   def perform(record)
     Rails.logger.info "Starting audio transcription for #{record.class.name}##{record.id}"
