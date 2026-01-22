@@ -3,7 +3,7 @@ require "json"
 
 class AudioTranscriptionService
   GROQ_API_BASE_URL = "https://api.groq.com/openai/v1".freeze
-  GROQ_DEFAULT_MODEL = "whisper-large-v3-turbo".freeze
+  GROQ_DEFAULT_MODEL = ENV.fetch("GROQ_DEFAULT_MODEL", "whisper-large-v3-turbo").freeze
 
   def initialize(record: nil, language: "ar")
     @record = record
