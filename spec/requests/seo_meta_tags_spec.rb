@@ -95,18 +95,18 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
 
     it "includes title meta tag" do
-      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind)
+      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind_for_url)
       expect(response.body).to include("<title>")
       expect(response.body).to include("Test Lecture Title")
     end
 
     it "includes description meta tag" do
-      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind)
+      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind_for_url)
       expect(response.body).to include('name="description"')
     end
 
     it "includes JSON-LD structured data for video/audio" do
-      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind)
+      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind_for_url)
       expect(response.body).to include('type="application/ld+json"')
       expect(response.body).to match(/"@type":"(VideoObject|AudioObject)"/)
     end
