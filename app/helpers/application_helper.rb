@@ -125,7 +125,7 @@ module ApplicationHelper
       return polymorphic_url(series, scholar_id: scholar.to_param) if series && scholar
     when Lecture
       scholar = resource.respond_to?(:scholar) ? resource.scholar : nil
-      return polymorphic_url(resource, scholar_id: scholar.to_param, kind: resource.kind.presence) if scholar
+      return polymorphic_url(resource, scholar_id: scholar.to_param, kind: resource.kind_for_url) if scholar
     else
       scholar = resource.respond_to?(:scholar) ? resource.scholar : nil
       return polymorphic_url(resource, scholar_id: scholar.to_param) if scholar

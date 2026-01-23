@@ -43,7 +43,7 @@ class LecturesController < ApplicationController
       breadcrumb_for(t("breadcrumbs.lectures"), lectures_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.lectures"), lectures_path)
-      breadcrumb_for(@lecture.title, lecture_path(@lecture, kind: @lecture.kind, scholar_id: @lecture.scholar.to_param))
+      breadcrumb_for(@lecture.title, lecture_path(@lecture, kind: @lecture.kind_for_url, scholar_id: @lecture.scholar.to_param))
     end
   end
 

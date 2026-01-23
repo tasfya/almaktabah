@@ -55,13 +55,13 @@ RSpec.describe LecturesController, type: :controller do
       end
 
       it "shows the lecture" do
-        get :show, params: { scholar_id: scholar.id, kind: published_lecture.kind, id: published_lecture.id }
+        get :show, params: { scholar_id: scholar.id, kind: published_lecture.kind_for_url, id: published_lecture.id }
         expect(response).to be_successful
         expect(assigns(:lecture)).to eq(published_lecture)
       end
 
       it "assigns related lectures from the same category" do
-        get :show, params: { scholar_id: scholar.id, kind: published_lecture.kind, id: published_lecture.id }
+        get :show, params: { scholar_id: scholar.id, kind: published_lecture.kind_for_url, id: published_lecture.id }
         related = assigns(:related_lectures)
         expect(related).to include(same_category)
         expect(related).not_to include(published_lecture, other_category)
@@ -72,14 +72,14 @@ RSpec.describe LecturesController, type: :controller do
           create(:domain_assignment, domain: domain, assignable: l)
         end
 
-        get :show, params: { scholar_id: scholar.id, kind: published_lecture.kind, id: published_lecture.id }
+        get :show, params: { scholar_id: scholar.id, kind: published_lecture.kind_for_url, id: published_lecture.id }
         expect(assigns(:related_lectures).count).to eq(4)
       end
 
       it "sets up breadcrumbs" do
         expect(controller).to receive(:breadcrumb_for).with(I18n.t("breadcrumbs.lectures"), lectures_path)
-        expect(controller).to receive(:breadcrumb_for).with(published_lecture.title, lecture_path(scholar_id: scholar.to_param, kind: published_lecture.kind, id: published_lecture.to_param))
-        get :show, params: { scholar_id: scholar.to_param, kind: published_lecture.kind, id: published_lecture.to_param }
+        expect(controller).to receive(:breadcrumb_for).with(published_lecture.title, lecture_path(scholar_id: scholar.to_param, kind: published_lecture.kind_for_url, id: published_lecture.to_param))
+        get :show, params: { scholar_id: scholar.to_param, kind: published_lecture.kind_for_url, id: published_lecture.to_param }
       end
     end
 
@@ -87,13 +87,13 @@ RSpec.describe LecturesController, type: :controller do
       it "redirects and shows alert for unpublished lecture" do
         create(:domain_assignment, domain: domain, assignable: unpublished_lecture)
 
-        get :show, params: { scholar_id: scholar.id, kind: unpublished_lecture.kind, id: unpublished_lecture.id }
+        get :show, params: { scholar_id: scholar.id, kind: unpublished_lecture.kind_for_url, id: unpublished_lecture.id }
         expect(response).to redirect_to(lectures_path)
         expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
       end
 
       it "redirects and shows alert for missing lecture" do
-        get :show, params: { scholar_id: scholar.id, kind: "sermon", id: 999999 }
+        get :show, params: { scholar_id: scholar.id, kind: I18n.t("activerecord.attributes.lecture.kind.sermon"), id: 999999 }
         expect(response).to redirect_to(lectures_path)
         expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
       end

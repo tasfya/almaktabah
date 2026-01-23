@@ -32,7 +32,7 @@ module SitemapsHelper
     when Book
       book_url(record, scholar_id: record.scholar.slug, host: request.host)
     when Lecture
-      lecture_url(record, scholar_id: record.scholar.slug, kind: record.kind, host: request.host)
+      lecture_url(record, scholar_id: record.scholar.slug, kind: record.kind_for_url, host: request.host)
     when Series
       series_url(record, scholar_id: record.scholar.slug, host: request.host)
     when Fatwa

@@ -59,7 +59,7 @@ class Lecture < ApplicationRecord
       created_at&.to_i
     end
     attribute :url do
-      Rails.application.routes.url_helpers.lecture_path(self, scholar_id: scholar.slug, kind: kind)
+      Rails.application.routes.url_helpers.lecture_path(self, scholar_id: scholar.slug, kind: kind_for_url)
     end
 
     predefined_fields [
@@ -133,11 +133,11 @@ class Lecture < ApplicationRecord
     "all-audios/#{scholar.name}/lectures/#{kind}/#{title}.mp3"
   end
 
-  def kind_translated
+  def kind_for_url
     I18n.t("activerecord.attributes.lecture.kind.#{kind}")
   end
 
   def seo_show_title
-    "#{kind_translated} - #{title} - #{scholar.full_name}"
+    "#{kind_for_url} - #{title} - #{scholar.full_name}"
   end
 end
