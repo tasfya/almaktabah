@@ -13,9 +13,7 @@
           <%= @book.title %>
         </h1>
         <% if @book.scholar.present? %>
-          <p class="text-xl mb-4">
-            <%= link_to @book.scholar.name, scholar_path(@book.scholar), class: "hover:link" %>
-          </p>
+          <p class="text-xl mb-4"><%= @book.scholar.name %></p>
         <% end %>
         <div class="flex flex-wrap items-center gap-4 text-sm mb-6">
           <% if @book.category.present? %>

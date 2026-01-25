@@ -152,13 +152,6 @@ RSpec.describe SitemapsController, type: :controller do
       end
     end
 
-    context "with type=scholars" do
-      it "includes scholar URLs" do
-        get :show, params: { type: "scholars" }, format: :xml
-        expect(response.body).to include(scholar_path(scholar))
-      end
-    end
-
     context "with pagination" do
       it "returns 404 for page number too high" do
         get :show, params: { type: "articles", page: "999" }, format: :xml

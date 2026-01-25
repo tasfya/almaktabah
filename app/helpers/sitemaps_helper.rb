@@ -9,7 +9,6 @@ module SitemapsHelper
     fatwas: "monthly",
     news: "weekly",
     lessons: "monthly",
-    scholars: "monthly",
     static: "daily"
   }.freeze
 
@@ -21,7 +20,6 @@ module SitemapsHelper
     fatwas: 0.7,
     news: 0.6,
     lessons: 0.7,
-    scholars: 0.9,
     static: 1.0
   }.freeze
 
@@ -41,8 +39,6 @@ module SitemapsHelper
       news_url(record, host: request.host)
     when Lesson
       lesson_url(record, host: request.host)
-    when Scholar
-      scholar_url(record, host: request.host)
     when Hash
       static_url_for(record[:loc])
     else

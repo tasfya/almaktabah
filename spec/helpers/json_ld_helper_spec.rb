@@ -18,7 +18,6 @@ RSpec.describe JsonLdHelper, type: :helper do
       double(host: "localhost", protocol: "http://", original_url: "http://localhost/test")
     )
     allow(helper).to receive(:root_url).with(host: "localhost").and_return("http://localhost/")
-    allow(helper).to receive(:scholar_url).and_return("http://localhost/scholars/test-scholar")
     allow(helper).to receive(:t).with("site.name").and_return("Default Site")
     allow(helper).to receive(:url_for).and_return("http://localhost/file.jpg")
   end
@@ -186,36 +185,6 @@ RSpec.describe JsonLdHelper, type: :helper do
         result = helper.lecture_json_ld(lecture)
         expect(result[:@type]).to eq("VideoObject")
       end
-    end
-  end
-
-  describe "#scholar_json_ld" do
-    let(:scholar_with_bio) do
-      scholar = build_stubbed(:scholar, full_name: "Test Scholar")
-      allow(scholar).to receive(:bio).and_return(
-        double(present?: true, to_plain_text: "This is a scholar biography that describes the scholar.")
-      )
-      scholar
-    end
-
-    it "returns Person type" do
-      result = helper.scholar_json_ld(scholar_with_bio)
-      expect(result[:@type]).to eq("Person")
-    end
-
-    it "includes name" do
-      result = helper.scholar_json_ld(scholar_with_bio)
-      expect(result[:name]).to eq("Test Scholar")
-    end
-
-    it "includes description from bio" do
-      result = helper.scholar_json_ld(scholar_with_bio)
-      expect(result[:description]).to include("This is a scholar biography")
-    end
-
-    it "includes url" do
-      result = helper.scholar_json_ld(scholar_with_bio)
-      expect(result[:url]).to eq("http://localhost/test")
     end
   end
 

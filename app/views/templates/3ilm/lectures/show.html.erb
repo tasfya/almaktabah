@@ -25,9 +25,7 @@
         <h1 class="text-4xl font-bold mb-4"><%= @lecture.title %></h1>
         <div class="flex items-center justify-right gap-4 mb-4">
           <% if @lecture.scholar.present? %>
-            <h2 class="text-base font-semibold">
-              <%= link_to @lecture.scholar.name, scholar_path(@lecture.scholar), class: "hover:underline" %>
-            </h2>
+            <h2 class="text-base font-semibold"><%= @lecture.scholar.name %></h2>
           <% end %>
         </div>
         <div class="flex items-center justify-center lg:justify-start gap-3 text-sm text-gray-500 mb-4">
