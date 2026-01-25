@@ -11,6 +11,7 @@
           <%= t('.series_label') %>
         </p>
         <h1 class="text-4xl font-bold mb-3"><%= @series.title %></h1>
+        <h2 class="text-base font-semibold mb-3"><%= @series.scholar.name %></h2>
         <div class="flex items-center justify-center lg:justify-start gap-4 text-sm text-gray-500 mb-4">
           <% if @series.category.present? %>
             <span class="badge badge-primary rounded-full"><%= @series.category %></span>
