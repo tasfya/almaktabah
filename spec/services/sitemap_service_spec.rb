@@ -56,13 +56,6 @@ RSpec.describe SitemapService do
       end
     end
 
-    context "with scholars" do
-      it "returns all published scholars regardless of domain" do
-        urls = service.urls_for(:scholars)
-        expect(urls).to include(scholar)
-      end
-    end
-
     context "with lessons" do
       let!(:series) { create(:series, scholar: scholar, published: true, published_at: 1.day.ago) }
       let!(:lesson) do

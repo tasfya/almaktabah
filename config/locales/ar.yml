@@ -248,7 +248,6 @@ ar:
     contact: "تواصل معنا"
     lessons: "الدروس العلمية"
     series: "السلاسل"
-    scholars: "العلماء"
     articles: "المقالات"
     search: "البحث"
     quick_links: "روابط سريعة"
@@ -462,19 +461,8 @@ ar:
     lecture_not_found: "المحاضرة غير موجودة"
     lesson_not_found: "الدرس غير موجود"
     series_not_found: "السلسلة غير موجودة"
-    scholar_not_found: "الشيخ غير موجود"
-    scholars_listing_not_allowed: "عرض قائمة العلماء غير متاح في هذا الموقع"
   scholars:
-    index:
-      title: "العلماء"
-      description: "تعرف على العلماء وسيرهم ومؤلفاتهم ومحاضراتهم"
-      no_scholars: "لا يوجد علماء متاحون حالياً"
     show:
-      about_scholar: "نبذة عن الشيخ"
-      lectures_by_scholar: "محاضرات الشيخ"
-      series_by_scholar: "سلاسل الشيخ"
-      view_all_lectures: "عرض جميع المحاضرات"
-      view_all_series: "عرض جميع السلاسل"
       lessons_count:
         zero: "لا توجد دروس"
         one: "درس واحد"
@@ -482,8 +470,6 @@ ar:
         few: "%{count} دروس"
         many: "%{count} درساً"
         other: "%{count} دروس"
-    scholar_card:
-      view_profile: "عرض الملف الشخصي"
   breadcrumbs:
     books: "الكتب"
     lectures: "المحاضرات"
@@ -492,7 +478,6 @@ ar:
     series: "السلاسل العلمية"
     news: "الأخبار"
     articles: "المقالات"
-    scholars: "العلماء"
     about: "حول"
     contact: "اتصل بنا"
   datetime:
@@ -555,6 +540,5 @@ ar:
     series: "السلاسل"
     lectures: "المحاضرات"
     news: "الأخبار"
-    scholars: "العلماء"
     fatwas: "الفتاوى"
     lessons: "الدروس"

@@ -112,26 +112,6 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
   end
 
-  describe "Scholars" do
-    it "includes title meta tag with scholar name" do
-      get scholar_path(scholar)
-      expect(response.body).to include("<title>")
-      expect(response.body).to include(scholar.full_name)
-    end
-
-    it "includes Open Graph type as profile" do
-      get scholar_path(scholar)
-      expect(response.body).to include('property="og:type"')
-      expect(response.body).to include("profile")
-    end
-
-    it "includes JSON-LD structured data" do
-      get scholar_path(scholar)
-      expect(response.body).to include('type="application/ld+json"')
-      expect(response.body).to include('"@type":"Person"')
-    end
-  end
-
   describe "Fatwas" do
     let!(:fatwa) do
       fatwa = create(:fatwa, title: "Test Fatwa Title", scholar: scholar, published: true, published_at: 1.day.ago)

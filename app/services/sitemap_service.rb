@@ -11,7 +11,6 @@ class SitemapService
     fatwas: { model: Fatwa, domain_scoped: true, includes: :scholar },
     news: { model: News, domain_scoped: true, includes: nil },
     lessons: { model: Lesson, domain_scoped: true, includes: { series: :scholar } },
-    scholars: { model: Scholar, domain_scoped: false, includes: nil },
     static: { model: nil, domain_scoped: false, includes: nil }
   }.freeze
 

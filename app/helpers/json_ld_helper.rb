@@ -22,8 +22,7 @@ module JsonLdHelper
     if article.scholar.present?
       data[:author] = {
         "@type": "Person",
-        "name": article.scholar.full_name,
-        "url": scholar_url(article.scholar, host: request.host)
+        "name": article.scholar.full_name
       }
     end
     data.compact
@@ -42,8 +41,7 @@ module JsonLdHelper
     if book.scholar.present?
       data[:author] = {
         "@type": "Person",
-        "name": book.scholar.full_name,
-        "url": scholar_url(book.scholar, host: request.host)
+        "name": book.scholar.full_name
       }
     end
     data[:image] = safe_attachment_url(book.cover_image)
@@ -65,23 +63,12 @@ module JsonLdHelper
     if lecture.scholar.present?
       data[:author] = {
         "@type": "Person",
-        "name": lecture.scholar.full_name,
-        "url": scholar_url(lecture.scholar, host: request.host)
+        "name": lecture.scholar.full_name
       }
     end
     data[:thumbnailUrl] = safe_attachment_url(lecture.thumbnail)
     data[:contentUrl] = safe_attachment_url(lecture.video) || safe_attachment_url(lecture.audio)
     data.compact
-  end
-
-  def scholar_json_ld(scholar)
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": scholar.full_name,
-      "description": scholar.bio.present? ? scholar.bio.to_plain_text.truncate(500) : nil,
-      "url": canonical_url
-    }.compact
   end
 
   def fatwa_json_ld(fatwa)
@@ -117,8 +104,7 @@ module JsonLdHelper
     if series.scholar.present?
       data[:provider] = {
         "@type": "Person",
-        "name": series.scholar.full_name,
-        "url": scholar_url(series.scholar, host: request.host)
+        "name": series.scholar.full_name
       }
     end
     data.compact
