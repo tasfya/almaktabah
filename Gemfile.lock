@@ -146,7 +146,7 @@ GEM
     connection_pool (2.5.4)
     crass (1.0.6)
     csv (3.3.5)
-    database_consistency (2.0.5)
+    database_consistency (2.0.6)
       activerecord (>= 3.2)
     database_validations (1.1.1)
       activerecord (>= 4.2.0)
