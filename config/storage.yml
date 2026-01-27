@@ -19,9 +19,12 @@ public_media_aws:
   service: S3
   access_key_id: <%= ENV["PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID"] %>
   secret_access_key: <%= ENV["PUBLIC_AWS_S3_3ILM_ACCESS_KEY"]  %>
-  region: eu-central-1
-  bucket: 3ilm
+  region: auto
+  bucket: ilm
   public: true
+  force_path_style: true
+  endpoint: "https://530ead0646d782269b6d097e15a631eb.r2.cloudflarestorage.com"
+
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
 #   service: S3
