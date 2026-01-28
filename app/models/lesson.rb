@@ -86,6 +86,7 @@ class Lesson < ApplicationRecord
   has_one_attached :audio, service: Rails.application.config.public_storage
   has_one_attached :video, service: Rails.application.config.public_storage
   has_one_attached :optimized_audio, service: Rails.application.config.public_storage
+  has_one_attached :final_audio, service: Rails.application.config.r2_clouldflare_public_storage
 
   has_rich_text :content
 
@@ -146,8 +147,9 @@ class Lesson < ApplicationRecord
   end
 
   def generate_optimize_audio_bucket_key
-    key = position? ? position : title
-    "all-audios/#{scholar.full_name}/series/#{series_title}/#{key}.mp3"
+    # todo fix position nil case I did update some
+    # that had no position with the the id but need to fix properly
+    "all-audios/#{scholar.full_name}/series/#{series_title}/#{position}.mp3"
   end
 
   def scholar
