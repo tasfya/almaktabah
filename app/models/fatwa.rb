@@ -11,8 +11,8 @@ class Fatwa < ApplicationRecord
   belongs_to :scholar, optional: true, inverse_of: :fatwas
   has_one_attached :audio, service: Rails.application.config.public_storage
   has_one_attached :optimized_audio, service: Rails.application.config.public_storage
-  has_one_attached :final_audio, service: Rails.application.config.public_storage
   has_one_attached :video, service: Rails.application.config.public_storage
+  has_one_attached :final_audio, service: :public_media_aws
 
   has_rich_text :question
   has_rich_text :answer
