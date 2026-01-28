@@ -86,7 +86,7 @@ class Lesson < ApplicationRecord
   has_one_attached :audio, service: Rails.application.config.public_storage
   has_one_attached :video, service: Rails.application.config.public_storage
   has_one_attached :optimized_audio, service: Rails.application.config.public_storage
-  has_one_attached :final_audio, service: Rails.application.config.r2_clouldflare_public_storage
+  has_one_attached :final_audio, service: :public_media_aws
 
   has_rich_text :content
 
