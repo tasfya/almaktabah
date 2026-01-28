@@ -12,6 +12,7 @@ class Fatwa < ApplicationRecord
   has_one_attached :audio, service: Rails.application.config.public_storage
   has_one_attached :optimized_audio, service: Rails.application.config.public_storage
   has_one_attached :video, service: Rails.application.config.public_storage
+  has_one_attached :final_audio, service: :public_media_aws
 
   has_rich_text :question
   has_rich_text :answer
@@ -85,5 +86,13 @@ class Fatwa < ApplicationRecord
 
   def video?
     video.attached?
+  end
+
+  def generate_optimize_audio_bucket_key
+     # todo fix position nil case I did update some
+     # that had no position with the the id but need to fix properly
+     category ||= "general"
+     title ||= id
+    "all-audios/#{scholar.full_name}/fatawas/#{category}/#{title}.mp3"
   end
 end
