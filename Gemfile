@@ -25,7 +25,7 @@ gem "pagy", "~> 9.4"
 gem "typesense-rails", "~> 1.0.0.rc1"
 
 # Filtering and searching
-gem "ransack", "~> 4.0"
+gem "ransack", "~> 4.4"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
