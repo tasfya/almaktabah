@@ -2,13 +2,19 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static targets = ["logo", "nav"];
-  static values = { threshold: { type: Number, default: 50 } };
+  static values = { threshold: { type: Number, default: 200 } };
 
   connect() {
     this.compact = false;
+    this.lastScrollY = 0;
+    this.ticking = false;
     this._onScroll = this._onScroll.bind(this);
+    
+    // Add transition to header
+    this.element.style.transition = "transform 0.3s ease-in-out";
+    
     window.addEventListener("scroll", this._onScroll, { passive: true });
-    this._onScroll();
+    this._checkScroll();
   }
 
   disconnect() {
@@ -16,11 +22,23 @@ export default class extends Controller {
   }
 
   _onScroll() {
-    const scrollY = window.scrollY;
-    const shouldCompact = scrollY > this.thresholdValue;
+    this.lastScrollY = window.scrollY;
+    
+    if (!this.ticking) {
+      window.requestAnimationFrame(() => {
+        this._checkScroll();
+        this.ticking = false;
+      });
+      this.ticking = true;
+    }
+  }
 
-    if (shouldCompact !== this.compact) {
-      this.compact = shouldCompact;
+  _checkScroll() {
+    const scrollY = this.lastScrollY;
+    const shouldHide = scrollY > this.thresholdValue;
+
+    if (shouldHide !== this.compact) {
+      this.compact = shouldHide;
       this._updateCompactState();
     }
   }
@@ -28,12 +46,10 @@ export default class extends Controller {
   _updateCompactState() {
     if (this.compact) {
       this.element.classList.add("header--compact");
-      if (this.hasLogoTarget) this.logoTarget.classList.add("hidden");
-      if (this.hasNavTarget) this.navTarget.classList.add("header--nav-hidden");
+      this.element.style.transform = "translateY(-100%)";
     } else {
       this.element.classList.remove("header--compact");
-      if (this.hasLogoTarget) this.logoTarget.classList.remove("hidden");
-      if (this.hasNavTarget) this.navTarget.classList.remove("header--nav-hidden");
+      this.element.style.transform = "translateY(0)";
     }
   }
 }
