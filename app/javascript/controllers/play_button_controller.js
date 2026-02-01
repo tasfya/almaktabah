@@ -149,13 +149,15 @@ export default class extends ApplicationController {
     const audioPlayer = document.getElementById("audio-player")
     if (audioPlayer && audioPlayer.innerHTML.trim() !== "") {
       fetch("/play/stop", {
-        method: "DELETE",
+        method: "GET",
         headers: {
-          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
           "Accept": "text/vnd.turbo-stream.html"
         }
       })
-        .then(response => response.ok ? response.text() : null)
+        .then(response => {
+          if (response.ok) return response.text()
+          throw new Error(`HTTP error! status: ${response.status}`)
+        })
         .then(html => {
           if (html) Turbo.renderStreamMessage(html)
         })
