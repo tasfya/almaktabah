@@ -28,7 +28,7 @@ Rails.application.routes.draw do
 
   # Generic play route for all playable resources
   post "play/:resource_type/:id", to: "play#show", as: "play"
-  delete "play/stop", to: "play#stop", as: "stop_play"
+  get "play/stop", to: "play#stop", as: "stop_play"
 
   # Static pages
   get "about", to: "about#index"
