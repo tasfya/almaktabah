@@ -94,21 +94,21 @@ RSpec.describe PlayController, type: :controller do
     end
   end
 
-  describe "DELETE #stop" do
+  describe "get #stop" do
     it "returns a successful response" do
-      delete :stop
+      get :stop
       expect(response).to be_successful
     end
 
     it "renders turbo_stream response" do
-      delete :stop
+      get :stop
       expect(response.body).to include('turbo-stream')
       expect(response.body).to include('update')
       expect(response.body).to include('audio')
     end
 
     it "clears the audio element" do
-      delete :stop
+      get :stop
       expect(response.body).to include('<turbo-stream action="update" target="audio-player">')
     end
   end

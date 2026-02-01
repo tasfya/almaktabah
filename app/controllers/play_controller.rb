@@ -11,11 +11,7 @@ class PlayController < ApplicationController
   end
 
   def stop
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.update("audio-player", "")
-      end
-    end
+    render turbo_stream: turbo_stream.update("audio-player", "")
   end
 
   private
