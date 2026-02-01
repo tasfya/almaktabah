@@ -27,7 +27,7 @@ Rails.application.routes.draw do
   resources :fatwas, only: [ :index, :show ], path: I18n.t("routes.fatwas", default: "fatwas")
 
   # Generic play route for all playable resources
-  get "play/:resource_type/:id", to: "play#show", as: "play"
+  post "play/:resource_type/:id", to: "play#show", as: "play"
   get "play/stop", to: "play#stop", as: "stop_play"
 
   # Static pages
