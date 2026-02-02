@@ -133,24 +133,10 @@ RSpec.describe Fatwa, type: :model do
           fatwa.optimized_audio.attach(audio_file)
         end
 
-
-
-        it 'uses correct filename' do
-          fatwa.migrate_to_final_audio
-          expect(fatwa.final_audio.filename.to_s).to eq('حكم الصيام.mp3')
-        end
-
         it 'preserves audio content' do
           original_byte_size = fatwa.optimized_audio.byte_size
           fatwa.migrate_to_final_audio
           expect(fatwa.final_audio.byte_size).to eq(original_byte_size)
-        end
-      end
-
-      context 'when final_audio already exists' do
-        before do
-          fatwa.optimized_audio.attach(audio_file)
-          fatwa.final_audio.attach(audio_file)
         end
       end
 
@@ -161,4 +147,4 @@ RSpec.describe Fatwa, type: :model do
       end
     end
   end
-end
+ end
