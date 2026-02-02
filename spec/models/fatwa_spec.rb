@@ -101,4 +101,72 @@ RSpec.describe Fatwa, type: :model do
       expect(test_fatwa.assigned_domains).to include(domain)
     end
   end
+
+  describe 'audio migration' do
+    let(:scholar) { create(:scholar, full_name: 'الشيخ محمد') }
+    let(:fatwa) { create(:fatwa, title: 'حكم الصيام', category: 'صيام', scholar: scholar) }
+
+    describe '#generate_final_audio_bucket_key' do
+      it 'generates correct bucket key with all fields' do
+        expected_key = 'all-audios/الشيخ محمد/fatawas/صيام/حكم الصيام.mp3'
+        expect(fatwa.generate_final_audio_bucket_key).to eq(expected_key)
+      end
+
+      it 'uses "general" for nil category' do
+        fatwa.category = nil
+        expected_key = 'all-audios/الشيخ محمد/fatawas/general/حكم الصيام.mp3'
+        expect(fatwa.generate_final_audio_bucket_key).to eq(expected_key)
+      end
+
+      it 'uses id for nil title' do
+        fatwa.title = nil
+        expected_key = "all-audios/الشيخ محمد/fatawas/صيام/#{fatwa.id}.mp3"
+        expect(fatwa.generate_final_audio_bucket_key).to eq(expected_key)
+      end
+    end
+
+    describe '#migrate_to_final_audio' do
+      let(:audio_file) { fixture_file_upload(Rails.root.join('spec', 'files', 'test_audio.mp3'), 'audio/mpeg') }
+
+      context 'when optimized_audio is attached' do
+        before do
+          fatwa.optimized_audio.attach(audio_file)
+        end
+
+        it 'migrates optimized_audio to final_audio' do
+          expect(fatwa.migrate_to_final_audio).to be true
+          expect(fatwa.final_audio).to be_attached
+        end
+
+        it 'uses correct filename' do
+          fatwa.migrate_to_final_audio
+          expect(fatwa.final_audio.filename.to_s).to eq('حكم الصيام.mp3')
+        end
+
+        it 'preserves audio content' do
+          original_byte_size = fatwa.optimized_audio.byte_size
+          fatwa.migrate_to_final_audio
+          expect(fatwa.final_audio.byte_size).to eq(original_byte_size)
+        end
+      end
+
+      context 'when final_audio already exists' do
+        before do
+          fatwa.optimized_audio.attach(audio_file)
+          fatwa.final_audio.attach(audio_file)
+        end
+
+        it 'skips migration and returns true' do
+          expect(fatwa.migrate_to_final_audio).to be true
+          expect(fatwa.final_audio).to be_attached
+        end
+      end
+
+      context 'when optimized_audio is not attached' do
+        it 'returns false' do
+          expect(fatwa.migrate_to_final_audio).to be false
+        end
+      end
+    end
+  end
 end
