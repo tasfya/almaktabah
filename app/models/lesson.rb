@@ -152,6 +152,38 @@ class Lesson < ApplicationRecord
     "all-audios/#{scholar.full_name}/series/#{series_title}/#{position}.mp3"
   end
 
+  def generate_final_audio_bucket_key
+    pos = position.presence || id.to_s
+    "all-audios/#{scholar.full_name}/series/#{series_title}/#{pos}.mp3"
+  end
+
+  def migrate_to_final_audio
+    return false unless optimized_audio.attached?
+    return true if final_audio.attached? # Skip if already migrated
+
+    begin
+      # Download the optimized_audio blob
+      optimized_audio.open do |tempfile|
+        # Get the proper key/path for the new file
+        key = generate_final_audio_bucket_key
+
+        # Attach to final_audio with the proper key
+        final_audio.attach(
+          io: tempfile,
+          filename: "#{position.presence || id}.mp3",
+          content_type: "audio/mpeg",
+          key: key
+        )
+      end
+
+      Rails.logger.info "Successfully migrated Lesson##{id} optimized_audio to final_audio"
+      true
+    rescue => e
+      Rails.logger.error "Failed to migrate Lesson##{id}: #{e.message}"
+      false
+    end
+  end
+
   def scholar
     series.scholar
   end
