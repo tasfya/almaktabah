@@ -77,6 +77,18 @@ RSpec.describe AudioMigrationJob, type: :job do
         expect(Rails.logger).to receive(:info).with(/Successfully migrated Lesson##{lesson.id}/)
         described_class.perform_now('Lesson', lesson.id)
       end
+
+      context 'when position is nil' do
+        before do
+          lesson.update_column(:position, nil)
+        end
+
+        it 'raises an error' do
+          expect {
+            described_class.perform_now('Lesson', lesson.id)
+          }.to raise_error(/Migration failed/)
+        end
+      end
     end
 
     context 'with Lecture' do

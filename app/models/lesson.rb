@@ -153,8 +153,9 @@ class Lesson < ApplicationRecord
   end
 
   def generate_final_audio_bucket_key
-    pos = position.presence || id.to_s
-    "all-audios/#{scholar.full_name}/series/#{series_title}/#{pos}.mp3"
+    raise ArgumentError, "Lesson##{id} must have a position to generate final_audio bucket key" if position.blank?
+
+    "all-audios/#{scholar.full_name}/series/#{series_title}/#{position}.mp3"
   end
 
   def migrate_to_final_audio
@@ -162,6 +163,8 @@ class Lesson < ApplicationRecord
     return true if final_audio.attached? # Skip if already migrated
 
     begin
+      raise ArgumentError, "Lesson##{id} must have a position to migrate" if position.blank?
+
       # Download the optimized_audio blob
       optimized_audio.open do |tempfile|
         # Get the proper key/path for the new file
@@ -170,7 +173,7 @@ class Lesson < ApplicationRecord
         # Attach to final_audio with the proper key
         final_audio.attach(
           io: tempfile,
-          filename: "#{position.presence || id}.mp3",
+          filename: "#{position}.mp3",
           content_type: "audio/mpeg",
           key: key
         )

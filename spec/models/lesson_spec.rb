@@ -247,10 +247,11 @@ RSpec.describe Lesson, type: :model do
         expect(lesson.generate_final_audio_bucket_key).to eq(expected_key)
       end
 
-      it 'uses id for nil position' do
+      it 'raises error for nil position' do
         lesson.position = nil
-        expected_key = "all-audios/الشيخ محمد/series/سلسلة الفقه/#{lesson.id}.mp3"
-        expect(lesson.generate_final_audio_bucket_key).to eq(expected_key)
+        expect {
+          lesson.generate_final_audio_bucket_key
+        }.to raise_error(ArgumentError, /must have a position/)
       end
     end
 
@@ -293,6 +294,18 @@ RSpec.describe Lesson, type: :model do
 
       context 'when optimized_audio is not attached' do
         it 'returns false' do
+          expect(lesson.migrate_to_final_audio).to be false
+        end
+      end
+
+      context 'when position is nil' do
+        before do
+          lesson.optimized_audio.attach(audio_file)
+          lesson.position = nil
+        end
+
+        it 'returns false and logs error' do
+          expect(Rails.logger).to receive(:error).with(/must have a position/)
           expect(lesson.migrate_to_final_audio).to be false
         end
       end
