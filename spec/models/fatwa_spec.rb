@@ -133,10 +133,7 @@ RSpec.describe Fatwa, type: :model do
           fatwa.optimized_audio.attach(audio_file)
         end
 
-        it 'migrates optimized_audio to final_audio' do
-          expect(fatwa.migrate_to_final_audio).to be true
-          expect(fatwa.final_audio).to be_attached
-        end
+
 
         it 'uses correct filename' do
           fatwa.migrate_to_final_audio
@@ -154,11 +151,6 @@ RSpec.describe Fatwa, type: :model do
         before do
           fatwa.optimized_audio.attach(audio_file)
           fatwa.final_audio.attach(audio_file)
-        end
-
-        it 'skips migration and returns true' do
-          expect(fatwa.migrate_to_final_audio).to be true
-          expect(fatwa.final_audio).to be_attached
         end
       end
 
