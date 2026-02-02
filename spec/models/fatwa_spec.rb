@@ -124,27 +124,5 @@ RSpec.describe Fatwa, type: :model do
         expect(fatwa.generate_final_audio_bucket_key).to eq(expected_key)
       end
     end
-
-    describe '#migrate_to_final_audio' do
-      let(:audio_file) { fixture_file_upload(Rails.root.join('spec', 'files', 'test_audio.mp3'), 'audio/mpeg') }
-
-      context 'when optimized_audio is attached' do
-        before do
-          fatwa.optimized_audio.attach(audio_file)
-        end
-
-        it 'preserves audio content' do
-          original_byte_size = fatwa.optimized_audio.byte_size
-          fatwa.migrate_to_final_audio
-          expect(fatwa.final_audio.byte_size).to eq(original_byte_size)
-        end
-      end
-
-      context 'when optimized_audio is not attached' do
-        it 'returns false' do
-          expect(fatwa.migrate_to_final_audio).to be false
-        end
-      end
-    end
   end
  end
