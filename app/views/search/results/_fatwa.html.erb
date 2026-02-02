@@ -21,6 +21,7 @@
     <div class="card-actions justify-end mt-4">
       <% if fatwa.audio_url.present? %>
         <%= form_with url: play_path(resource_type: "fatwa", id: fatwa.id),
+                      method: :get,
                       local: false,
                       class: "relative z-10",
                       data: {
