@@ -73,41 +73,57 @@
   </div>
   <%# Mobile search bar row - only visible on mobile %>
   <div class="md:hidden bg-primary border-t border-primary-content/10">
-    <div class="container mx-auto px-4 py-2">
-      <form data-controller="search-navbar"
+    <div class="container mx-auto px-4 py-3">
+      <form data-controller="search-navbar search-bar"
         data-action="submit->search-navbar#submit"
-        class="flex items-center gap-2">
+        class="relative flex flex-col sm:flex-row sm:items-center gap-2">
         <%# Mobile menu button - shown when scrolled (in compact mode) %>
         <button
           type="button"
           data-navigation-target="menuButton"
           data-action="click->navigation#toggleMobileMenu"
-          class="hidden btn btn-ghost btn-sm text-primary-content hover:text-secondary-content header--show-when-compact"
+          class="hidden btn btn-ghost btn-sm text-primary-content hover:text-secondary-content header--show-when-compact self-start sm:self-auto"
           aria-controls="mobile-menu"
           aria-label="<%= t('buttons.menu') %>">
           <%= icon "bars-3", class: "size-5"%>
         </button>
-        <select
-          data-search-navbar-target="contentType"
-          data-action="change->search-navbar#navigate"
-          class="select select-ghost select-xs bg-base-100/80 text-base-content border-0 focus:outline-none focus:ring-2 focus:ring-primary/50 p-0 px-2 rounded">
-          <option value="<%= root_path %>" <%= 'selected' if controller_name == 'home' %>><%= t('search.content_types.all') %></option>
-          <% available_content_types.each do |ct| %>
-            <option value="<%= content_type_path(ct[:type]) %>" <%= 'selected' if current_page?(content_type_path(ct[:type])) %>><%= t("navigation.#{content_type_nav_key(ct[:type])}") %></option>
-          <% end %>
-        </select>
-        <div class="flex-1 flex items-center bg-base-100 rounded-lg px-3 py-1.5">
+        <div class="w-full flex-1 flex items-center bg-base-100 rounded-full shadow-sm hover:shadow-md transition-all duration-300 focus-within:shadow-lg focus-within:scale-[1.02]">
+          <button
+            type="button"
+            data-action="click->search-bar#toggleCategories"
+            data-search-bar-target="categoryButton"
+            class="btn btn-ghost btn-sm rounded-full text-base-content/70 hover:text-base-content">
+            <%= icon "sliders-horizontal", library: "lucide", class: "size-4" %>
+          </button>
           <input
             type="search"
             name="q"
             value="<%= params[:q] %>"
             placeholder="<%= t('forms.search_placeholder') %>"
             data-search-navbar-target="query"
-            class="input input-ghost input-xs flex-1 bg-transparent text-base-content border-0 focus:outline-none focus:ring-0 p-0" />
+            data-action="focus->search-bar#onFocus blur->search-bar#onBlur"
+            class="input input-ghost input-sm flex-1 bg-transparent text-base-content border-0 focus:outline-none focus:ring-0 px-2" />
+          <button type="submit" class="btn btn-primary btn-sm rounded-full m-1">
+            <%= icon "search", library: "lucide", class: "size-4" %>
+          </button>
         </div>
-        <button type="submit" class="btn btn-ghost btn-xs rounded-md">
-          <%= icon "search", library: "lucide", class: "size-4" %>
-        </button>
+        <div
+          data-search-bar-target="categoriesDropdown"
+          class="hidden absolute top-full left-0 right-0 mt-2 bg-base-100 rounded-2xl shadow-xl border border-base-300 p-3 z-50 animate-fadeIn">
+          <div class="text-xs font-semibold text-base-content/60 mb-2 px-3"><%= t('search.filter_by') %></div>
+          <div class="flex flex-wrap gap-2" data-action="click->search-bar#preventClose">
+            <label class="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-base-200 cursor-pointer transition-colors">
+              <input type="radio" name="content_type" value="<%= root_path %>" data-search-navbar-target="contentType" data-action="change->search-navbar#navigate change->search-bar#closeDropdown" class="radio radio-xs radio-primary" <%= 'checked' if controller_name == 'home' %>>
+              <span class="text-sm"><%= t('search.content_types.all') %></span>
+            </label>
+            <% available_content_types.each do |ct| %>
+              <label class="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-base-200 cursor-pointer transition-colors">
+                <input type="radio" name="content_type" value="<%= content_type_path(ct[:type]) %>" data-search-navbar-target="contentType" data-action="change->search-navbar#navigate change->search-bar#closeDropdown" class="radio radio-xs radio-primary" <%= 'checked' if current_page?(content_type_path(ct[:type])) %>>
+                <span class="text-sm"><%= t("navigation.#{content_type_nav_key(ct[:type])}") %></span>
+              </label>
+            <% end %>
+          </div>
+        </div>
       </form>
     </div>
   </div>
