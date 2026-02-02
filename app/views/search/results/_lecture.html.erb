@@ -24,6 +24,7 @@
       <% if lecture.audio_url.present? %>
         <div class="card-actions mt-auto pt-2">
           <%= form_with url: play_path(resource_type: "lecture", id: lecture.id),
+                        method: :get,
                         local: false,
                         class: "relative z-10",
                         data: {

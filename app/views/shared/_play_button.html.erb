@@ -1,4 +1,5 @@
 <%= form_with url: play_path(resource_type: resource.class.name.downcase, id: resource.id), 
+                method: :get,
                 local: false, 
                 data: { 
                   turbo_stream: true,
