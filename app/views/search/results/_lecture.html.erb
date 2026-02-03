@@ -1,7 +1,11 @@
+<%
+  modal_id = "share_modal_lecture_#{lecture.id}"
+  share_url = "#{request.base_url}#{lecture.url}"
+%>
 <div class="card card-side card-border bg-base-100 relative shadow-sm hover:shadow-lg transition-shadow">
   <div class="card-body">
     <div class="flex items-center gap-2 mb-2">
-      <%= icon "microphone", class: "w-5 h-5 text-primary" %>
+      <%= icon "microphone", class: "w-5 h-5" %>
       <h2 class="card-title">
         <%= link_to lecture.url, class: "hover:text-primary stretched-link", data: { turbo_frame: "_top" } do %>
           <%= sanitize(lecture.highlighted_title, tags: %w[mark]) %>
@@ -21,12 +25,13 @@
           <%= format_duration(lecture.duration) %>
         </div>
       <% end %>
-      <% if lecture.audio_url.present? %>
-        <div class="card-actions mt-auto pt-2">
+    </div>
+    <div class="card-actions justify-end mt-auto pt-2">
+      <div class="flex items-center gap-2 relative z-10">
+        <% if lecture.audio_url.present? %>
           <%= form_with url: play_path(resource_type: "lecture", id: lecture.id),
                         method: :get,
                         local: false,
-                        class: "relative z-10",
                         data: {
                           turbo_stream: true,
                           player_id: "lecture_#{lecture.id}_player_content",
@@ -35,7 +40,7 @@
                           action: "submit->play-button#handleSubmit"
                         } do |form| %>
             <%= form.button type: "submit",
-                            class: "btn btn-primary btn-sm gap-2",
+                            class: "btn btn-secondary btn-sm",
                             data: { play_button_target: "button" } do %>
               <span data-play-button-target="playIcon">
                 <%= icon "play", class: "w-4 h-4" %>
@@ -48,8 +53,22 @@
               </span>
             <% end %>
           <% end %>
-        </div>
-      <% end %>
+          <%= link_to lecture.audio_url, download: true, target: "_blank", class: "btn btn-secondary btn-sm" do %>
+            <%= icon "arrow-down-tray", class: "w-4 h-4" %>
+          <% end %>
+        <% end %>
+        <button class="btn btn-secondary btn-sm"
+                data-controller="share-trigger"
+                data-share-trigger-modal-id-value="<%= modal_id %>"
+                data-action="click->share-trigger#open">
+          <%= icon "share", class: "w-4 h-4" %>
+        </button>
+      </div>
     </div>
   </div>
 </div>
+<%= render 'shared/share_modal',
+    modal_id: modal_id,
+    url: share_url,
+    title: lecture.title,
+    text: lecture.title %>

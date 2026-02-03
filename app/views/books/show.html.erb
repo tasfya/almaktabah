@@ -1,102 +1,120 @@
 <% content_for :title, @book.title %>
 <%= json_ld_tag(book_json_ld(@book)) %>
-<div class="min-h-screen py-8">
-  <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 gap-8">
-      <div class="lg:col-span-2">
-        <article class="border border-base-300 rounded-lg shadow-md p-8">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div class="md:col-span-1">
-              <% if @book.cover_image.present?%>
-                <%= image_tag @book.cover_image, class: "w-full h-full rounded-lg shadow-md", alt: @book.title %>
-              <% end %>
-            </div>
-            <div class="md:col-span-2">
-              <header>
-                <h1 class="text-3xl font-bold mb-4">
-                  <%= @book.title %>
-                </h1>
+
+<div class="min-h-screen">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <article class="bg-base-100 rounded-2xl shadow-xl overflow-hidden">
+      <div class="p-8 lg:p-12">
+        <header class="mb-10">
+          <div class="flex flex-col md:flex-row gap-8">
+            <% if @book.cover_image.present? %>
+              <div class="flex-shrink-0">
+                <%= image_tag @book.cover_image, class: "w-48 h-auto rounded-xl shadow-lg", alt: @book.title %>
+              </div>
+            <% end %>
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-3 mb-4">
                 <% if @book.scholar.present? %>
-                  <p class="text-xl mb-4">
-                    <%= @book.scholar.name %>
-                  </p>
-                <% end %>
-                <div class="flex flex-wrap items-center gap-4 text-sm mb-6">
-                  <% if @book.category.present? %>
-                    <span class="badge badge-primary">
-                      <%= @book.category %>
-                    </span>
-                  <% end %>
-                </div>
-                <% if @book.description.present? %>
-                  <section class="mb-8">
-                    <h2 class="text-2xl font-bold mb-4"><%= t('.book_description') %></h2>
-                    <div class="prose prose-lg max-w-none">
-                      <%= simple_format(@book.description) %>
-                    </div>
-                  </section>
-                <% end %>
-                <% if @book.file.present? %>
-                  <div class="mb-6">
-                    <%= link_to @book.file, target: "_blank",
-                        class: "btn btn-primary" do %>
-                      <%= icon "arrow-down-tray", class:"size-5" %>
-                      <%= t("buttons.download_book")%>
-                    <% end %>
+                  <div class="flex items-center gap-2 text-base-content/70">
+                    <%= icon "user", class: "size-4" %>
+                    <span class="font-medium"><%= @book.scholar.name %></span>
                   </div>
                 <% end %>
-              </header>
+                <% if @book.scholar.present? && @book.category.present? %>
+                  <span class="text-base-content/30">|</span>
+                <% end %>
+                <% if @book.category.present? %>
+                  <span class="badge badge-outline badge-lg">
+                    <%= @book.category %>
+                  </span>
+                <% end %>
+              </div>
+              <h1 class="text-3xl lg:text-4xl font-bold leading-tight mb-6">
+                <%= @book.title %>
+              </h1>
+              <div class="flex flex-wrap items-center gap-4">
+                <% if @book.file.present? %>
+                  <%= link_to @book.file, target: "_blank", class: "btn btn-secondary btn-sm" do %>
+                    <%= icon "arrow-down-tray", class: "size-4" %>
+                  <% end %>
+                <% end %>
+                <button class="btn btn-secondary btn-sm"
+                        data-controller="share-trigger"
+                        data-share-trigger-modal-id-value="book_share_modal"
+                        data-action="click->share-trigger#open">
+                  <%= icon "share", class: "size-4" %>
+                </button>
+              </div>
             </div>
           </div>
-          <% if @book.scholar.respond_to?(:bio) && @book.scholar.bio.present? %>
-            <section class="mb-8">
-              <h2 class="text-2xl font-bold mb-4">
-                <%= t(".about_author")%>
-              </h2>
+        </header>
+
+        <% if @book.description.present? %>
+          <section class="mb-10">
+            <h2 class="text-xl lg:text-2xl font-bold mb-4">
+              <%= t('.book_description') %>
+            </h2>
+            <div class="bg-base-200 rounded-xl p-6">
+              <div class="prose prose-lg max-w-none">
+                <%= simple_format(@book.description) %>
+              </div>
+            </div>
+          </section>
+        <% end %>
+
+        <% if @book.scholar.respond_to?(:bio) && @book.scholar.bio.present? %>
+          <section class="mb-10">
+            <h2 class="text-xl lg:text-2xl font-bold mb-4">
+              <%= t(".about_author") %>
+            </h2>
+            <div class="bg-base-200 rounded-xl p-6">
               <div class="prose prose-lg max-w-none">
                 <%= @book.scholar.bio %>
               </div>
-            </section>
-          <% end %>
-          <% if @related_books.any? %>
-            <section class="mt-12">
-              <h2 class="text-2xl font-bold mb-6">
-                <%= t(".related_books")%>
-              </h2>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <% @related_books.each do |related_book| %>
-                  <div class="card card-side card-border bg-base-100 shadow-sm hover:shadow-md transition-shadow">
-                    <figure class="pr-4 py-4">
-                      <% if related_book.cover_image.present? %>
-                        <%= image_tag related_book.cover_image, class: "w-24 h-32 object-cover rounded", alt: related_book.title %>
-                      <% else %>
-                        <div class="w-24 h-32 rounded flex items-center justify-center">
-                          <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>book</title><g fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="16" y1="5.8" x2="16" y2="31" fill="none" stroke="currentColor" stroke-width="2"></line> <path d="M23.5,2C19.4,2,16,3.6,16,5.8,16,3.6,12.6,2,8.5,2S1,3.6,1,5.8V31c0-2.3,3.4-4,7.5-4S16,28.7,16,31c0-2.3,3.4-4,7.5-4S31,28.7,31,31V5.8C31,3.6,27.6,2,23.5,2Z" fill="none" stroke="currentColor" stroke-width="2"></path></g></svg>
-                        </div>
-                      <% end %>
-                    </figure>
-                    <div class="card-body">
-                      <h3 class="card-title">
-                        <%= link_to related_book.title, book_path(related_book.scholar, related_book), class: "hover:text-primary-500" %>
-                      </h3>
-                      <% if related_book.scholar.present? %>
-                        <p class="text-sm">
-                          <%= related_book.scholar.respond_to?(:name) ? related_book.scholar.name : related_book.scholar %>
-                        </p>
-                      <% end %>
-                      <% if related_book.category.present? %>
-                        <div class="card-actions justify-start">
-                          <span class="badge badge-primary"><%= related_book.category %></span>
-                        </div>
-                      <% end %>
+            </div>
+          </section>
+        <% end %>
+
+        <% if @related_books.any? %>
+          <section class="mb-10">
+            <h2 class="text-xl lg:text-2xl font-bold mb-6">
+              <%= t(".related_books") %>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <% @related_books.each do |related_book| %>
+                <div class="bg-base-200 rounded-xl p-4 flex gap-4">
+                  <% if related_book.cover_image.present? %>
+                    <%= image_tag related_book.cover_image, class: "w-20 h-28 object-cover rounded-lg flex-shrink-0", alt: related_book.title %>
+                  <% else %>
+                    <div class="w-20 h-28 bg-base-300 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <%= icon "book-open", class: "size-8 text-base-content/30" %>
                     </div>
+                  <% end %>
+                  <div class="flex-1 min-w-0">
+                    <h3 class="font-bold mb-1 line-clamp-2">
+                      <%= link_to related_book.title, book_path(related_book.scholar, related_book), class: "hover:underline" %>
+                    </h3>
+                    <% if related_book.scholar.present? %>
+                      <p class="text-sm text-base-content/60 mb-2">
+                        <%= related_book.scholar.respond_to?(:name) ? related_book.scholar.name : related_book.scholar %>
+                      </p>
+                    <% end %>
+                    <% if related_book.category.present? %>
+                      <span class="badge badge-outline badge-sm"><%= related_book.category %></span>
+                    <% end %>
                   </div>
-                <% end %>
-              </div>
-            </section>
-          <% end %>
-        </article>
+                </div>
+              <% end %>
+            </div>
+          </section>
+        <% end %>
       </div>
-    </div>
+    </article>
   </div>
 </div>
+
+<%= render 'shared/share_modal',
+    modal_id: 'book_share_modal',
+    url: request.original_url,
+    title: html_escape(@book.title),
+    text: html_escape(@book.title) %>
