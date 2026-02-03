@@ -131,7 +131,8 @@ class Lecture < ApplicationRecord
   end
 
   def generate_optimize_audio_bucket_key
-    "all-audios/#{scholar.name}/lectures/#{kind}/#{title}.mp3"
+    kind_folder = kind.present? ? kind : "general"
+    "all-audios/#{scholar.name}/lectures/#{kind_folder}/#{title}.mp3"
   end
 
   def kind_for_url

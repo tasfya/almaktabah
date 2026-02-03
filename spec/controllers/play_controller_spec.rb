@@ -14,7 +14,7 @@ RSpec.describe PlayController, type: :controller do
     controller.instance_variable_set(:@domain, domain)
   end
 
-  describe "POST #show" do
+  describe "GET #show" do
     context "with a lesson" do
       let!(:published_lesson) { create(:lesson, published: true, published_at: 1.day.ago) }
       let!(:unpublished_lesson) { create(:lesson, published: false) }
@@ -25,28 +25,28 @@ RSpec.describe PlayController, type: :controller do
       end
 
       it "returns a successful response for published lesson" do
-        post :show, params: { resource_type: "lesson", id: published_lesson.id }
+        get :show, params: { resource_type: "lesson", id: published_lesson.id }
         expect(response).to be_successful
       end
 
       it "assigns the requested lesson" do
-        post :show, params: { resource_type: "lesson", id: published_lesson.id }
+        get :show, params: { resource_type: "lesson", id: published_lesson.id }
         expect(assigns(:resource)).to eq(published_lesson)
       end
 
       it "renders the play/show template" do
-        post :show, params: { resource_type: "lesson", id: published_lesson.id }
+        get :show, params: { resource_type: "lesson", id: published_lesson.id }
         expect(response).to render_template("play/show")
       end
 
       it "redirects to root_path when lesson is not published" do
-        post :show, params: { resource_type: "lesson", id: unpublished_lesson.id }
+        get :show, params: { resource_type: "lesson", id: unpublished_lesson.id }
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(I18n.t("messages.lesson_not_found"))
       end
 
       it "redirects to root_path when lesson not found" do
-        post :show, params: { resource_type: "lesson", id: 99999 }
+        get :show, params: { resource_type: "lesson", id: 99999 }
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(I18n.t("messages.lesson_not_found"))
       end
@@ -62,23 +62,23 @@ RSpec.describe PlayController, type: :controller do
       end
 
       it "returns a successful response for published lecture" do
-        post :show, params: { resource_type: "lecture", id: published_lecture.id }
+        get :show, params: { resource_type: "lecture", id: published_lecture.id }
         expect(response).to be_successful
       end
 
       it "assigns the requested lecture" do
-        post :show, params: { resource_type: "lecture", id: published_lecture.id }
+        get :show, params: { resource_type: "lecture", id: published_lecture.id }
         expect(assigns(:resource)).to eq(published_lecture)
       end
 
       it "redirects to root_path when lecture is not published" do
-        post :show, params: { resource_type: "lecture", id: unpublished_lecture.id }
+        get :show, params: { resource_type: "lecture", id: unpublished_lecture.id }
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
       end
 
       it "redirects to root_path when lecture not found" do
-        post :show, params: { resource_type: "lecture", id: 99999 }
+        get :show, params: { resource_type: "lecture", id: 99999 }
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
       end
@@ -87,28 +87,28 @@ RSpec.describe PlayController, type: :controller do
 
     context "with invalid resource type" do
       it "redirects to root_path with invalid resource alert" do
-        post :show, params: { resource_type: "invalid_type", id: 1 }
+        get :show, params: { resource_type: "invalid_type", id: 1 }
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(I18n.t("messages.invalid_resource"))
       end
     end
   end
 
-  describe "DELETE #stop" do
+  describe "get #stop" do
     it "returns a successful response" do
-      delete :stop
+      get :stop
       expect(response).to be_successful
     end
 
     it "renders turbo_stream response" do
-      delete :stop
+      get :stop
       expect(response.body).to include('turbo-stream')
       expect(response.body).to include('update')
       expect(response.body).to include('audio')
     end
 
     it "clears the audio element" do
-      delete :stop
+      get :stop
       expect(response.body).to include('<turbo-stream action="update" target="audio-player">')
     end
   end

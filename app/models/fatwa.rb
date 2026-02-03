@@ -13,6 +13,7 @@ class Fatwa < ApplicationRecord
   has_one_attached :optimized_audio, service: Rails.application.config.public_storage
   has_one_attached :final_audio, service: :public_media_aws
   has_one_attached :video, service: Rails.application.config.public_storage
+  has_one_attached :final_audio, service: :public_media_aws
 
   has_rich_text :question
   has_rich_text :answer
@@ -86,5 +87,46 @@ class Fatwa < ApplicationRecord
 
   def video?
     video.attached?
+  end
+
+  def generate_optimize_audio_bucket_key
+     # todo fix position nil case I did update some
+     # that had no position with the the id but need to fix properly
+     category ||= "general"
+     title ||= id
+    "all-audios/#{scholar.full_name}/fatawas/#{category}/#{title}.mp3"
+  end
+
+  def generate_final_audio_bucket_key
+    cat = category.presence || "general"
+    filename = title.presence || id.to_s
+    "all-audios/#{scholar.full_name}/fatawas/#{cat}/#{filename}.mp3"
+  end
+
+  def migrate_to_final_audio
+    return false unless optimized_audio.attached?
+    return true if final_audio.attached? # Skip if already migrated
+
+    begin
+      # Download the optimized_audio blob
+      optimized_audio.open do |tempfile|
+        # Get the proper key/path for the new file
+        key = generate_final_audio_bucket_key
+
+        # Attach to final_audio with the proper key
+        final_audio.attach(
+          io: tempfile,
+          filename: "#{title.presence || id}.mp3",
+          content_type: "audio/mpeg",
+          key: key
+        )
+      end
+
+      Rails.logger.info "Successfully migrated Fatwa##{id} optimized_audio to final_audio"
+      true
+    rescue => e
+      Rails.logger.error "Failed to migrate Fatwa##{id}: #{e.message}"
+      false
+    end
   end
 end

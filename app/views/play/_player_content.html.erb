@@ -1,7 +1,7 @@
 <div data-controller="collapsible"  class="bg-white border-t shadow-lg max-h-[70vh] overflow-y-auto" id="<%= dom_id(resource) %>_player_content">
     <!-- Header Row: Close, Title, Collapse -->
     <div class="flex items-center justify-between px-3 py-2 border-b border-gray-100 sticky top-0 bg-white">
-      <%= button_to stop_play_path, method: :delete,
+      <%= button_to stop_play_path, method: :get,
           form: { data: { turbo_stream: true } },
           class: "flex items-center justify-center w-8 h-8 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors",
           title: t('buttons.close') do %>
