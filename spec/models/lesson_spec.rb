@@ -235,4 +235,80 @@ RSpec.describe Lesson, type: :model do
       end
     end
   end
+
+  describe 'audio migration' do
+    let(:scholar) { create(:scholar, full_name: 'الشيخ محمد') }
+    let(:series) { create(:series, title: 'سلسلة الفقه', scholar: scholar) }
+    let(:lesson) { create(:lesson, title: 'الدرس الأول', series: series, position: 1) }
+
+    describe '#generate_final_audio_bucket_key' do
+      it 'generates correct bucket key with all fields' do
+        expected_key = 'all-audios/الشيخ محمد/series/سلسلة الفقه/1.mp3'
+        expect(lesson.generate_final_audio_bucket_key).to eq(expected_key)
+      end
+
+      it 'raises error for nil position' do
+        lesson.position = nil
+        expect {
+          lesson.generate_final_audio_bucket_key
+        }.to raise_error(ArgumentError, /must have a position/)
+      end
+    end
+
+    describe '#migrate_to_final_audio' do
+      let(:audio_file) { fixture_file_upload(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
+
+      context 'when optimized_audio is attached' do
+        before do
+          lesson.optimized_audio.attach(audio_file)
+        end
+
+        it 'migrates optimized_audio to final_audio' do
+          expect(lesson.migrate_to_final_audio).to be true
+          expect(lesson.final_audio).to be_attached
+        end
+
+        it 'uses correct filename' do
+          lesson.migrate_to_final_audio
+          expect(lesson.final_audio.filename.to_s).to eq('1.mp3')
+        end
+
+        it 'preserves audio content' do
+          original_byte_size = lesson.optimized_audio.byte_size
+          lesson.migrate_to_final_audio
+          expect(lesson.final_audio.byte_size).to eq(original_byte_size)
+        end
+      end
+
+      context 'when final_audio already exists' do
+        before do
+          lesson.optimized_audio.attach(audio_file)
+          lesson.final_audio.attach(audio_file)
+        end
+
+        it 'skips migration and returns true' do
+          expect(lesson.migrate_to_final_audio).to be true
+          expect(lesson.final_audio).to be_attached
+        end
+      end
+
+      context 'when optimized_audio is not attached' do
+        it 'returns false' do
+          expect(lesson.migrate_to_final_audio).to be false
+        end
+      end
+
+      context 'when position is nil' do
+        before do
+          lesson.optimized_audio.attach(audio_file)
+          lesson.position = nil
+        end
+
+        it 'returns false and logs error' do
+          expect(Rails.logger).to receive(:error).with(/must have a position/)
+          expect(lesson.migrate_to_final_audio).to be false
+        end
+      end
+    end
+  end
 end

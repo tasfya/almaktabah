@@ -136,6 +136,39 @@ class Lecture < ApplicationRecord
     "all-audios/#{scholar.name}/lectures/#{kind_folder}/#{title}.mp3"
   end
 
+  def generate_final_audio_bucket_key
+    kind_folder = kind.presence || "general"
+    filename = title.presence || id.to_s
+    "all-audios/#{scholar.name}/lectures/#{kind_folder}/#{filename}.mp3"
+  end
+
+  def migrate_to_final_audio
+    return false unless optimized_audio.attached?
+    return true if final_audio.attached? # Skip if already migrated
+
+    begin
+      # Download the optimized_audio blob
+      optimized_audio.open do |tempfile|
+        # Get the proper key/path for the new file
+        key = generate_final_audio_bucket_key
+
+        # Attach to final_audio with the proper key
+        final_audio.attach(
+          io: tempfile,
+          filename: "#{title.presence || id}.mp3",
+          content_type: "audio/mpeg",
+          key: key
+        )
+      end
+
+      Rails.logger.info "Successfully migrated Lecture##{id} optimized_audio to final_audio"
+      true
+    rescue => e
+      Rails.logger.error "Failed to migrate Lecture##{id}: #{e.message}"
+      false
+    end
+  end
+
   def kind_for_url
     I18n.t("activerecord.attributes.lecture.kind.#{kind}")
   end

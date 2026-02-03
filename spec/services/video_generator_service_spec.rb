@@ -8,7 +8,7 @@ RSpec.describe VideoGeneratorService, type: :service do
   let(:description) { "الدرس الأول - مقدمة في الفقه الإسلامي" }
   let(:english_description) { "First lesson - Introduction to Islamic jurisprudence" }
   let(:temp_dir)        { Rails.root.join('tmp', 'test_video_generation') }
-  let(:audio_file_path) { temp_dir.join('test_audio.mp3') }
+  let(:audio_file_path) { temp_dir.join('audio.mp3') }
   let(:logo_file_path)  { temp_dir.join('logo.png') }
 
   let(:mock_audio_file) { double('audio_file') }
