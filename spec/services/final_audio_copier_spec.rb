@@ -47,6 +47,8 @@ RSpec.describe FinalAudioCopier, type: :service do
     it "falls back to the optimized blob key when no generator is available" do
       fatwa = create(:fatwa)
       attach_optimized_audio(fatwa, filename: "fatwa_optimized.mp3")
+      allow(fatwa).to receive(:respond_to?).and_call_original
+      allow(fatwa).to receive(:respond_to?).with(:generate_optimize_audio_bucket_key).and_return(false)
 
       source_key = fatwa.optimized_audio.blob.key
       target_key = latinized_key(fatwa, source_key)
