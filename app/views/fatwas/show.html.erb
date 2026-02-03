@@ -20,6 +20,11 @@
               <%= @fatwa.title %>
             </h1>
             <div class="flex flex-wrap items-center gap-4 text-sm mb-6">
+              <% if @fatwa.scholar.present? %>
+                <span class="badge badge-secondary">
+                  <%= @fatwa.scholar.full_name %>
+                </span>
+              <% end %>
               <% if @fatwa.category.present? %>
                 <span class="badge badge-primary">
                   <%= @fatwa.category %>
