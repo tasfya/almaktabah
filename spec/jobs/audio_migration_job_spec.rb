@@ -19,6 +19,7 @@ RSpec.describe AudioMigrationJob, type: :job do
       end
 
       it 'logs success message' do
+        allow(Rails.logger).to receive(:info)
         expect(Rails.logger).to receive(:info).with(/Successfully migrated Fatwa##{fatwa.id}/)
         described_class.perform_now('Fatwa', fatwa.id)
       end
@@ -74,6 +75,7 @@ RSpec.describe AudioMigrationJob, type: :job do
       end
 
       it 'logs success message' do
+        allow(Rails.logger).to receive(:info)
         expect(Rails.logger).to receive(:info).with(/Successfully migrated Lesson##{lesson.id}/)
         described_class.perform_now('Lesson', lesson.id)
       end
@@ -85,14 +87,14 @@ RSpec.describe AudioMigrationJob, type: :job do
 
         it 'raises an error' do
           expect {
-            described_class.perform_now('Lesson', lesson.id)
+            described_class.new.perform('Lesson', lesson.id)
           }.to raise_error(/Migration failed/)
         end
       end
     end
 
     context 'with Lecture' do
-      let(:scholar) { create(:scholar, name: 'الشيخ محمد') }
+      let(:scholar) { create(:scholar, full_name: 'الشيخ محمد') }
       let(:lecture) { create(:lecture, title: 'محاضرة في الفقه', kind: :sermon, scholar: scholar) }
 
       before do
@@ -106,6 +108,7 @@ RSpec.describe AudioMigrationJob, type: :job do
       end
 
       it 'logs success message' do
+        allow(Rails.logger).to receive(:info)
         expect(Rails.logger).to receive(:info).with(/Successfully migrated Lecture##{lecture.id}/)
         described_class.perform_now('Lecture', lecture.id)
       end
@@ -121,14 +124,14 @@ RSpec.describe AudioMigrationJob, type: :job do
 
       it 'raises an error' do
         expect {
-          described_class.perform_now('Fatwa', fatwa.id)
+          described_class.new.perform('Fatwa', fatwa.id)
         }.to raise_error(/Migration failed/)
       end
 
       it 'logs error message' do
         expect(Rails.logger).to receive(:error).with(/Failed to migrate/)
         begin
-          described_class.perform_now('Fatwa', fatwa.id)
+          described_class.new.perform('Fatwa', fatwa.id)
         rescue
           # Expected to raise
         end

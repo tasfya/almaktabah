@@ -316,7 +316,7 @@ RSpec.describe Lecture, type: :model do
   end
 
   describe 'audio migration' do
-    let(:scholar) { create(:scholar, name: 'الشيخ محمد') }
+    let(:scholar) { create(:scholar, full_name: 'الشيخ محمد') }
     let(:lecture) { create(:lecture, title: 'محاضرة في الفقه', kind: :sermon, scholar: scholar) }
 
     describe '#generate_final_audio_bucket_key' do
