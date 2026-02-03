@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AudioMigrationJob, type: :job do
-  let(:audio_file) { fixture_file_upload(Rails.root.join('spec', 'files', 'test_audio.mp3'), 'audio/mpeg') }
+  let(:audio_file) { fixture_file_upload(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
 
   describe '#perform' do
     context 'with Fatwa' do

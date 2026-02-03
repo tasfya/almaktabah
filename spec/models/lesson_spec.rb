@@ -256,7 +256,7 @@ RSpec.describe Lesson, type: :model do
     end
 
     describe '#migrate_to_final_audio' do
-      let(:audio_file) { fixture_file_upload(Rails.root.join('spec', 'files', 'test_audio.mp3'), 'audio/mpeg') }
+      let(:audio_file) { fixture_file_upload(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
 
       context 'when optimized_audio is attached' do
         before do
