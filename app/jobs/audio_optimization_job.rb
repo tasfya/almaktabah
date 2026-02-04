@@ -1,5 +1,5 @@
 class AudioOptimizationJob < ApplicationJob
-  queue_as :default
+  queue_as :ffmpeg_queue
 
   def perform(item)
     return unless item.audio?
