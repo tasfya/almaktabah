@@ -9,6 +9,9 @@ default: &default
     - polling_interval: 30 # Check for "low" jobs every 30s (less frequent for non-priority)
       batch_size: 1000 # Even larger batch size if jobs are quick and numerous
       queues: ["low"] # New low priority queue
+    - polling_interval: 10 # Check for "low" jobs every 10s (less frequent for non-priority)
+      batch_size: 100 # Even larger batch size if jobs are quick and numerous
+      queues: ["ffmpeg_queue"] # New low priority queue
 
   workers:
     - queues: ["important"] # Dedicated for important jobs
@@ -20,3 +23,7 @@ default: &default
       threads: <%= (ENV.fetch("RAILS_MAX_THREADS") { 7 }).to_i - 2 %>
       processes: <%= ENV.fetch("JOB_CONCURRENCY") { 1 } %>
       polling_interval: 1.0 # Reduced frequency (every 1s)
+
+    - queues: ["ffmpeg_queue"]
+      threads: 1
+      processes: 4
