@@ -6,6 +6,9 @@
       <div class="lg:col-span-2">
         <article class="border border-base-300 rounded-lg shadow-md p-8">
           <header class="mb-8">
+            <h1 class="text-3xl font-bold mb-4">
+              <%= @lecture.title %>
+            </h1>
             <% if @lecture.video? %>
               <section class="mb-8">
                 <% if @lecture.video? %>
@@ -25,9 +28,6 @@
                 </div>
               </section>
             <% end %>
-            <h1 class="text-3xl font-bold mb-4">
-              <%= @lecture.title %>
-            </h1>
             <div class="flex flex-wrap items-center gap-4 text-sm mb-6">
               <% if @lecture.category.present? %>
                 <span class="badge badge-primary">
