@@ -1,88 +1,94 @@
 <% content_for :title, @lecture.seo_show_title %>
 <%= json_ld_tag(lecture_json_ld(@lecture)) %>
-<div class="min-h-screen py-8">
-  <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 gap-8">
-      <div class="lg:col-span-2">
-        <article class="border border-base-300 rounded-lg shadow-md p-8">
-          <header class="mb-8">
-            <h1 class="text-3xl font-bold mb-4">
-              <%= @lecture.title %>
-            </h1>
-            <% if @lecture.video? %>
-              <section class="mb-8">
-                <% if @lecture.video? %>
-                  <video controls class="w-full rounded">
-                    <source src="<%= url_for(@lecture.video) %>" type="<%= @lecture.video.content_type %>">
-                    <%= t('common.browser_no_support_video') %>
-                  </video>
-                <% end %>
-              </section>
-            <% elsif @lecture.youtube_url.present? %>
-              <section class="mb-8">
-                <div class="aspect-video">
-                  <iframe src="<%= youtube_embed_url(@lecture.youtube_url) %>"
-                          frameborder="0"
-                          allowfullscreen
-                          class="w-full h-full rounded"></iframe>
-                </div>
-              </section>
+
+<div class="min-h-screen">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <article class="bg-base-100 rounded-2xl shadow-xl overflow-hidden">
+      <% if @lecture.video? %>
+        <div class="w-full bg-black">
+          <video controls class="w-full max-h-[500px] mx-auto">
+            <source src="<%= url_for(@lecture.video) %>" type="<%= @lecture.video.content_type %>">
+            <%= t('common.browser_no_support_video') %>
+          </video>
+        </div>
+      <% elsif @lecture.youtube_url.present? %>
+        <div class="w-full bg-black">
+          <div class="aspect-video max-h-[500px] mx-auto">
+            <iframe src="<%= youtube_embed_url(@lecture.youtube_url) %>"
+                    frameborder="0"
+                    allowfullscreen
+                    class="w-full h-full"></iframe>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="p-8 lg:p-12">
+        <header class="mb-10">
+          <div class="flex flex-wrap items-center gap-3 mb-4">
+            <% if @lecture.category.present? %>
+              <span class="badge badge-outline badge-lg">
+                <%= @lecture.category %>
+              </span>
             <% end %>
-            <div class="flex flex-wrap items-center gap-4 text-sm mb-6">
-              <% if @lecture.category.present? %>
-                <span class="badge badge-primary">
-                  <%= @lecture.category %>
-                </span>
+          </div>
+          <h1 class="text-3xl lg:text-4xl font-bold leading-tight">
+            <%= @lecture.title %>
+          </h1>
+        </header>
+
+        <div class="bg-base-200 rounded-xl p-6 mb-10">
+          <div class="flex flex-wrap items-center gap-4">
+            <% if @lecture.has_any_audio? %>
+              <%= play_button(resource: @lecture, klass: "btn btn-secondary btn-sm") %>
+              <%= link_to direct_download_url(@lecture.best_audio), download: true, target: "_blank", class: "btn btn-secondary btn-sm" do %>
+                <%= icon "arrow-down-tray", class: "size-4" %>
               <% end %>
-              <% if false && @lecture.published_at %>
-                <time class="text-foreground"><%= @lecture.published_at.strftime("%Y/%m/%d") %></time>
+            <% end %>
+            <% if @lecture.video? %>
+              <%= link_to direct_download_url(@lecture.video), download: true, target: "_blank", class: "btn btn-secondary btn-sm" do %>
+                <%= icon "arrow-down-tray", class: "size-4" %>
               <% end %>
-            </div>
-          </header>
-          <% if @lecture.has_any_audio? || @lecture.video? %>
-            <section class="mb-8">
-              <div class="rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4">
-                  <%= t(".download_options")%>
-                </h3>
-                <div class="flex flex-wrap gap-4">
-                  <% if @lecture.has_any_audio? %>
-                    <%= link_to direct_download_url(@lecture.best_audio), download: true, target: "_blank", class: "btn btn-primary w-fit" do %>
-                      <%= icon "arrow-down-tray", class: "size-5" %>
-                      <%= t("buttons.download_audio")%>
-                    <% end %>
-                    <%= play_button(resource: @lecture) %>
-                  <% end %>
-                  <% if @lecture.video? %>
-                    <%= link_to direct_download_url(@lecture.video), download: true, target: "_blank", class: "btn btn-secondary w-fit" do %>
-                      <%= icon "arrow-down-tray", class: "size-5" %>
-                      <%= t("buttons.download_video")%>
-                    <% end %>
-                  <% end %>
-                </div>
+            <% end %>
+            <button class="btn btn-secondary btn-sm"
+                    data-controller="share-trigger"
+                    data-share-trigger-modal-id-value="lecture_share_modal"
+                    data-action="click->share-trigger#open">
+              <%= icon "share", class: "size-4" %>
+            </button>
+          </div>
+        </div>
+
+        <% if @lecture.transcription_json.present? %>
+          <section class="mb-10">
+            <div class="collapse collapse-arrow collapse-open bg-base-200 rounded-xl">
+              <input type="checkbox" checked />
+              <div class="collapse-title text-xl font-bold flex items-center gap-3">
+                <%= icon "document-text", class: "size-5" %>
+                <%= t('.transcription') %>
               </div>
-            </section>
-          <% end %>
-          <% if @lecture.transcription_json.present? %>
-            <section class="mb-8">
-              <div class="border-t border-base-300 pt-6">
-                <h2 class="text-2xl font-bold mb-4">
-                  <%= t('.transcription') %>
-                </h2>
-                <p class="text-sm italic mb-4"><%= t('common.ai_transcript_disclaimer') %></p>
-                <div class="prose prose-lg max-w-none p-6 bg-base-200 rounded-lg mb-4">
+              <div class="collapse-content">
+                <p class="text-sm text-base-content/60 italic mb-4">
+                  <%= t('common.ai_transcript_disclaimer') %>
+                </p>
+                <div class="bg-base-100 rounded-lg p-6">
                   <% begin %>
                     <% transcription = JSON.parse(@lecture.transcription_json) %>
-                    <p class="whitespace-pre-wrap"><%= transcription['text'] %></p>
+                    <p class="whitespace-pre-wrap leading-relaxed"><%= transcription['text'] %></p>
                   <% rescue JSON::ParserError => e %>
                     <p class="text-error">Error parsing transcription: <%= e.message %></p>
                   <% end %>
                 </div>
               </div>
-            </section>
-          <% end %>
-        </article>
+            </div>
+          </section>
+        <% end %>
       </div>
-    </div>
+    </article>
   </div>
 </div>
+
+<%= render 'shared/share_modal',
+    modal_id: 'lecture_share_modal',
+    url: request.original_url,
+    title: html_escape(@lecture.title),
+    text: html_escape(@lecture.title) %>
