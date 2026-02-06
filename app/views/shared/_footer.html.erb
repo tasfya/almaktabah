@@ -1,40 +1,40 @@
-<footer class="bg-primary pb-16 sm:pb-0">
-  <div class="container mx-auto px-4 py-12">
+<footer class="bg-primary text-primary-content pb-16 sm:pb-0">
+  <div class="container mx-auto px-4 py-8">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <div class="md:col-span-1">
         <div class="flex items-center gap-3 mb-4">
-          <%= image_tag @logo_url, alt: (@domain&.title.presence || "Logo"), width: 400, height: 150, class: "rounded-full" %>
+          <%= image_tag @logo_url, alt: (@domain&.title.presence || "Logo"), width: 400, height: 150, class: "rounded-lg max-w-[120px]" %>
         </div>
-        <p class="text-sm text-primary-content">
+        <p class="text-sm text-primary-content/70">
           <%= t('sheikh.description') %>
         </p>
       </div>
       <% if available_content_types.any? %>
         <% many_content_types = available_content_types.size > 4 %>
         <div class="<%= many_content_types ? 'md:col-span-2' : '' %>">
-          <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('navigation.quick_links') %></h4>
-          <ul class="space-y-2 <%= many_content_types ? 'grid grid-cols-2 gap-x-8 gap-y-2' : '' %>">
-            <li><%= link_to t('navigation.home'), root_path, class: "btn hover:underline btn-primary" %></li>
+          <h4 class="text-base font-semibold text-primary-content mb-3"><%= t('navigation.quick_links') %></h4>
+          <ul class="space-y-1.5 <%= many_content_types ? 'grid grid-cols-2 gap-x-6 gap-y-1.5' : '' %>">
+            <li><%= link_to t('navigation.home'), root_path, class: "text-sm text-primary-content/70 hover:text-primary-content hover:underline transition-colors" %></li>
             <% available_content_types.each do |ct| %>
-              <li><%= link_to t("navigation.#{content_type_nav_key(ct[:type])}"), content_type_path(ct[:type]), class: "btn hover:underline btn-primary" %></li>
+              <li><%= link_to t("navigation.#{content_type_nav_key(ct[:type])}"), content_type_path(ct[:type]), class: "text-sm text-primary-content/70 hover:text-primary-content hover:underline transition-colors" %></li>
             <% end %>
           </ul>
         </div>
       <% end %>
       <div>
-        <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('footer.contact_title') %></h4>
-        <div class="mt-4 flex gap-4">
-          <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
-            <%= icon "youtube", library: "lucide", class: "size-5" %>
+        <h4 class="text-base font-semibold text-primary-content mb-3"><%= t('footer.contact_title') %></h4>
+        <div class="flex gap-2">
+          <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-sm rounded-lg hover:bg-primary-content/10 text-primary-content" do %>
+            <%= icon "youtube", library: "lucide", class: "size-4" %>
           <% end %>
-          <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
-            <%= icon "twitter", library: "lucide", class: "size-5" %>
+          <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-sm rounded-lg hover:bg-primary-content/10 text-primary-content" do %>
+            <%= icon "twitter", library: "lucide", class: "size-4" %>
           <% end %>
         </div>
       </div>
     </div>
-  <div class="border-t border-base-300 mt-8 pt-8 text-center">
-    <p class="text-sm text-primary-content">
+  <div class="border-t border-primary-content/20 mt-6 pt-6 text-center">
+    <p class="text-xs text-primary-content/60">
       &copy; <%= Date.current.year %> <%= t('footer.copyright') %>
     </p>
   </div>
