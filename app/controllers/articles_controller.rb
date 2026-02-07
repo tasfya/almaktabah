@@ -14,12 +14,12 @@ class ArticlesController < ApplicationController
     set_meta_tags(
       title: @article.title,
       description: description,
-      canonical: canonical_url,
+      canonical: canonical_url_for(@article),
       og: {
         title: @article.title,
         description: description,
         type: "article",
-        url: canonical_url
+        url: canonical_url_for(@article)
       }
     )
   end

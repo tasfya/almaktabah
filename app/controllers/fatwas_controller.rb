@@ -14,12 +14,12 @@ class FatwasController < ApplicationController
     set_meta_tags(
       title: @fatwa.title,
       description: description,
-      canonical: canonical_url,
+      canonical: canonical_url_for(@fatwa),
       og: {
         title: @fatwa.title,
         description: description,
         type: "article",
-        url: canonical_url
+        url: canonical_url_for(@fatwa)
       }
     )
   end

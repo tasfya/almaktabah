@@ -21,6 +21,19 @@ class LessonsController < ApplicationController
                              .where.not(id: @lesson.id)
                              .recent
                              .limit(4)
+
+    description = @lesson.description.to_s.truncate(MetaTags.config.description_limit)
+    set_meta_tags(
+      title: @lesson.title,
+      description: description,
+      canonical: canonical_url_for(@lesson),
+      og: {
+        title: @lesson.title,
+        description: description,
+        type: "article",
+        url: canonical_url_for(@lesson)
+      }
+    )
   end
 
   private
@@ -36,7 +49,7 @@ class LessonsController < ApplicationController
   end
 
   def set_lesson
-    @lesson = Lesson.for_domain_id(@domain.id).published.find(params[:id])
+    @lesson = Lesson.for_domain_id(@domain.id).published.includes(series: { scholar: :default_domain }).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to lessons_path, alert: t("messages.lesson_not_found")
   end

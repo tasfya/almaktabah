@@ -9,8 +9,7 @@ RSpec.describe JsonLdHelper, type: :helper do
   before do
     assign(:domain, domain)
 
-    # Define canonical_url as a helper method
-    def helper.canonical_url
+    def helper.canonical_url_for(_resource = nil)
       "http://localhost/test"
     end
 

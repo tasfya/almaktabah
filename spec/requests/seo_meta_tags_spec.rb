@@ -170,6 +170,50 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
   end
 
+  describe "Canonical URL resolution" do
+    context "when scholar has a default_domain" do
+      let!(:scholar_domain) { create(:domain, host: "scholar.example.com", name: "Scholar Site") }
+      let!(:scholar_with_domain) { create(:scholar, full_name: "عالم", default_domain: scholar_domain) }
+      let!(:article) do
+        article = create(:article, title: "Canonical Test", scholar: scholar_with_domain, published: true, published_at: 1.day.ago)
+        article.domains << domain
+        article
+      end
+
+      it "points to scholar's default domain" do
+        get article_path(article, scholar_id: scholar_with_domain.slug)
+        expect(response.body).to include('rel="canonical" href="http://scholar.example.com')
+      end
+    end
+
+    context "when scholar has no default_domain" do
+      let!(:ilm_domain) { create(:domain, host: "ilm.example.com", name: Domain::ILM_NAME) }
+      let!(:book) do
+        book = create(:book, title: "Ilm Fallback Book", scholar: scholar, published: true, published_at: 1.day.ago)
+        book.domains << domain
+        book
+      end
+
+      it "falls back to ilm domain" do
+        get book_path(book, scholar_id: scholar.slug)
+        expect(response.body).to include('rel="canonical" href="http://ilm.example.com')
+      end
+    end
+
+    context "when no scholar default_domain and no ilm domain" do
+      let!(:fatwa) do
+        fatwa = create(:fatwa, title: "Fallback Fatwa", scholar: scholar, published: true, published_at: 1.day.ago)
+        fatwa.domains << domain
+        fatwa
+      end
+
+      it "falls back to current request domain" do
+        get fatwa_path(fatwa)
+        expect(response.body).to include('rel="canonical" href="http://www.example.com')
+      end
+    end
+  end
+
   describe "Default meta tags" do
     let!(:fatwa) do
       fatwa = create(:fatwa, title: "Test", scholar: scholar, published: true, published_at: 1.day.ago)

@@ -54,8 +54,26 @@ class ApplicationController < ActionController::Base
     )
   end
 
-  def canonical_url
-    request.original_url.split(/[?#]/).first
+  def canonical_domain_for(resource)
+    scholar = resource.try(:scholar)
+    scholar&.default_domain || ilm_domain || @domain
   end
+
+  def canonical_url_for(resource = nil)
+    domain = resource ? canonical_domain_for(resource) : @domain
+    if domain && domain.host != request.host
+      "#{request.protocol}#{domain.host}#{":#{request.port}" unless request.standard_port?}#{request.path}"
+    else
+      request.original_url.split(/[?#]/).first
+    end
+  end
+  helper_method :canonical_url_for
+
+  def canonical_url = canonical_url_for
+
   helper_method :canonical_url
+
+  def ilm_domain
+    @ilm_domain ||= Domain.find_by(name: Domain::ILM_NAME)
+  end
 end
