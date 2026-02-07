@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
 
   def canonical_url_for(resource = nil)
     domain = resource ? canonical_domain_for(resource) : @domain
-    if domain && domain.host != request.host
+    if domain&.host.present? && domain.host != request.host
       "#{request.protocol}#{domain.host}#{":#{request.port}" unless request.standard_port?}#{request.path}"
     else
       request.original_url.split(/[?#]/).first
