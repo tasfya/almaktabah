@@ -48,7 +48,7 @@ class LecturesController < ApplicationController
   end
 
   def set_lecture
-    @scholar = Scholar.friendly.find(params[:scholar_id])
+    @scholar = Scholar.includes(:default_domain).friendly.find(params[:scholar_id])
     @lecture = @scholar.lectures.friendly
                        .for_domain_id(@domain.id)
                        .published

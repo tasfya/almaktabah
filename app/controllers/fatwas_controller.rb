@@ -28,6 +28,7 @@ class FatwasController < ApplicationController
 
   def set_fatwa
     @fatwa = Fatwa.friendly
+                  .includes(scholar: :default_domain)
                   .for_domain_id(@domain.id)
                   .published
                   .find(params[:id])

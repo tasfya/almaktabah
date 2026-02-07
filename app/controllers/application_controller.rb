@@ -74,6 +74,7 @@ class ApplicationController < ActionController::Base
   helper_method :canonical_url
 
   def ilm_domain
-    @ilm_domain ||= Domain.find_by(name: Domain::ILM_NAME)
+    return @ilm_domain if defined?(@ilm_domain)
+    @ilm_domain = Domain.find_by(name: Domain::ILM_NAME)
   end
 end

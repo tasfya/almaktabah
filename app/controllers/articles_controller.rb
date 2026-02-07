@@ -37,7 +37,7 @@ class ArticlesController < ApplicationController
   end
 
   def set_article
-    @scholar = Scholar.friendly.find(params[:scholar_id])
+    @scholar = Scholar.includes(:default_domain).friendly.find(params[:scholar_id])
     @article = @scholar.articles.friendly
                        .for_domain_id(@domain.id)
                        .published

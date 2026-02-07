@@ -45,7 +45,7 @@ class BooksController < ApplicationController
   end
 
   def set_book
-    @scholar = Scholar.friendly.find(params[:scholar_id])
+    @scholar = Scholar.includes(:default_domain).friendly.find(params[:scholar_id])
     @book = @scholar.books.friendly
                     .for_domain_id(@domain.id)
                     .published

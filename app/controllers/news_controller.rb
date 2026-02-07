@@ -30,6 +30,7 @@ class NewsController < ApplicationController
 
   def set_news
     @news = News.friendly
+                .includes(scholar: :default_domain)
                 .for_domain_id(@domain.id)
                 .published
                 .find(params[:id])
