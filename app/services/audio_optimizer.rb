@@ -12,11 +12,19 @@ class AudioOptimizer
     movie = FFMPEG::Movie.new(@input_path)
     puts "Optimizing audio file: #{@input_path} to #{@output_path} as MP3 (speech-optimized)"
 
+    # Get original duration to ensure output matches input
+    original_duration = movie.duration
+
     options = {
       audio_codec: "libmp3lame",
       audio_bitrate: @bitrate,
-      custom: %w[-y -fflags +fastseek+genpts -avoid_negative_ts make_zero]
+      custom: %w[-y -vn -map_metadata -1]
     }
+
+    # Add duration limit to prevent output from being longer than input
+    if original_duration
+      options[:custom] += [ "-t", original_duration.to_s ]
+    end
 
     movie.transcode(@output_path, options)
     @output_path
