@@ -60,6 +60,7 @@ db/backups
 .vscode/*
 /*.local.*
 .playwright-mcp
+.playwright-cli
 .mcp.json
 opencode.json
 .claude/

@@ -56,7 +56,8 @@ class ApplicationController < ActionController::Base
 
   def canonical_domain_for(resource)
     scholar = resource.try(:scholar)
-    scholar&.default_domain || ilm_domain || @domain
+    return @domain unless scholar
+    scholar.default_domain || ilm_domain || @domain
   end
 
   def canonical_url_for(resource = nil)
