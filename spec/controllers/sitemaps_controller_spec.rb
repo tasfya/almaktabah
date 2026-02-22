@@ -148,7 +148,7 @@ RSpec.describe SitemapsController, type: :controller do
 
       it "includes lesson URLs" do
         get :show, params: { type: "lessons" }, format: :xml
-        expect(response.body).to include(lesson_path(lesson))
+        expect(response.body).to include(series_lesson_path(series, lesson, scholar_id: scholar.slug))
       end
     end
 

@@ -151,6 +151,39 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
   end
 
+  describe "Lessons" do
+    let!(:series) do
+      series = create(:series, title: "Test Series", scholar: scholar, published: true, published_at: 1.day.ago)
+      series.domains << domain
+      series
+    end
+    let!(:lesson) do
+      lesson = create(:lesson, title: "Test Lesson Title", description: "Lesson description text", series: series, published: true, published_at: 1.day.ago)
+      lesson.domains << domain
+      lesson
+    end
+
+    it "includes title meta tag" do
+      get series_lesson_path(series, lesson, scholar_id: scholar.slug)
+      expect(response.body).to include("<title>Test Lesson Title")
+    end
+
+    it "includes description meta tag" do
+      get series_lesson_path(series, lesson, scholar_id: scholar.slug)
+      expect(response.body).to include('name="description"')
+    end
+
+    it "includes canonical URL" do
+      get series_lesson_path(series, lesson, scholar_id: scholar.slug)
+      expect(response.body).to include('rel="canonical"')
+    end
+
+    it "includes Open Graph title" do
+      get series_lesson_path(series, lesson, scholar_id: scholar.slug)
+      expect(response.body).to include('property="og:title"')
+    end
+  end
+
   describe "News" do
     let!(:news) do
       news = create(:news, title: "Test News Title", description: "News description", published: true, published_at: 1.day.ago)

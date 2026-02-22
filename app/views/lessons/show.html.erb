@@ -1,0 +1,118 @@
+<div class="min-h-screen">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <article class="bg-base-100 rounded-2xl shadow-xl overflow-hidden">
+      <% if @lesson.video? %>
+        <div class="w-full bg-black">
+          <video controls class="w-full max-h-[500px] mx-auto">
+            <source src="<%= url_for(@lesson.video) %>" type="<%= @lesson.video.content_type %>">
+            <%= t('common.browser_no_support_video') %>
+          </video>
+        </div>
+      <% elsif @lesson.respond_to?(:youtube_url) && @lesson.youtube_url.present? %>
+        <div class="w-full bg-black">
+          <div class="aspect-video max-h-[500px] mx-auto">
+            <iframe src="<%= youtube_embed_url(@lesson.youtube_url) %>"
+                    frameborder="0"
+                    allowfullscreen
+                    class="w-full h-full"></iframe>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="p-8 lg:p-12">
+        <header class="mb-10">
+          <p class="uppercase tracking-wide text-sm text-base-content/50 mb-2">
+            <%= link_to @series.title, series_path(@series, scholar_id: @scholar.slug), class: "hover:link" %>
+          </p>
+          <h1 class="text-3xl lg:text-4xl font-bold leading-tight mb-3">
+            <%= @lesson.title %>
+          </h1>
+          <div class="flex items-center gap-2 text-base-content/70">
+            <%= icon "user", class: "size-4" %>
+            <span class="font-medium"><%= @lesson.scholar.name %></span>
+          </div>
+        </header>
+
+        <div class="bg-base-200 rounded-xl p-6 mb-10">
+          <div class="flex flex-wrap items-center gap-4">
+            <% if @lesson.has_any_audio? %>
+              <%= play_button(resource: @lesson, klass: "btn btn-secondary btn-sm") %>
+              <%= link_to direct_download_url(@lesson.best_audio), download: true, target: "_blank", class: "btn btn-secondary btn-sm" do %>
+                <%= icon "arrow-down-tray", class: "size-4" %>
+              <% end %>
+            <% end %>
+            <% if @lesson.video? %>
+              <%= link_to direct_download_url(@lesson.video), download: true, target: "_blank", class: "btn btn-secondary btn-sm" do %>
+                <%= icon "arrow-down-tray", class: "size-4" %>
+              <% end %>
+            <% end %>
+            <button class="btn btn-secondary btn-sm"
+                    data-controller="share-trigger"
+                    data-share-trigger-modal-id-value="lesson_share_modal"
+                    data-action="click->share-trigger#open">
+              <%= icon "share", class: "size-4" %>
+            </button>
+          </div>
+        </div>
+
+        <% if @lesson.description.present? %>
+          <section class="mb-10">
+            <div class="prose max-w-none">
+              <p><%= @lesson.description %></p>
+            </div>
+          </section>
+        <% end %>
+
+        <% if @lesson.content.present? %>
+          <section class="mb-10">
+            <div class="prose max-w-none">
+              <%= @lesson.content %>
+            </div>
+          </section>
+        <% end %>
+
+        <% if @lesson.transcription_json.present? %>
+          <section class="mb-10">
+            <div class="collapse collapse-arrow collapse-open bg-base-200 rounded-xl">
+              <input type="checkbox" checked />
+              <div class="collapse-title text-xl font-bold flex items-center gap-3">
+                <%= icon "document-text", class: "size-5" %>
+                <%= t('lectures.show.transcription') %>
+              </div>
+              <div class="collapse-content">
+                <p class="text-sm text-base-content/60 italic mb-4">
+                  <%= t('common.ai_transcript_disclaimer') %>
+                </p>
+                <div class="bg-base-100 rounded-lg p-6">
+                  <% begin %>
+                    <% transcription = JSON.parse(@lesson.transcription_json) %>
+                    <p class="whitespace-pre-wrap leading-relaxed"><%= transcription['text'] %></p>
+                  <% rescue JSON::ParserError => e %>
+                    <p class="text-error">Error parsing transcription: <%= e.message %></p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </section>
+        <% end %>
+
+        <% if @related_lessons.present? %>
+          <section>
+            <h2 class="text-2xl font-bold mb-6"><%= t('common.related_content') %></h2>
+            <div class="bg-base-200 rounded-xl overflow-hidden divide-y divide-base-300">
+              <% @related_lessons.each_with_index do |lesson, idx| %>
+                <%= render "shared/playlist_card", resource: lesson, linkable: true, index: idx %>
+              <% end %>
+            </div>
+          </section>
+        <% end %>
+      </div>
+    </article>
+  </div>
+</div>
+
+<%= render 'shared/share_modal',
+    modal_id: 'lesson_share_modal',
+    url: request.original_url,
+    title: html_escape(@lesson.title),
+    text: html_escape(@lesson.title) %>

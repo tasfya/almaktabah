@@ -42,6 +42,9 @@ class Lesson < ApplicationRecord
     attribute :scholar_name do
       scholar.name
     end
+    attribute :scholar_slug do
+      scholar.slug
+    end
     attribute :scholar_id do
       scholar.id
     end
@@ -71,6 +74,7 @@ class Lesson < ApplicationRecord
       { "name" => "position", "type" => "int32" },
       { "name" => "duration", "type" => "int32" },
       { "name" => "scholar_name", "type" => "string", "facet" => true },
+      { "name" => "scholar_slug", "type" => "string" },
       { "name" => "scholar_id", "type" => "int32", "facet" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },

@@ -18,11 +18,15 @@ Rails.application.routes.draw do
   scope ":scholar_id" do
     resources :books, only: [ :show ], path: I18n.t("routes.books", default: "books")
     resources :articles, only: [ :show ], path: I18n.t("routes.articles", default: "articles")
-    resources :series, only: [ :show ], path: I18n.t("routes.series", default: "series")
+    resources :series, only: [ :show ], path: I18n.t("routes.series", default: "series") do
+      resources :lessons, only: [ :show ], path: I18n.t("routes.lessons", default: "lessons")
+    end
     get "#{I18n.t("routes.lectures", default: "lectures")}/(:kind)/:id", to: "lectures#show", as: "lecture"
   end
 
-  resources :lessons, only: [ :index, :show ], path: I18n.t("routes.lessons", default: "lessons")
+  # Legacy lesson URLs → redirect
+  get I18n.t("routes.lessons", default: "lessons"), to: redirect("/#{I18n.t("routes.series", default: "series")}", status: 301)
+  get "#{I18n.t("routes.lessons", default: "lessons")}/:id", to: "lessons#legacy_redirect"
   resources :news, only: [ :index, :show ], path: I18n.t("routes.news", default: "news")
   resources :fatwas, only: [ :index, :show ], path: I18n.t("routes.fatwas", default: "fatwas")
 

@@ -1,18 +1,6 @@
 class LessonsController < ApplicationController
-  include Filterable
   before_action :set_lesson, only: [ :show ]
-  before_action :setup_lessons_breadcrumbs
-
-  def index
-    @q = Lesson.for_domain_id(@domain.id)
-      .published
-      .includes(series: :scholar)
-      .with_attached_thumbnail
-      .with_attached_audio
-      .with_attached_video
-      .ransack(params[:q])
-    @pagy, @lessons = pagy(@q.result(distinct: true))
-  end
+  before_action :setup_lessons_breadcrumbs, only: [ :show ]
 
   def show
     @related_lessons = Lesson.for_domain_id(@domain.id)
@@ -36,21 +24,33 @@ class LessonsController < ApplicationController
     )
   end
 
+  def legacy_redirect
+    lesson = Lesson.published.find(params[:id])
+    series = lesson.series
+    scholar = series&.scholar
+    if series && scholar
+      redirect_to series_lesson_path(scholar.slug, series, lesson), status: :moved_permanently
+    else
+      redirect_to series_index_path, alert: t("messages.lesson_not_found")
+    end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to series_index_path, alert: t("messages.lesson_not_found")
+  end
+
   private
 
   def setup_lessons_breadcrumbs
-    case action_name
-    when "index"
-      breadcrumb_for(t("breadcrumbs.lessons"), lessons_path)
-    when "show"
-      breadcrumb_for(t("breadcrumbs.lessons"), lessons_path)
-      breadcrumb_for(@lesson.title, lesson_path(@lesson))
-    end
+    breadcrumb_for(t("breadcrumbs.series"), series_index_path)
+    breadcrumb_for(@series.title, series_path(@series, scholar_id: @scholar.slug))
+    breadcrumb_for(@lesson.title, series_lesson_path(@scholar, @series, @lesson))
   end
 
   def set_lesson
-    @lesson = Lesson.for_domain_id(@domain.id).published.includes(series: { scholar: :default_domain }).find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to lessons_path, alert: t("messages.lesson_not_found")
+    @scholar = Scholar.includes(:default_domain).friendly.find(params[:scholar_id])
+    @series = @scholar.series.friendly.for_domain_id(@domain.id).published.find(params[:series_id])
+    @lesson = @series.lessons.for_domain_id(@domain.id).published.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    Rails.logger.info "Lesson lookup failed: #{e.message} (scholar_id=#{params[:scholar_id]}, series_id=#{params[:series_id]}, id=#{params[:id]})"
+    redirect_to series_index_path, alert: t("messages.lesson_not_found")
   end
 end
