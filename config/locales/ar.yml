@@ -266,6 +266,7 @@ ar:
     ai_transcript_disclaimer: "تفريغ آلي — قد يحتوي على أخطاء"
     ai_transcript_disclaimer_title: "تفريغ آلي — قد يحتوي على أخطاء"
     transcription_parse_error: "تعذر تحميل التفريغ"
+    related_content: "دروس ذات صلة"
     no_items_available: "لا توجد %{items} متاحة حالياً"
     no_lessons_in_series: "لا توجد دروس في هذه السلسلة حالياً"
     no_related_items: "لا توجد %{items} أخرى حالياً"
