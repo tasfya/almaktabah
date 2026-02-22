@@ -87,8 +87,8 @@
                   <% begin %>
                     <% transcription = JSON.parse(@lesson.transcription_json) %>
                     <p class="whitespace-pre-wrap leading-relaxed"><%= transcription['text'] %></p>
-                  <% rescue JSON::ParserError => e %>
-                    <p class="text-error">Error parsing transcription: <%= e.message %></p>
+                  <% rescue JSON::ParserError %>
+                    <p class="text-error"><%= t('common.transcription_parse_error') %></p>
                   <% end %>
                 </div>
               </div>

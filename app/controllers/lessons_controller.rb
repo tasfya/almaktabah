@@ -29,7 +29,7 @@ class LessonsController < ApplicationController
   end
 
   def legacy_redirect
-    lesson = Lesson.published.find(params[:id])
+    lesson = Lesson.for_domain_id(@domain.id).published.find(params[:id])
     series = lesson.series
     scholar = series&.scholar
     if series && scholar
