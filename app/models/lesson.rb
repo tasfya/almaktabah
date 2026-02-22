@@ -1,5 +1,4 @@
 class Lesson < ApplicationRecord
-  include Typesense
   include MediaHandler
   include Publishable
   include DomainAssignable
@@ -7,84 +6,10 @@ class Lesson < ApplicationRecord
   include AttachmentSerializable
   include TranscriptionConcern
 
-
   belongs_to :series
   delegate :scholar, to: :series
 
   validates :title, presence: true
-
-  typesense enqueue: true, if: :published? do
-    attribute :title
-    attribute :description do
-      description || ""
-    end
-    attribute :content_text do
-      description.present? ? description : ""
-    end
-
-    attribute :content_type do
-      "lesson"
-    end
-    attribute :slug do
-      id.to_s  # Lessons use id for URL, not friendly_id
-    end
-    attribute :series_title do
-      series.title
-    end
-    attribute :series_slug do
-      series.slug
-    end
-    attribute :series_id
-    attribute :position
-    attribute :duration do
-      duration || 0
-    end
-    attribute :scholar_name do
-      scholar.name
-    end
-    attribute :scholar_slug do
-      scholar.slug
-    end
-    attribute :scholar_id do
-      scholar.id
-    end
-    attribute :media_type do
-      video.attached? ? "video" : "audio"
-    end
-    attribute :domain_ids do
-      domain_assignments.pluck(:domain_id)
-    end
-    # Timestamp fields for sorting (named _ts to avoid overriding model attributes)
-    attribute :published_at_ts do
-      published_at&.to_i
-    end
-    attribute :created_at_ts do
-      created_at&.to_i
-    end
-
-    predefined_fields [
-      { "name" => "title", "type" => "string", "locale" => "ar" },
-      { "name" => "description", "type" => "string", "locale" => "ar" },
-      { "name" => "content_text", "type" => "string", "locale" => "ar" },
-      { "name" => "content_type", "type" => "string", "facet" => true },
-      { "name" => "slug", "type" => "string" },
-      { "name" => "series_title", "type" => "string", "facet" => true },
-      { "name" => "series_slug", "type" => "string" },
-      { "name" => "series_id", "type" => "int32", "facet" => true },
-      { "name" => "position", "type" => "int32" },
-      { "name" => "duration", "type" => "int32" },
-      { "name" => "scholar_name", "type" => "string", "facet" => true },
-      { "name" => "scholar_slug", "type" => "string" },
-      { "name" => "scholar_id", "type" => "int32", "facet" => true },
-      { "name" => "media_type", "type" => "string", "facet" => true },
-      { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
-      { "name" => "published_at_ts", "type" => "int64", "optional" => true },
-      { "name" => "created_at_ts", "type" => "int64" }
-    ]
-
-    symbols_to_index [ "-", "_" ]
-    token_separators [ "-", "_" ]
-  end
 
   has_one_attached :thumbnail, service: Rails.application.config.public_storage
   has_one_attached :audio, service: Rails.application.config.public_storage

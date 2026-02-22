@@ -79,6 +79,14 @@ RSpec.describe LessonsController, type: :controller do
     end
   end
 
+  describe "GET #legacy_index_redirect" do
+    it "redirects to series index with 301" do
+      get :legacy_index_redirect
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response).to redirect_to(series_index_path)
+    end
+  end
+
   describe "GET #legacy_redirect" do
     it "redirects to nested lesson URL with 301" do
       get :legacy_redirect, params: { id: published_lesson.id }

@@ -24,6 +24,10 @@ class LessonsController < ApplicationController
     )
   end
 
+  def legacy_index_redirect
+    redirect_to series_index_path, status: :moved_permanently
+  end
+
   def legacy_redirect
     lesson = Lesson.published.find(params[:id])
     series = lesson.series

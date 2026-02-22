@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   end
 
   # Legacy lesson URLs → redirect
-  get I18n.t("routes.lessons", default: "lessons"), to: redirect("/#{I18n.t("routes.series", default: "series")}", status: 301)
+  get I18n.t("routes.lessons", default: "lessons"), to: "lessons#legacy_index_redirect"
   get "#{I18n.t("routes.lessons", default: "lessons")}/:id", to: "lessons#legacy_redirect"
   resources :news, only: [ :index, :show ], path: I18n.t("routes.news", default: "news")
   resources :fatwas, only: [ :index, :show ], path: I18n.t("routes.fatwas", default: "fatwas")
