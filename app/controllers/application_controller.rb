@@ -69,12 +69,9 @@ class ApplicationController < ActionController::Base
   end
   helper_method :canonical_url_for
 
-  def canonical_url = canonical_url_for
-
-  helper_method :canonical_url
-
   def ilm_domain
-    return @ilm_domain if defined?(@ilm_domain)
-    @ilm_domain = Domain.find_by(name: Domain::ILM_NAME)
+    Rails.cache.fetch("ilm_domain", expires_in: 1.hour) do
+      Domain.find_by(name: Domain::ILM_NAME)
+    end
   end
 end
