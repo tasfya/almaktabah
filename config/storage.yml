@@ -15,11 +15,7 @@ public_media_hetzner:
   bucket: hachico
   public: true
 
-<% if Rails.env.test? %>
-public_media_aws:
-  service: Disk
-  root: <%= Rails.root.join("tmp/storage") %>
-<% else %>
+<% if Rails.env.production? %>
 public_media_aws:
   service: S3
   access_key_id: <%= ENV["PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID"] %>
@@ -31,6 +27,10 @@ public_media_aws:
   endpoint: "https://530ead0646d782269b6d097e15a631eb.r2.cloudflarestorage.com"
   request_checksum_calculation: "when_required"
   response_checksum_validation: "when_required"
+<% else %>
+public_media_aws:
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage") %>
 <% end %>
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:

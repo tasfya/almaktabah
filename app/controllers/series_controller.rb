@@ -18,12 +18,12 @@ class SeriesController < ApplicationController
     set_meta_tags(
       title: @series.seo_show_title,
       description: description,
-      canonical: canonical_url,
+      canonical: canonical_url_for(@series),
       og: {
         title: @series.seo_show_title,
         description: description,
         type: "article",
-        url: canonical_url
+        url: canonical_url_for(@series)
       }
     )
   end
@@ -41,7 +41,7 @@ class SeriesController < ApplicationController
   end
 
   def set_series
-    @scholar = Scholar.friendly.find(params[:scholar_id])
+    @scholar = Scholar.includes(:default_domain).friendly.find(params[:scholar_id])
     @series = @scholar.series.friendly
                       .for_domain_id(@domain.id)
                       .published

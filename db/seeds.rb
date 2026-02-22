@@ -22,7 +22,7 @@ domain1.description ||= "الموقع الرسمي لفضيلة الشيخ مح�
 domain1.save!
 
 domain2 = Domain.find_or_initialize_by(host: "localhost")
-domain2.name = "localhost"
+domain2.name = Domain::ILM_NAME
 domain2.title ||= "العلم"
 domain2.description ||= "موقع العلم الشرعي - مجموعة من الكتب والمحاضرات والدروس"
 domain2.save!

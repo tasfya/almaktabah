@@ -15,12 +15,12 @@ class NewsController < ApplicationController
     set_meta_tags(
       title: @news.title,
       description: description,
-      canonical: canonical_url,
+      canonical: canonical_url_for(@news),
       og: {
         title: @news.title,
         description: description,
         type: "article",
-        url: canonical_url,
+        url: canonical_url_for(@news),
         image: image_url
       }
     )
@@ -30,6 +30,7 @@ class NewsController < ApplicationController
 
   def set_news
     @news = News.friendly
+                .includes(scholar: :default_domain)
                 .for_domain_id(@domain.id)
                 .published
                 .find(params[:id])

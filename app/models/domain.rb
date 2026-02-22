@@ -1,4 +1,5 @@
 class Domain < ApplicationRecord
+  ILM_NAME = "ilm"
   has_one_attached :logo, service: Rails.application.config.public_storage
   has_one_attached :art_work, service: Rails.application.config.public_storage
   has_one_attached :favicon_ico, service: Rails.application.config.public_storage

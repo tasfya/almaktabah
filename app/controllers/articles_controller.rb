@@ -14,12 +14,12 @@ class ArticlesController < ApplicationController
     set_meta_tags(
       title: @article.title,
       description: description,
-      canonical: canonical_url,
+      canonical: canonical_url_for(@article),
       og: {
         title: @article.title,
         description: description,
         type: "article",
-        url: canonical_url
+        url: canonical_url_for(@article)
       }
     )
   end
@@ -37,7 +37,7 @@ class ArticlesController < ApplicationController
   end
 
   def set_article
-    @scholar = Scholar.friendly.find(params[:scholar_id])
+    @scholar = Scholar.includes(:default_domain).friendly.find(params[:scholar_id])
     @article = @scholar.articles.friendly
                        .for_domain_id(@domain.id)
                        .published
