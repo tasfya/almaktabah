@@ -95,10 +95,6 @@ RSpec.describe LecturesController, type: :controller do
     end
 
     context "when accessed via old lecture slug" do
-      before do
-        create(:domain_assignment, domain: domain, assignable: published_lecture)
-      end
-
       it "redirects to canonical URL with 301" do
         old_slug = published_lecture.slug
         published_lecture.update!(title: "New Unique Lecture Title #{SecureRandom.hex(4)}")
@@ -127,10 +123,6 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #legacy_redirect" do
-    before do
-      create(:domain_assignment, domain: domain, assignable: published_lecture)
-    end
-
     it "redirects to new lecture URL with 301" do
       get :legacy_redirect, params: { id: published_lecture.id }
       expect(response).to have_http_status(:moved_permanently)

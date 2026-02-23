@@ -25,7 +25,7 @@ RSpec.describe SeriesController, type: :controller do
         old_slug = scholar.slug
         scholar.update!(first_name: "NewUniqueName", last_name: "NewUniqueLast", full_name: "NewUniqueName NewUniqueLast")
 
-        get :show, params: { scholar_id: old_slug, id: published_series.id }
+        get :show, params: { scholar_id: old_slug, id: published_series.to_param }
         expect(response).to have_http_status(:moved_permanently)
         expect(response).to redirect_to(series_path(scholar, published_series))
       end

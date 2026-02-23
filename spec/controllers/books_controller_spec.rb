@@ -25,7 +25,7 @@ RSpec.describe BooksController, type: :controller do
         old_slug = scholar.slug
         scholar.update!(first_name: "NewUniqueName", last_name: "NewUniqueLast", full_name: "NewUniqueName NewUniqueLast")
 
-        get :show, params: { scholar_id: old_slug, id: published_book.id }
+        get :show, params: { scholar_id: old_slug, id: published_book.to_param }
         expect(response).to have_http_status(:moved_permanently)
         expect(response).to redirect_to(book_path(scholar, published_book))
       end
