@@ -44,7 +44,7 @@ RSpec.describe BooksController, type: :controller do
 
     context "when book is not found" do
       it "redirects to books index" do
-        get :show, params: { scholar_id: scholar.id, id: 999999 }
+        get :show, params: { scholar_id: scholar.to_param, id: 999999 }
         expect(response).to redirect_to(books_path)
         expect(flash[:alert]).to eq(I18n.t("messages.book_not_found"))
       end
