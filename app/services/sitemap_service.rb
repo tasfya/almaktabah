@@ -83,10 +83,8 @@ class SitemapService
     scope.order(updated_at: :desc)
   end
 
-  LISTING_TYPES = %i[articles books lectures series fatwas news].freeze
-
   def listing_urls
-    LISTING_TYPES.filter_map do |type|
+    SitemapsHelper::LISTING_LOCS.filter_map do |type|
       { loc: type } if base_scope_for(type).exists?
     end
   end
