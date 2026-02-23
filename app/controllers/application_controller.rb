@@ -61,8 +61,8 @@ class ApplicationController < ActionController::Base
       params[:content_types].present?
   end
 
-  def set_noindex_meta_tags
-    set_meta_tags(noindex: true, follow: true) if noindex_page?
+  def set_noindex_meta_tags(empty: false)
+    set_meta_tags(noindex: true, follow: true) if noindex_page? || empty
   end
 
   def canonical_domain_for(resource)

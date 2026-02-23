@@ -28,7 +28,7 @@ module TypesenseListable
     @per_page = result.per_page
     @total_pages = result.total_pages
 
-    set_noindex_meta_tags
+    set_noindex_meta_tags(empty: @total_results == 0)
     render "search/index"
   end
 end

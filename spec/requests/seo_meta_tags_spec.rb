@@ -294,9 +294,15 @@ RSpec.describe "SEO Meta Tags", type: :request do
       expect(response.body).to include('content="noindex, follow"')
     end
 
-    it "does not add noindex on listing page 1" do
+    it "does not add noindex on listing page 1 with results" do
+      stub_typesense_search(build_search_result(hits_by_type: { articles: [ build_search_hit(type: :article, title: "Test") ] }, total: 1))
       get articles_path
       expect(response.body).not_to include('content="noindex')
+    end
+
+    it "adds noindex on empty listing page" do
+      get articles_path
+      expect(response.body).to include('content="noindex, follow"')
     end
 
     it "adds noindex on listing page 2" do

@@ -71,9 +71,15 @@ RSpec.describe SitemapService do
     end
 
     context "with listings type" do
-      it "returns all listing page URLs" do
+      it "only includes content types with published content on domain" do
+        article = create(:article, scholar: scholar, published: true, published_at: 1.day.ago)
+        article.domains << domain
         urls = service.urls_for(:listings)
-        expect(urls.map { |u| u[:loc] }).to contain_exactly(:articles, :books, :lectures, :series, :fatwas, :news)
+        expect(urls.map { |u| u[:loc] }).to eq([ :articles ])
+      end
+
+      it "returns empty when domain has no content" do
+        expect(service.urls_for(:listings)).to be_empty
       end
     end
 

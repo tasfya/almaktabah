@@ -83,8 +83,12 @@ class SitemapService
     scope.order(updated_at: :desc)
   end
 
+  LISTING_TYPES = %i[articles books lectures series fatwas news].freeze
+
   def listing_urls
-    [ { loc: :articles }, { loc: :books }, { loc: :lectures }, { loc: :series }, { loc: :fatwas }, { loc: :news } ]
+    LISTING_TYPES.filter_map do |type|
+      { loc: type } if base_scope_for(type).exists?
+    end
   end
 
   def static_urls
