@@ -43,7 +43,7 @@
         <section>
           <div class="bg-base-200 rounded-xl overflow-hidden divide-y divide-base-300">
             <% @lessons.each_with_index do |lesson, idx| %>
-              <%= render "shared/playlist_card", resource: lesson, with_icon: true, index: idx %>
+              <%= render "shared/playlist_card", resource: lesson, with_icon: true, index: idx, linkable: true %>
             <% end %>
           </div>
         </section>

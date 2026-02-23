@@ -5,8 +5,10 @@
   custom_icon = local_assigns.fetch(:custom_icon, "book-open")
 
   if resource.is_a?(Lesson)
-    share_url = polymorphic_url(resource.series)
-    resource_link = polymorphic_path(resource.series)
+    scholar = resource.scholar
+    series = resource.series
+    share_url = series_lesson_url(scholar, series, resource)
+    resource_link = series_lesson_path(scholar, series, resource)
   elsif resource.is_a?(Lecture)
     share_url = lecture_url(resource.scholar, resource, kind: resource.kind_for_url)
     resource_link = lecture_path(resource.scholar, resource, kind: resource.kind_for_url)

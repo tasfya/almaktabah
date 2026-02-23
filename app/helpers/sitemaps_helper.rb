@@ -38,7 +38,7 @@ module SitemapsHelper
     when News
       news_url(record, host: request.host)
     when Lesson
-      lesson_url(record, host: request.host)
+      series_lesson_url(record.series, record, scholar_id: record.scholar.slug, host: request.host)
     when Hash
       static_url_for(record[:loc])
     else
