@@ -54,6 +54,17 @@ class ApplicationController < ActionController::Base
     )
   end
 
+  def noindex_page?
+    (params[:page].present? && params[:page].to_i > 1) ||
+      params[:q].present? ||
+      params[:scholars].present? ||
+      params[:content_types].present?
+  end
+
+  def set_noindex_meta_tags
+    set_meta_tags(noindex: true, follow: true) if noindex_page?
+  end
+
   def canonical_domain_for(resource)
     scholar = resource.try(:scholar)
     return @domain unless scholar

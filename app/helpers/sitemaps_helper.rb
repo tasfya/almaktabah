@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module SitemapsHelper
+  LISTING_LOCS = %i[articles books lectures series fatwas news].freeze
+
   CHANGEFREQ = {
     articles: "monthly",
     books: "monthly",
@@ -9,6 +11,7 @@ module SitemapsHelper
     fatwas: "monthly",
     news: "weekly",
     lessons: "monthly",
+    listings: "weekly",
     static: "daily"
   }.freeze
 
@@ -20,6 +23,7 @@ module SitemapsHelper
     fatwas: 0.7,
     news: 0.6,
     lessons: 0.7,
+    listings: 0.6,
     static: 1.0
   }.freeze
 
@@ -40,7 +44,7 @@ module SitemapsHelper
     when Lesson
       series_lesson_url(record.series, record, scholar_id: record.scholar.slug, host: request.host)
     when Hash
-      static_url_for(record[:loc])
+      LISTING_LOCS.include?(record[:loc]) ? listing_url_for(record[:loc]) : static_url_for(record[:loc])
     else
       raise ArgumentError, "Unknown sitemap record type: #{record.class}"
     end
@@ -55,6 +59,18 @@ module SitemapsHelper
   end
 
   private
+
+  def listing_url_for(loc)
+    case loc
+    when :articles then articles_url(host: request.host)
+    when :books then books_url(host: request.host)
+    when :lectures then lectures_url(host: request.host)
+    when :series then series_index_url(host: request.host)
+    when :fatwas then fatwas_url(host: request.host)
+    when :news then news_index_url(host: request.host)
+    else raise ArgumentError, "Unknown listing URL location: #{loc}"
+    end
+  end
 
   def static_url_for(loc)
     case loc
