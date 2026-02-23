@@ -33,6 +33,7 @@ class HomeController < ApplicationController
     @per_page = result.per_page
     @total_pages = result.total_pages
 
+    set_noindex_meta_tags
     render "search/index"
   end
 end

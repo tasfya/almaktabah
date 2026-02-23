@@ -11,6 +11,7 @@ class SitemapService
     fatwas: { model: Fatwa, domain_scoped: true, includes: :scholar },
     news: { model: News, domain_scoped: true, includes: nil },
     lessons: { model: Lesson, domain_scoped: true, includes: { series: :scholar } },
+    listings: { model: nil, domain_scoped: false, includes: nil },
     static: { model: nil, domain_scoped: false, includes: nil }
   }.freeze
 
@@ -26,6 +27,7 @@ class SitemapService
   end
 
   def urls_for(type, page: 1)
+    return listing_urls if type.to_sym == :listings
     return static_urls if type.to_sym == :static
 
     config = CONTENT_TYPES[type.to_sym]
@@ -50,6 +52,7 @@ class SitemapService
   private
 
   def compute_page_count(type)
+    return 1 if type.to_sym == :listings
     return 1 if type.to_sym == :static
 
     config = CONTENT_TYPES[type.to_sym]
@@ -60,6 +63,7 @@ class SitemapService
   end
 
   def compute_latest_updated_at(type)
+    return @domain.updated_at if type.to_sym == :listings
     return @domain.updated_at if type.to_sym == :static
 
     config = CONTENT_TYPES[type.to_sym]
@@ -77,6 +81,12 @@ class SitemapService
     scope = scope.for_domain_id(@domain.id) if config[:domain_scoped]
     scope = scope.includes(includes) if includes.present?
     scope.order(updated_at: :desc)
+  end
+
+  def listing_urls
+    SitemapsHelper::LISTING_LOCS.filter_map do |type|
+      { loc: type } if base_scope_for(type).exists?
+    end
   end
 
   def static_urls

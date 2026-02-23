@@ -270,4 +270,56 @@ RSpec.describe "SEO Meta Tags", type: :request do
       expect(response.body).to include("ar_AR")
     end
   end
+
+  describe "Robots noindex directives" do
+    before { stub_typesense_search(empty_search_result) }
+
+    it "does not add noindex on home page without params" do
+      get root_path
+      expect(response.body).not_to include('content="noindex')
+    end
+
+    it "adds noindex on home page with search query" do
+      get root_path, params: { q: "test" }
+      expect(response.body).to include('content="noindex, follow"')
+    end
+
+    it "adds noindex on home page with scholars filter" do
+      get root_path, params: { scholars: [ "some-scholar" ] }
+      expect(response.body).to include('content="noindex, follow"')
+    end
+
+    it "adds noindex on home page with content_types filter" do
+      get root_path, params: { content_types: [ "article" ] }
+      expect(response.body).to include('content="noindex, follow"')
+    end
+
+    it "does not add noindex on listing page 1 with results" do
+      stub_typesense_search(build_search_result(hits_by_type: { articles: [ build_search_hit(type: :article, title: "Test") ] }, total: 1))
+      get articles_path
+      expect(response.body).not_to include('content="noindex')
+    end
+
+    it "adds noindex on empty listing page" do
+      get articles_path
+      expect(response.body).to include('content="noindex, follow"')
+    end
+
+    it "adds noindex on listing page 2" do
+      get articles_path, params: { page: 2 }
+      expect(response.body).to include('content="noindex, follow"')
+    end
+
+    it "adds noindex on listing page with scholars filter" do
+      get articles_path, params: { scholars: [ "xyz" ] }
+      expect(response.body).to include('content="noindex, follow"')
+    end
+
+    it "does not add noindex on detail page" do
+      article = create(:article, title: "Noindex Test", scholar: scholar, published: true, published_at: 1.day.ago)
+      article.domains << domain
+      get article_path(article, scholar_id: scholar.slug)
+      expect(response.body).not_to include('content="noindex')
+    end
+  end
 end

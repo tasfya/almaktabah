@@ -70,6 +70,19 @@ RSpec.describe SitemapService do
       end
     end
 
+    context "with listings type" do
+      it "only includes content types with published content on domain" do
+        article = create(:article, scholar: scholar, published: true, published_at: 1.day.ago)
+        article.domains << domain
+        urls = service.urls_for(:listings)
+        expect(urls.map { |u| u[:loc] }).to eq([ :articles ])
+      end
+
+      it "returns empty when domain has no content" do
+        expect(service.urls_for(:listings)).to be_empty
+      end
+    end
+
     context "with pagination" do
       it "respects page parameter" do
         urls_page1 = service.urls_for(:articles, page: 1)
@@ -83,6 +96,10 @@ RSpec.describe SitemapService do
   describe "#page_count" do
     it "returns 1 for static type" do
       expect(service.page_count(:static)).to eq(1)
+    end
+
+    it "returns 1 for listings type" do
+      expect(service.page_count(:listings)).to eq(1)
     end
 
     it "returns at least 1 for any content type" do
@@ -100,6 +117,10 @@ RSpec.describe SitemapService do
     it "returns current time for static type" do
       result = service.latest_updated_at(:static)
       expect(result).to be_within(1.second).of(Time.current)
+    end
+
+    it "returns domain updated_at for listings type" do
+      expect(service.latest_updated_at(:listings)).to be_within(1.second).of(domain.updated_at)
     end
 
     it "returns nil when no records exist" do
