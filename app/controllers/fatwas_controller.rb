@@ -32,6 +32,7 @@ class FatwasController < ApplicationController
                   .for_domain_id(@domain.id)
                   .published
                   .find(params[:id])
+    redirect_to fatwa_path(@fatwa), status: :moved_permanently if slug_mismatch?(:id, @fatwa)
   rescue ActiveRecord::RecordNotFound
     redirect_to fatwas_path, alert: t("messages.fatwa_not_found")
   end

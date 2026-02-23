@@ -53,6 +53,9 @@ class LessonsController < ApplicationController
     @scholar = Scholar.includes(:default_domain).friendly.find(params[:scholar_id])
     @series = @scholar.series.friendly.for_domain_id(@domain.id).published.find(params[:series_id])
     @lesson = @series.lessons.for_domain_id(@domain.id).published.find(params[:id])
+    if slug_mismatch?(:scholar_id, @scholar) || slug_mismatch?(:series_id, @series)
+      redirect_to series_lesson_path(@scholar, @series, @lesson), status: :moved_permanently
+    end
   rescue ActiveRecord::RecordNotFound => e
     Rails.logger.info "Lesson lookup failed: #{e.message} (scholar_id=#{params[:scholar_id]}, series_id=#{params[:series_id]}, id=#{params[:id]})"
     redirect_to series_index_path, alert: t("messages.lesson_not_found")

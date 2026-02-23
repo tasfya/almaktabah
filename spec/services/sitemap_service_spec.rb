@@ -8,10 +8,19 @@ RSpec.describe SitemapService do
   let(:service) { described_class.new(domain) }
 
   describe "#content_type_pages" do
-    it "returns all content types" do
+    it "excludes empty content types" do
       pages = service.content_type_pages
       types = pages.map { |p| p[:type] }.uniq
-      expect(types).to match_array(SitemapService::CONTENT_TYPES.keys)
+      expect(types).to include(:listings, :static)
+      expect(types).not_to include(:articles)
+    end
+
+    it "includes content types with records" do
+      article = create(:article, scholar: scholar, published: true, published_at: 1.day.ago)
+      article.domains << domain
+      fresh_service = described_class.new(domain)
+      types = fresh_service.content_type_pages.map { |p| p[:type] }.uniq
+      expect(types).to include(:articles)
     end
 
     it "returns page numbers starting at 1" do
@@ -102,10 +111,15 @@ RSpec.describe SitemapService do
       expect(service.page_count(:listings)).to eq(1)
     end
 
-    it "returns at least 1 for any content type" do
-      SitemapService::CONTENT_TYPES.keys.each do |type|
-        expect(service.page_count(type)).to be >= 1
-      end
+    it "returns 0 for empty content types" do
+      expect(service.page_count(:articles)).to eq(0)
+    end
+
+    it "returns at least 1 for content types with records" do
+      article = create(:article, scholar: scholar, published: true, published_at: 1.day.ago)
+      article.domains << domain
+      fresh_service = described_class.new(domain)
+      expect(fresh_service.page_count(:articles)).to be >= 1
     end
 
     it "returns 0 for unknown type" do

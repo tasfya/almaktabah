@@ -34,6 +34,7 @@ class NewsController < ApplicationController
                 .for_domain_id(@domain.id)
                 .published
                 .find(params[:id])
+    redirect_to news_path(@news), status: :moved_permanently if slug_mismatch?(:id, @news)
   rescue ActiveRecord::RecordNotFound
     redirect_to news_index_path, alert: t("messages.news_not_found")
   end

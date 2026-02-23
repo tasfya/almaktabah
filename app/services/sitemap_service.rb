@@ -59,7 +59,8 @@ class SitemapService
     return 0 unless config && config[:model]
 
     count = base_scope_for(type).count
-    (count.to_f / URLS_PER_SITEMAP).ceil.clamp(1..)
+    return 0 if count.zero?
+    (count.to_f / URLS_PER_SITEMAP).ceil
   end
 
   def compute_latest_updated_at(type)

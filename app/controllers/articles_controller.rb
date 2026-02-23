@@ -42,6 +42,9 @@ class ArticlesController < ApplicationController
                        .for_domain_id(@domain.id)
                        .published
                        .find(params[:id])
+    if slug_mismatch?(:scholar_id, @scholar) || slug_mismatch?(:id, @article)
+      redirect_to article_path(@scholar, @article), status: :moved_permanently
+    end
   rescue ActiveRecord::RecordNotFound
     redirect_to articles_path, alert: t("messages.article_not_found")
   end

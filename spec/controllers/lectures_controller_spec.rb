@@ -83,6 +83,32 @@ RSpec.describe LecturesController, type: :controller do
       end
     end
 
+    context "when accessed via old scholar slug" do
+      it "redirects to canonical URL with 301" do
+        old_slug = scholar.slug
+        scholar.update!(first_name: "NewUniqueName", last_name: "NewUniqueLast", full_name: "NewUniqueName NewUniqueLast")
+
+        get :show, params: { scholar_id: old_slug, kind: published_lecture.kind_for_url, id: published_lecture.id }
+        expect(response).to have_http_status(:moved_permanently)
+        expect(response).to redirect_to(lecture_path(scholar, published_lecture, kind: published_lecture.kind_for_url))
+      end
+    end
+
+    context "when accessed via old lecture slug" do
+      before do
+        create(:domain_assignment, domain: domain, assignable: published_lecture)
+      end
+
+      it "redirects to canonical URL with 301" do
+        old_slug = published_lecture.slug
+        published_lecture.update!(title: "New Unique Lecture Title #{SecureRandom.hex(4)}")
+
+        get :show, params: { scholar_id: scholar.to_param, kind: published_lecture.kind_for_url, id: old_slug }
+        expect(response).to have_http_status(:moved_permanently)
+        expect(response).to redirect_to(lecture_path(scholar, published_lecture, kind: published_lecture.kind_for_url))
+      end
+    end
+
     context "when lecture is unpublished or not found" do
       it "redirects and shows alert for unpublished lecture" do
         create(:domain_assignment, domain: domain, assignable: unpublished_lecture)
@@ -97,6 +123,24 @@ RSpec.describe LecturesController, type: :controller do
         expect(response).to redirect_to(lectures_path)
         expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
       end
+    end
+  end
+
+  describe "GET #legacy_redirect" do
+    before do
+      create(:domain_assignment, domain: domain, assignable: published_lecture)
+    end
+
+    it "redirects to new lecture URL with 301" do
+      get :legacy_redirect, params: { id: published_lecture.id }
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response).to redirect_to(lecture_path(scholar.slug, published_lecture, kind: published_lecture.kind_for_url))
+    end
+
+    it "redirects to lectures index when not found" do
+      get :legacy_redirect, params: { id: 999999 }
+      expect(response).to redirect_to(lectures_path)
+      expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
     end
   end
 end

@@ -64,6 +64,17 @@ RSpec.describe LessonsController, type: :controller do
       end
     end
 
+    context "when accessed via old scholar slug" do
+      it "redirects to canonical URL with 301" do
+        old_slug = scholar.slug
+        scholar.update!(first_name: "NewUniqueName", last_name: "NewUniqueLast", full_name: "NewUniqueName NewUniqueLast")
+
+        get :show, params: { scholar_id: old_slug, series_id: series.to_param, id: published_lesson.id }
+        expect(response).to have_http_status(:moved_permanently)
+        expect(response).to redirect_to(series_lesson_path(scholar, series, published_lesson))
+      end
+    end
+
     context "when lesson is unpublished or not found" do
       it "redirects for unpublished lesson" do
         get :show, params: { scholar_id: scholar.to_param, series_id: series.to_param, id: unpublished_lesson.id }

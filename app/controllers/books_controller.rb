@@ -32,6 +32,13 @@ class BooksController < ApplicationController
     )
   end
 
+  def legacy_redirect
+    book = Book.for_domain_id(@domain.id).published.find(params[:id])
+    redirect_to book_path(book.scholar.slug, book), status: :moved_permanently
+  rescue ActiveRecord::RecordNotFound
+    redirect_to books_path, alert: t("messages.book_not_found")
+  end
+
   private
 
   def setup_books_breadcrumbs
@@ -50,6 +57,9 @@ class BooksController < ApplicationController
                     .for_domain_id(@domain.id)
                     .published
                     .find(params[:id])
+    if slug_mismatch?(:scholar_id, @scholar) || slug_mismatch?(:id, @book)
+      redirect_to book_path(@scholar, @book), status: :moved_permanently
+    end
   rescue ActiveRecord::RecordNotFound
     redirect_to books_path, alert: t("messages.book_not_found")
   end
