@@ -81,6 +81,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :canonical_url_for
 
+  def slug_mismatch?(param_key, record)
+    value = params[param_key]
+    value != record.slug && value != record.id.to_s
+  end
+
   def ilm_domain
     Rails.cache.fetch("ilm_domain", expires_in: 1.hour) do
       Domain.find_by(name: Domain::ILM_NAME)

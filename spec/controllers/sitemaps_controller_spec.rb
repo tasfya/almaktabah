@@ -28,11 +28,18 @@ RSpec.describe SitemapsController, type: :controller do
       expect(response.body).to include('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"')
     end
 
-    it "includes sitemap entries for each content type" do
+    it "excludes empty content types from sitemap index" do
       get :index, format: :xml
-      SitemapService::CONTENT_TYPES.keys.each do |type|
-        expect(response.body).to include("/sitemaps/#{type}.xml")
-      end
+      expect(response.body).to include("/sitemaps/static.xml")
+      expect(response.body).to include("/sitemaps/listings.xml")
+      expect(response.body).not_to include("/sitemaps/articles.xml")
+    end
+
+    it "includes content types with records" do
+      article = create(:article, scholar: scholar, published: true, published_at: 1.day.ago)
+      article.domains << domain
+      get :index, format: :xml
+      expect(response.body).to include("/sitemaps/articles.xml")
     end
   end
 
@@ -163,7 +170,14 @@ RSpec.describe SitemapsController, type: :controller do
         expect(response).to have_http_status(:not_found)
       end
 
-      it "returns success for page 1" do
+      it "returns 404 for page 1 of empty content type" do
+        get :show, params: { type: "articles", page: "1" }, format: :xml
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "returns success for page 1 with records" do
+        article = create(:article, scholar: scholar, published: true, published_at: 1.day.ago)
+        article.domains << domain
         get :show, params: { type: "articles", page: "1" }, format: :xml
         expect(response).to be_successful
       end

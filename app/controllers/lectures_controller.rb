@@ -35,6 +35,13 @@ class LecturesController < ApplicationController
     )
   end
 
+  def legacy_redirect
+    lecture = Lecture.for_domain_id(@domain.id).published.find(params[:id])
+    redirect_to lecture_path(lecture.scholar.slug, lecture, kind: lecture.kind_for_url), status: :moved_permanently
+  rescue ActiveRecord::RecordNotFound
+    redirect_to lectures_path, alert: t("messages.lecture_not_found")
+  end
+
   private
 
   def setup_lectures_breadcrumbs
@@ -53,6 +60,9 @@ class LecturesController < ApplicationController
                        .for_domain_id(@domain.id)
                        .published
                        .find(params[:id])
+    if slug_mismatch?(:scholar_id, @scholar) || slug_mismatch?(:id, @lecture)
+      redirect_to lecture_path(@scholar, @lecture, kind: @lecture.kind_for_url), status: :moved_permanently
+    end
   rescue ActiveRecord::RecordNotFound
     redirect_to lectures_path, alert: t("messages.lecture_not_found")
   end

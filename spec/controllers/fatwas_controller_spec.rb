@@ -62,6 +62,17 @@ RSpec.describe FatwasController, type: :controller do
       end
     end
 
+    context "when accessed via old slug" do
+      it "redirects to canonical slug URL with 301" do
+        old_slug = published_fatwa.slug
+        published_fatwa.update!(title: "New Unique Fatwa Title #{SecureRandom.hex(4)}")
+
+        get :show, params: { id: old_slug }
+        expect(response).to have_http_status(:moved_permanently)
+        expect(response).to redirect_to(fatwa_path(published_fatwa))
+      end
+    end
+
     context "when fatwa does not exist" do
       it "redirects to fatwas index" do
         get :show, params: { id: 99999 }

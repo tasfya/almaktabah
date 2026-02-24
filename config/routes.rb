@@ -24,9 +24,12 @@ Rails.application.routes.draw do
     get "#{I18n.t("routes.lectures", default: "lectures")}/(:kind)/:id", to: "lectures#show", as: "lecture"
   end
 
-  # Legacy lesson URLs → redirect
+  # Legacy URLs → redirect (old English paths with numeric IDs)
   get I18n.t("routes.lessons", default: "lessons"), to: "lessons#legacy_index_redirect"
   get "#{I18n.t("routes.lessons", default: "lessons")}/:id", to: "lessons#legacy_redirect"
+  get "books/:id", to: "books#legacy_redirect", constraints: { id: /\d+/ }
+  get "series/:id", to: "series#legacy_redirect", constraints: { id: /\d+/ }
+  get "lectures/:id", to: "lectures#legacy_redirect", constraints: { id: /\d+/ }
   resources :news, only: [ :index, :show ], path: I18n.t("routes.news", default: "news")
   resources :fatwas, only: [ :index, :show ], path: I18n.t("routes.fatwas", default: "fatwas")
 
