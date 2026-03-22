@@ -35,7 +35,7 @@ class BooksController < ApplicationController
   def legacy_redirect
     book = Book.for_domain_id(@domain.id).published.find(params[:id])
     redirect_to book_path(book.scholar.slug, book), status: :moved_permanently
-  rescue ActiveRecord::RecordNotFound
+  rescue ActiveRecord::RecordNotFound, NoMethodError
     redirect_to books_path, alert: t("messages.book_not_found")
   end
 

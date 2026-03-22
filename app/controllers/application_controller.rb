@@ -83,6 +83,7 @@ class ApplicationController < ActionController::Base
 
   def slug_mismatch?(param_key, record)
     value = params[param_key]
+    return false if value.nil?
     value != record.slug && value != record.id.to_s
   end
 
