@@ -23,4 +23,37 @@ namespace :scholars do
 
     puts "Done — dry_run: #{dry_run}"
   end
+
+  desc "Fix doubled/UUID slugs and merge duplicate Scholar 1 into Scholar 2"
+  task fix_slugs: :environment do
+    # Merge Scholar 1 (ibn-ramzan, empty) into Scholar 2 (محمد بن رمزان الهاجري)
+    duplicate = Scholar.find_by(id: 1, slug: "ibn-ramzan")
+    canonical = Scholar.find_by(id: 2)
+    if duplicate && canonical && duplicate.full_name.blank?
+      FriendlyId::Slug.where(sluggable_id: duplicate.id, sluggable_type: "Scholar")
+                      .update_all(sluggable_id: canonical.id)
+      duplicate.delete
+      puts "Merged Scholar ##{duplicate.id} into Scholar ##{canonical.id}"
+    end
+
+    # Detect doubled slugs (e.g., "name-name") and UUID slugs
+    uuid_re = /\A[0-9a-f]{8}-[0-9a-f]{4}-/
+    bad_scholars = Scholar.all.select do |s|
+      parts = s.slug.split("-")
+      half = parts.length / 2
+      doubled = half > 0 && parts[0...half] == parts[half..]
+      doubled || s.slug.match?(uuid_re)
+    end
+
+    puts "Found #{bad_scholars.size} scholars with bad slugs"
+
+    bad_scholars.each do |scholar|
+      old_slug = scholar.slug
+      scholar.slug = nil
+      scholar.save!
+      puts "  #{old_slug} → #{scholar.slug}"
+    end
+
+    puts "Done. Total scholars: #{Scholar.count}"
+  end
 end
