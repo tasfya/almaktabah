@@ -35,6 +35,6 @@ class Scholar < ApplicationRecord
   protected
 
   def should_generate_new_friendly_id?
-    will_save_change_to_first_name? || will_save_change_to_last_name? || slug.blank?
+    will_save_change_to_full_name? || slug.blank?
   end
 end

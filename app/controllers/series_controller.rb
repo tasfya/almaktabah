@@ -31,7 +31,7 @@ class SeriesController < ApplicationController
   def legacy_redirect
     series = Series.for_domain_id(@domain.id).published.find(params[:id])
     redirect_to series_path(series.scholar.slug, series), status: :moved_permanently
-  rescue ActiveRecord::RecordNotFound
+  rescue ActiveRecord::RecordNotFound, NoMethodError
     redirect_to series_index_path, alert: t("messages.series_not_found")
   end
 

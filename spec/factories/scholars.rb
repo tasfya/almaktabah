@@ -1,8 +1,12 @@
 FactoryBot.define do
   factory :scholar do
-    first_name { Faker::Name.first_name }
-    last_name { Faker::Name.last_name }
-    full_name { Faker::Name.first_name }
+    transient do
+      generated_first { Faker::Name.first_name }
+      generated_last { Faker::Name.last_name }
+    end
+    first_name { generated_first }
+    last_name { generated_last }
+    full_name { "#{generated_first} #{generated_last}" }
     bio { Faker::Lorem.sentence }
     published { true }
   end
