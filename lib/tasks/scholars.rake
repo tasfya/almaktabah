@@ -40,6 +40,7 @@ namespace :scholars do
       # Detect doubled slugs (e.g., "name-name") and UUID slugs
       uuid_re = /\A[0-9a-f]{8}-[0-9a-f]{4}-/
       bad_scholars = Scholar.all.select do |s|
+        next false if s.slug.blank?
         parts = s.slug.split("-")
         half = parts.length / 2
         doubled = half > 0 && parts[0...half] == parts[half..]

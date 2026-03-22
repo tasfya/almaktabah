@@ -60,7 +60,7 @@ class LecturesController < ApplicationController
                        .for_domain_id(@domain.id)
                        .published
                        .find(params[:id])
-    if slug_mismatch?(:scholar_id, @scholar) || slug_mismatch?(:id, @lecture)
+    if slug_mismatch?(:scholar_id, @scholar) || slug_mismatch?(:id, @lecture) || params[:kind] != @lecture.kind_for_url
       redirect_to lecture_path(@scholar, @lecture, kind: @lecture.kind_for_url), status: :moved_permanently
     end
   rescue ActiveRecord::RecordNotFound
