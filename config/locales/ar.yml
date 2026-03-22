@@ -297,6 +297,7 @@ ar:
     lecture_not_found: "المحاضرة غير موجودة"
     lesson_not_found: "الدرس غير موجود"
     series_not_found: "السلسلة غير موجودة"
+    fatwa_not_found: "الفتوى غير موجودة"
     browser_no_support_video: "متصفحك لا يدعم تشغيل الفيديو."
     browser_no_support_audio: "متصفحك لا يدعم تشغيل الصوت."
     search_placeholder_general: "ابحث في العنوان أو الوصف..."
@@ -463,6 +464,7 @@ ar:
     lecture_not_found: "المحاضرة غير موجودة"
     lesson_not_found: "الدرس غير موجود"
     series_not_found: "السلسلة غير موجودة"
+    fatwa_not_found: "الفتوى غير موجودة"
   scholars:
     show:
       lessons_count:
