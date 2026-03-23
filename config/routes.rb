@@ -32,9 +32,10 @@ Rails.application.routes.draw do
   %w[lectures fatwas].each do |eng|
     arabic = I18n.t("routes.#{eng}", default: eng)
     next if eng == arabic
+    encoded = URI::DEFAULT_PARSER.escape(arabic)
     get eng, to: redirect { |_, req|
       qs = req.query_string.present? ? "?#{req.query_string}" : ""
-      "/#{arabic}#{qs}"
+      "/#{encoded}#{qs}"
     }, as: nil
   end
 
