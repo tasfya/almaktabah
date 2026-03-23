@@ -85,4 +85,18 @@ RSpec.describe FatwasController, type: :controller do
       end
     end
   end
+
+  describe "GET #legacy_redirect" do
+    it "redirects to canonical fatwa URL with 301" do
+      get :legacy_redirect, params: { id: published_fatwa.slug }
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response).to redirect_to(fatwa_path(published_fatwa))
+    end
+
+    it "redirects to fatwas index when not found" do
+      get :legacy_redirect, params: { id: "nonexistent-slug" }
+      expect(response).to redirect_to(fatwas_path)
+      expect(flash[:alert]).to eq(I18n.t("messages.fatwa_not_found"))
+    end
+  end
 end

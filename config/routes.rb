@@ -24,9 +24,25 @@ Rails.application.routes.draw do
     get "#{I18n.t("routes.lectures", default: "lectures")}/(:kind)/:id", to: "lectures#show", as: "lecture"
   end
 
-  # Legacy URLs → redirect (old English paths with numeric IDs)
+  # Legacy: Arabic-path lessons redirects
   get I18n.t("routes.lessons", default: "lessons"), to: "lessons#legacy_index_redirect"
   get "#{I18n.t("routes.lessons", default: "lessons")}/:id", to: "lessons#legacy_redirect"
+
+  # Legacy: English index paths → Arabic equivalents (301)
+  %w[lectures fatwas].each do |eng|
+    arabic = I18n.t("routes.#{eng}", default: eng)
+    next if eng == arabic
+    get eng, to: redirect { |_, req|
+      qs = req.query_string.present? ? "?#{req.query_string}" : ""
+      "/#{arabic}#{qs}"
+    }, as: nil
+  end
+
+  # Legacy: English lessons → series index
+  get "lessons", to: "lessons#legacy_index_redirect", as: nil
+
+  # Legacy: English show paths
+  get "fatwas/:id", to: "fatwas#legacy_redirect", as: nil
   get "books/:id", to: "books#legacy_redirect", constraints: { id: /\d+/ }
   get "series/:id", to: "series#legacy_redirect", constraints: { id: /\d+/ }
   get "lectures/:id", to: "lectures#legacy_redirect", constraints: { id: /\d+/ }
