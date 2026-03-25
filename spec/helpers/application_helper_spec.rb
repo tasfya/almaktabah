@@ -292,4 +292,96 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
     end
   end
+
+  describe "#resource_share_url" do
+    let(:scholar) { Scholar.new(id: 1, slug: "test-scholar", full_name: "Test Scholar") }
+
+    it "returns lecture URL with kind" do
+      lecture = Lecture.new(id: 2, slug: "test-lecture", scholar: scholar, title: "Test Lecture", kind: :sermon)
+      expect(helper).to receive(:lecture_url).with(scholar, lecture, kind: lecture.kind_for_url).and_return("/lecture-url")
+      expect(helper.resource_share_url(lecture)).to eq("/lecture-url")
+    end
+
+    it "returns article URL" do
+      article = Article.new(id: 2, slug: "test-article", scholar: scholar, title: "Test")
+      expect(helper).to receive(:article_url).with(scholar, article).and_return("/article-url")
+      expect(helper.resource_share_url(article)).to eq("/article-url")
+    end
+
+    it "returns book URL" do
+      book = Book.new(id: 2, slug: "test-book", scholar: scholar, title: "Test")
+      expect(helper).to receive(:book_url).with(scholar, book).and_return("/book-url")
+      expect(helper.resource_share_url(book)).to eq("/book-url")
+    end
+
+    it "returns series URL" do
+      series = Series.new(id: 2, slug: "test-series", scholar: scholar, title: "Test")
+      expect(helper).to receive(:series_url).with(scholar, series).and_return("/series-url")
+      expect(helper.resource_share_url(series)).to eq("/series-url")
+    end
+
+    it "returns fatwa URL" do
+      fatwa = Fatwa.new(id: 2, slug: "test-fatwa", scholar: scholar, title: "Test")
+      expect(helper).to receive(:fatwa_url).with(scholar, fatwa).and_return("/fatwa-url")
+      expect(helper.resource_share_url(fatwa)).to eq("/fatwa-url")
+    end
+
+    it "returns news URL" do
+      news = News.new(id: 2, slug: "test-news", scholar: scholar, title: "Test")
+      expect(helper).to receive(:news_url).with(scholar, news).and_return("/news-url")
+      expect(helper.resource_share_url(news)).to eq("/news-url")
+    end
+
+    it "falls back to polymorphic_url for unknown types" do
+      resource = double("Resource")
+      expect(helper).to receive(:polymorphic_url).with(resource).and_return("/fallback")
+      expect(helper.resource_share_url(resource)).to eq("/fallback")
+    end
+  end
+
+  describe "#resource_path_for" do
+    let(:scholar) { Scholar.new(id: 1, slug: "test-scholar", full_name: "Test Scholar") }
+
+    it "returns lecture path with kind" do
+      lecture = Lecture.new(id: 2, slug: "test-lecture", scholar: scholar, title: "Test", kind: :sermon)
+      expect(helper).to receive(:lecture_path).with(scholar, lecture, kind: lecture.kind_for_url).and_return("/lecture-path")
+      expect(helper.resource_path_for(lecture)).to eq("/lecture-path")
+    end
+
+    it "returns article path" do
+      article = Article.new(id: 2, slug: "test-article", scholar: scholar, title: "Test")
+      expect(helper).to receive(:article_path).with(scholar, article).and_return("/article-path")
+      expect(helper.resource_path_for(article)).to eq("/article-path")
+    end
+
+    it "returns book path" do
+      book = Book.new(id: 2, slug: "test-book", scholar: scholar, title: "Test")
+      expect(helper).to receive(:book_path).with(scholar, book).and_return("/book-path")
+      expect(helper.resource_path_for(book)).to eq("/book-path")
+    end
+
+    it "returns series path" do
+      series = Series.new(id: 2, slug: "test-series", scholar: scholar, title: "Test")
+      expect(helper).to receive(:series_path).with(scholar, series).and_return("/series-path")
+      expect(helper.resource_path_for(series)).to eq("/series-path")
+    end
+
+    it "returns fatwa path" do
+      fatwa = Fatwa.new(id: 2, slug: "test-fatwa", scholar: scholar, title: "Test")
+      expect(helper).to receive(:fatwa_path).with(scholar, fatwa).and_return("/fatwa-path")
+      expect(helper.resource_path_for(fatwa)).to eq("/fatwa-path")
+    end
+
+    it "returns news path" do
+      news = News.new(id: 2, slug: "test-news", scholar: scholar, title: "Test")
+      expect(helper).to receive(:news_path).with(scholar, news).and_return("/news-path")
+      expect(helper.resource_path_for(news)).to eq("/news-path")
+    end
+
+    it "falls back to polymorphic_path for unknown types" do
+      resource = double("Resource")
+      expect(helper).to receive(:polymorphic_path).with(resource).and_return("/fallback")
+      expect(helper.resource_path_for(resource)).to eq("/fallback")
+    end
+  end
 end

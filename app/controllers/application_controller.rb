@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
   def latest_news
     return unless @domain
 
-    @latest_news ||= News.for_domain_id(@domain.id).published.order(published_at: :desc).limit(5)
+    @latest_news ||= News.includes(:scholar).for_domain_id(@domain.id).published.order(published_at: :desc).limit(5)
   end
 
   def set_default_meta_tags

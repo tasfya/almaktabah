@@ -8,7 +8,7 @@ class Fatwa < ApplicationRecord
   include AttachmentSerializable
   include TranscriptionConcern
 
-  belongs_to :scholar, optional: true, inverse_of: :fatwas
+  belongs_to :scholar, inverse_of: :fatwas
   has_one_attached :audio, service: Rails.application.config.public_storage
   has_one_attached :optimized_audio, service: Rails.application.config.public_storage
   has_one_attached :video, service: Rails.application.config.public_storage
@@ -30,10 +30,10 @@ class Fatwa < ApplicationRecord
     end
     attribute :slug
     attribute :scholar_name do
-      scholar&.name
+      scholar.name
     end
     attribute :scholar_slug do
-      scholar&.slug
+      scholar.slug
     end
     attribute :scholar_id
     attribute :media_type do
@@ -52,7 +52,7 @@ class Fatwa < ApplicationRecord
       created_at&.to_i
     end
     attribute :url do
-      Rails.application.routes.url_helpers.fatwa_path(self)
+      Rails.application.routes.url_helpers.fatwa_path(scholar, self)
     end
 
     predefined_fields [
@@ -60,9 +60,9 @@ class Fatwa < ApplicationRecord
       { "name" => "content_text", "type" => "string", "locale" => "ar" },
       { "name" => "content_type", "type" => "string", "facet" => true },
       { "name" => "slug", "type" => "string" },
-      { "name" => "scholar_name", "type" => "string", "facet" => true, "optional" => true },
-      { "name" => "scholar_slug", "type" => "string", "optional" => true },
-      { "name" => "scholar_id", "type" => "int32", "facet" => true, "optional" => true },
+      { "name" => "scholar_name", "type" => "string", "facet" => true },
+      { "name" => "scholar_slug", "type" => "string" },
+      { "name" => "scholar_id", "type" => "int32", "facet" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "audio_url", "type" => "string", "optional" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },

@@ -21,6 +21,8 @@ Rails.application.routes.draw do
     resources :series, only: [ :show ], path: I18n.t("routes.series", default: "series") do
       resources :lessons, only: [ :show ], path: I18n.t("routes.lessons", default: "lessons")
     end
+    resources :news, only: [ :show ], path: I18n.t("routes.news", default: "news")
+    resources :fatwas, only: [ :show ], path: I18n.t("routes.fatwas", default: "fatwas")
     get "#{I18n.t("routes.lectures", default: "lectures")}/(:kind)/:id", to: "lectures#show", as: "lecture"
   end
 
@@ -29,7 +31,7 @@ Rails.application.routes.draw do
   get "#{I18n.t("routes.lessons", default: "lessons")}/:id", to: "lessons#legacy_redirect"
 
   # Legacy: English index paths → Arabic equivalents (301)
-  %w[lectures fatwas].each do |eng|
+  %w[lectures fatwas news].each do |eng|
     arabic = I18n.t("routes.#{eng}", default: eng)
     next if eng == arabic
     encoded = URI::DEFAULT_PARSER.escape(arabic)
@@ -42,13 +44,17 @@ Rails.application.routes.draw do
   # Legacy: English lessons → series index
   get "lessons", to: "lessons#legacy_index_redirect", as: nil
 
+  get "#{I18n.t("routes.news", default: "news")}/:id", to: "news#legacy_redirect", as: :legacy_news
+  get "#{I18n.t("routes.fatwas", default: "fatwas")}/:id", to: "fatwas#legacy_redirect", as: :legacy_fatwa
+
   # Legacy: English show paths
+  get "news/:id", to: "news#legacy_redirect", as: nil
   get "fatwas/:id", to: "fatwas#legacy_redirect", as: nil
   get "books/:id", to: "books#legacy_redirect", constraints: { id: /\d+/ }
   get "series/:id", to: "series#legacy_redirect", constraints: { id: /\d+/ }
   get "lectures/:id", to: "lectures#legacy_redirect", constraints: { id: /\d+/ }
-  resources :news, only: [ :index, :show ], path: I18n.t("routes.news", default: "news")
-  resources :fatwas, only: [ :index, :show ], path: I18n.t("routes.fatwas", default: "fatwas")
+  resources :news, only: [ :index ], path: I18n.t("routes.news", default: "news")
+  resources :fatwas, only: [ :index ], path: I18n.t("routes.fatwas", default: "fatwas")
 
   # Generic play route for all playable resources
   get "play/:resource_type/:id", to: "play#show", as: "play"

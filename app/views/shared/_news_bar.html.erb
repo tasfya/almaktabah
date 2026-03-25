@@ -18,7 +18,7 @@
           <div class="absolute inset-0 flex items-center hidden"
                 data-news-ticker-target="item"
                 data-news-ticker-index="<%= index %>">
-            <%= link_to news_path(news), class: "btn hover:underline btn-primary text-sm truncate" do %>
+            <%= link_to news_path(news.scholar, news), class: "btn hover:underline btn-primary text-sm truncate" do %>
               <%= news.title %>
             <% end %>
           </div>

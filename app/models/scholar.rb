@@ -9,6 +9,7 @@ class Scholar < ApplicationRecord
   has_many :lectures, dependent: :restrict_with_error
   has_many :series, dependent: :restrict_with_error
   has_many :fatwas, dependent: :restrict_with_error
+  has_many :news, dependent: :restrict_with_error
   belongs_to :default_domain, class_name: "Domain", optional: true
   has_rich_text :bio
 

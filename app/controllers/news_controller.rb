@@ -26,15 +26,29 @@ class NewsController < ApplicationController
     )
   end
 
+  def legacy_redirect
+    news = News.friendly
+               .includes(scholar: :default_domain)
+               .for_domain_id(@domain.id)
+               .published
+               .find(params[:id])
+    redirect_to news_path(news.scholar, news), status: :moved_permanently
+  rescue ActiveRecord::RecordNotFound
+    redirect_to news_index_path, alert: t("messages.news_not_found")
+  end
+
   private
 
   def set_news
-    @news = News.friendly
-                .includes(scholar: :default_domain)
-                .for_domain_id(@domain.id)
-                .published
-                .find(params[:id])
-    redirect_to news_path(@news), status: :moved_permanently if slug_mismatch?(:id, @news)
+    @scholar = Scholar.includes(:default_domain).friendly.find(params[:scholar_id])
+    @news = @scholar.news.friendly
+                    .includes(scholar: :default_domain)
+                    .for_domain_id(@domain.id)
+                    .published
+                    .find(params[:id])
+    if slug_mismatch?(:scholar_id, @scholar) || slug_mismatch?(:id, @news)
+      redirect_to news_path(@scholar, @news), status: :moved_permanently
+    end
   rescue ActiveRecord::RecordNotFound
     redirect_to news_index_path, alert: t("messages.news_not_found")
   end
@@ -45,7 +59,7 @@ class NewsController < ApplicationController
       breadcrumb_for(t("breadcrumbs.news"), news_index_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.news"), news_index_path)
-      breadcrumb_for(@news.title, news_path(@news))
+      breadcrumb_for(@news.title, news_path(@scholar, @news))
     end
   end
 end

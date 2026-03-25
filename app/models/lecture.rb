@@ -59,7 +59,7 @@ class Lecture < ApplicationRecord
       created_at&.to_i
     end
     attribute :url do
-      Rails.application.routes.url_helpers.lecture_path(self, scholar_id: scholar.slug, kind: kind_for_url)
+      Rails.application.routes.url_helpers.lecture_path(scholar, self, kind: kind_for_url)
     end
 
     predefined_fields [

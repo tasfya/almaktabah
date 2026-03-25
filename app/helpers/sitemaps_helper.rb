@@ -30,19 +30,19 @@ module SitemapsHelper
   def url_for_sitemap_record(record)
     case record
     when Article
-      article_url(record, scholar_id: record.scholar.slug, host: request.host)
+      article_url(record.scholar, record, host: request.host)
     when Book
-      book_url(record, scholar_id: record.scholar.slug, host: request.host)
+      book_url(record.scholar, record, host: request.host)
     when Lecture
-      lecture_url(record, scholar_id: record.scholar.slug, kind: record.kind_for_url, host: request.host)
+      lecture_url(record.scholar, record, kind: record.kind_for_url, host: request.host)
     when Series
-      series_url(record, scholar_id: record.scholar.slug, host: request.host)
+      series_url(record.scholar, record, host: request.host)
     when Fatwa
-      fatwa_url(record, host: request.host)
+      fatwa_url(record.scholar, record, host: request.host)
     when News
-      news_url(record, host: request.host)
+      news_url(record.scholar, record, host: request.host)
     when Lesson
-      series_lesson_url(record.series, record, scholar_id: record.scholar.slug, host: request.host)
+      series_lesson_url(record.scholar, record.series, record, host: request.host)
     when Hash
       LISTING_LOCS.include?(record[:loc]) ? listing_url_for(record[:loc]) : static_url_for(record[:loc])
     else

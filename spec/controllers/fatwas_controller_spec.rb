@@ -9,6 +9,7 @@ RSpec.describe FatwasController, type: :controller do
   end
 
   let!(:domain) { create(:domain, host: "localhost") }
+  let!(:scholar) { create(:scholar) }
   let(:published_fatwa) { create(:fatwa, published: true, published_at: 1.day.ago) }
 
   describe "GET #index" do
@@ -39,12 +40,12 @@ RSpec.describe FatwasController, type: :controller do
   describe "GET #show" do
     context "when fatwa exists" do
       it "returns a successful response" do
-        get :show, params: { id: published_fatwa.id }
+        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.to_param }
         expect(response).to be_successful
       end
 
       it "assigns the requested fatwa" do
-        get :show, params: { id: published_fatwa.id }
+        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.to_param }
         expect(assigns(:fatwa)).to eq(published_fatwa)
       end
 
@@ -55,32 +56,47 @@ RSpec.describe FatwasController, type: :controller do
         )
         expect(controller).to receive(:breadcrumb_for).with(
           published_fatwa.title,
-          fatwa_path(published_fatwa)
+          fatwa_path(published_fatwa.scholar, published_fatwa)
         )
 
-        get :show, params: { id: published_fatwa.id }
+        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.to_param }
       end
     end
 
-    context "when accessed via old slug" do
+    context "when accessed via old scholar slug" do
+      it "redirects to canonical URL with 301" do
+        old_slug = published_fatwa.scholar.slug
+        published_fatwa.scholar.update!(first_name: "NewUniqueName", last_name: "NewUniqueLast", full_name: "NewUniqueName NewUniqueLast")
+
+        get :show, params: { scholar_id: old_slug, id: published_fatwa.to_param }
+        expect(response).to have_http_status(:moved_permanently)
+        expect(response).to redirect_to(fatwa_path(published_fatwa.scholar, published_fatwa))
+      end
+    end
+
+    context "when accessed via old fatwa slug" do
       it "redirects to canonical slug URL with 301" do
         old_slug = published_fatwa.slug
         published_fatwa.update!(title: "New Unique Fatwa Title #{SecureRandom.hex(4)}")
 
-        get :show, params: { id: old_slug }
+        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: old_slug }
         expect(response).to have_http_status(:moved_permanently)
-        expect(response).to redirect_to(fatwa_path(published_fatwa))
+        expect(response).to redirect_to(fatwa_path(published_fatwa.scholar, published_fatwa))
+      end
+    end
+
+    context "when scholar does not exist" do
+      it "redirects to fatwas index" do
+        get :show, params: { scholar_id: "nonexistent-scholar", id: published_fatwa.to_param }
+        expect(response).to redirect_to(fatwas_path)
+        expect(flash[:alert]).to eq(I18n.t("messages.fatwa_not_found"))
       end
     end
 
     context "when fatwa does not exist" do
       it "redirects to fatwas index" do
-        get :show, params: { id: 99999 }
+        get :show, params: { scholar_id: scholar.slug, id: 99999 }
         expect(response).to redirect_to(fatwas_path)
-      end
-
-      it "shows not found alert" do
-        get :show, params: { id: 99999 }
         expect(flash[:alert]).to eq(I18n.t("messages.fatwa_not_found"))
       end
     end
@@ -90,7 +106,7 @@ RSpec.describe FatwasController, type: :controller do
     it "redirects to canonical fatwa URL with 301" do
       get :legacy_redirect, params: { id: published_fatwa.slug }
       expect(response).to have_http_status(:moved_permanently)
-      expect(response).to redirect_to(fatwa_path(published_fatwa))
+      expect(response).to redirect_to(fatwa_path(published_fatwa.scholar, published_fatwa))
     end
 
     it "redirects to fatwas index when not found" do
