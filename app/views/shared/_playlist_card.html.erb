@@ -3,22 +3,8 @@
   modal_id = "share_modal_#{resource.class.name.downcase}_#{resource.id}"
   show_scholar = local_assigns.fetch(:show_scholar, false)
   custom_icon = local_assigns.fetch(:custom_icon, "book-open")
-
-  if resource.is_a?(Lesson)
-    scholar = resource.scholar
-    series = resource.series
-    share_url = series_lesson_url(scholar, series, resource)
-    resource_link = series_lesson_path(scholar, series, resource)
-  elsif resource.is_a?(Lecture)
-    share_url = lecture_url(resource.scholar, resource, kind: resource.kind_for_url)
-    resource_link = lecture_path(resource.scholar, resource, kind: resource.kind_for_url)
-  elsif resource.is_a?(Article)
-    share_url = article_url(resource.scholar, resource)
-    resource_link = article_path(resource.scholar, resource)
-  else
-    share_url = polymorphic_url(resource)
-    resource_link = polymorphic_path(resource)
-  end
+  share_url = resource_share_url(resource)
+  resource_link = resource_path_for(resource)
 
   linkable = local_assigns[:linkable].present? ? local_assigns[:linkable] : false
 %>

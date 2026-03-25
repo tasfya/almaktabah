@@ -46,7 +46,7 @@ class Article < ApplicationRecord
       created_at&.to_i
     end
     attribute :url do
-      Rails.application.routes.url_helpers.article_path(self, scholar_id: scholar.slug)
+      Rails.application.routes.url_helpers.article_path(scholar, self)
     end
 
     predefined_fields [

@@ -25,8 +25,8 @@ class FatwasController < ApplicationController
   end
 
   def legacy_redirect
-    fatwa = Fatwa.for_domain_id(@domain.id).published.friendly.find(params[:id])
-    redirect_to fatwa_path(fatwa), status: :moved_permanently
+    fatwa = Fatwa.includes(:scholar).for_domain_id(@domain.id).published.friendly.find(params[:id])
+    redirect_to fatwa_path(fatwa.scholar, fatwa), status: :moved_permanently
   rescue ActiveRecord::RecordNotFound, NoMethodError
     redirect_to fatwas_path, alert: t("messages.fatwa_not_found")
   end
@@ -34,12 +34,15 @@ class FatwasController < ApplicationController
   private
 
   def set_fatwa
-    @fatwa = Fatwa.friendly
-                  .includes(scholar: :default_domain)
-                  .for_domain_id(@domain.id)
-                  .published
-                  .find(params[:id])
-    redirect_to fatwa_path(@fatwa), status: :moved_permanently if slug_mismatch?(:id, @fatwa)
+    @scholar = Scholar.includes(:default_domain).friendly.find(params[:scholar_id])
+    @fatwa = @scholar.fatwas.friendly
+                      .includes(scholar: :default_domain)
+                      .for_domain_id(@domain.id)
+                      .published
+                      .find(params[:id])
+    if slug_mismatch?(:scholar_id, @scholar) || slug_mismatch?(:id, @fatwa)
+      redirect_to fatwa_path(@scholar, @fatwa), status: :moved_permanently
+    end
   rescue ActiveRecord::RecordNotFound
     redirect_to fatwas_path, alert: t("messages.fatwa_not_found")
   end
@@ -50,7 +53,7 @@ class FatwasController < ApplicationController
       breadcrumb_for(t("breadcrumbs.fatwas"), fatwas_path)
     when "show"
       breadcrumb_for(t("breadcrumbs.fatwas"), fatwas_path)
-      breadcrumb_for(@fatwa.title, fatwa_path(@fatwa))
+      breadcrumb_for(@fatwa.title, fatwa_path(@scholar, @fatwa))
     end
   end
 end

@@ -45,7 +45,7 @@ class Series < ApplicationRecord
             created_at&.to_i
         end
         attribute :url do
-            Rails.application.routes.url_helpers.series_path(self, scholar_id: scholar.slug)
+            Rails.application.routes.url_helpers.series_path(scholar, self)
         end
 
         predefined_fields [

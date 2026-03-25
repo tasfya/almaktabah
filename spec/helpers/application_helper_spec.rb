@@ -292,4 +292,32 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
     end
   end
+
+  describe "#resource_share_url" do
+    it "uses nested lecture URLs instead of polymorphic query params" do
+      scholar = Scholar.new(id: 1, slug: "test-scholar", full_name: "Test Scholar")
+      lecture = Lecture.new(id: 2, slug: "test-lecture", scholar: scholar, title: "Test Lecture", kind: :sermon)
+
+      expect(helper).to receive(:lecture_url).with(scholar, lecture, kind: lecture.kind_for_url).and_return("/lecture-url")
+      expect(helper.resource_share_url(lecture)).to eq("/lecture-url")
+    end
+
+    it "uses nested fatwa URLs" do
+      scholar = Scholar.new(id: 1, slug: "test-scholar", full_name: "Test Scholar")
+      fatwa = Fatwa.new(id: 2, slug: "test-fatwa", scholar: scholar, title: "Test Fatwa")
+
+      expect(helper).to receive(:fatwa_url).with(scholar, fatwa).and_return("/fatwa-url")
+      expect(helper.resource_share_url(fatwa)).to eq("/fatwa-url")
+    end
+  end
+
+  describe "#resource_path_for" do
+    it "uses nested paths for books" do
+      scholar = Scholar.new(id: 1, slug: "test-scholar", full_name: "Test Scholar")
+      book = Book.new(id: 2, slug: "test-book", scholar: scholar, title: "Test Book")
+
+      expect(helper).to receive(:book_path).with(scholar, book).and_return("/book-path")
+      expect(helper.resource_path_for(book)).to eq("/book-path")
+    end
+  end
 end

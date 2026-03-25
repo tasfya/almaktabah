@@ -4,6 +4,7 @@ RSpec.describe News, type: :model do
   subject(:news) { build(:news) }
 
   describe 'associations' do
+    it { should belong_to(:scholar).required }
     it { should have_one_attached(:thumbnail) }
     it { should have_rich_text(:content) }
   end

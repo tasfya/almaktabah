@@ -6,7 +6,7 @@ class News < ApplicationRecord
   include AttachmentSerializable
 
   has_one_attached :thumbnail, service: Rails.application.config.public_storage
-  belongs_to :scholar, optional: true
+  belongs_to :scholar
   validates :title, presence: true
   validates :content, presence: true
   validates :published_at, presence: true, if: :published?
@@ -26,10 +26,10 @@ class News < ApplicationRecord
     end
     attribute :slug
     attribute :scholar_name do
-      scholar&.name
+      scholar.name
     end
     attribute :scholar_slug do
-      scholar&.slug
+      scholar.slug
     end
     attribute :scholar_id do
       scholar_id
@@ -50,7 +50,7 @@ class News < ApplicationRecord
       attachment_url(thumbnail)
     end
     attribute :url do
-      Rails.application.routes.url_helpers.news_path(self)
+      Rails.application.routes.url_helpers.news_path(scholar, self)
     end
 
     predefined_fields [
@@ -59,9 +59,9 @@ class News < ApplicationRecord
       { "name" => "content_text", "type" => "string", "locale" => "ar" },
       { "name" => "content_type", "type" => "string", "facet" => true },
       { "name" => "slug", "type" => "string" },
-      { "name" => "scholar_name", "type" => "string", "facet" => true, "optional" => true },
-      { "name" => "scholar_slug", "type" => "string", "optional" => true },
-      { "name" => "scholar_id", "type" => "int32", "facet" => true, "optional" => true },
+      { "name" => "scholar_name", "type" => "string", "facet" => true },
+      { "name" => "scholar_slug", "type" => "string" },
+      { "name" => "scholar_id", "type" => "int32", "facet" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
       { "name" => "published_at_ts", "type" => "int64", "optional" => true },

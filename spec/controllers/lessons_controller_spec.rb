@@ -55,7 +55,7 @@ RSpec.describe LessonsController, type: :controller do
 
       it "sets up breadcrumbs" do
         expect(controller).to receive(:breadcrumb_for).with(I18n.t("breadcrumbs.series"), series_index_path)
-        expect(controller).to receive(:breadcrumb_for).with(series.title, series_path(series, scholar_id: scholar.slug))
+        expect(controller).to receive(:breadcrumb_for).with(series.title, series_path(scholar, series))
         expect(controller).to receive(:breadcrumb_for).with(
           published_lesson.title,
           series_lesson_path(scholar, series, published_lesson)
