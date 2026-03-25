@@ -14,12 +14,12 @@ RSpec.describe NewsController, type: :controller do
   describe "GET #show" do
     context "when news exists" do
       it "returns a successful response" do
-        get :show, params: { scholar_id: published_news.scholar.slug, id: published_news.id }
+        get :show, params: { scholar_id: published_news.scholar.slug, id: published_news.to_param }
         expect(response).to be_successful
       end
 
       it "assigns the requested news" do
-        get :show, params: { scholar_id: published_news.scholar.slug, id: published_news.id }
+        get :show, params: { scholar_id: published_news.scholar.slug, id: published_news.to_param }
         expect(assigns(:news)).to eq(published_news)
       end
     end
@@ -29,7 +29,7 @@ RSpec.describe NewsController, type: :controller do
         old_slug = published_news.scholar.slug
         published_news.scholar.update!(first_name: "NewUniqueName", last_name: "NewUniqueLast", full_name: "NewUniqueName NewUniqueLast")
 
-        get :show, params: { scholar_id: old_slug, id: published_news.id }
+        get :show, params: { scholar_id: old_slug, id: published_news.to_param }
         expect(response).to have_http_status(:moved_permanently)
         expect(response).to redirect_to(news_path(published_news.scholar, published_news))
       end
@@ -48,7 +48,7 @@ RSpec.describe NewsController, type: :controller do
 
     context "when scholar does not exist" do
       it "redirects to news index" do
-        get :show, params: { scholar_id: "nonexistent-scholar", id: published_news.id }
+        get :show, params: { scholar_id: "nonexistent-scholar", id: published_news.to_param }
         expect(response).to redirect_to(news_index_path)
         expect(flash[:alert]).to eq(I18n.t("messages.news_not_found"))
       end

@@ -33,7 +33,7 @@ class NewsController < ApplicationController
                .published
                .find(params[:id])
     redirect_to news_path(news.scholar, news), status: :moved_permanently
-  rescue ActiveRecord::RecordNotFound, NoMethodError
+  rescue ActiveRecord::RecordNotFound
     redirect_to news_index_path, alert: t("messages.news_not_found")
   end
 

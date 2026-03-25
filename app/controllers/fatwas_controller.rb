@@ -27,7 +27,7 @@ class FatwasController < ApplicationController
   def legacy_redirect
     fatwa = Fatwa.includes(:scholar).for_domain_id(@domain.id).published.friendly.find(params[:id])
     redirect_to fatwa_path(fatwa.scholar, fatwa), status: :moved_permanently
-  rescue ActiveRecord::RecordNotFound, NoMethodError
+  rescue ActiveRecord::RecordNotFound
     redirect_to fatwas_path, alert: t("messages.fatwa_not_found")
   end
 

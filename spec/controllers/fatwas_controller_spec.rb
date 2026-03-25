@@ -40,12 +40,12 @@ RSpec.describe FatwasController, type: :controller do
   describe "GET #show" do
     context "when fatwa exists" do
       it "returns a successful response" do
-        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.id }
+        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.to_param }
         expect(response).to be_successful
       end
 
       it "assigns the requested fatwa" do
-        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.id }
+        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.to_param }
         expect(assigns(:fatwa)).to eq(published_fatwa)
       end
 
@@ -59,7 +59,7 @@ RSpec.describe FatwasController, type: :controller do
           fatwa_path(published_fatwa.scholar, published_fatwa)
         )
 
-        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.id }
+        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.to_param }
       end
     end
 
@@ -68,7 +68,7 @@ RSpec.describe FatwasController, type: :controller do
         old_slug = published_fatwa.scholar.slug
         published_fatwa.scholar.update!(first_name: "NewUniqueName", last_name: "NewUniqueLast", full_name: "NewUniqueName NewUniqueLast")
 
-        get :show, params: { scholar_id: old_slug, id: published_fatwa.id }
+        get :show, params: { scholar_id: old_slug, id: published_fatwa.to_param }
         expect(response).to have_http_status(:moved_permanently)
         expect(response).to redirect_to(fatwa_path(published_fatwa.scholar, published_fatwa))
       end
@@ -87,7 +87,7 @@ RSpec.describe FatwasController, type: :controller do
 
     context "when scholar does not exist" do
       it "redirects to fatwas index" do
-        get :show, params: { scholar_id: "nonexistent-scholar", id: published_fatwa.id }
+        get :show, params: { scholar_id: "nonexistent-scholar", id: published_fatwa.to_param }
         expect(response).to redirect_to(fatwas_path)
         expect(flash[:alert]).to eq(I18n.t("messages.fatwa_not_found"))
       end
