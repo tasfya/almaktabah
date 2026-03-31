@@ -8,13 +8,21 @@ class VideoToAudioConverter
     movie = FFMPEG::Movie.new(@input_path)
     puts "Converting video to optimized MP3: #{@input_path} -> #{@output_path}"
 
+    # Get original duration to ensure output matches input
+    original_duration = movie.duration
+
     options = {
       audio_codec: "libmp3lame",
       audio_bitrate: "128k",
       audio_sample_rate: 44100,
       audio_channels: 2,
-      custom: %w[-vn -y -f mp3 -copyts]
+      custom: %w[-vn -y -f mp3 -map_metadata -1]
     }
+
+    # Add duration limit to prevent output from being longer than input
+    if original_duration
+      options[:custom] += [ "-t", original_duration.to_s ]
+    end
 
     movie.transcode(@output_path, options)
 
