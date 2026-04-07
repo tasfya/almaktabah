@@ -152,6 +152,13 @@ class Lecture < ApplicationRecord
         # Get the proper key/path for the new file
         key = generate_final_audio_bucket_key
 
+        # If a blob with this key already exists, append the ID to make it unique
+        if ActiveStorage::Blob.exists?(key: key)
+          kind_folder = kind.presence || "general"
+          filename = title.presence || id.to_s
+          key = "all-audios/#{scholar.name}/lectures/#{kind_folder}/#{id}-#{filename}.mp3"
+        end
+
         # Attach to final_audio with the proper key
         final_audio.attach(
           io: tempfile,
