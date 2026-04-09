@@ -26,6 +26,12 @@ module AudioFallback
     respond_to?(:audio) && audio.attached?
   end
 
+  def audio_url
+    return nil unless has_any_audio?
+
+    attachment_url(best_audio)
+  end
+
   def best_audio_dom_id
     return nil unless has_any_audio?
 

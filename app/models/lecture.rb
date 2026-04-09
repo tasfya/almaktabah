@@ -124,12 +124,6 @@ class Lecture < ApplicationRecord
     description
   end
 
-  def audio_url
-    return nil unless has_any_audio?
-
-    attachment_url(best_audio)
-  end
-
   def generate_optimize_audio_bucket_key
     kind_folder = kind.present? ? kind : "general"
     "all-audios/#{scholar.name}/lectures/#{kind_folder}/#{title}.mp3"
