@@ -46,12 +46,6 @@ class Lesson < ApplicationRecord
     "#{series_title} #{title}"
   end
 
-  def audio_url
-    return nil unless has_any_audio?
-
-    attachment_url(best_audio)
-  end
-
   def audio_file_size
     return nil unless has_any_audio?
 
