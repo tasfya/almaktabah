@@ -18,6 +18,10 @@ module MediaHandler
     optimized_audio.attached?
   end
 
+  def final_audio?
+    final_audio.attached?
+  end
+
   def media_type
     if video?
       I18n.t("common.video")

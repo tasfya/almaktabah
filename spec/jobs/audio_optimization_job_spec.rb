@@ -13,12 +13,12 @@ RSpec.describe AudioOptimizationJob, type: :job do
 
       it 'optimizes audio successfully' do
         expect(lecture.audio).to be_attached
-        expect(lecture.optimized_audio).not_to be_attached
+        expect(lecture.final_audio).not_to be_attached
 
         described_class.perform_now(lecture)
 
         lecture.reload
-        expect(lecture.optimized_audio).to be_attached
+        expect(lecture.final_audio).to be_attached
       end
 
       it 'logs successful optimization' do
@@ -37,7 +37,7 @@ RSpec.describe AudioOptimizationJob, type: :job do
       it 'returns early without processing' do
         expect(lecture_without_audio.audio).not_to be_attached
         expect { described_class.perform_now(lecture_without_audio) }.not_to raise_error
-        expect(lecture_without_audio.optimized_audio).not_to be_attached
+        expect(lecture_without_audio.final_audio).not_to be_attached
       end
     end
 
@@ -47,11 +47,11 @@ RSpec.describe AudioOptimizationJob, type: :job do
 
       before do
         lecture.audio.attach(audio_file)
-        lecture.optimized_audio.attach(optimized_file)
+        lecture.final_audio.attach(optimized_file)
       end
 
       it 'returns early without processing' do
-        expect(lecture.optimized_audio).to be_attached
+        expect(lecture.final_audio).to be_attached
         expect { described_class.perform_now(lecture) }.not_to raise_error
       end
     end
@@ -117,36 +117,36 @@ RSpec.describe AudioOptimizationJob, type: :job do
       end
     end
 
-    describe '#attach_optimized_audio' do
+    describe '#attach_final_audio' do
       it 'attaches optimized audio with correct attributes' do
         output_tempfile = Tempfile.new([ 'optimized', '.mp3' ])
         output_tempfile.write('optimized audio content')
         output_tempfile.rewind
 
-        job.send(:attach_optimized_audio, lecture, output_tempfile)
+        job.send(:attach_final_audio, lecture, output_tempfile)
 
         lecture.reload
-        expect(lecture.optimized_audio).to be_attached
-        expect(lecture.optimized_audio.content_type).to eq('audio/mpeg')
+        expect(lecture.final_audio).to be_attached
+        expect(lecture.final_audio.content_type).to eq('audio/mpeg')
 
         output_tempfile.close
         output_tempfile.unlink
       end
 
-      context 'when item responds to generate_optimize_audio_bucket_key' do
+      context 'when item responds to generate_final_audio_bucket_key' do
         it 'uses custom bucket key with _op prefix' do
           allow(lecture).to receive(:respond_to?).and_call_original
-          allow(lecture).to receive(:respond_to?).with(:generate_optimize_audio_bucket_key).and_return(true)
-          allow(lecture).to receive(:generate_optimize_audio_bucket_key).and_return('custom/bucket/key.mp3')
+          allow(lecture).to receive(:respond_to?).with(:generate_final_audio_bucket_key).and_return(true)
+          allow(lecture).to receive(:generate_final_audio_bucket_key).and_return('custom/bucket/key.mp3')
 
           output_tempfile = Tempfile.new([ 'optimized', '.mp3' ])
           output_tempfile.write('optimized audio content')
           output_tempfile.rewind
 
-          job.send(:attach_optimized_audio, lecture, output_tempfile)
+          job.send(:attach_final_audio, lecture, output_tempfile)
           lecture.reload
-          expect(lecture.optimized_audio).to be_attached
-          expect(lecture).to have_received(:generate_optimize_audio_bucket_key)
+          expect(lecture.final_audio).to be_attached
+          expect(lecture).to have_received(:generate_final_audio_bucket_key)
 
           output_tempfile.close
           output_tempfile.unlink

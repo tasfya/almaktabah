@@ -3,14 +3,14 @@ class AudioOptimizationJob < ApplicationJob
 
   def perform(item)
     return unless item.audio?
-    return if item.optimized_audio.attached?
+    return if item.final_audio.attached?
 
     begin
       item.audio.open do |audio_file|
         input_tempfile = create_input_tempfile(item, audio_file)
         output_tempfile = optimize_audio_to_tempfile(input_tempfile)
 
-        attach_optimized_audio(item, output_tempfile)
+        attach_final_audio(item, output_tempfile)
         item.save!
 
         Rails.logger.info "Audio optimization completed for item ID #{item.id}"
@@ -38,7 +38,7 @@ class AudioOptimizationJob < ApplicationJob
   end
 
   def optimize_audio_to_tempfile(input_tempfile)
-    output_tempfile = Tempfile.new([ "optimized_audio", ".mp3" ])
+    output_tempfile = Tempfile.new([ "final_audio", ".mp3" ])
     output_tempfile.close
 
     optimizer = AudioOptimizer.new(input_tempfile.path, output_tempfile.path)
@@ -48,10 +48,10 @@ class AudioOptimizationJob < ApplicationJob
     output_tempfile
   end
 
-  def attach_optimized_audio(item, output_tempfile)
+  def attach_final_audio(item, output_tempfile)
     output_tempfile.rewind
     key = ensure_key_unique(item)
-    item.optimized_audio.attach(
+    item.final_audio.attach(
       io: output_tempfile,
       filename: "#{File.basename(item.audio.filename.to_s, '.*')}.mp3",
       key:,
@@ -60,12 +60,13 @@ class AudioOptimizationJob < ApplicationJob
   end
 
   def ensure_key_unique(item)
-    key = item.generate_optimize_audio_bucket_key
+    key = item.generate_final_audio_bucket_key
     counter = 0
     while ActiveStorage::Blob.where(key: key).exists?
       key = "#{key.split('.').first}_#{counter}.mp3"
       counter += 1
       break if counter > 5
     end
+    key
   end
 end
