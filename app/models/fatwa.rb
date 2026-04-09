@@ -40,7 +40,7 @@ class Fatwa < ApplicationRecord
       audio.attached? ? "audio" : "text"
     end
     attribute :audio_url do
-      attachment_url(optimized_audio.attached? ? optimized_audio : audio)
+      attachment_url(best_audio)
     end
     attribute :domain_ids do
       domain_assignments.pluck(:domain_id)

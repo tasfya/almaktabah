@@ -47,15 +47,15 @@ class Lesson < ApplicationRecord
   end
 
   def audio_url
-    return nil unless audio.attached?
+    return nil unless has_any_audio?
 
-    attachment_url(audio)
+    attachment_url(best_audio)
   end
 
   def audio_file_size
-    return nil unless audio.attached?
+    return nil unless has_any_audio?
 
-    audio.blob.byte_size
+    best_audio.blob.byte_size
   end
 
   def podcast_title
