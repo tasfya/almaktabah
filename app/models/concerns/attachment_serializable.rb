@@ -3,6 +3,7 @@ module AttachmentSerializable
 
   # TODO Mohamed clean up this code
   def attachment_url(attachment)
+    return nil if attachment.nil?
     return nil unless attachment.attached?
     return nil if attachment.blob.new_record?
 
