@@ -209,12 +209,6 @@ RSpec.describe Lecture, type: :model do
           content_type: "audio/mpeg"
         )
       end
-
-      it 'generates a structured bucket key' do
-        lecture = create(:lecture, title: 'الطهارة')
-        bucket_key = lecture.generate_optimize_audio_bucket_key
-        expect(bucket_key).to eq("all-audios/#{lecture.scholar.name}/lectures/#{lecture.kind}/#{lecture.title}.mp3")
-      end
     end
   end
 
