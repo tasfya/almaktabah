@@ -8,6 +8,8 @@ class Fatwa < ApplicationRecord
   include AttachmentSerializable
   include TranscriptionConcern
 
+  enum :audio_review_status, { pending: 0, flagged: 1, verified: 2, duplicate: 3 }
+
   belongs_to :scholar, optional: true, inverse_of: :fatwas
   has_one_attached :audio, service: Rails.application.config.public_storage
   has_one_attached :video, service: Rails.application.config.public_storage

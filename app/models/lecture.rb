@@ -9,6 +9,7 @@ class Lecture < ApplicationRecord
   include TranscriptionConcern
 
   enum :kind, { sermon: 1, conference: 2, benefit: 3 }
+  enum :audio_review_status, { pending: 0, flagged: 1, verified: 2, duplicate: 3 }
 
   validates :title, presence: true
   validates :source_url, uniqueness: true, allow_blank: true
