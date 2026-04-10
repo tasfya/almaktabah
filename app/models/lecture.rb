@@ -90,7 +90,6 @@ class Lecture < ApplicationRecord
   has_one_attached :thumbnail, service: Rails.application.config.public_storage
   has_one_attached :audio, service: Rails.application.config.public_storage
   has_one_attached :video, service: Rails.application.config.public_storage
-  has_one_attached :optimized_audio, service: Rails.application.config.public_storage
   has_one_attached :final_audio, service: :public_media_aws
 
   has_rich_text :content
@@ -124,49 +123,10 @@ class Lecture < ApplicationRecord
     description
   end
 
-  def generate_optimize_audio_bucket_key
-    kind_folder = kind.present? ? kind : "general"
-    "all-audios/#{scholar.name}/lectures/#{kind_folder}/#{title}.mp3"
-  end
-
   def generate_final_audio_bucket_key
     kind_folder = kind.presence || "general"
     filename = title.presence || id.to_s
     "all-audios/#{scholar.name}/lectures/#{kind_folder}/#{filename}.mp3"
-  end
-
-  def migrate_to_final_audio
-    return false unless optimized_audio.attached?
-    return true if final_audio.attached? # Skip if already migrated
-
-    begin
-      # Download the optimized_audio blob
-      optimized_audio.open do |tempfile|
-        # Get the proper key/path for the new file
-        key = generate_final_audio_bucket_key
-
-        # If a blob with this key already exists, append the ID to make it unique
-        if ActiveStorage::Blob.exists?(key: key)
-          kind_folder = kind.presence || "general"
-          filename = title.presence || id.to_s
-          key = "all-audios/#{scholar.name}/lectures/#{kind_folder}/#{id}-#{filename}.mp3"
-        end
-
-        # Attach to final_audio with the proper key
-        final_audio.attach(
-          io: tempfile,
-          filename: "#{title.presence || id}.mp3",
-          content_type: "audio/mpeg",
-          key: key
-        )
-      end
-
-      Rails.logger.info "Successfully migrated Lecture##{id} optimized_audio to final_audio"
-      true
-    rescue => e
-      Rails.logger.error "Failed to migrate Lecture##{id}: #{e.message}"
-      false
-    end
   end
 
   def kind_for_url

@@ -38,7 +38,6 @@ class Avo::Resources::Lesson < Avo::BaseResource
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes
     field :generated_video, as: :file, accept: "video/*", max_size: 100.megabytes, hide_on: [ :new, :edit ], readonly: true
-    field :optimized_audio, as: :file, accept: "audio/*", max_size: 10.megabytes, hide_on: [ :new, :edit ], readonly: true
     field :final_audio, as: :file, accept: "audio/*", max_size: 10.megabytes, hide_on: [ :new, :edit ], readonly: true
     field :final_audio_key, as: :text, hide_on: [ :new, :edit ], readonly: true do
       record.final_audio.key if record.final_audio.attached?
