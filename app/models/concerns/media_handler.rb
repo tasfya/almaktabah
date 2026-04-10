@@ -14,10 +14,6 @@ module MediaHandler
     audio.attached?
   end
 
-  def optimized_audio?
-    optimized_audio.attached?
-  end
-
   def final_audio?
     final_audio.attached?
   end
