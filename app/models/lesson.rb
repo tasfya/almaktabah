@@ -6,6 +6,8 @@ class Lesson < ApplicationRecord
   include AttachmentSerializable
   include TranscriptionConcern
 
+  enum :audio_review_status, { pending: 0, flagged: 1, verified: 2, duplicate: 3 }
+
   belongs_to :series
   delegate :scholar, to: :series
 

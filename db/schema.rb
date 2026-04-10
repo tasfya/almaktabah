@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_19_194335) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_10_211618) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -123,6 +123,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_194335) do
     t.integer "scholar_id"
     t.string "source_url"
     t.text "transcription_json"
+    t.integer "audio_review_status", default: 0, null: false
     t.index ["published"], name: "index_fatwas_on_published"
     t.index ["scholar_id"], name: "index_fatwas_on_scholar_id"
     t.index ["slug"], name: "index_fatwas_on_slug", unique: true
@@ -156,6 +157,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_194335) do
     t.integer "kind"
     t.string "slug"
     t.text "transcription_json"
+    t.integer "audio_review_status", default: 0, null: false
     t.index ["kind"], name: "index_lectures_on_kind"
     t.index ["old_id"], name: "index_lectures_on_old_id"
     t.index ["published"], name: "index_lectures_on_published"
@@ -180,6 +182,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_194335) do
     t.boolean "published", default: false, null: false
     t.string "source_url"
     t.text "transcription_json"
+    t.integer "audio_review_status", default: 0, null: false
     t.index ["old_id"], name: "index_lessons_on_old_id"
     t.index ["position"], name: "index_lessons_on_position"
     t.index ["published"], name: "index_lessons_on_published"
