@@ -92,8 +92,47 @@ namespace :storage do
     if orphaned.positive?
       puts ""
       puts "Note: Found #{orphaned} orphaned blobs."
-      puts "Run 'rails active_storage:purge_unattached' to clean them up."
+      puts "Run 'rake storage:purge_orphaned_blobs' to clean them up."
     end
+  end
+
+  desc "Purge orphaned blobs (blobs with no attachments)"
+  task purge_orphaned_blobs: :environment do
+    orphaned = ActiveStorage::Blob.left_joins(:attachments)
+                                  .where(active_storage_attachments: { id: nil })
+
+    total = orphaned.count
+
+    if total.zero?
+      puts "No orphaned blobs found."
+      exit 0
+    end
+
+    total_bytes = orphaned.sum(:byte_size)
+    total_mb = (total_bytes / 1_048_576.0).round(2)
+
+    puts "Found #{total} orphaned blobs (#{total_mb} MB)"
+    print "Purge these blobs? (y/N): "
+    confirmation = $stdin.gets.chomp.downcase
+
+    unless %w[y yes].include?(confirmation)
+      puts "Cancelled."
+      exit 0
+    end
+
+    puts "Purging..."
+
+    purged = 0
+    orphaned.find_each do |blob|
+      blob.purge
+      purged += 1
+      print "\rPurged: #{purged}/#{total}"
+    rescue => e
+      Rails.logger.error "Failed to purge blob #{blob.id}: #{e.message}"
+    end
+
+    puts ""
+    puts "Done! Purged #{purged} orphaned blobs."
   end
 
   desc "Purge optimized_audio for a specific model (e.g., rake storage:purge_optimized_audio_for[Lecture])"

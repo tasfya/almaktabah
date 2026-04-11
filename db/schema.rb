@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_10_211618) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_11_175540) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -110,6 +110,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_10_211618) do
     t.text "custom_css"
     t.string "template_name", default: "default", null: false
     t.string "title"
+    t.boolean "is_default", default: false, null: false
+    t.index ["is_default"], name: "index_domains_on_is_default", unique: true, where: "is_default = true"
   end
 
   create_table "fatwas", force: :cascade do |t|

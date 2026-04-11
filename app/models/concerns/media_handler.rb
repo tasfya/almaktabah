@@ -31,12 +31,9 @@ module MediaHandler
   private
 
   def process_media_files
-    # return unless audio.attached? || video.attached?
+    return unless audio.attached?
 
-    # AudioOptimizationJob.perform_later(self)
-    # VideoProcessingJob.perform_later(self)
-
-    # handle_youtube_resource
+    AudioOptimizationJob.perform_later(self)
   end
 
   def handle_youtube_resource
