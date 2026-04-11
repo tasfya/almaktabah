@@ -10,13 +10,19 @@ class AudioOptimizationJob < ApplicationJob
         input_tempfile = create_input_tempfile(item, audio_file)
         output_tempfile = optimize_audio_to_tempfile(input_tempfile)
 
+        # Get original duration BEFORE attaching
+        original_duration = extract_duration(input_tempfile.path)
+
         attach_final_audio(item, output_tempfile)
         item.save!
 
-        Rails.logger.info "Audio optimization completed for item ID #{item.id}"
+        # Verify and delete original
+        verify_and_delete_original(item, original_duration)
+
+        Rails.logger.info "Audio optimization completed for #{item.class.name} ID #{item.id}"
       end
     rescue => e
-      Rails.logger.error "Audio optimization failed for item ID #{item.id}: #{e.message}"
+      Rails.logger.error "Audio optimization failed for #{item.class.name} ID #{item.id}: #{e.message}"
       raise e
     end
   end
@@ -68,5 +74,37 @@ class AudioOptimizationJob < ApplicationJob
       break if counter > 5
     end
     key
+  end
+
+  def extract_duration(file_path)
+    movie = FFMPEG::Movie.new(file_path)
+    movie.duration
+  rescue => e
+    Rails.logger.warn "Failed to extract duration: #{e.message}"
+    nil
+  end
+
+  def verify_and_delete_original(item, original_duration)
+    return unless original_duration
+    return unless item.final_audio.attached?
+
+    # Download final_audio to temp file to verify duration
+    item.final_audio.open do |final_file|
+      final_duration = extract_duration(final_file.path)
+
+      return unless final_duration
+
+      # Allow 1 second tolerance for encoding differences
+      duration_diff = (original_duration - final_duration).abs
+
+      if duration_diff <= 1.0
+        Rails.logger.info "Duration verified (diff: #{duration_diff.round(2)}s). Deleting original audio for #{item.class.name} ID #{item.id}."
+        item.audio.purge
+      else
+        Rails.logger.warn "Duration mismatch! Original: #{original_duration}s, Final: #{final_duration}s. Keeping original for #{item.class.name} ID #{item.id}."
+      end
+    end
+  rescue => e
+    Rails.logger.error "Failed to verify/delete original audio for #{item.class.name} ID #{item.id}: #{e.message}"
   end
 end
