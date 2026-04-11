@@ -27,7 +27,7 @@ RSpec.describe AudioOptimizationJob, type: :job do
         described_class.perform_now(lecture)
 
         expect(Rails.logger).to have_received(:info)
-          .with("Audio optimization completed for item ID #{lecture.id}")
+          .with("Audio optimization completed for Lecture ID #{lecture.id}")
       end
     end
 
@@ -70,7 +70,7 @@ RSpec.describe AudioOptimizationJob, type: :job do
         expect { described_class.perform_now(lecture) }.to raise_error(StandardError, "Optimization failed")
 
         expect(Rails.logger).to have_received(:error)
-          .with("Audio optimization failed for item ID #{lecture.id}: Optimization failed")
+          .with("Audio optimization failed for Lecture ID #{lecture.id}: Optimization failed")
       end
     end
   end
