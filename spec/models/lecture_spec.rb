@@ -209,12 +209,6 @@ RSpec.describe Lecture, type: :model do
           content_type: "audio/mpeg"
         )
       end
-
-      it 'generates a structured bucket key' do
-        lecture = create(:lecture, title: 'الطهارة')
-        bucket_key = lecture.generate_optimize_audio_bucket_key
-        expect(bucket_key).to eq("all-audios/#{lecture.scholar.name}/lectures/#{lecture.kind}/#{lecture.title}.mp3")
-      end
     end
   end
 
@@ -335,50 +329,6 @@ RSpec.describe Lecture, type: :model do
         lecture.title = nil
         expected_key = "all-audios/الشيخ محمد/lectures/sermon/#{lecture.id}.mp3"
         expect(lecture.generate_final_audio_bucket_key).to eq(expected_key)
-      end
-    end
-
-    describe '#migrate_to_final_audio' do
-      let(:audio_file) { fixture_file_upload(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
-
-      context 'when optimized_audio is attached' do
-        before do
-          lecture.optimized_audio.attach(audio_file)
-        end
-
-        it 'migrates optimized_audio to final_audio' do
-          expect(lecture.migrate_to_final_audio).to be true
-          expect(lecture.final_audio).to be_attached
-        end
-
-        it 'uses correct filename' do
-          lecture.migrate_to_final_audio
-          expect(lecture.final_audio.filename.to_s).to eq('محاضرة في الفقه.mp3')
-        end
-
-        it 'preserves audio content' do
-          original_byte_size = lecture.optimized_audio.byte_size
-          lecture.migrate_to_final_audio
-          expect(lecture.final_audio.byte_size).to eq(original_byte_size)
-        end
-      end
-
-      context 'when final_audio already exists' do
-        before do
-          lecture.optimized_audio.attach(audio_file)
-          lecture.final_audio.attach(audio_file)
-        end
-
-        it 'skips migration and returns true' do
-          expect(lecture.migrate_to_final_audio).to be true
-          expect(lecture.final_audio).to be_attached
-        end
-      end
-
-      context 'when optimized_audio is not attached' do
-        it 'returns false' do
-          expect(lecture.migrate_to_final_audio).to be false
-        end
       end
     end
   end

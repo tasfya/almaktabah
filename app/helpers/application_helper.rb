@@ -164,8 +164,12 @@ module ApplicationHelper
   def direct_download_url(attachment)
     return nil unless attachment&.attached?
 
-    if attachment.service.respond_to?(:url) && attachment.service.name == :public_media_hetzner
+    service_name = attachment.service.name
+
+    if attachment.service.respond_to?(:url) && service_name == :public_media_hetzner
       attachment.url
+    elsif service_name == :public_media_aws
+      "https://bucket.3ilm.org/#{attachment.blob.key}"
     else
       rails_blob_url(attachment, disposition: "attachment")
     end

@@ -9,6 +9,7 @@ class Lecture < ApplicationRecord
   include TranscriptionConcern
 
   enum :kind, { sermon: 1, conference: 2, benefit: 3 }
+  enum :audio_review_status, { pending: 0, flagged: 1, verified: 2, duplicate: 3 }
 
   validates :title, presence: true
   validates :source_url, uniqueness: true, allow_blank: true
@@ -41,7 +42,7 @@ class Lecture < ApplicationRecord
       video.attached? ? "video" : "audio"
     end
     attribute :audio_url do
-      attachment_url(optimized_audio.attached? ? optimized_audio : audio)
+      attachment_url(best_audio)
     end
     attribute :video_url do
       attachment_url(video)
@@ -90,7 +91,6 @@ class Lecture < ApplicationRecord
   has_one_attached :thumbnail, service: Rails.application.config.public_storage
   has_one_attached :audio, service: Rails.application.config.public_storage
   has_one_attached :video, service: Rails.application.config.public_storage
-  has_one_attached :optimized_audio, service: Rails.application.config.public_storage
   has_one_attached :final_audio, service: :public_media_aws
 
   has_rich_text :content
@@ -115,58 +115,19 @@ class Lecture < ApplicationRecord
   end
 
   def audio_file_size
-    return nil unless audio.attached?
+    return nil unless has_any_audio?
 
-    audio.blob.byte_size
+    best_audio.blob.byte_size
   end
 
   def summary
     description
   end
 
-  def audio_url
-    return nil unless audio.attached?
-
-    # Use direct storage URL for Hetzner public media, fallback to Rails blob URL otherwise
-    attachment_url(audio)
-  end
-
-  def generate_optimize_audio_bucket_key
-    kind_folder = kind.present? ? kind : "general"
-    "all-audios/#{scholar.name}/lectures/#{kind_folder}/#{title}.mp3"
-  end
-
   def generate_final_audio_bucket_key
     kind_folder = kind.presence || "general"
     filename = title.presence || id.to_s
     "all-audios/#{scholar.name}/lectures/#{kind_folder}/#{filename}.mp3"
-  end
-
-  def migrate_to_final_audio
-    return false unless optimized_audio.attached?
-    return true if final_audio.attached? # Skip if already migrated
-
-    begin
-      # Download the optimized_audio blob
-      optimized_audio.open do |tempfile|
-        # Get the proper key/path for the new file
-        key = generate_final_audio_bucket_key
-
-        # Attach to final_audio with the proper key
-        final_audio.attach(
-          io: tempfile,
-          filename: "#{title.presence || id}.mp3",
-          content_type: "audio/mpeg",
-          key: key
-        )
-      end
-
-      Rails.logger.info "Successfully migrated Lecture##{id} optimized_audio to final_audio"
-      true
-    rescue => e
-      Rails.logger.error "Failed to migrate Lecture##{id}: #{e.message}"
-      false
-    end
   end
 
   def kind_for_url

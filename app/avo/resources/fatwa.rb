@@ -29,7 +29,10 @@ class Avo::Resources::Fatwa < Avo::BaseResource
     field :audio, as: :file, accept: "audio/*", max_size: 10.megabytes
     field :video, as: :file, accept: "video/*", max_size: 100.megabytes
     field :source_url, as: :text, help: "Source URL for the fatwa"
-    field :optimized_audio, as: :file, accept: "audio/*", max_size: 10.megabytes, hide_on: [ :new, :edit ], readonly: true
+    field :final_audio, as: :file, accept: "audio/*", max_size: 10.megabytes, hide_on: [ :new, :edit ], readonly: true
+    field :final_audio_key, as: :text, hide_on: [ :new, :edit ], readonly: true do
+      record.final_audio.key if record.final_audio.attached?
+    end
     field :created_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
     field :updated_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
   end
