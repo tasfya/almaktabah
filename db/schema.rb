@@ -122,7 +122,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_11_175540) do
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
     t.string "slug"
-    t.integer "scholar_id"
+    t.integer "scholar_id", null: false
     t.string "source_url"
     t.text "transcription_json"
     t.integer "audio_review_status", default: 0, null: false
@@ -200,7 +200,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_11_175540) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "published", default: false, null: false
-    t.integer "scholar_id"
+    t.integer "scholar_id", null: false
     t.index ["published"], name: "index_news_on_published"
     t.index ["scholar_id"], name: "index_news_on_scholar_id"
     t.index ["slug"], name: "index_news_on_slug", unique: true
@@ -408,7 +408,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_11_175540) do
   add_foreign_key "articles", "scholars", column: "author_id"
   add_foreign_key "books", "scholars", column: "author_id"
   add_foreign_key "domain_assignments", "domains"
-  add_foreign_key "fatwas", "scholars", on_delete: :nullify
+  add_foreign_key "fatwas", "scholars"
   add_foreign_key "lectures", "scholars"
   add_foreign_key "lessons", "series"
   add_foreign_key "news", "scholars"

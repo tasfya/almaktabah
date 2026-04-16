@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :news do
+    scholar
     title { Faker::Book.title }
     content { Faker::Lorem.paragraphs(number: 3).join("\n\n") }
     description { Faker::Lorem.sentence(word_count: 10) }

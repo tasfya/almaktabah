@@ -4,6 +4,7 @@ RSpec.describe Fatwa, type: :model do
   subject(:fatwa) { build(:fatwa) }
 
   describe 'associations' do
+    it { should belong_to(:scholar).required }
     it { should have_rich_text(:question) }
     it { should have_rich_text(:answer) }
   end

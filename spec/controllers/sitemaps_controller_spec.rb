@@ -75,7 +75,7 @@ RSpec.describe SitemapsController, type: :controller do
 
       it "includes article URLs" do
         get :show, params: { type: "articles" }, format: :xml
-        expect(response.body).to include(article_path(article, scholar_id: scholar.slug))
+        expect(response.body).to include(article_path(scholar, article))
       end
 
       it "includes lastmod for articles" do
@@ -93,7 +93,7 @@ RSpec.describe SitemapsController, type: :controller do
 
       it "includes book URLs" do
         get :show, params: { type: "books" }, format: :xml
-        expect(response.body).to include(book_path(book, scholar_id: scholar.slug))
+        expect(response.body).to include(book_path(scholar, book))
       end
     end
 
@@ -115,7 +115,7 @@ RSpec.describe SitemapsController, type: :controller do
 
       it "includes series URLs" do
         get :show, params: { type: "series" }, format: :xml
-        expect(response.body).to include(series_path(series, scholar_id: scholar.slug))
+        expect(response.body).to include(series_path(scholar, series))
       end
     end
 
@@ -128,20 +128,20 @@ RSpec.describe SitemapsController, type: :controller do
 
       it "includes fatwa URLs" do
         get :show, params: { type: "fatwas" }, format: :xml
-        expect(response.body).to include(fatwa_path(fatwa))
+        expect(response.body).to include(fatwa_path(scholar, fatwa))
       end
     end
 
     context "with type=news" do
       let!(:news_item) do
-        news = create(:news, published: true, published_at: 1.day.ago)
+        news = create(:news, scholar: scholar, published: true, published_at: 1.day.ago)
         news.domains << domain
         news
       end
 
       it "includes news URLs" do
         get :show, params: { type: "news" }, format: :xml
-        expect(response.body).to include(news_path(news_item))
+        expect(response.body).to include(news_path(scholar, news_item))
       end
     end
 
@@ -155,7 +155,7 @@ RSpec.describe SitemapsController, type: :controller do
 
       it "includes lesson URLs" do
         get :show, params: { type: "lessons" }, format: :xml
-        expect(response.body).to include(series_lesson_path(series, lesson, scholar_id: scholar.slug))
+        expect(response.body).to include(series_lesson_path(scholar, series, lesson))
       end
     end
 
@@ -192,7 +192,7 @@ RSpec.describe SitemapsController, type: :controller do
 
       it "does not include unpublished articles" do
         get :show, params: { type: "articles" }, format: :xml
-        expect(response.body).not_to include(article_path(unpublished_article, scholar_id: scholar.slug))
+        expect(response.body).not_to include(article_path(scholar, unpublished_article))
       end
     end
 
@@ -207,7 +207,7 @@ RSpec.describe SitemapsController, type: :controller do
 
       it "does not include content from other domains" do
         get :show, params: { type: "articles" }, format: :xml
-        expect(response.body).not_to include(article_path(other_article, scholar_id: scholar.slug))
+        expect(response.body).not_to include(article_path(scholar, other_article))
       end
     end
   end

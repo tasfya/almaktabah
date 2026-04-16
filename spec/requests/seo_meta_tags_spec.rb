@@ -25,33 +25,33 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
 
     it "includes title meta tag" do
-      get article_path(article, scholar_id: scholar.slug)
+      get article_path(scholar, article)
       expect(response.body).to include("<title>Test Article Title")
     end
 
     it "includes description meta tag" do
-      get article_path(article, scholar_id: scholar.slug)
+      get article_path(scholar, article)
       expect(response.body).to include('name="description"')
     end
 
     it "includes canonical URL" do
-      get article_path(article, scholar_id: scholar.slug)
+      get article_path(scholar, article)
       expect(response.body).to include('rel="canonical"')
     end
 
     it "includes Open Graph title" do
-      get article_path(article, scholar_id: scholar.slug)
+      get article_path(scholar, article)
       expect(response.body).to include('property="og:title"')
     end
 
     it "includes Open Graph type" do
-      get article_path(article, scholar_id: scholar.slug)
+      get article_path(scholar, article)
       expect(response.body).to include('property="og:type"')
       expect(response.body).to include("article")
     end
 
     it "includes JSON-LD structured data" do
-      get article_path(article, scholar_id: scholar.slug)
+      get article_path(scholar, article)
       expect(response.body).to include('type="application/ld+json"')
       expect(response.body).to include('"@type":"Article"')
     end
@@ -65,23 +65,23 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
 
     it "includes title meta tag" do
-      get book_path(book, scholar_id: scholar.slug)
+      get book_path(scholar, book)
       expect(response.body).to include("<title>Test Book Title")
     end
 
     it "includes description meta tag from book description" do
-      get book_path(book, scholar_id: scholar.slug)
+      get book_path(scholar, book)
       expect(response.body).to include('name="description"')
     end
 
     it "includes Open Graph type as book" do
-      get book_path(book, scholar_id: scholar.slug)
+      get book_path(scholar, book)
       expect(response.body).to include('property="og:type"')
       expect(response.body).to include("book")
     end
 
     it "includes JSON-LD structured data" do
-      get book_path(book, scholar_id: scholar.slug)
+      get book_path(scholar, book)
       expect(response.body).to include('type="application/ld+json"')
       expect(response.body).to include('"@type":"Book"')
     end
@@ -95,18 +95,18 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
 
     it "includes title meta tag" do
-      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind_for_url)
+      get lecture_path(scholar, lecture, kind: lecture.kind_for_url)
       expect(response.body).to include("<title>")
       expect(response.body).to include("Test Lecture Title")
     end
 
     it "includes description meta tag" do
-      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind_for_url)
+      get lecture_path(scholar, lecture, kind: lecture.kind_for_url)
       expect(response.body).to include('name="description"')
     end
 
     it "includes JSON-LD structured data for video/audio" do
-      get lecture_path(lecture, scholar_id: scholar.slug, kind: lecture.kind_for_url)
+      get lecture_path(scholar, lecture, kind: lecture.kind_for_url)
       expect(response.body).to include('type="application/ld+json"')
       expect(response.body).to match(/"@type":"(VideoObject|AudioObject)"/)
     end
@@ -120,12 +120,12 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
 
     it "includes title meta tag" do
-      get fatwa_path(fatwa)
+      get fatwa_path(scholar, fatwa)
       expect(response.body).to include("<title>Test Fatwa Title")
     end
 
     it "includes JSON-LD FAQPage structured data" do
-      get fatwa_path(fatwa)
+      get fatwa_path(scholar, fatwa)
       expect(response.body).to include('type="application/ld+json"')
       expect(response.body).to include('"@type":"FAQPage"')
     end
@@ -139,13 +139,13 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
 
     it "includes title meta tag" do
-      get series_path(series, scholar_id: scholar.slug)
+      get series_path(scholar, series)
       expect(response.body).to include("<title>")
       expect(response.body).to include("Test Series Title")
     end
 
     it "includes JSON-LD Course structured data" do
-      get series_path(series, scholar_id: scholar.slug)
+      get series_path(scholar, series)
       expect(response.body).to include('type="application/ld+json"')
       expect(response.body).to include('"@type":"Course"')
     end
@@ -164,40 +164,40 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
 
     it "includes title meta tag" do
-      get series_lesson_path(series, lesson, scholar_id: scholar.slug)
+      get series_lesson_path(scholar, series, lesson)
       expect(response.body).to include("<title>Test Lesson Title")
     end
 
     it "includes description meta tag" do
-      get series_lesson_path(series, lesson, scholar_id: scholar.slug)
+      get series_lesson_path(scholar, series, lesson)
       expect(response.body).to include('name="description"')
     end
 
     it "includes canonical URL" do
-      get series_lesson_path(series, lesson, scholar_id: scholar.slug)
+      get series_lesson_path(scholar, series, lesson)
       expect(response.body).to include('rel="canonical"')
     end
 
     it "includes Open Graph title" do
-      get series_lesson_path(series, lesson, scholar_id: scholar.slug)
+      get series_lesson_path(scholar, series, lesson)
       expect(response.body).to include('property="og:title"')
     end
   end
 
   describe "News" do
     let!(:news) do
-      news = create(:news, title: "Test News Title", description: "News description", published: true, published_at: 1.day.ago)
+      news = create(:news, title: "Test News Title", description: "News description", scholar: scholar, published: true, published_at: 1.day.ago)
       news.domains << domain
       news
     end
 
     it "includes title meta tag" do
-      get news_path(news)
+      get news_path(scholar, news)
       expect(response.body).to include("<title>Test News Title")
     end
 
     it "includes JSON-LD NewsArticle structured data" do
-      get news_path(news)
+      get news_path(scholar, news)
       expect(response.body).to include('type="application/ld+json"')
       expect(response.body).to include('"@type":"NewsArticle"')
     end
@@ -214,7 +214,7 @@ RSpec.describe "SEO Meta Tags", type: :request do
       end
 
       it "points to scholar's default domain" do
-        get article_path(article, scholar_id: scholar_with_domain.slug)
+        get article_path(scholar_with_domain, article)
         expect(response.body).to include('rel="canonical" href="http://scholar.example.com')
       end
     end
@@ -228,7 +228,7 @@ RSpec.describe "SEO Meta Tags", type: :request do
       end
 
       it "falls back to ilm domain" do
-        get book_path(book, scholar_id: scholar.slug)
+        get book_path(scholar, book)
         expect(response.body).to include('rel="canonical" href="http://ilm.example.com')
       end
     end
@@ -241,7 +241,7 @@ RSpec.describe "SEO Meta Tags", type: :request do
       end
 
       it "falls back to current request domain" do
-        get fatwa_path(fatwa)
+        get fatwa_path(scholar, fatwa)
         expect(response.body).to include('rel="canonical" href="http://www.example.com')
       end
     end
@@ -255,17 +255,17 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
 
     it "includes site name in meta tags" do
-      get fatwa_path(fatwa)
+      get fatwa_path(scholar, fatwa)
       expect(response.body).to include('property="og:site_name"')
     end
 
     it "includes Twitter card meta tag" do
-      get fatwa_path(fatwa)
+      get fatwa_path(scholar, fatwa)
       expect(response.body).to include('name="twitter:card"')
     end
 
     it "includes locale in Open Graph" do
-      get fatwa_path(fatwa)
+      get fatwa_path(scholar, fatwa)
       expect(response.body).to include('property="og:locale"')
       expect(response.body).to include("ar_AR")
     end
@@ -318,7 +318,7 @@ RSpec.describe "SEO Meta Tags", type: :request do
     it "does not add noindex on detail page" do
       article = create(:article, title: "Noindex Test", scholar: scholar, published: true, published_at: 1.day.ago)
       article.domains << domain
-      get article_path(article, scholar_id: scholar.slug)
+      get article_path(scholar, article)
       expect(response.body).not_to include('content="noindex')
     end
   end

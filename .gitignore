@@ -65,3 +65,4 @@ db/backups
 opencode.json
 .claude/
 /justfile
+/seo/

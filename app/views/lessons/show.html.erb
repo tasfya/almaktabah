@@ -22,7 +22,7 @@
       <div class="p-8 lg:p-12">
         <header class="mb-10">
           <p class="uppercase tracking-wide text-sm text-base-content/50 mb-2">
-            <%= link_to @series.title, series_path(@series, scholar_id: @scholar.slug), class: "hover:link" %>
+            <%= link_to @series.title, series_path(@scholar, @series), class: "hover:link" %>
           </p>
           <h1 class="text-3xl lg:text-4xl font-bold leading-tight mb-3">
             <%= @lesson.title %>

@@ -124,13 +124,41 @@ module ApplicationHelper
       scholar = series&.scholar
       return series_lesson_url(scholar, series, resource) if series && scholar
     when Lecture
-      scholar = resource.respond_to?(:scholar) ? resource.scholar : nil
-      return polymorphic_url(resource, scholar_id: scholar.to_param, kind: resource.kind_for_url) if scholar
-    else
-      scholar = resource.respond_to?(:scholar) ? resource.scholar : nil
-      return polymorphic_url(resource, scholar_id: scholar.to_param) if scholar
+      return lecture_url(resource.scholar, resource, kind: resource.kind_for_url)
+    when Article
+      return article_url(resource.scholar, resource)
+    when Book
+      return book_url(resource.scholar, resource)
+    when Series
+      return series_url(resource.scholar, resource)
+    when Fatwa
+      return fatwa_url(resource.scholar, resource)
+    when News
+      return news_url(resource.scholar, resource)
     end
     polymorphic_url(resource)
+  end
+
+  def resource_path_for(resource)
+    case resource
+    when Lesson
+      series = resource.series
+      scholar = series&.scholar
+      return series_lesson_path(scholar, series, resource) if series && scholar
+    when Lecture
+      return lecture_path(resource.scholar, resource, kind: resource.kind_for_url)
+    when Article
+      return article_path(resource.scholar, resource)
+    when Book
+      return book_path(resource.scholar, resource)
+    when Series
+      return series_path(resource.scholar, resource)
+    when Fatwa
+      return fatwa_path(resource.scholar, resource)
+    when News
+      return news_path(resource.scholar, resource)
+    end
+    polymorphic_path(resource)
   end
 
   def direct_download_url(attachment)

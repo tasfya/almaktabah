@@ -53,7 +53,7 @@ class Book < ApplicationRecord
       attachment_url(cover_image)
     end
     attribute :url do
-      Rails.application.routes.url_helpers.book_path(self, scholar_id: scholar.slug)
+      Rails.application.routes.url_helpers.book_path(scholar, self)
     end
 
     # Predefined fields with Arabic locale
