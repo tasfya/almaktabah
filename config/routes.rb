@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   namespace :api do
     get "lectures/pending_downloads", to: "lectures#pending_downloads"
     post "lectures/:id/upload_video", to: "lectures#upload_video"
+
+    get "transcriptions/pending", to: "transcriptions#pending"
+    post "transcriptions/:type/:id/upload", to: "transcriptions#upload"
   end
 
   get "/robots.txt", to: "robots#show", defaults: { format: "text" }
