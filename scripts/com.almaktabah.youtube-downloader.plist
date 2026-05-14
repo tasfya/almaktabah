@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.almaktabah.youtube-downloader</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/ruby</string>
+        <string>/Users/mac/apps/almaktabah/scripts/local_youtube_downloader.rb</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>ALMAKTABAH_SERVER_URL</key>
+        <string>https://YOUR-SERVER-URL.com</string>
+        <key>ALMAKTABAH_API_TOKEN</key>
+        <string>YOUR-SECRET-TOKEN</string>
+        <key>DOWNLOAD_LIMIT</key>
+        <string>5</string>
+    </dict>
+
+    <key>StartInterval</key>
+    <integer>1800</integer>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/almaktabah-downloader.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/almaktabah-downloader.error.log</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>

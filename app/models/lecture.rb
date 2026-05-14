@@ -100,6 +100,7 @@ class Lecture < ApplicationRecord
   scope :by_category, ->(category) { where(category: category) if category.present? }
   scope :with_audio, -> { joins(:audio_attachment) }
   scope :without_audio, -> { where.missing(:audio_attachment) }
+  scope :with_youtube_url_missing_video, -> { where.not(youtube_url: [ nil, "" ]).where.missing(:video_attachment) }
 
 
   def self.ransackable_attributes(auth_object = nil)
