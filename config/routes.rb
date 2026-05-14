@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  namespace :api do
+    get "lectures/pending_downloads", to: "lectures#pending_downloads"
+    post "lectures/:id/upload_video", to: "lectures#upload_video"
+  end
+
   get "/robots.txt", to: "robots#show", defaults: { format: "text" }
   get "/sitemap.xml", to: "sitemaps#index", defaults: { format: "xml" }
   get "/sitemaps/:type(-:page).xml", to: "sitemaps#show",
