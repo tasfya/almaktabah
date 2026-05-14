@@ -7,7 +7,8 @@
 # Setup:
 #   1. Install yt-dlp: brew install yt-dlp
 #   2. Set environment variables:
-#      export ALMAKTABAH_SERVER_URL="https://your-server.com"
+#      export ALMAKTABAH_SERVER_URL="https://3ilm.org"
+#      export ALMAKTABAH_UPLOAD_URL="https://upload.3ilm.org"  # bypasses Cloudflare
 #      export ALMAKTABAH_API_TOKEN="your-secret-token"
 #   3. Run: ruby local_youtube_downloader.rb
 #
@@ -15,6 +16,7 @@
 #   DOWNLOAD_DIR: Where to store downloads (default: ~/youtube_downloads)
 #   DOWNLOAD_LIMIT: Max videos per run (default: 10)
 #   KEEP_FILES: Set to "true" to keep downloaded files after upload
+#   ALMAKTABAH_UPLOAD_URL: Separate URL for uploads (bypasses Cloudflare 100MB limit)
 
 require "net/http"
 require "uri"
@@ -25,6 +27,7 @@ require "logger"
 class LocalYoutubeDownloader
   DOWNLOAD_DIR = ENV.fetch("DOWNLOAD_DIR", File.expand_path("~/youtube_downloads"))
   SERVER_URL = ENV.fetch("ALMAKTABAH_SERVER_URL") { raise "ALMAKTABAH_SERVER_URL not set" }
+  UPLOAD_URL = ENV.fetch("ALMAKTABAH_UPLOAD_URL", SERVER_URL) # Use separate URL to bypass Cloudflare
   API_TOKEN = ENV.fetch("ALMAKTABAH_API_TOKEN") { raise "ALMAKTABAH_API_TOKEN not set" }
   DOWNLOAD_LIMIT = ENV.fetch("DOWNLOAD_LIMIT", "10").to_i
   KEEP_FILES = ENV.fetch("KEEP_FILES", "false") == "true"
@@ -38,6 +41,7 @@ class LocalYoutubeDownloader
   def run
     @logger.info "Starting YouTube download run..."
     @logger.info "Server: #{SERVER_URL}"
+    @logger.info "Upload: #{UPLOAD_URL}" if UPLOAD_URL != SERVER_URL
     @logger.info "Download directory: #{DOWNLOAD_DIR}"
 
     lectures = fetch_pending_lectures
@@ -147,9 +151,9 @@ class LocalYoutubeDownloader
   end
 
   def upload_to_server(lecture_id, video_path, thumbnail_path)
-    uri = URI("#{SERVER_URL}/api/lectures/#{lecture_id}/upload_video")
+    uri = URI("#{UPLOAD_URL}/api/lectures/#{lecture_id}/upload_video")
 
-    @logger.info "Uploading to server..."
+    @logger.info "Uploading to #{uri.host}..."
 
     # Build multipart form data
     boundary = "----RubyFormBoundary#{rand(1_000_000)}"
