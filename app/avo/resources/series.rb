@@ -30,6 +30,7 @@ class Avo::Resources::Series < Avo::BaseResource
   end
 
   def actions
+    action Avo::Actions::ImportLessonsCsv
     action Avo::Actions::PublishSeries
     action Avo::Actions::UnpublishSeries
   end
