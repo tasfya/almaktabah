@@ -11,9 +11,10 @@ class AudioTranscriptionService
   end
 
   def transcribe!
-    return unless @record.audio_url.present?
+    audio_url = public_audio_url
+    return unless audio_url.present?
 
-    transcript_json = transcribe_with_groq!(@record.audio_url)
+    transcript_json = transcribe_with_groq!(audio_url)
     raise "No transcript generated for #{@record.class.name}##{@record.id}" if transcript_json.blank?
 
     attach_transcript_to_record(transcript_json)
@@ -21,8 +22,15 @@ class AudioTranscriptionService
     transcript_json
   end
 
+  # Returns URL from final_audio (public R2 storage) only
+  def public_audio_url
+    return nil unless @record.respond_to?(:final_audio) && @record.final_audio.attached?
+
+    @record.attachment_url(@record.final_audio)
+  end
+
   def transcribe_with_groq!(audio_url)
-    Rails.logger.info "Transcribing with Groq API for #{@record.class.name}##{@record.id}: #{@record.audio_url}"
+    Rails.logger.info "Transcribing with Groq API for #{@record.class.name}##{@record.id}: #{audio_url}"
 
     # Build multipart form data body matching the curl example
     body = {

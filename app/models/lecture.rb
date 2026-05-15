@@ -100,6 +100,7 @@ class Lecture < ApplicationRecord
   scope :by_category, ->(category) { where(category: category) if category.present? }
   scope :with_audio, -> { joins(:audio_attachment) }
   scope :without_audio, -> { where.missing(:audio_attachment) }
+  scope :with_final_audio, -> { joins(:final_audio_attachment) }
   scope :with_youtube_url_missing_video, -> { where.not(youtube_url: [ nil, "" ]).where.missing(:video_attachment) }
 
 
@@ -125,17 +126,10 @@ class Lecture < ApplicationRecord
     description
   end
 
-  # Returns absolute HTTPS URL for podcast feed
+  # Returns absolute HTTPS URL for podcast feed (only final_audio on public R2)
   def podcast_audio_url
-    return nil unless has_any_audio?
-    url = attachment_url(best_audio)
-    return nil if url.blank?
-
-    # If already absolute URL, return as-is
-    return url if url.start_with?("https://")
-
-    # Otherwise, it's a relative path - this shouldn't happen with current storage config
-    nil
+    return nil unless has_final_audio?
+    attachment_url(final_audio)
   end
 
   def generate_final_audio_bucket_key

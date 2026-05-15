@@ -4,8 +4,9 @@ module PodcastsHelper
   end
 
   def get_podcast_audios(domain_id:)
-    lessons = Lesson.published.with_audio.where.not(duration: nil).where.not(published_at: nil)
-    lectures = Lecture.published.with_audio.where.not(duration: nil).where.not(published_at: nil)
+    # Only include items with final_audio (stored on public R2 storage)
+    lessons = Lesson.published.with_final_audio.where.not(duration: nil).where.not(published_at: nil)
+    lectures = Lecture.published.with_final_audio.where.not(duration: nil).where.not(published_at: nil)
     lessons = lessons.for_domain_id(domain_id)
     lectures = lectures.for_domain_id(domain_id)
 
