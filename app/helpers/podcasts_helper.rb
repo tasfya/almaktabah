@@ -5,10 +5,18 @@ module PodcastsHelper
 
   def get_podcast_audios(domain_id:)
     # Only include items with final_audio (stored on public R2 storage)
-    lessons = Lesson.published.with_final_audio.where.not(duration: nil).where.not(published_at: nil)
-    lectures = Lecture.published.with_final_audio.where.not(duration: nil).where.not(published_at: nil)
-    lessons = lessons.for_domain_id(domain_id)
-    lectures = lectures.for_domain_id(domain_id)
+    # Use distinct to avoid duplicates from domain assignments
+    lessons = Lesson.published.with_final_audio
+      .where.not(duration: nil)
+      .where.not(published_at: nil)
+      .for_domain_id(domain_id)
+      .distinct
+
+    lectures = Lecture.published.with_final_audio
+      .where.not(duration: nil)
+      .where.not(published_at: nil)
+      .for_domain_id(domain_id)
+      .distinct
 
     # Combine and sort by published_at descending (newest first)
     (lectures.to_a + lessons.to_a).sort_by(&:published_at).reverse
