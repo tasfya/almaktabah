@@ -30,7 +30,7 @@ class LocalYoutubeDownloader
   SERVER_URL = ENV.fetch("ALMAKTABAH_SERVER_URL") { raise "ALMAKTABAH_SERVER_URL not set" }
   UPLOAD_URL = ENV.fetch("ALMAKTABAH_UPLOAD_URL", SERVER_URL) # Use separate URL to bypass Cloudflare
   API_TOKEN = ENV.fetch("ALMAKTABAH_API_TOKEN") { raise "ALMAKTABAH_API_TOKEN not set" }
-  DOWNLOAD_LIMIT = ENV.fetch("DOWNLOAD_LIMIT", "10").to_i
+  DOWNLOAD_LIMIT = ENV["DOWNLOAD_LIMIT"]&.to_i
   KEEP_FILES = ENV.fetch("KEEP_FILES", "false") == "true"
   MODEL = ENV.fetch("MODEL", "all").downcase # "lecture", "lesson", or "all"
 
@@ -85,7 +85,9 @@ class LocalYoutubeDownloader
   private
 
   def fetch_pending_items(model_type)
-    uri = URI("#{SERVER_URL}/api/#{model_type}s/pending_downloads?limit=#{DOWNLOAD_LIMIT}")
+    url = "#{SERVER_URL}/api/#{model_type}s/pending_downloads"
+    url += "?limit=#{DOWNLOAD_LIMIT}" if DOWNLOAD_LIMIT
+    uri = URI(url)
     response = make_request(uri, :get)
 
     if response.is_a?(Net::HTTPSuccess)
