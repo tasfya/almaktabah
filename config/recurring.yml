@@ -3,6 +3,14 @@ production:
     class: VideoBatchProcessingJob
     schedule: every 6 hours
 
+  audio_duration_batch:
+    class: AudioDurationBatchJob
+    schedule: every 2 hours
+
+  lecture_kind_assignment:
+    class: LectureKindAssignmentJob
+    schedule: every 3 hours
+
 # Example schedule syntax:
 #   schedule: every hour
 #   schedule: every 6 hours
