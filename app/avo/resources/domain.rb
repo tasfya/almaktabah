@@ -28,7 +28,6 @@ class Avo::Resources::Domain < Avo::BaseResource
           help: "Apple touch icon for iOS devices (optional - auto-generated from logo if not provided)", hide_on: :index
 
     # Podcast settings
-    heading "Podcast Settings"
     field :podcast_enabled, as: :boolean, help: "Enable podcast RSS feed for this domain"
     field :podcast_title, as: :text, help: "Podcast title (required)"
     field :podcast_author, as: :text, help: "Podcast author name"
