@@ -21,7 +21,7 @@ class LessonCsvImportService
 
     existing_titles = series.lessons.pluck(:title).map(&:downcase) if skip_duplicates
 
-    csv_content = csv_file.read
+    csv_content = csv_file.read.force_encoding("UTF-8")
     csv_data = CSV.parse(csv_content, headers: true)
 
     unless csv_data.headers.include?("title")
