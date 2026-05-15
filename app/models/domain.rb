@@ -1,4 +1,6 @@
 class Domain < ApplicationRecord
+  include AttachmentSerializable
+
   ILM_NAME = "ilm"
 
   def self.default
@@ -7,6 +9,7 @@ class Domain < ApplicationRecord
 
   has_one_attached :logo, service: Rails.application.config.public_storage
   has_one_attached :art_work, service: Rails.application.config.public_storage
+  has_one_attached :podcast_artwork, service: Rails.application.config.public_storage
   has_one_attached :favicon_ico, service: Rails.application.config.public_storage
   has_one_attached :favicon_png, service: Rails.application.config.public_storage
   has_one_attached :favicon_svg, service: Rails.application.config.public_storage
@@ -56,5 +59,30 @@ class Domain < ApplicationRecord
     return false if template_name.blank?
     return false if !self.class.available_templates.include?(template_name)
     true
+  end
+
+  # Podcast methods
+  def podcast_enabled?
+    podcast_enabled && podcast_title.present? && podcast_owner_email.present?
+  end
+
+  def podcast_artwork_url
+    return nil unless podcast_artwork.attached?
+    attachment_url(podcast_artwork)
+  end
+
+  def podcast_details
+    {
+      title: podcast_title,
+      author: podcast_author.presence || podcast_title,
+      description: podcast_description.presence || "Podcast from #{name}",
+      website_url: "https://#{host}/",
+      language: podcast_language.presence || "ar",
+      owner_name: podcast_owner_name.presence || podcast_author.presence || podcast_title,
+      owner_email: podcast_owner_email,
+      artwork_url: podcast_artwork_url,
+      category: podcast_category.presence || "Religion & Spirituality",
+      subcategory: podcast_subcategory
+    }
   end
 end

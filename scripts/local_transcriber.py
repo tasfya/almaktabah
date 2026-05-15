@@ -1,24 +1,27 @@
 #!/usr/bin/env python3
 """
 Local Arabic Transcription Script
-Transcribes audio using faster-whisper with large-v3 model (best for Arabic)
+Transcribes audio using Whisper with large-v3 model (best for Arabic)
 
 Setup:
-  1. Install dependencies:
+  For Apple Silicon (recommended):
+     pip install mlx-whisper requests
+
+  For NVIDIA GPU or CPU:
      pip install faster-whisper requests
 
-  2. Set environment variables:
+  Set environment variables:
      export ALMAKTABAH_SERVER_URL="https://3ilm.org"
      export ALMAKTABAH_API_TOKEN="your-secret-token"
 
-  3. Run:
+  Run:
      python local_transcriber.py
 
 Optional environment variables:
   DOWNLOAD_DIR: Where to store temp audio (default: ~/transcription_downloads)
   TRANSCRIPTION_LIMIT: Max items per run (default: 5)
   WHISPER_MODEL: Model size (default: large-v3)
-  WHISPER_DEVICE: cpu, cuda, or auto (default: auto)
+  WHISPER_BACKEND: mlx, faster-whisper, or auto (default: auto)
   RESOURCE_TYPE: Lecture, Lesson, or Fatwa (default: all)
 """
 
@@ -26,12 +29,38 @@ import os
 import sys
 import json
 import logging
-import tempfile
+import platform
 from pathlib import Path
 from typing import Optional
 
 import requests
-from faster_whisper import WhisperModel
+
+# Detect backend
+WHISPER_BACKEND = os.environ.get("WHISPER_BACKEND", "auto")
+
+def get_backend():
+    """Determine which whisper backend to use"""
+    if WHISPER_BACKEND != "auto":
+        return WHISPER_BACKEND
+
+    # On Apple Silicon, prefer mlx-whisper for GPU acceleration
+    if platform.system() == "Darwin" and platform.machine() == "arm64":
+        try:
+            import mlx_whisper
+            return "mlx"
+        except ImportError:
+            pass
+
+    # Fall back to faster-whisper
+    try:
+        from faster_whisper import WhisperModel
+        return "faster-whisper"
+    except ImportError:
+        pass
+
+    raise ImportError("No whisper backend found. Install mlx-whisper (Apple Silicon) or faster-whisper")
+
+BACKEND = get_backend()
 
 # Configuration
 SERVER_URL = os.environ.get("ALMAKTABAH_SERVER_URL", "https://3ilm.org")
@@ -39,7 +68,6 @@ API_TOKEN = os.environ.get("ALMAKTABAH_API_TOKEN")
 DOWNLOAD_DIR = Path(os.environ.get("DOWNLOAD_DIR", Path.home() / "transcription_downloads"))
 TRANSCRIPTION_LIMIT = int(os.environ.get("TRANSCRIPTION_LIMIT", "5"))
 WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "large-v3")
-WHISPER_DEVICE = os.environ.get("WHISPER_DEVICE", "auto")
 RESOURCE_TYPE = os.environ.get("RESOURCE_TYPE", "")  # empty = all types
 
 # Setup logging
@@ -70,17 +98,21 @@ class LocalTranscriber:
             return
 
         logger.info(f"Loading Whisper model: {WHISPER_MODEL}")
+        logger.info(f"Using backend: {BACKEND}")
 
-        # Determine compute type based on device
-        device = WHISPER_DEVICE
-        if device == "auto":
-            # Check for Apple Silicon MPS or CUDA
+        if BACKEND == "mlx":
+            # MLX backend for Apple Silicon - uses GPU automatically
+            import mlx_whisper
+            self.model = "mlx"  # mlx_whisper uses model name directly in transcribe
+            logger.info("Using MLX backend (Apple Silicon GPU)")
+        else:
+            # faster-whisper backend
+            from faster_whisper import WhisperModel
+
+            # Determine device
             try:
                 import torch
-                if torch.backends.mps.is_available():
-                    device = "cpu"  # faster-whisper doesn't support MPS directly, but uses optimized CPU
-                    compute_type = "int8"
-                elif torch.cuda.is_available():
+                if torch.cuda.is_available():
                     device = "cuda"
                     compute_type = "float16"
                 else:
@@ -89,16 +121,15 @@ class LocalTranscriber:
             except ImportError:
                 device = "cpu"
                 compute_type = "int8"
-        else:
-            compute_type = "float16" if device == "cuda" else "int8"
 
-        logger.info(f"Using device: {device}, compute_type: {compute_type}")
+            logger.info(f"Using device: {device}, compute_type: {compute_type}")
 
-        self.model = WhisperModel(
-            WHISPER_MODEL,
-            device=device,
-            compute_type=compute_type
-        )
+            self.model = WhisperModel(
+                WHISPER_MODEL,
+                device=device,
+                compute_type=compute_type
+            )
+
         logger.info("Model loaded successfully")
 
     def run(self):
@@ -204,43 +235,86 @@ class LocalTranscriber:
         logger.info("Transcribing with Whisper...")
 
         try:
-            segments, info = self.model.transcribe(
-                str(audio_path),
-                language="ar",
-                task="transcribe",
-                vad_filter=True,  # Filter out silence
-                vad_parameters=dict(
-                    min_silence_duration_ms=500,
-                ),
-                word_timestamps=True,
-                beam_size=5,
-            )
-
-            # Convert to our format
-            result_segments = []
-            full_text = []
-
-            for segment in segments:
-                result_segments.append({
-                    "start": round(segment.start, 3),
-                    "end": round(segment.end, 3),
-                    "text": segment.text.strip()
-                })
-                full_text.append(segment.text.strip())
-
-            transcription = {
-                "text": " ".join(full_text),
-                "segments": result_segments,
-                "language": info.language,
-                "duration": info.duration
-            }
-
-            logger.info(f"Transcribed {len(result_segments)} segments, {info.duration:.1f}s duration")
-            return transcription
-
+            if BACKEND == "mlx":
+                return self._transcribe_mlx(audio_path)
+            else:
+                return self._transcribe_faster_whisper(audio_path)
         except Exception as e:
             logger.error(f"Transcription failed: {e}")
             return None
+
+    def _transcribe_mlx(self, audio_path: Path) -> Optional[dict]:
+        """Transcribe using MLX backend (Apple Silicon)"""
+        import mlx_whisper
+
+        result = mlx_whisper.transcribe(
+            str(audio_path),
+            path_or_hf_repo=f"mlx-community/whisper-{WHISPER_MODEL}-mlx",
+            language="ar",
+            task="transcribe",
+            word_timestamps=True,
+        )
+
+        # Convert to our format
+        result_segments = []
+        full_text = []
+
+        for segment in result.get("segments", []):
+            result_segments.append({
+                "start": round(segment["start"], 3),
+                "end": round(segment["end"], 3),
+                "text": segment["text"].strip()
+            })
+            full_text.append(segment["text"].strip())
+
+        # Calculate duration from last segment
+        duration = result_segments[-1]["end"] if result_segments else 0
+
+        transcription = {
+            "text": " ".join(full_text),
+            "segments": result_segments,
+            "language": result.get("language", "ar"),
+            "duration": duration
+        }
+
+        logger.info(f"Transcribed {len(result_segments)} segments, {duration:.1f}s duration")
+        return transcription
+
+    def _transcribe_faster_whisper(self, audio_path: Path) -> Optional[dict]:
+        """Transcribe using faster-whisper backend"""
+        segments, info = self.model.transcribe(
+            str(audio_path),
+            language="ar",
+            task="transcribe",
+            vad_filter=True,
+            vad_parameters=dict(
+                min_silence_duration_ms=500,
+            ),
+            word_timestamps=True,
+            beam_size=5,
+        )
+
+        # Convert to our format
+        result_segments = []
+        full_text = []
+
+        for segment in segments:
+            result_segments.append({
+                "start": round(segment.start, 3),
+                "end": round(segment.end, 3),
+                "text": segment.text.strip()
+            })
+            full_text.append(segment.text.strip())
+
+        transcription = {
+            "text": " ".join(full_text),
+            "segments": result_segments,
+            "language": info.language,
+            "duration": info.duration
+        }
+
+        logger.info(f"Transcribed {len(result_segments)} segments, {info.duration:.1f}s duration")
+        return transcription
 
     def upload_transcription(self, item_type: str, item_id: int, transcription: dict):
         """Upload transcription to server"""

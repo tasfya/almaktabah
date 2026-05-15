@@ -71,6 +71,19 @@ class Lesson < ApplicationRecord
     description
   end
 
+  # Returns absolute HTTPS URL for podcast feed
+  def podcast_audio_url
+    return nil unless has_any_audio?
+    url = attachment_url(best_audio)
+    return nil if url.blank?
+
+    # If already absolute URL, return as-is
+    return url if url.start_with?("https://")
+
+    # Otherwise, it's a relative path - this shouldn't happen with current storage config
+    nil
+  end
+
   def generate_optimize_audio_bucket_key
     # todo fix position nil case I did update some
     # that had no position with the the id but need to fix properly

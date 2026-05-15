@@ -125,6 +125,19 @@ class Lecture < ApplicationRecord
     description
   end
 
+  # Returns absolute HTTPS URL for podcast feed
+  def podcast_audio_url
+    return nil unless has_any_audio?
+    url = attachment_url(best_audio)
+    return nil if url.blank?
+
+    # If already absolute URL, return as-is
+    return url if url.start_with?("https://")
+
+    # Otherwise, it's a relative path - this shouldn't happen with current storage config
+    nil
+  end
+
   def generate_final_audio_bucket_key
     kind_folder = kind.presence || "general"
     filename = title.presence || id.to_s

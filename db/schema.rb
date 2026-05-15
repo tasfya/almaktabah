@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_11_175540) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_15_175737) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.string "actionable_type", null: false
@@ -111,6 +111,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_11_175540) do
     t.string "template_name", default: "default", null: false
     t.string "title"
     t.boolean "is_default", default: false, null: false
+    t.string "podcast_title"
+    t.string "podcast_author"
+    t.text "podcast_description"
+    t.string "podcast_owner_name"
+    t.string "podcast_owner_email"
+    t.string "podcast_language", default: "ar"
+    t.string "podcast_category", default: "Religion & Spirituality"
+    t.string "podcast_subcategory", default: "Islam"
+    t.boolean "podcast_enabled", default: false, null: false
     t.index ["is_default"], name: "index_domains_on_is_default", unique: true, where: "is_default = true"
   end
 
