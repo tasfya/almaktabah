@@ -37,8 +37,9 @@ class VideoProcessingJob < ApplicationJob
       if !item.audio.attached?
         Rails.logger.info "Extracting audio from video for item #{item.id}"
 
-        audio_output_filename = "op_#{File.basename(base_name, ".*")}.mp3"
-        audio_output_path = AUDIO_STORAGE_DIR.join(audio_output_filename)
+        model_type = item.class.name.downcase
+        audio_output_filename = "#{model_type}_#{item.id}.mp3"
+        audio_output_path = AUDIO_STORAGE_DIR.join("#{model_type}_#{item.id}_#{timestamp}.mp3")
 
         converter = VideoToAudioConverter.new(
           input_path.to_s,
