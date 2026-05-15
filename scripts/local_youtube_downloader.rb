@@ -17,6 +17,7 @@
 #   DOWNLOAD_LIMIT: Max videos per run (default: 10)
 #   KEEP_FILES: Set to "true" to keep downloaded files after upload
 #   ALMAKTABAH_UPLOAD_URL: Separate URL for uploads (bypasses Cloudflare 100MB limit)
+#   MODEL: Which model to process - "lecture", "lesson", or "all" (default: "all")
 
 require "net/http"
 require "uri"
@@ -31,6 +32,9 @@ class LocalYoutubeDownloader
   API_TOKEN = ENV.fetch("ALMAKTABAH_API_TOKEN") { raise "ALMAKTABAH_API_TOKEN not set" }
   DOWNLOAD_LIMIT = ENV.fetch("DOWNLOAD_LIMIT", "10").to_i
   KEEP_FILES = ENV.fetch("KEEP_FILES", "false") == "true"
+  MODEL = ENV.fetch("MODEL", "all").downcase # "lecture", "lesson", or "all"
+
+  SUPPORTED_MODELS = %w[lecture lesson].freeze
 
   def initialize
     @logger = Logger.new($stdout)
@@ -43,58 +47,76 @@ class LocalYoutubeDownloader
     @logger.info "Server: #{SERVER_URL}"
     @logger.info "Upload: #{UPLOAD_URL}" if UPLOAD_URL != SERVER_URL
     @logger.info "Download directory: #{DOWNLOAD_DIR}"
+    @logger.info "Model filter: #{MODEL}"
 
-    lectures = fetch_pending_lectures
-    if lectures.empty?
-      @logger.info "No pending lectures to download"
-      return
+    models_to_process = MODEL == "all" ? SUPPORTED_MODELS : [ MODEL ]
+    total_processed = 0
+
+    models_to_process.each do |model_type|
+      total_processed += process_model(model_type)
     end
 
-    @logger.info "Found #{lectures.size} lectures to download"
+    if total_processed.zero?
+      @logger.info "No pending items to download"
+    else
+      @logger.info "Download run complete! Processed #{total_processed} items."
+    end
+  end
 
-    lectures.each_with_index do |lecture, index|
-      @logger.info "[#{index + 1}/#{lectures.size}] Processing: #{lecture['title']}"
-      process_lecture(lecture)
+  def process_model(model_type)
+    @logger.info "--- Processing #{model_type.capitalize}s ---"
+
+    items = fetch_pending_items(model_type)
+    if items.empty?
+      @logger.info "No pending #{model_type}s to download"
+      return 0
     end
 
-    @logger.info "Download run complete!"
+    @logger.info "Found #{items.size} #{model_type}s to download"
+
+    items.each_with_index do |item, index|
+      @logger.info "[#{index + 1}/#{items.size}] Processing #{model_type}: #{item['title']}"
+      process_item(model_type, item)
+    end
+
+    items.size
   end
 
   private
 
-  def fetch_pending_lectures
-    uri = URI("#{SERVER_URL}/api/lectures/pending_downloads?limit=#{DOWNLOAD_LIMIT}")
+  def fetch_pending_items(model_type)
+    uri = URI("#{SERVER_URL}/api/#{model_type}s/pending_downloads?limit=#{DOWNLOAD_LIMIT}")
     response = make_request(uri, :get)
 
     if response.is_a?(Net::HTTPSuccess)
-      JSON.parse(response.body)["lectures"]
+      JSON.parse(response.body)["#{model_type}s"]
     else
-      @logger.error "Failed to fetch pending lectures: #{response.code} #{response.body}"
+      @logger.error "Failed to fetch pending #{model_type}s: #{response.code} #{response.body}"
       []
     end
   end
 
-  def process_lecture(lecture)
-    lecture_id = lecture["id"]
-    youtube_url = lecture["youtube_url"]
+  def process_item(model_type, item)
+    item_id = item["id"]
+    youtube_url = item["youtube_url"]
 
-    video_path = download_video(lecture_id, youtube_url)
+    video_path = download_video(model_type, item_id, youtube_url)
     return unless video_path
 
-    thumbnail_path = generate_thumbnail(video_path, lecture_id)
-    upload_to_server(lecture_id, video_path, thumbnail_path)
+    thumbnail_path = generate_thumbnail(video_path, model_type, item_id)
+    upload_to_server(model_type, item_id, video_path, thumbnail_path)
 
     unless KEEP_FILES
       FileUtils.rm_f(video_path)
       FileUtils.rm_f(thumbnail_path) if thumbnail_path
     end
   rescue StandardError => e
-    @logger.error "Failed to process lecture #{lecture_id}: #{e.message}"
+    @logger.error "Failed to process #{model_type} #{item_id}: #{e.message}"
     @logger.debug e.backtrace.join("\n")
   end
 
-  def download_video(lecture_id, youtube_url)
-    output_template = File.join(DOWNLOAD_DIR, "lecture_#{lecture_id}.%(ext)s")
+  def download_video(model_type, item_id, youtube_url)
+    output_template = File.join(DOWNLOAD_DIR, "#{model_type}_#{item_id}.%(ext)s")
 
     cmd = [
       "yt-dlp",
@@ -111,24 +133,24 @@ class LocalYoutubeDownloader
     result = system(*cmd)
 
     unless result
-      @logger.error "yt-dlp failed for lecture #{lecture_id}"
+      @logger.error "yt-dlp failed for #{model_type} #{item_id}"
       return nil
     end
 
     # Find the downloaded file
-    video_path = Dir.glob(File.join(DOWNLOAD_DIR, "lecture_#{lecture_id}.*")).first
+    video_path = Dir.glob(File.join(DOWNLOAD_DIR, "#{model_type}_#{item_id}.*")).first
     if video_path && File.exist?(video_path)
       file_size_mb = (File.size(video_path) / 1024.0 / 1024.0).round(2)
       @logger.info "Downloaded: #{File.basename(video_path)} (#{file_size_mb} MB)"
       video_path
     else
-      @logger.error "Download completed but file not found for lecture #{lecture_id}"
+      @logger.error "Download completed but file not found for #{model_type} #{item_id}"
       nil
     end
   end
 
-  def generate_thumbnail(video_path, lecture_id)
-    thumbnail_path = File.join(DOWNLOAD_DIR, "lecture_#{lecture_id}_thumb.jpg")
+  def generate_thumbnail(video_path, model_type, item_id)
+    thumbnail_path = File.join(DOWNLOAD_DIR, "#{model_type}_#{item_id}_thumb.jpg")
 
     cmd = [
       "ffmpeg", "-y",
@@ -145,13 +167,13 @@ class LocalYoutubeDownloader
       @logger.info "Generated thumbnail: #{File.basename(thumbnail_path)}"
       thumbnail_path
     else
-      @logger.warn "Failed to generate thumbnail for lecture #{lecture_id}"
+      @logger.warn "Failed to generate thumbnail for #{model_type} #{item_id}"
       nil
     end
   end
 
-  def upload_to_server(lecture_id, video_path, thumbnail_path)
-    uri = URI("#{UPLOAD_URL}/api/lectures/#{lecture_id}/upload_video")
+  def upload_to_server(model_type, item_id, video_path, thumbnail_path)
+    uri = URI("#{UPLOAD_URL}/api/#{model_type}s/#{item_id}/upload_video")
 
     @logger.info "Uploading to #{uri.host}..."
 
@@ -189,7 +211,7 @@ class LocalYoutubeDownloader
     response = http.request(request)
 
     if response.is_a?(Net::HTTPSuccess)
-      @logger.info "Upload successful for lecture #{lecture_id}"
+      @logger.info "Upload successful for #{model_type} #{item_id}"
       true
     else
       @logger.error "Upload failed: #{response.code} #{response.body}"

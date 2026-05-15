@@ -25,6 +25,7 @@ class Lesson < ApplicationRecord
   scope :by_series, ->(series_id) { where(series_id: series_id) if series_id.present? }
   scope :with_audio, -> { joins(:audio_attachment) }
   scope :without_audio, -> { where.missing(:audio_attachment) }
+  scope :with_youtube_url_missing_video, -> { where.not(youtube_url: [ nil, "" ]).where.missing(:video_attachment) }
 
   scope :ordered_by_lesson_number, -> { order(Arel.sql("COALESCE(position, 999999)")) }
 

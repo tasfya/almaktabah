@@ -3,6 +3,9 @@ Rails.application.routes.draw do
     get "lectures/pending_downloads", to: "lectures#pending_downloads"
     post "lectures/:id/upload_video", to: "lectures#upload_video"
 
+    get "lessons/pending_downloads", to: "lessons#pending_downloads"
+    post "lessons/:id/upload_video", to: "lessons#upload_video"
+
     get "transcriptions/pending", to: "transcriptions#pending"
     post "transcriptions/:type/:id/upload", to: "transcriptions#upload"
   end
