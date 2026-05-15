@@ -48,6 +48,7 @@ class Avo::Resources::Lesson < Avo::BaseResource
   end
 
   def actions
+    action Avo::Actions::ImportLessonsCsv
     action Avo::Actions::GenerateVideo
     action Avo::Actions::PublishLesson
     action Avo::Actions::UnpublishLesson
