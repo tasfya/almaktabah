@@ -26,5 +26,41 @@ class Avo::Resources::Domain < Avo::BaseResource
           help: "SVG format favicon (optional - auto-generated from logo if not provided)", hide_on: :index
     field :apple_touch_icon, as: :file, accept: "image/png", max_size: 1.megabytes,
           help: "Apple touch icon for iOS devices (optional - auto-generated from logo if not provided)", hide_on: :index
+
+    # Podcast settings
+    heading "Podcast Settings"
+    field :podcast_enabled, as: :boolean, help: "Enable podcast RSS feed for this domain"
+    field :podcast_title, as: :text, help: "Podcast title (required)"
+    field :podcast_author, as: :text, help: "Podcast author name"
+    field :podcast_description, as: :textarea, help: "Podcast description", hide_on: :index
+    field :podcast_owner_name, as: :text, help: "Owner name for iTunes/Spotify", hide_on: :index
+    field :podcast_owner_email, as: :text, help: "Owner email for iTunes/Spotify (required)", hide_on: :index
+    field :podcast_language, as: :text, help: "Language code (e.g., ar, en)", hide_on: :index
+    field :podcast_category, as: :select, hide_on: :index,
+          options: [
+            "Arts",
+            "Business",
+            "Comedy",
+            "Education",
+            "Fiction",
+            "Government",
+            "Health & Fitness",
+            "History",
+            "Kids & Family",
+            "Leisure",
+            "Music",
+            "News",
+            "Religion & Spirituality",
+            "Science",
+            "Society & Culture",
+            "Sports",
+            "Technology",
+            "True Crime",
+            "TV & Film"
+          ],
+          help: "Apple Podcasts category"
+    field :podcast_subcategory, as: :text, help: "Subcategory (e.g., Islam)", hide_on: :index
+    field :podcast_artwork, as: :file, accept: "image/jpeg,image/png", max_size: 5.megabytes,
+          help: "Podcast artwork (1400x1400 to 3000x3000 pixels, JPEG or PNG)", hide_on: :index
   end
 end

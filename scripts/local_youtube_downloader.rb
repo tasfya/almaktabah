@@ -123,7 +123,7 @@ class LocalYoutubeDownloader
     cmd = [
       "yt-dlp",
       "--no-playlist",
-      "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+      "-f", "bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360]",
       "--merge-output-format", "mp4",
       "-o", output_template,
       "--no-warnings",
