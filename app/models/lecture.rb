@@ -132,6 +132,15 @@ class Lecture < ApplicationRecord
     attachment_url(final_audio)
   end
 
+  # Returns absolute URL to episode page for podcast feed
+  def podcast_episode_url
+    path = Rails.application.routes.url_helpers.lecture_path(scholar, self, kind: kind_for_url)
+    # Get domain from first assignment or use default
+    domain = domain_assignments.first&.domain
+    return nil unless domain
+    "https://#{domain.host}#{path}"
+  end
+
   def generate_final_audio_bucket_key
     kind_folder = kind.presence || "general"
     filename = title.presence || id.to_s

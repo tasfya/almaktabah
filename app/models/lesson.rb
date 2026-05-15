@@ -78,6 +78,15 @@ class Lesson < ApplicationRecord
     attachment_url(final_audio)
   end
 
+  # Returns absolute URL to episode page for podcast feed
+  def podcast_episode_url
+    path = Rails.application.routes.url_helpers.scholar_series_lesson_path(scholar, series, self)
+    # Get domain from first assignment or use default
+    domain = domain_assignments.first&.domain
+    return nil unless domain
+    "https://#{domain.host}#{path}"
+  end
+
   def generate_optimize_audio_bucket_key
     # todo fix position nil case I did update some
     # that had no position with the the id but need to fix properly
