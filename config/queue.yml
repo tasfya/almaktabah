@@ -7,7 +7,6 @@ default: &default
       threads: 3
       processes: <%= ENV.fetch("JOB_CONCURRENCY", 2) %>
       polling_interval: 0.1
-  scheduler: true
 
 development:
   <<: *default
