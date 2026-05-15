@@ -15,6 +15,7 @@ module PodcastsHelper
     lectures = Lecture.published.with_final_audio
       .where.not(duration: nil)
       .where.not(published_at: nil)
+      .where.not(kind: :benefit)
       .for_domain_id(domain_id)
       .distinct
 
