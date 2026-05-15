@@ -1,4 +1,4 @@
-production:
+default: &default
   video_batch_processing:
     class: VideoBatchProcessingJob
     queue: default
@@ -8,6 +8,12 @@ production:
     class: YoutubeVideoBatchDownloadJob
     queue: default
     schedule: every 6 hours
+
+development:
+  <<: *default
+
+production:
+  <<: *default
 
 # Example schedule syntax:
 #   schedule: every hour
