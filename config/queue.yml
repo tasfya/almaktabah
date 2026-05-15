@@ -2,12 +2,13 @@ default: &default
   dispatchers:
     - polling_interval: 1
       batch_size: 500
-      recurring_schedule_file: config/recurring.yml
   workers:
     - queues: "*"
       threads: 3
       processes: <%= ENV.fetch("JOB_CONCURRENCY", 2) %>
       polling_interval: 0.1
+  scheduler:
+    recurring_schedule_file: config/recurring.yml
 
 development:
   <<: *default
