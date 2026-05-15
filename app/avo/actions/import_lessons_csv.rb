@@ -5,7 +5,11 @@ class Avo::Actions::ImportLessonsCsv < Avo::BaseAction
 
   def fields
     field :csv_file, as: :file, help: "CSV file with columns: position, title, youtube_url"
-    field :series_id, as: :select, name: "Series", options: -> { series_options }, help: "Select the series to add lessons to"
+    field :series_id, as: :select, name: "Series", options: -> {
+      Series.includes(:scholar).order("scholars.full_name, series.title").map do |s|
+        [ "#{s.scholar.name} - #{s.title}", s.id ]
+      end
+    }, help: "Select the series to add lessons to"
     field :skip_duplicates, as: :boolean, default: true, help: "Skip lessons with duplicate titles in the series"
   end
 
@@ -41,14 +45,6 @@ class Avo::Actions::ImportLessonsCsv < Avo::BaseAction
       error "Import completed with errors: #{result[:errors].first(3).join(', ')}"
     else
       succeed "Successfully created #{result[:created_count]} lessons. Skipped #{result[:skipped_count]} rows."
-    end
-  end
-
-  private
-
-  def series_options
-    Series.includes(:scholar).order("scholars.full_name, series.title").map do |series|
-      [ "#{series.scholar.name} - #{series.title}", series.id ]
     end
   end
 end
