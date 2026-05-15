@@ -1,7 +1,5 @@
-require "open-uri"
 require "fileutils"
 require "streamio-ffmpeg"
-require "stringio"
 require "securerandom"
 
 class VideoProcessingJob < ApplicationJob
@@ -31,7 +29,10 @@ class VideoProcessingJob < ApplicationJob
       base_name = "item_#{item.id}_#{timestamp}_#{unique_id}_#{safe_filename}"
       input_path = TEMP_DIR.join(base_name)
 
-      File.write(input_path, item.video.download, mode: "wb")
+      # Stream video to file instead of loading into memory
+      File.open(input_path, "wb") do |file|
+        item.video.download { |chunk| file.write(chunk) }
+      end
       Rails.logger.info "Downloaded video to temporary path: #{input_path}"
 
       if !item.audio.attached?
@@ -48,13 +49,15 @@ class VideoProcessingJob < ApplicationJob
         converter.convert
         Rails.logger.info "Extracted audio to: #{audio_output_path}"
 
-        item.audio.attach(
-          io: StringIO.new(File.binread(audio_output_path)),
-          filename: audio_output_filename,
-          content_type: "audio/mpeg"
-        )
+        # Use File.open to stream instead of loading into memory
+        File.open(audio_output_path, "rb") do |file|
+          item.audio.attach(
+            io: file,
+            filename: audio_output_filename,
+            content_type: "audio/mpeg"
+          )
+        end
         AudioOptimizationJob.perform_later(item) if item.audio.attached?
-        CleanupTemporaryFilesJob.perform_later(audio_output_path.to_s)
         Rails.logger.info "Attached extracted audio for item #{item.id}"
       end
 
@@ -65,11 +68,13 @@ class VideoProcessingJob < ApplicationJob
         thumbnail_output_path = THUMBNAIL_STORAGE_DIR.join(thumbnail_output_filename)
 
         movie.screenshot(thumbnail_output_path.to_s, seek_time: 0, resolution: "640x360")
-        item.thumbnail.attach(
-          io: StringIO.new(File.binread(thumbnail_output_path)),
-          filename: thumbnail_output_filename,
-          content_type: "image/jpeg"
-        )
+        File.open(thumbnail_output_path, "rb") do |file|
+          item.thumbnail.attach(
+            io: file,
+            filename: thumbnail_output_filename,
+            content_type: "image/jpeg"
+          )
+        end
         Rails.logger.info "Attached thumbnail for item #{item.id}"
       end
 
