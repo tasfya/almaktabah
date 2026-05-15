@@ -67,6 +67,10 @@ class Domain < ApplicationRecord
   end
 
   def podcast_artwork_url
+    # Use override URL if provided (must have proper extension like .jpg or .png)
+    return podcast_artwork_url_override if podcast_artwork_url_override.present?
+
+    # Fall back to attachment
     return nil unless podcast_artwork.attached?
     attachment_url(podcast_artwork)
   end

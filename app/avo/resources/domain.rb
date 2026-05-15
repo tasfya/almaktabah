@@ -61,5 +61,7 @@ class Avo::Resources::Domain < Avo::BaseResource
     field :podcast_subcategory, as: :text, help: "Subcategory (e.g., Islam)", hide_on: :index
     field :podcast_artwork, as: :file, accept: "image/jpeg,image/png", max_size: 5.megabytes,
           help: "Podcast artwork (1400x1400 to 3000x3000 pixels, JPEG or PNG)", hide_on: :index
+    field :podcast_artwork_url_override, as: :text, hide_on: :index,
+          help: "Direct URL to artwork image (must end in .jpg or .png). Use this instead of uploading if needed."
   end
 end
