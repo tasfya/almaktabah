@@ -25,6 +25,7 @@ class Lesson < ApplicationRecord
   scope :by_series, ->(series_id) { where(series_id: series_id) if series_id.present? }
   scope :with_audio, -> { joins(:audio_attachment) }
   scope :without_audio, -> { where.missing(:audio_attachment) }
+  scope :with_final_audio, -> { joins(:final_audio_attachment) }
   scope :with_youtube_url_missing_video, -> { where.not(youtube_url: [ nil, "" ]).where.missing(:video_attachment) }
 
   scope :ordered_by_lesson_number, -> { order(Arel.sql("COALESCE(position, 999999)")) }
@@ -71,17 +72,19 @@ class Lesson < ApplicationRecord
     description
   end
 
-  # Returns absolute HTTPS URL for podcast feed
+  # Returns absolute HTTPS URL for podcast feed (only final_audio on public R2)
   def podcast_audio_url
-    return nil unless has_any_audio?
-    url = attachment_url(best_audio)
-    return nil if url.blank?
+    return nil unless has_final_audio?
+    attachment_url(final_audio)
+  end
 
-    # If already absolute URL, return as-is
-    return url if url.start_with?("https://")
-
-    # Otherwise, it's a relative path - this shouldn't happen with current storage config
-    nil
+  # Returns absolute URL to episode page for podcast feed
+  def podcast_episode_url
+    path = Rails.application.routes.url_helpers.scholar_series_lesson_path(scholar, series, self)
+    # Get domain from first assignment or use default
+    domain = domain_assignments.first&.domain
+    return nil unless domain
+    "https://#{domain.host}#{path}"
   end
 
   def generate_optimize_audio_bucket_key

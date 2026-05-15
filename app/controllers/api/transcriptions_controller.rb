@@ -19,10 +19,10 @@ module Api
         klass = type.constantize
         remaining = limit - results.size
 
+        # Only include items with final_audio (public R2 storage)
         records = klass
           .where(transcription_json: [ nil, "" ])
-          .where.not(id: klass.where.missing(:audio_attachment).select(:id))
-          .select(:id, :title)
+          .joins(:final_audio_attachment)
           .limit(remaining)
 
         records.each do |record|
@@ -71,13 +71,10 @@ module Api
     private
 
     def build_audio_url(record)
-      return nil unless record.respond_to?(:audio) && record.audio.attached?
+      return nil unless record.respond_to?(:final_audio) && record.final_audio.attached?
 
-      Rails.application.routes.url_helpers.rails_blob_url(
-        record.audio,
-        host: request.host_with_port,
-        protocol: request.protocol.delete("://")
-      )
+      # Use the public R2 URL directly
+      record.attachment_url(record.final_audio)
     end
   end
 end

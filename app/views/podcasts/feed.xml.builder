@@ -70,8 +70,8 @@ xml.rss version: "2.0",
         # Duration in seconds (Spotify prefers seconds, iTunes accepts both)
         xml.tag! "itunes:duration", episode.duration.to_i
 
-        # Link to episode page if available
-        xml.link episode.podcast_episode_url if episode.respond_to?(:podcast_episode_url) && episode.podcast_episode_url.present?
+        # Link to episode page (required)
+        xml.link episode.podcast_episode_url || @podcast[:website_url]
       end
     end
   end
