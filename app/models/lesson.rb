@@ -80,7 +80,7 @@ class Lesson < ApplicationRecord
 
   # Returns absolute URL to episode page for podcast feed
   def podcast_episode_url
-    path = Rails.application.routes.url_helpers.scholar_series_lesson_path(scholar, series, self)
+    path = Rails.application.routes.url_helpers.series_lesson_path(scholar, series, self)
     # Get domain from first assignment or use default
     domain = domain_assignments.first&.domain
     return nil unless domain
