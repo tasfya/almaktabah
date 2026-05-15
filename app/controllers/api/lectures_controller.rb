@@ -5,7 +5,7 @@ module Api
     def pending_downloads
       lectures = Lecture.with_youtube_url_missing_video
                         .select(:id, :title, :youtube_url)
-                        .limit(params[:limit] || 50)
+      lectures = lectures.limit(params[:limit]) if params[:limit].present?
 
       render json: {
         lectures: lectures.map { |l| { id: l.id, title: l.title, youtube_url: l.youtube_url } },

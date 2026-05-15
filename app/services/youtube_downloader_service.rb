@@ -9,7 +9,7 @@ class YoutubeDownloaderService
   attr_accessor :url, :download_path, :format, :quality, :verbose
   attr_reader :progress, :download_info, :errors
 
-  def initialize(url:, download_path: nil, format: "mp4", quality: "best", verbose: true)
+  def initialize(url:, download_path: nil, format: "mp4", quality: "360p", verbose: true)
     @url = url.to_s.strip
     @download_path = download_path || default_download_path
     @format = format
@@ -240,13 +240,19 @@ class YoutubeDownloaderService
 
     cmd = [ tool ]
 
-    # Format selection
+    # Format selection - default to 360p for smallest file sizes
     if @quality == "best"
-      cmd += [ "--format", "best[ext=#{@format}]/best" ]
+      cmd += [ "--format", "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080]" ]
+    elsif @quality == "720p"
+      cmd += [ "--format", "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720]" ]
+    elsif @quality == "480p"
+      cmd += [ "--format", "bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480]" ]
+    elsif @quality == "360p"
+      cmd += [ "--format", "bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360]" ]
     elsif @quality == "worst"
-      cmd += [ "--format", "worst[ext=#{@format}]/worst" ]
+      cmd += [ "--format", "worstvideo[ext=mp4]+worstaudio[ext=m4a]/worst" ]
     else
-      cmd += [ "--format", "#{@quality}[ext=#{@format}]/#{@quality}" ]
+      cmd += [ "--format", "#{@quality}" ]
     end
 
     # Output options
