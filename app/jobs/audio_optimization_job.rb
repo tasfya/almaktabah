@@ -13,7 +13,12 @@ class AudioOptimizationJob < ApplicationJob
         # Get original duration BEFORE attaching
         original_duration = extract_duration(input_tempfile.path)
 
-        attach_final_audio(item, output_tempfile)
+        # Skip if attachment was not created (duplicate key)
+        unless attach_final_audio(item, output_tempfile)
+          Rails.logger.info "Skipping #{item.class.name} ID #{item.id} - final audio key already exists"
+          return
+        end
+
         item.save!
 
         # Verify and delete original
@@ -56,24 +61,21 @@ class AudioOptimizationJob < ApplicationJob
 
   def attach_final_audio(item, output_tempfile)
     output_tempfile.rewind
-    key = ensure_key_unique(item)
+    key = item.generate_final_audio_bucket_key
+
+    # Skip if this key already exists to prevent duplicates
+    if ActiveStorage::Blob.exists?(key: key)
+      Rails.logger.info "Key #{key} already exists, skipping attachment for #{item.class.name} ID #{item.id}"
+      return false
+    end
+
     item.final_audio.attach(
       io: output_tempfile,
       filename: "#{File.basename(item.audio.filename.to_s, '.*')}.mp3",
-      key:,
+      key: key,
       content_type: "audio/mpeg"
     )
-  end
-
-  def ensure_key_unique(item)
-    key = item.generate_final_audio_bucket_key
-    counter = 0
-    while ActiveStorage::Blob.where(key: key).exists?
-      key = "#{key.split('.').first}_#{counter}.mp3"
-      counter += 1
-      break if counter > 5
-    end
-    key
+    true
   end
 
   def extract_duration(file_path)
