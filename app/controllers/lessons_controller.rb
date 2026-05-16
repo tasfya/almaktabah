@@ -3,12 +3,12 @@ class LessonsController < ApplicationController
   before_action :setup_lessons_breadcrumbs, only: [ :show ]
 
   def show
+    cache_page(duration: 1.week)
     @related_lessons = Lesson.for_domain_id(@domain.id)
                              .published
                              .where(series: @lesson.series)
                              .where.not(id: @lesson.id)
-                             .recent
-                             .limit(4)
+                             .order(:position)
 
     description = @lesson.description.to_s.truncate(MetaTags.config.description_limit)
     set_meta_tags(

@@ -6,12 +6,12 @@ class SeriesController < ApplicationController
   before_action :setup_series_breadcrumbs
 
   def index
-    expires_in 1.hour, public: true
+    cache_page(duration: 1.day)
     typesense_collection_search("series")
   end
 
   def show
-    expires_in 1.hour, public: true
+    cache_page(duration: 1.week)
     @lessons = @series.lessons.for_domain_id(@domain.id).published.ordered_by_lesson_number
 
     description = @series.description.to_s.truncate(MetaTags.config.description_limit)

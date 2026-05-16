@@ -6,10 +6,12 @@ class NewsController < ApplicationController
   before_action :setup_news_breadcrumbs
 
   def index
+    cache_page(duration: 1.day)
     typesense_collection_search("news")
   end
 
   def show
+    cache_page(duration: 1.week)
     description = @news.description.presence || (@news.content.present? ? @news.content.to_plain_text.truncate(MetaTags.config.description_limit) : "")
     image_url = @news.thumbnail.attached? ? url_for(@news.thumbnail) : nil
     set_meta_tags(

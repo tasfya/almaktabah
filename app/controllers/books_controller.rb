@@ -6,10 +6,12 @@ class BooksController < ApplicationController
   before_action :setup_books_breadcrumbs
 
   def index
+    cache_page(duration: 1.day)
     typesense_collection_search("book")
   end
 
   def show
+    cache_page(duration: 1.week)
     @related_books = Book.for_domain_id(@domain.id)
                          .published.by_category(@book.category)
                          .where.not(id: @book.id)

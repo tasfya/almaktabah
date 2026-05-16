@@ -12,6 +12,13 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  # Cache for Cloudflare edge and browser
+  # Show pages: 1 week (content rarely changes)
+  # Index pages: 1 day (may have new items)
+  def cache_page(duration: 1.week)
+    expires_in duration, public: true, stale_while_revalidate: 1.hour
+  end
+
   def set_domain
     @domain = Domain.find_by_host(request.host)
     if @domain&.logo.present?
