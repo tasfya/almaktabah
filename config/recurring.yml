@@ -11,6 +11,10 @@ production:
     class: LectureKindAssignmentJob
     schedule: every 3 hours
 
+  purge_original_audio:
+    class: PurgeOriginalAudioBatchJob
+    schedule: every 12 hours
+
 # Example schedule syntax:
 #   schedule: every hour
 #   schedule: every 6 hours

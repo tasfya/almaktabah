@@ -32,6 +32,7 @@ module MediaHandler
 
   def process_media_files
     return unless audio.attached?
+    return if final_audio.attached?
 
     AudioOptimizationJob.perform_later(self)
   end
