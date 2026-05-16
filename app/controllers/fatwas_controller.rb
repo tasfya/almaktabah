@@ -6,10 +6,12 @@ class FatwasController < ApplicationController
   before_action :setup_fatwas_breadcrumbs
 
   def index
+    cache_page(duration: 1.day)
     typesense_collection_search("fatwa")
   end
 
   def show
+    cache_page(duration: 1.week)
     description = @fatwa.question.present? ? @fatwa.question.to_plain_text.truncate(MetaTags.config.description_limit) : ""
     set_meta_tags(
       title: @fatwa.title,

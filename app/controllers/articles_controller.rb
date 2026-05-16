@@ -6,10 +6,12 @@ class ArticlesController < ApplicationController
   before_action :setup_articles_breadcrumbs
 
   def index
+    cache_page(duration: 1.day)
     typesense_collection_search("article")
   end
 
   def show
+    cache_page(duration: 1.week)
     description = @article.content.present? ? @article.content.to_plain_text.truncate(MetaTags.config.description_limit) : ""
     set_meta_tags(
       title: @article.title,

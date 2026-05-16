@@ -38,6 +38,12 @@ class Avo::Resources::Lecture < Avo::BaseResource
     field :final_audio_key, as: :text, hide_on: [ :new, :edit ], readonly: true do
       record.final_audio.key if record.final_audio.attached?
     end
+    field :final_audio_player, as: :text, hide_on: [ :new, :edit, :index ], readonly: true, format_using: -> {
+      if record.final_audio.attached?
+        url = "https://bucket.3ilm.org/#{record.final_audio.key}"
+        "<audio controls src=\"#{url}\" style=\"width: 100%;\"></audio>".html_safe
+      end
+    }
     field :created_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
     field :updated_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
   end
