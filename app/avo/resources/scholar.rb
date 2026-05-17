@@ -23,4 +23,8 @@ class Avo::Resources::Scholar < Avo::BaseResource
     field :created_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
     field :updated_at, as: :date_time, hide_on: [ :new, :edit ], sortable: true
   end
+
+  def actions
+    action Avo::Actions::ImportLecturesCsv
+  end
 end
