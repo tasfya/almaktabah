@@ -6,6 +6,13 @@ class AudioOptimizationJob < ApplicationJob
     return if item.final_audio.attached?
 
     begin
+      # Check if audio file actually exists in storage
+      unless audio_exists?(item)
+        Rails.logger.warn "Audio file missing from storage for #{item.class.name} ID #{item.id}, purging orphaned attachment"
+        item.audio.purge
+        return
+      end
+
       item.audio.open do |audio_file|
         input_tempfile = create_input_tempfile(item, audio_file)
         output_tempfile = optimize_audio_to_tempfile(input_tempfile)
@@ -21,8 +28,8 @@ class AudioOptimizationJob < ApplicationJob
 
         item.save!
 
-        # Verify and delete original
-        verify_and_delete_original(item, original_duration)
+        # Verify and delete original (disabled for now)
+        # verify_and_delete_original(item, original_duration)
 
         Rails.logger.info "Audio optimization completed for #{item.class.name} ID #{item.id}"
       end
@@ -84,6 +91,15 @@ class AudioOptimizationJob < ApplicationJob
   rescue => e
     Rails.logger.warn "Failed to extract duration: #{e.message}"
     nil
+  end
+
+  def audio_exists?(item)
+    return false unless item.audio.attached?
+
+    item.audio.blob.service.exist?(item.audio.blob.key)
+  rescue => e
+    Rails.logger.warn "Failed to check audio existence for #{item.class.name} ID #{item.id}: #{e.message}"
+    false
   end
 
   def verify_and_delete_original(item, original_duration)
