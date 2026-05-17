@@ -2,6 +2,8 @@ require "fileutils"
 require "streamio-ffmpeg"
 require "securerandom"
 
+class AudioVideoDurationMismatchError < StandardError; end
+
 class VideoProcessingJob < ApplicationJob
   queue_as :default
 
@@ -48,6 +50,17 @@ class VideoProcessingJob < ApplicationJob
         )
         converter.convert
         Rails.logger.info "Extracted audio to: #{audio_output_path}"
+
+        # Verify audio duration matches video duration before attaching
+        video_duration = FFMPEG::Movie.new(input_path.to_s).duration
+        audio_duration = FFMPEG::Movie.new(audio_output_path.to_s).duration
+        duration_diff = (video_duration - audio_duration).abs
+
+        if duration_diff > 2.0
+          raise AudioVideoDurationMismatchError, "Audio duration (#{audio_duration.round(1)}s) doesn't match video duration (#{video_duration.round(1)}s) for #{item.class.name} ID #{item.id}. Diff: #{duration_diff.round(1)}s"
+        end
+
+        Rails.logger.info "Duration verified: video=#{video_duration.round(1)}s, audio=#{audio_duration.round(1)}s"
 
         # Use File.open to stream instead of loading into memory
         File.open(audio_output_path, "rb") do |file|
