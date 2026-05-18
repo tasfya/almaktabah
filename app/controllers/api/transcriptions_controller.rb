@@ -7,6 +7,7 @@ module Api
     def pending
       limit = (params[:limit] || 20).to_i
       resource_type = params[:type]&.capitalize
+      scholar_id = params[:scholar_id]
 
       results = []
 
@@ -23,7 +24,13 @@ module Api
         records = klass
           .where(transcription_json: [ nil, "" ])
           .joins(:final_audio_attachment)
-          .limit(remaining)
+
+        # Filter by scholar_id if provided
+        if scholar_id.present?
+          records = apply_scholar_filter(records, type, scholar_id)
+        end
+
+        records = records.limit(remaining)
 
         records.each do |record|
           audio_url = build_audio_url(record)
@@ -69,6 +76,19 @@ module Api
     end
 
     private
+
+    def apply_scholar_filter(records, type, scholar_id)
+      case type
+      when "Lecture"
+        records.where(scholar_id: scholar_id)
+      when "Lesson"
+        records.joins(:series).where(series: { scholar_id: scholar_id })
+      when "Fatwa"
+        records.where(scholar_id: scholar_id)
+      else
+        records
+      end
+    end
 
     def build_audio_url(record)
       return nil unless record.respond_to?(:final_audio) && record.final_audio.attached?
