@@ -8,7 +8,7 @@ class AudioDurationBatchJob < ApplicationJob
 
     total_processed = 0
 
-    [ Lecture, Lesson, Fatwa ].each do |klass|
+    [ Lecture, Lesson ].each do |klass|
       processed = process_model(klass)
       total_processed += processed
     end
