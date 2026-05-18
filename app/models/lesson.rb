@@ -12,6 +12,7 @@ class Lesson < ApplicationRecord
   delegate :scholar, to: :series
 
   validates :title, presence: true
+  validates :youtube_url, uniqueness: true, allow_blank: true
 
   has_one_attached :thumbnail, service: Rails.application.config.public_storage
   has_one_attached :audio, service: Rails.application.config.public_storage
