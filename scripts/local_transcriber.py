@@ -15,11 +15,15 @@ Setup:
      export ALMAKTABAH_API_TOKEN="your-secret-token"
 
   Run:
-     python local_transcriber.py
+     python local_transcriber.py [scholar_id]
+
+  Examples:
+     python local_transcriber.py          # Process all pending
+     python local_transcriber.py 42       # Process only scholar ID 42
 
 Optional environment variables:
   DOWNLOAD_DIR: Where to store temp audio (default: ~/transcription_downloads)
-  TRANSCRIPTION_LIMIT: Max items per run (default: 5)
+  TRANSCRIPTION_LIMIT: Max items per run (default: 50)
   WHISPER_MODEL: Model size (default: large-v3)
   WHISPER_BACKEND: mlx, faster-whisper, or auto (default: auto)
   RESOURCE_TYPE: Lecture, Lesson, or Fatwa (default: all)
@@ -66,7 +70,7 @@ BACKEND = get_backend()
 SERVER_URL = os.environ.get("ALMAKTABAH_SERVER_URL", "https://3ilm.org")
 API_TOKEN = os.environ.get("ALMAKTABAH_API_TOKEN")
 DOWNLOAD_DIR = Path(os.environ.get("DOWNLOAD_DIR", Path.home() / "transcription_downloads"))
-TRANSCRIPTION_LIMIT = int(os.environ.get("TRANSCRIPTION_LIMIT", "5"))
+TRANSCRIPTION_LIMIT = int(os.environ.get("TRANSCRIPTION_LIMIT", "50"))
 WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "large-v3")
 RESOURCE_TYPE = os.environ.get("RESOURCE_TYPE", "")  # empty = all types
 
@@ -80,12 +84,13 @@ logger = logging.getLogger(__name__)
 
 
 class LocalTranscriber:
-    def __init__(self):
+    def __init__(self, scholar_id: Optional[int] = None):
         if not API_TOKEN:
             raise ValueError("ALMAKTABAH_API_TOKEN environment variable not set")
 
         DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
         self.model: Optional[WhisperModel] = None
+        self.scholar_id = scholar_id
         self.session = requests.Session()
         self.session.headers.update({
             "Authorization": f"Bearer {API_TOKEN}",
@@ -137,6 +142,8 @@ class LocalTranscriber:
         logger.info("Starting transcription run...")
         logger.info(f"Server: {SERVER_URL}")
         logger.info(f"Model: {WHISPER_MODEL}")
+        if self.scholar_id:
+            logger.info(f"Scholar ID: {self.scholar_id}")
 
         pending = self.fetch_pending()
         if not pending:
@@ -164,6 +171,8 @@ class LocalTranscriber:
         params = {"limit": TRANSCRIPTION_LIMIT}
         if RESOURCE_TYPE:
             params["type"] = RESOURCE_TYPE
+        if self.scholar_id:
+            params["scholar_id"] = self.scholar_id
 
         try:
             response = self.session.get(url, params=params, timeout=30)
@@ -335,8 +344,17 @@ class LocalTranscriber:
 
 
 def main():
+    # Parse optional scholar_id argument
+    scholar_id = None
+    if len(sys.argv) > 1:
+        try:
+            scholar_id = int(sys.argv[1])
+        except ValueError:
+            logger.error(f"Invalid scholar_id: {sys.argv[1]} (must be an integer)")
+            sys.exit(1)
+
     try:
-        transcriber = LocalTranscriber()
+        transcriber = LocalTranscriber(scholar_id=scholar_id)
         transcriber.run()
     except KeyboardInterrupt:
         logger.info("Interrupted by user")
