@@ -26,5 +26,6 @@ class Avo::Resources::Scholar < Avo::BaseResource
 
   def actions
     action Avo::Actions::ImportLecturesCsv
+    action Avo::Actions::ImportScholarLessonsCsv
   end
 end
