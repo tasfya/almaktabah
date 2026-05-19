@@ -56,6 +56,12 @@ xml.rss version: "2.0",
         xml.tag! "itunes:explicit", "false"
         xml.tag! "itunes:episodeType", "full"
 
+        # Episode and season numbers for lessons (helps podcast apps order episodes correctly)
+        if episode.is_a?(Lesson)
+          xml.tag! "itunes:episode", episode.position
+          xml.tag! "itunes:season", episode.series_id
+        end
+
         # Enclosure (the actual audio file)
         xml.enclosure url: episode.podcast_audio_url,
                       length: episode.audio_file_size.to_i,
