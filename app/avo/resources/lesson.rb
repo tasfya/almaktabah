@@ -1,6 +1,7 @@
 class Avo::Resources::Lesson < Avo::BaseResource
   self.title = :title
   self.includes = [ :series ]
+  self.extra_params = [ :position ]
   self.search = {
     query: -> {
       query.ransack(
