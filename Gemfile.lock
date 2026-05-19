@@ -295,7 +295,7 @@ GEM
     net-ssh (7.3.0)
     nice_partials (0.10.1)
       actionview (>= 4.2.6)
-    nio4r (2.7.4)
+    nio4r (2.7.5)
     nokogiri (1.19.2-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.19.2-aarch64-linux-musl)
@@ -341,7 +341,7 @@ GEM
       date
       stringio
     public_suffix (7.0.5)
-    puma (8.0.0)
+    puma (8.0.1)
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)
