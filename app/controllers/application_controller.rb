@@ -15,6 +15,10 @@ class ApplicationController < ActionController::Base
   # Show pages: 1 week (content rarely changes)
   # Index pages: 1 day (may have new items)
   def cache_page(duration: 1.week)
+    # Skip client caching in local dev/test so view changes show on refresh
+    # instead of being masked by a day-long browser cache.
+    return if Rails.env.local?
+
     expires_in duration, public: true, stale_while_revalidate: 1.hour
   end
 

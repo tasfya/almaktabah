@@ -10,29 +10,34 @@ module HomeHelper
     "article" => "document-text"
   }.freeze
 
-  # Curated [from, to] color pairs for placeholder artwork. Deep, saturated
-  # tones that read well behind a white icon and the dark text overlay.
-  # Temporary until AI-generated cover images land.
+  # Curated [base, glow1, glow2] color triples for placeholder artwork.
+  # Composed as a layered "mesh" gradient: a saturated base with two brighter
+  # radial glows. Vivid on purpose; reads well under a white icon and the dark
+  # bottom text overlay. Temporary until AI-generated cover images land.
   GRADIENTS = [
-    [ "#0f766e", "#134e4a" ], # teal
-    [ "#1d4ed8", "#4c1d95" ], # blue → violet
-    [ "#b45309", "#7c2d12" ], # amber → brown
-    [ "#15803d", "#14532d" ], # green
-    [ "#9d174d", "#581c87" ], # rose → purple
-    [ "#0e7490", "#155e75" ], # cyan
-    [ "#a16207", "#854d0e" ], # gold
-    [ "#4338ca", "#1e3a8a" ], # indigo
-    [ "#be123c", "#881337" ], # crimson
-    [ "#047857", "#065f46" ]  # emerald
+    [ "#0d9488", "#2dd4bf", "#0891b2" ], # teal · turquoise · cyan
+    [ "#4f46e5", "#a855f7", "#ec4899" ], # indigo · violet · pink
+    [ "#ea580c", "#f59e0b", "#e11d48" ], # orange · amber · rose
+    [ "#16a34a", "#84cc16", "#0d9488" ], # green · lime · teal
+    [ "#db2777", "#a855f7", "#6366f1" ], # rose · purple · indigo
+    [ "#0284c7", "#38bdf8", "#6366f1" ], # sky · blue · indigo
+    [ "#d97706", "#f43f5e", "#f59e0b" ], # amber · rose · gold
+    [ "#7c3aed", "#6366f1", "#3b82f6" ], # violet · indigo · blue
+    [ "#e11d48", "#ec4899", "#a855f7" ], # crimson · pink · purple
+    [ "#059669", "#10b981", "#0ea5e9" ]  # emerald · green · sky
   ].freeze
 
-  # Deterministic gradient for a hit: same item always renders the same
+  # Deterministic mesh gradient for a hit: same item always renders the same
   # gradient (String#sum is stable across processes, unlike String#hash).
   def home_gradient(hit)
     seed = "#{hit.try(:id)}#{hit.try(:title)}".sum
-    from, to = GRADIENTS[seed % GRADIENTS.size]
-    angle = 110 + (seed * 7) % 130
-    "background-image: linear-gradient(#{angle}deg, #{from}, #{to});"
+    base, glow1, glow2 = GRADIENTS[seed % GRADIENTS.size]
+    x1 = 12 + seed % 30
+    x2 = 70 + seed % 22
+    "background-color: #{base};" \
+      "background-image: radial-gradient(at #{x1}% 18%, #{glow1} 0, transparent 55%)," \
+      "radial-gradient(at #{x2}% 8%, #{glow2} 0, transparent 50%)," \
+      "radial-gradient(at 50% 105%, #{glow1} 0, transparent 60%);"
   end
 
   # Singularized content type for a SearchHit (e.g. "lecture").
