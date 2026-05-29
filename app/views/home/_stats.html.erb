@@ -1,0 +1,15 @@
+<%#
+  Locals:
+    total: Integer (total content count)
+%>
+<% return if total.to_i <= 0 %>
+<div class="rounded-2xl p-5 bg-primary text-primary-content">
+  <p class="text-sm opacity-90"><%= t("home.stats.intro") %></p>
+  <p class="text-3xl font-bold tabular-nums leading-tight my-1"><%= number_with_delimiter(total) %></p>
+  <p class="text-sm opacity-90"><%= t("home.stats.subtitle") %></p>
+  <%= link_to root_path(content_types: TypesenseSearch::Collections::NAMES.map(&:downcase)),
+              class: "btn btn-sm bg-primary-content/15 hover:bg-primary-content/25 border-0 text-primary-content w-full mt-3",
+              data: { turbo_frame: "_top" } do %>
+    <%= t("home.cta.browse_all") %>
+  <% end %>
+</div>
