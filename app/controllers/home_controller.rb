@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
-  SHELF_PER_PAGE = 12
+  SHELF_PER_PAGE = 6
   RECENT_MIXED_LIMIT = 6
   SPOTLIGHT_LIMIT = 8
 

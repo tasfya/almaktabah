@@ -3,7 +3,6 @@
     scholars: Array<Hash> with keys :scholar (Scholar) and :count (Integer)
 %>
 <% return if scholars.blank? || scholars.size < 3 %>
-<% scrollable = scholars.size >= 4 %>
 <section class="mt-10">
   <div class="flex items-center justify-between mb-3">
     <h2 class="text-lg md:text-xl font-semibold flex items-center gap-2">
@@ -11,37 +10,9 @@
       <%= t("home.sections.spotlight_scholars") %>
     </h2>
   </div>
-  <% if scrollable %>
-    <div class="relative" data-controller="horizontal-scroller">
-      <button type="button"
-              class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm shadow-md bg-base-100/90 hover:bg-base-100 transition-opacity"
-              aria-label="<%= t("home.shelf.scroll_prev") %>"
-              data-horizontal-scroller-target="prev"
-              data-action="horizontal-scroller#prev">
-        <%= icon "chevron-right", class: "w-4 h-4" %>
-      </button>
-      <button type="button"
-              class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm shadow-md bg-base-100/90 hover:bg-base-100 transition-opacity"
-              aria-label="<%= t("home.shelf.scroll_next") %>"
-              data-horizontal-scroller-target="next"
-              data-action="horizontal-scroller#next">
-        <%= icon "chevron-left", class: "w-4 h-4" %>
-      </button>
-      <div class="flex gap-4 overflow-x-auto snap-x scroll-px-4 pb-2 -mx-2 px-2"
-           style="scrollbar-width: thin"
-           data-horizontal-scroller-target="track">
-        <% scholars.each do |entry| %>
-          <div class="snap-start flex-shrink-0 w-[180px] sm:w-[200px]">
-            <%= render "home/scholar_card", scholar: entry[:scholar], count: entry[:count] %>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  <% else %>
-    <div class="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-      <% scholars.each do |entry| %>
-        <%= render "home/scholar_card", scholar: entry[:scholar], count: entry[:count] %>
-      <% end %>
-    </div>
-  <% end %>
+  <div class="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6">
+    <% scholars.each do |entry| %>
+      <%= render "home/scholar_card", scholar: entry[:scholar], count: entry[:count] %>
+    <% end %>
+  </div>
 </section>

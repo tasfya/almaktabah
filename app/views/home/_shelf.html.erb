@@ -1,17 +1,16 @@
 <%#
   Locals:
-    title:            section heading (String)
-    icon_name:        Heroicon name (String)
-    count:            total available items for the link target (Integer or nil)
-    view_all_path:    URL string for the "view all" link
-    hits:             Array<TypesenseSearch::SearchHit>
-    card_partial:     String, e.g. "search/results/lecture"
-    card_local:       Symbol, the local var the partial expects (e.g. :lecture)
-    card_class:       Optional CSS classes for each card wrapper
+    title:          section heading (String)
+    icon_name:      Heroicon name (String)
+    count:          total available items for the link target (Integer or nil)
+    view_all_path:  URL string for the "view all" link
+    hits:           Array<TypesenseSearch::SearchHit>
+    card_partial:   String, e.g. "search/results/lecture"
+    card_local:     Symbol, the local var the partial expects (e.g. :lecture)
+    grid_class:     Optional Tailwind grid template (default: 3-col responsive)
 %>
 <% return if hits.blank? %>
-<% card_class = local_assigns.fetch(:card_class, "w-[280px] sm:w-[320px] md:w-[340px]") %>
-<% scrollable = hits.size >= 4 %>
+<% grid_class = local_assigns.fetch(:grid_class, "grid-cols-1 md:grid-cols-2 lg:grid-cols-3") %>
 <section class="mt-10">
   <div class="flex items-center justify-between mb-3">
     <h2 class="text-lg md:text-xl font-semibold flex items-center gap-2">
@@ -25,40 +24,12 @@
     </h2>
     <%= link_to view_all_path, class: "btn btn-ghost btn-sm gap-1", data: { turbo_frame: "_top" } do %>
       <%= t("search.view_all") %>
-      <%= icon "chevron-left", class: "w-4 h-4 rtl:rotate-180" %>
+      <%= icon "chevron-left", class: "w-4 h-4" %>
     <% end %>
   </div>
-  <% if scrollable %>
-    <div class="relative group" data-controller="horizontal-scroller">
-      <button type="button"
-              class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm shadow-md bg-base-100/90 hover:bg-base-100 transition-opacity"
-              aria-label="<%= t("home.shelf.scroll_prev") %>"
-              data-horizontal-scroller-target="prev"
-              data-action="horizontal-scroller#prev">
-        <%= icon "chevron-right", class: "w-4 h-4" %>
-      </button>
-      <button type="button"
-              class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm shadow-md bg-base-100/90 hover:bg-base-100 transition-opacity"
-              aria-label="<%= t("home.shelf.scroll_next") %>"
-              data-horizontal-scroller-target="next"
-              data-action="horizontal-scroller#next">
-        <%= icon "chevron-left", class: "w-4 h-4" %>
-      </button>
-      <div class="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-4 pb-2 -mx-2 px-2"
-           style="scrollbar-width: thin"
-           data-horizontal-scroller-target="track">
-        <% hits.each do |hit| %>
-          <div class="snap-start flex-shrink-0 <%= card_class %>">
-            <%= render partial: card_partial, locals: { card_local => hit } %>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  <% else %>
-    <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-      <% hits.each do |hit| %>
-        <%= render partial: card_partial, locals: { card_local => hit } %>
-      <% end %>
-    </div>
-  <% end %>
+  <div class="grid gap-4 <%= grid_class %>">
+    <% hits.each do |hit| %>
+      <%= render partial: card_partial, locals: { card_local => hit } %>
+    <% end %>
+  </div>
 </section>
