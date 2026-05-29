@@ -1,0 +1,68 @@
+<% content_for :title, t("navigation.home") %>
+<div class="container mx-auto px-4 pt-4 pb-12">
+  <% cache [ "home-h1-v1", @domain&.cache_key_with_version, I18n.locale ] do %>
+    <header class="mt-2 mb-4">
+      <h1 class="text-xl md:text-2xl font-bold leading-tight text-base-content">
+        <%= @domain&.title.presence || t("home.h1_default") %>
+      </h1>
+      <% if @domain&.description.present? %>
+        <p class="text-sm text-base-content/70 mt-1 line-clamp-2">
+          <%= @domain.description %>
+        </p>
+      <% end %>
+    </header>
+  <% end %>
+
+  <% lectures = Array(@grouped[:lectures]) %>
+  <% cache [ "home-shelf-lectures-v2", @domain&.id, lectures.first&.id, lectures.size ] do %>
+    <%= render "home/shelf",
+              title: t("home.sections.latest_lectures"),
+              icon_name: "microphone",
+              count: @content_counts["lecture"],
+              view_all_path: lectures_path,
+              hits: lectures,
+              card_partial: "search/results/lecture",
+              card_local: :lecture,
+              card_class: "w-[300px] sm:w-[340px] md:w-[380px]" %>
+  <% end %>
+
+  <% cache [ "home-recent-v2", @domain&.id, @recent_mixed.first&.id, @recent_mixed.size ] do %>
+    <%= render "home/recent_mixed", hits: @recent_mixed %>
+  <% end %>
+
+  <% cache [ "home-spotlight-v2", @domain&.id, @spotlight_scholars.size ] do %>
+    <%= render "home/scholar_strip", scholars: @spotlight_scholars %>
+  <% end %>
+
+  <% books = Array(@grouped[:books]) %>
+  <% cache [ "home-shelf-books-v2", @domain&.id, books.first&.id, books.size ] do %>
+    <%= render "home/shelf",
+              title: t("home.sections.latest_books"),
+              icon_name: "book-open",
+              count: @content_counts["book"],
+              view_all_path: books_path,
+              hits: books,
+              card_partial: "search/results/book",
+              card_local: :book,
+              card_class: "w-[260px] sm:w-[280px] md:w-[300px]" %>
+  <% end %>
+
+  <% series_hits = Array(@grouped[:series]) %>
+  <% cache [ "home-shelf-series-v2", @domain&.id, series_hits.first&.id, series_hits.size ] do %>
+    <%= render "home/shelf",
+              title: t("home.sections.latest_series"),
+              icon_name: "queue-list",
+              count: @content_counts["series"],
+              view_all_path: series_index_path,
+              hits: series_hits,
+              card_partial: "search/results/series",
+              card_local: :series,
+              card_class: "w-[280px] sm:w-[300px] md:w-[320px]" %>
+  <% end %>
+
+  <% articles = Array(@grouped[:articles]) %>
+  <% fatwas = Array(@grouped[:fatwas]) %>
+  <% cache [ "home-two-col-v2", @domain&.id, articles.first&.id, fatwas.first&.id ] do %>
+    <%= render "home/two_column", articles: articles, fatwas: fatwas %>
+  <% end %>
+</div>

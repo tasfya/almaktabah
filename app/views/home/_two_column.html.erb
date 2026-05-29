@@ -1,0 +1,46 @@
+<%#
+  Locals:
+    articles: Array<TypesenseSearch::SearchHit>
+    fatwas:   Array<TypesenseSearch::SearchHit>
+%>
+<% return if articles.blank? && fatwas.blank? %>
+<section class="mt-10 grid gap-6 grid-cols-1 lg:grid-cols-2">
+  <% if articles.present? %>
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg md:text-xl font-semibold flex items-center gap-2">
+          <%= icon "document-text", class: "w-5 h-5 text-primary" %>
+          <%= t("home.sections.latest_articles") %>
+        </h2>
+        <%= link_to articles_path, class: "btn btn-ghost btn-sm gap-1", data: { turbo_frame: "_top" } do %>
+          <%= t("search.view_all") %>
+          <%= icon "chevron-left", class: "w-4 h-4 rtl:rotate-180" %>
+        <% end %>
+      </div>
+      <div class="flex flex-col gap-3">
+        <% articles.first(4).each do |hit| %>
+          <%= render "search/results/article", article: hit %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  <% if fatwas.present? %>
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg md:text-xl font-semibold flex items-center gap-2">
+          <%= icon "scale", class: "w-5 h-5 text-primary" %>
+          <%= t("home.sections.latest_fatwas") %>
+        </h2>
+        <%= link_to fatwas_path, class: "btn btn-ghost btn-sm gap-1", data: { turbo_frame: "_top" } do %>
+          <%= t("search.view_all") %>
+          <%= icon "chevron-left", class: "w-4 h-4 rtl:rotate-180" %>
+        <% end %>
+      </div>
+      <div class="flex flex-col gap-3">
+        <% fatwas.first(4).each do |hit| %>
+          <%= render "search/results/fatwa", fatwa: hit %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</section>

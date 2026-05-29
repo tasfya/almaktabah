@@ -1,0 +1,19 @@
+<%#
+  Locals:
+    hits: Array<TypesenseSearch::SearchHit>
+%>
+<% return if hits.blank? || hits.size < 3 %>
+<section class="mt-10">
+  <div class="flex items-center justify-between mb-3">
+    <h2 class="text-lg md:text-xl font-semibold flex items-center gap-2">
+      <%= icon "sparkles", class: "w-5 h-5 text-primary" %>
+      <%= t("home.sections.recent_mixed") %>
+    </h2>
+  </div>
+  <div class="grid gap-4 grid-cols-1 lg:grid-cols-2">
+    <% hits.each do |hit| %>
+      <% partial_name = hit.content_type.to_s.singularize %>
+      <%= render partial: "search/results/#{partial_name}", locals: { partial_name.to_sym => hit } %>
+    <% end %>
+  </div>
+</section>

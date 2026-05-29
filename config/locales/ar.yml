@@ -546,3 +546,25 @@ ar:
     news: "الأخبار"
     fatwas: "الفتاوى"
     lessons: "الدروس"
+  home:
+    h1_default: "العلم — مكتبة شرعية صوتية ومقروءة"
+    sections:
+      latest_lectures: "أحدث الخطب والمحاضرات والفوائد"
+      recent_mixed: "أحدث الإضافات"
+      spotlight_scholars: "علماء المكتبة"
+      latest_books: "أحدث الكتب"
+      latest_series: "أحدث السلاسل"
+      latest_articles: "أحدث المقالات"
+      latest_fatwas: "أحدث الفتاوى"
+    cta:
+      browse_all: "تصفّح كل المحتوى"
+      browse_all_hint: "ابحث وصفّ بحسب العالم ونوع المحتوى."
+    shelf:
+      scroll_prev: "السابق"
+      scroll_next: "التالي"
+    scholar:
+      lectures_count:
+        one: "محاضرة واحدة"
+        other: "%{count} محاضرة"
+    empty:
+      no_content: "لا يتوفر محتوى لعرضه حالياً."
