@@ -15,12 +15,12 @@
       <% action = home_action(hit) %>
       <li class="flex items-center gap-3 p-3 <%= 'border-t border-base-300' unless index.zero? %>">
         <span class="text-lg font-bold text-base-content/25 w-5 text-center tabular-nums"><%= index + 1 %></span>
-        <div class="w-11 h-11 rounded-lg overflow-hidden shrink-0 bg-gradient-to-br from-primary/15 to-secondary/15 grid place-items-center">
+        <div class="w-11 h-11 rounded-lg overflow-hidden shrink-0 grid place-items-center" style="<%= home_gradient(hit) unless hit.thumbnail_url.present? %>">
           <% if hit.thumbnail_url.present? %>
             <%= image_tag hit.thumbnail_url, alt: hit.title, loading: "lazy", decoding: "async",
                           class: "w-full h-full object-cover" %>
           <% else %>
-            <%= icon home_type_icon(hit), class: "w-5 h-5 text-primary/70" %>
+            <%= icon home_type_icon(hit), class: "w-5 h-5 text-white/80" %>
           <% end %>
         </div>
         <div class="flex-1 min-w-0">

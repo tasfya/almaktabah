@@ -10,6 +10,31 @@ module HomeHelper
     "article" => "document-text"
   }.freeze
 
+  # Curated [from, to] color pairs for placeholder artwork. Deep, saturated
+  # tones that read well behind a white icon and the dark text overlay.
+  # Temporary until AI-generated cover images land.
+  GRADIENTS = [
+    [ "#0f766e", "#134e4a" ], # teal
+    [ "#1d4ed8", "#4c1d95" ], # blue → violet
+    [ "#b45309", "#7c2d12" ], # amber → brown
+    [ "#15803d", "#14532d" ], # green
+    [ "#9d174d", "#581c87" ], # rose → purple
+    [ "#0e7490", "#155e75" ], # cyan
+    [ "#a16207", "#854d0e" ], # gold
+    [ "#4338ca", "#1e3a8a" ], # indigo
+    [ "#be123c", "#881337" ], # crimson
+    [ "#047857", "#065f46" ]  # emerald
+  ].freeze
+
+  # Deterministic gradient for a hit: same item always renders the same
+  # gradient (String#sum is stable across processes, unlike String#hash).
+  def home_gradient(hit)
+    seed = "#{hit.try(:id)}#{hit.try(:title)}".sum
+    from, to = GRADIENTS[seed % GRADIENTS.size]
+    angle = 110 + (seed * 7) % 130
+    "background-image: linear-gradient(#{angle}deg, #{from}, #{to});"
+  end
+
   # Singularized content type for a SearchHit (e.g. "lecture").
   def home_type_key(hit)
     hit.content_type.to_s.singularize
