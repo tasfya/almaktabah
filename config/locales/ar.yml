@@ -548,7 +548,21 @@ ar:
     lessons: "الدروس"
   home:
     h1_default: "العلم — مكتبة شرعية صوتية ومقروءة"
+    tags:
+      title: "تصنيفات رائجة"
+      all: "استكشف"
+    trending:
+      title: "الأكثر رواجاً"
+    action:
+      listen: "استمع"
+      read: "اقرأ"
+      view: "عرض"
+    stats:
+      intro: "مكتبة تضم"
+      subtitle: "مادة علمية بين كتاب ومحاضرة ودرس وفتوى"
     sections:
+      featured: "مميّز"
+      recent_feed: "أحدث الإضافات"
       latest_lectures: "أحدث الخطب والمحاضرات والفوائد"
       recent_mixed: "أحدث الإضافات"
       spotlight_scholars: "علماء المكتبة"

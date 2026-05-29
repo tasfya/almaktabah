@@ -3,6 +3,8 @@
 class HomeController < ApplicationController
   SHELF_PER_PAGE = 6
   RECENT_MIXED_LIMIT = 6
+  TRENDING_MIX_LIMIT = 6
+  TRENDING_CATEGORIES_LIMIT = 10
   SPOTLIGHT_LIMIT = 8
 
   def index
@@ -57,12 +59,52 @@ class HomeController < ApplicationController
     @total_results = result.total_found
 
     @recent_mixed = build_recent_mixed(@grouped)
+    @trending_mix = build_trending_mix(@grouped)
+    @featured = build_featured(@grouped, @recent_mixed)
+    @trending_categories = build_trending_categories(@domain&.id)
     @spotlight_scholars = build_spotlight_scholars(@domain&.id)
     @content_counts = build_content_counts(@domain&.id)
   end
 
   def build_recent_mixed(grouped)
     grouped.values.flatten.sort_by { |hit| -hit.created_at_ts.to_i }.first(RECENT_MIXED_LIMIT)
+  end
+
+  # Sidebar "الأكثر رواجاً". No real popularity signal yet, so we interleave the
+  # most-recent item from each content type (recency proxy — see Phase B).
+  def build_trending_mix(grouped)
+    lists = [ :books, :lectures, :series, :fatwas ].map { |type| Array(grouped[type]) }
+    mix = []
+    depth = 0
+    while mix.size < TRENDING_MIX_LIMIT && lists.any? { |l| l[depth] }
+      lists.each do |list|
+        break if mix.size >= TRENDING_MIX_LIMIT
+        mix << list[depth] if list[depth]
+      end
+      depth += 1
+    end
+    mix
+  end
+
+  # Hero item: prefer a recent series/lecture that has artwork, else anything recent.
+  def build_featured(grouped, recent_mixed)
+    candidates = Array(grouped[:series]) + Array(grouped[:lectures])
+    candidates.find { |hit| hit.thumbnail_url.present? } || candidates.first || recent_mixed.first
+  end
+
+  def build_trending_categories(domain_id)
+    return [] if domain_id.blank?
+
+    Rails.cache.fetch([ "home_trending_categories_v1", domain_id ], expires_in: 6.hours) do
+      counts = Hash.new(0)
+      [ Lecture, Book, Series ].each do |model|
+        model.published.for_domain_id(domain_id)
+             .where.not(category: [ nil, "" ])
+             .group(:category).count
+             .each { |category, n| counts[category] += n }
+      end
+      counts.sort_by { |_, n| -n }.first(TRENDING_CATEGORIES_LIMIT).map(&:first)
+    end
   end
 
   def build_spotlight_scholars(domain_id)
