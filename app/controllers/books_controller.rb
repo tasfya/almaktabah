@@ -23,12 +23,12 @@ class BooksController < ApplicationController
     set_meta_tags(
       title: @book.title,
       description: description,
-      canonical: canonical_url_for(@book),
+      canonical: canonical_url_for,
       og: {
         title: @book.title,
         description: description,
         type: "book",
-        url: canonical_url_for(@book),
+        url: canonical_url_for,
         image: image_url
       }
     )

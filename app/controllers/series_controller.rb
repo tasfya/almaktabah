@@ -18,12 +18,12 @@ class SeriesController < ApplicationController
     set_meta_tags(
       title: @series.seo_show_title,
       description: description,
-      canonical: canonical_url_for(@series),
+      canonical: canonical_url_for,
       og: {
         title: @series.seo_show_title,
         description: description,
         type: "article",
-        url: canonical_url_for(@series)
+        url: canonical_url_for
       }
     )
   end

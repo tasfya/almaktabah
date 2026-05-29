@@ -17,12 +17,12 @@ class NewsController < ApplicationController
     set_meta_tags(
       title: @news.title,
       description: description,
-      canonical: canonical_url_for(@news),
+      canonical: canonical_url_for,
       og: {
         title: @news.title,
         description: description,
         type: "article",
-        url: canonical_url_for(@news),
+        url: canonical_url_for,
         image: image_url
       }
     )

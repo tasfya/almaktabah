@@ -45,7 +45,9 @@ class ApplicationController < ActionController::Base
 
   def set_default_meta_tags
     site_name = @domain&.title.presence || request.host
-    description = @domain&.description.presence || "مكتبة العلم للمواد الشرعية الصوتية والمقروءة: كتب، محاضرات، دروس، سلاسل علمية، فتاوى ومقالات."
+    # Per-tenant description lives on the Domain record; fall back to a
+    # locale-keyed default so non-Arabic tenants aren't forced into Arabic.
+    description = @domain&.description.presence || t("meta.default_description")
 
     set_meta_tags(
       site: site_name,
@@ -78,7 +80,7 @@ class ApplicationController < ActionController::Base
     set_meta_tags(noindex: true, follow: true) if noindex_page? || empty
   end
 
-  def canonical_url_for(_resource = nil)
+  def canonical_url_for
     # Sitemap URLs are generated per current host/domain, so the matching page
     # must self-canonicalize on that same host. Do not canonicalize 3ilm.org
     # pages to scholar subdomains or external domains.

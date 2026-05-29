@@ -14,12 +14,12 @@ class LessonsController < ApplicationController
     set_meta_tags(
       title: @lesson.title,
       description: description,
-      canonical: canonical_url_for(@lesson),
+      canonical: canonical_url_for,
       og: {
         title: @lesson.title,
         description: description,
         type: "article",
-        url: canonical_url_for(@lesson)
+        url: canonical_url_for
       }
     )
   end

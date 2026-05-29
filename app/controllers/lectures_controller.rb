@@ -24,12 +24,12 @@ class LecturesController < ApplicationController
     set_meta_tags(
       title: @lecture.seo_show_title,
       description: description,
-      canonical: canonical_url_for(@lecture),
+      canonical: canonical_url_for,
       og: {
         title: @lecture.seo_show_title,
         description: description,
         type: og_type,
-        url: canonical_url_for(@lecture),
+        url: canonical_url_for,
         image: image_url
       }
     )
