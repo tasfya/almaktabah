@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   before_action :setup_breadcrumbs
   before_action :set_domain
   before_action :set_default_meta_tags
-  before_action :latest_news
   after_action { pagy_headers_merge(@pagy) if @pagy }
   include BreadcrumbHelper
   include Pagy::Backend
@@ -35,12 +34,6 @@ class ApplicationController < ActionController::Base
     if (controller_name == "home" && action_name == "index") || controller_path.start_with?("devise/")
       reset_breadcrumbs
     end
-  end
-
-  def latest_news
-    return unless @domain
-
-    @latest_news ||= News.includes(:scholar).for_domain_id(@domain.id).published.order(published_at: :desc).limit(5)
   end
 
   def set_default_meta_tags
