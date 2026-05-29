@@ -12,7 +12,7 @@ class NewsController < ApplicationController
 
   def show
     cache_page(duration: 1.week)
-    description = @news.description.presence || (@news.content.present? ? @news.content.to_plain_text.truncate(MetaTags.config.description_limit) : "")
+    description = seo_text(@news.description.presence || @news.content, fallback: "خبر بعنوان: #{@news.title} ضمن أخبار وإعلانات موقع العلم.")
     image_url = @news.thumbnail.attached? ? url_for(@news.thumbnail) : nil
     set_meta_tags(
       title: @news.title,

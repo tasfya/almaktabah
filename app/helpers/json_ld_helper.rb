@@ -6,6 +6,45 @@ module JsonLdHelper
     content_tag(:script, data.to_json.html_safe, type: "application/ld+json")
   end
 
+  def website_json_ld
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": @domain&.title.presence || "العلم",
+      "url": root_url(host: request.host),
+      "inLanguage": "ar",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "#{root_url(host: request.host)}?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  end
+
+  def breadcrumb_json_ld
+    return nil unless respond_to?(:current_breadcrumbs)
+
+    items = current_breadcrumbs.each_with_index.map do |crumb, index|
+      path = crumb[:path].presence || request.path
+      {
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": crumb[:name],
+        "item": URI.join(root_url(host: request.host), path).to_s
+      }
+    end
+
+    return nil if items.size < 2
+
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": items
+    }
+  rescue StandardError
+    nil
+  end
+
   def article_json_ld(article)
     data = {
       "@context": "https://schema.org",

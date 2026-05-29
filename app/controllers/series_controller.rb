@@ -14,7 +14,7 @@ class SeriesController < ApplicationController
     cache_page(duration: 1.week)
     @lessons = @series.lessons.for_domain_id(@domain.id).published.ordered_by_lesson_number
 
-    description = @series.description.to_s.truncate(MetaTags.config.description_limit)
+    description = seo_text(@series.description, fallback: "سلسلة #{@series.title} للشيخ #{@series.scholar.full_name}، تضم دروساً علمية مرتبة للاستماع والمتابعة عبر موقع العلم.")
     set_meta_tags(
       title: @series.seo_show_title,
       description: description,

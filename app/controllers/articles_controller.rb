@@ -12,7 +12,7 @@ class ArticlesController < ApplicationController
 
   def show
     cache_page(duration: 1.week)
-    description = @article.content.present? ? @article.content.to_plain_text.truncate(MetaTags.config.description_limit) : ""
+    description = seo_text(@article.content, fallback: "مقال بعنوان: #{@article.title} للشيخ #{@article.scholar.full_name}، ضمن مقالات موقع العلم الشرعية.")
     set_meta_tags(
       title: @article.title,
       description: description,

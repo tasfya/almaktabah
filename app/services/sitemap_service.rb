@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SitemapService
-  URLS_PER_SITEMAP = 50_000
+  URLS_PER_SITEMAP = 10_000
 
   CONTENT_TYPES = {
     articles: { model: Article, domain_scoped: true, includes: :scholar },
