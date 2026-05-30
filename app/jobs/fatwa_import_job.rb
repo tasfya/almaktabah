@@ -83,5 +83,4 @@ class FatwaImportJob < ApplicationJob
       s.published_at = Time.current
     end
   end
-
 end
