@@ -19,6 +19,8 @@ class LessonImportJob < ApplicationJob
 
     series = find_or_create_series(row.series_title, scholar,) if row.series_title.present?
 
+    published_at = parse_datetime(row.published_at)
+
     lesson = Lesson.find_or_create_by!(
       title: row.title,
       description: row.description,
@@ -27,7 +29,10 @@ class LessonImportJob < ApplicationJob
       youtube_url: row.youtube_url,
       source_url: row.source_url,
       position: parse_integer(row.position)
-    )
+    ) do |l|
+      l.published    = published_at.present?
+      l.published_at = published_at
+    end
 
     lesson.assign_to(Domain.find(domain_id))
 

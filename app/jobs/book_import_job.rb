@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "ostruct"
+
 class BookImportJob < ApplicationJob
   include ApplicationHelper
 
@@ -10,13 +12,13 @@ class BookImportJob < ApplicationJob
 
     row = ::OpenStruct.new(row_data)
 
-    # Validate required author information
-    if row.author_first_name.blank? && row.author_last_name.blank?
-      raise ArgumentError, "Author information (author_first_name and/or author_last_name) is required"
+    if row_data["scholar_id"]
+      scholar = Scholar.find(row_data["scholar_id"])
+    elsif row.scholar_full_name.present?
+      scholar = find_or_create_scholar_by_full_name(row.scholar_full_name)
+    else
+      raise ArgumentError, "Author information (scholar_id or scholar_full_name) is required"
     end
-
-    # Find or create author
-    scholar = find_or_create_author(row.author_first_name, row.author_last_name)
 
     published_at = parse_datetime(row.published_at)
 
@@ -46,14 +48,11 @@ class BookImportJob < ApplicationJob
 
   private
 
-  def find_or_create_author(first_name, last_name)
-    return nil if first_name.blank? && last_name.blank?
+  def find_or_create_scholar_by_full_name(full_name)
+    return nil if full_name.blank?
 
-    Scholar.find_or_create_by!(
-      first_name: first_name&.strip,
-      last_name:  last_name&.strip
-    ) do |s|
-      s.published    = true
+    Scholar.find_or_create_by!(full_name: full_name.strip) do |s|
+      s.published = true
       s.published_at = Time.current
     end
   end
