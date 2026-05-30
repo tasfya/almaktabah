@@ -44,9 +44,14 @@ class ArticleImportJob < ApplicationJob
       ) do |a|
         a.published    = published_at.present?
         a.published_at = published_at
+        a.source_url   = row.source_url
       end
 
       dirty = article.changed?
+      if row.source_url.present? && article.source_url.blank?
+        article.source_url = row.source_url
+        dirty = true
+      end
       if row.content.present? && article.content&.to_plain_text.to_s.blank?
         article.content = row.content
         dirty = true

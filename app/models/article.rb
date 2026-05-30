@@ -80,7 +80,7 @@ class Article < ApplicationRecord
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "id", "title", "description", "category", "slug", "author_id", "published", "published_at", "created_at", "updated_at" ]
+    [ "id", "title", "description", "category", "slug", "source_url", "author_id", "published", "published_at", "created_at", "updated_at" ]
   end
 
   # Virtual attribute for filter compatibility
