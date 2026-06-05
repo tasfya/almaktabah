@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ar" data-theme="<%= @domain&.name.presence || 'default' %>">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J4NQZZTD5M"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    <% if Rails.env.production? %>
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-J4NQZZTD5M"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-      gtag('config', 'G-J4NQZZTD5M');
-    </script>
+        gtag('config', 'G-J4NQZZTD5M', { send_page_view: false });
+
+        // Track initial page load
+        gtag('event', 'page_view', {
+          page_path: window.location.pathname,
+          page_location: window.location.href,
+          page_title: document.title
+        });
+
+        // Track Turbo Drive navigations
+        document.addEventListener('turbo:load', function() {
+          gtag('event', 'page_view', {
+            page_path: window.location.pathname,
+            page_location: window.location.href,
+            page_title: document.title
+          });
+        });
+      </script>
+    <% end %>
     <%= display_meta_tags %>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
