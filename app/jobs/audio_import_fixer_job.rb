@@ -80,6 +80,7 @@ class AudioImportFixerJob < ApplicationJob
       title: @row.title,
       category: @row.category,
       scholar_id: scholar.id,
+      source_url: @row.source_url,
       kind: @row.kind
     )
   end
@@ -91,9 +92,15 @@ class AudioImportFixerJob < ApplicationJob
     series = Series.find_by(title: @row.series_title&.strip, scholar: scholar)
     return nil unless series
 
+    # Match the same logic as LessonImportJob
     Lesson.find_by(
       title: @row.title,
-      series_id: series.id
+      description: @row.description,
+      content_type: @row.content_type.presence || "audio",
+      series: series,
+      youtube_url: @row.youtube_url,
+      source_url: @row.source_url,
+      position: @row.position&.to_i
     )
   end
 
@@ -101,9 +108,12 @@ class AudioImportFixerJob < ApplicationJob
     scholar = find_scholar
     return nil unless scholar
 
+    # Match the same logic as FatwaImportJob
     Fatwa.find_by(
       title: @row.title,
-      scholar_id: scholar.id
+      category: @row.category,
+      scholar_id: scholar.id,
+      source_url: @row.source_url
     )
   end
 
