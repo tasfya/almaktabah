@@ -179,7 +179,7 @@ GEM
       railties (>= 6.1.0)
     faker (3.8.0)
       i18n (>= 1.8.11, < 2)
-    faraday (2.14.1)
+    faraday (2.14.2)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -229,7 +229,7 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jmespath (1.6.2)
-    json (2.19.3)
+    json (2.19.5)
     kamal (2.11.0)
       activesupport (>= 7.0)
       base64 (~> 0.2)
@@ -559,7 +559,7 @@ GEM
       base64 (~> 0.2.0)
       faraday (~> 2.8)
       json (~> 2.9)
-    typesense-rails (1.0.0.rc7)
+    typesense-rails (1.0.0.rc8)
       json (>= 1.5.1)
       typesense (>= 5.0.0, < 6.0.0)
     tzinfo (2.0.6)
@@ -652,7 +652,7 @@ DEPENDENCIES
   tailwindcss-rails
   thruster
   turbo-rails
-  typesense-rails (~> 1.0.0.rc7)
+  typesense-rails (~> 1.0.0.rc8)
   tzinfo-data
   web-console
 
