@@ -163,6 +163,9 @@ GEM
     diff-lcs (1.6.2)
     docile (1.4.1)
     dotenv (3.1.8)
+    down (5.6.0)
+      addressable (~> 2.8)
+      base64 (~> 0.3)
     drb (2.2.3)
     ed25519 (1.4.0)
     erb (6.0.2)
@@ -607,6 +610,7 @@ DEPENDENCIES
   database_validations
   debug
   devise
+  down (~> 5.4)
   factory_bot_rails
   faker
   friendly_id (~> 5.6.0)

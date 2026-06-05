@@ -62,6 +62,9 @@ gem "mission_control-jobs"
 # YouTube video downloader and HTTP requests
 gem "httparty"
 
+# Robust file downloads with streaming support
+gem "down", "~> 5.4"
+
 # friendly_id for human-readable URLs
 gem "friendly_id", "~> 5.6.0"
 
