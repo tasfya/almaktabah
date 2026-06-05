@@ -86,22 +86,8 @@ class AudioImportFixerJob < ApplicationJob
   end
 
   def find_lesson
-    scholar = find_scholar
-    return nil unless scholar
-
-    series = Series.find_by(title: @row.series_title&.strip, scholar: scholar)
-    return nil unless series
-
-    # Match the same logic as LessonImportJob
-    Lesson.find_by(
-      title: @row.title,
-      description: @row.description,
-      content_type: @row.content_type.presence || "audio",
-      series: series,
-      youtube_url: @row.youtube_url,
-      source_url: @row.source_url,
-      position: @row.position&.to_i
-    )
+    # Use source_url as unique identifier (same as LessonFixerImportJob)
+    Lesson.find_by(source_url: @row.source_url)
   end
 
   def find_fatwa
