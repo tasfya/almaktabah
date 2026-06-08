@@ -7,6 +7,7 @@ class Lesson < ApplicationRecord
   include TranscriptionConcern
 
   enum :audio_review_status, { pending: 0, flagged: 1, verified: 2, duplicate: 3 }
+  enum :audio_sync_status, { unchecked: 0, audio_verified: 1, audio_fixed: 2, needs_fix: 3 }, prefix: :audio
 
   belongs_to :series
   delegate :scholar, to: :series
