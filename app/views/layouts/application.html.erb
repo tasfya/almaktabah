@@ -35,6 +35,12 @@
     <meta charset="utf-8">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <% if controller_name == 'home' && action_name == 'index' %>
+      <%= json_ld_tag(website_json_ld) %>
+    <% end %>
+    <% if (breadcrumbs_json_ld = breadcrumb_json_ld) %>
+      <%= json_ld_tag(breadcrumbs_json_ld) %>
+    <% end %>
     <%= yield :head %>
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>

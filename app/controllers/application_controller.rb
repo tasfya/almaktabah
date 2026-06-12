@@ -45,18 +45,26 @@ class ApplicationController < ActionController::Base
 
   def set_default_meta_tags
     site_name = @domain&.title.presence || request.host
+    # Per-tenant description lives on the Domain record; fall back to a
+    # locale-keyed default so non-Arabic tenants aren't forced into Arabic.
+    description = @domain&.description.presence || t("meta.default_description")
+
     set_meta_tags(
       site: site_name,
-      description: @domain&.description.presence,
+      description: description,
+      canonical: canonical_url_for,
       reverse: true,
       separator: "|",
       og: {
         site_name: site_name,
         type: "website",
-        locale: "ar_AR"
+        locale: "ar_AR",
+        url: canonical_url_for,
+        description: description
       },
       twitter: {
-        card: "summary_large_image"
+        card: "summary_large_image",
+        description: description
       }
     )
   end
@@ -72,21 +80,77 @@ class ApplicationController < ActionController::Base
     set_meta_tags(noindex: true, follow: true) if noindex_page? || empty
   end
 
-  def canonical_domain_for(resource)
-    scholar = resource.try(:scholar)
-    return @domain unless scholar
-    scholar.default_domain || ilm_domain || @domain
-  end
-
-  def canonical_url_for(resource = nil)
-    domain = resource ? canonical_domain_for(resource) : @domain
-    if domain&.host.present? && domain.host != request.host
-      "#{request.protocol}#{domain.host}#{":#{request.port}" unless request.standard_port?}#{request.path}"
-    else
-      request.original_url.split(/[?#]/).first
-    end
+  def canonical_url_for
+    # Sitemap URLs are generated per current host/domain, so the matching page
+    # must self-canonicalize on that same host. Do not canonicalize 3ilm.org
+    # pages to scholar subdomains or external domains.
+    request.original_url.split(/[?#]/).first
   end
   helper_method :canonical_url_for
+
+  def seo_text(value, fallback:, limit: MetaTags.config.description_limit)
+    text = if value.respond_to?(:to_plain_text)
+      value.to_plain_text
+    else
+      ActionController::Base.helpers.strip_tags(value.to_s)
+    end
+    text = text.squish
+    text = fallback if text.blank?
+    text.truncate(limit)
+  end
+
+  def set_collection_meta_tags(content_type)
+    metadata = collection_seo_metadata.fetch(content_type.to_s)
+    set_meta_tags(
+      title: metadata[:title],
+      description: metadata[:description],
+      canonical: canonical_url_for,
+      og: {
+        title: metadata[:title],
+        description: metadata[:description],
+        type: "website",
+        url: canonical_url_for
+      },
+      twitter: {
+        title: metadata[:title],
+        description: metadata[:description]
+      }
+    )
+  end
+
+  def collection_seo_metadata
+    site_name = @domain&.title.presence || "العلم"
+    {
+      "home" => {
+        title: "العلم - مكتبة صوتية ومقروءة للعلم الشرعي",
+        description: "موقع العلم مكتبة شرعية تجمع الكتب والمحاضرات والدروس والسلاسل العلمية والفتاوى والمقالات بصيغة سهلة للبحث والاستماع والقراءة."
+      },
+      "article" => {
+        title: "المقالات الشرعية - #{site_name}",
+        description: "تصفح المقالات الشرعية المنشورة في #{site_name} مع مواد علمية مرتبة وسهلة البحث."
+      },
+      "book" => {
+        title: "الكتب الشرعية - #{site_name}",
+        description: "تصفح الكتب الشرعية في #{site_name} مع روابط القراءة أو التحميل ومواد علمية موثوقة."
+      },
+      "lecture" => {
+        title: "الخطب والمحاضرات والفوائد - #{site_name}",
+        description: "استمع إلى الخطب والمحاضرات والفوائد الصوتية والمرئية في #{site_name} مصنفة وقابلة للبحث."
+      },
+      "series" => {
+        title: "السلاسل العلمية والدروس - #{site_name}",
+        description: "تصفح السلاسل العلمية والدروس المرتبة في #{site_name} مع روابط الدروس والاستماع والمتابعة."
+      },
+      "fatwa" => {
+        title: "الفتاوى الشرعية - #{site_name}",
+        description: "ابحث في الفتاوى الشرعية في #{site_name} حسب الموضوع والعنوان والشيخ مع إجابات واضحة ومفهرسة."
+      },
+      "news" => {
+        title: "الأخبار والإعلانات - #{site_name}",
+        description: "آخر الأخبار والإعلانات والتحديثات المنشورة في #{site_name}."
+      }
+    }
+  end
 
   def slug_mismatch?(param_key, record)
     value = params[param_key]

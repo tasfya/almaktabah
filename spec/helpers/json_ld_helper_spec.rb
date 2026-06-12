@@ -9,7 +9,7 @@ RSpec.describe JsonLdHelper, type: :helper do
   before do
     assign(:domain, domain)
 
-    helper.define_singleton_method(:canonical_url_for) { |_resource = nil| "http://localhost/test" }
+    helper.define_singleton_method(:canonical_url_for) { "http://localhost/test" }
     allow(helper).to receive(:canonical_url_for).and_call_original
 
     allow(helper).to receive(:request).and_return(
@@ -97,9 +97,9 @@ RSpec.describe JsonLdHelper, type: :helper do
       expect(result[:mainEntityOfPage][:@type]).to eq("WebPage")
     end
 
-    it "passes article to canonical_url_for" do
+    it "uses canonical_url_for for the URL" do
       helper.article_json_ld(article)
-      expect(helper).to have_received(:canonical_url_for).with(article)
+      expect(helper).to have_received(:canonical_url_for).with(no_args)
     end
   end
 
@@ -141,9 +141,9 @@ RSpec.describe JsonLdHelper, type: :helper do
       expect(result[:datePublished]).to eq("2024")
     end
 
-    it "passes book to canonical_url_for" do
+    it "uses canonical_url_for for the URL" do
       helper.book_json_ld(book)
-      expect(helper).to have_received(:canonical_url_for).with(book)
+      expect(helper).to have_received(:canonical_url_for).with(no_args)
     end
   end
 
@@ -173,9 +173,9 @@ RSpec.describe JsonLdHelper, type: :helper do
         expect(result[:duration]).to eq("PT3600S")
       end
 
-      it "passes lecture to canonical_url_for" do
+      it "uses canonical_url_for for the URL" do
         helper.lecture_json_ld(lecture)
-        expect(helper).to have_received(:canonical_url_for).with(lecture)
+        expect(helper).to have_received(:canonical_url_for).with(no_args)
       end
     end
 
@@ -270,9 +270,9 @@ RSpec.describe JsonLdHelper, type: :helper do
       expect(result[:provider][:name]).to eq(scholar.full_name)
     end
 
-    it "passes series to canonical_url_for" do
+    it "uses canonical_url_for for the URL" do
       helper.series_json_ld(series)
-      expect(helper).to have_received(:canonical_url_for).with(series)
+      expect(helper).to have_received(:canonical_url_for).with(no_args)
     end
   end
 
@@ -314,9 +314,9 @@ RSpec.describe JsonLdHelper, type: :helper do
       expect(result[:publisher][:@type]).to eq("Organization")
     end
 
-    it "passes news to canonical_url_for" do
+    it "uses canonical_url_for for the URL" do
       helper.news_json_ld(news)
-      expect(helper).to have_received(:canonical_url_for).with(news)
+      expect(helper).to have_received(:canonical_url_for).with(no_args)
     end
 
     context "with scholar" do
