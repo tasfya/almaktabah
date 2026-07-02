@@ -39,6 +39,19 @@ jobs:
 
   test:
     runs-on: blacksmith-4vcpu-ubuntu-2404
+    services:
+      typesense:
+        image: typesense/typesense:27.1
+        env:
+          TYPESENSE_DATA_DIR: /data
+          TYPESENSE_API_KEY: xyz
+        ports:
+          - 8108:8108
+    env:
+      TYPESENSE_HOST: localhost
+      TYPESENSE_PORT: 8108
+      TYPESENSE_API_KEY: xyz
+      TYPESENSE_PROTOCOL: http
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
