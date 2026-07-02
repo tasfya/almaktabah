@@ -3,7 +3,8 @@
 module JsonLdHelper
   def json_ld_tag(data)
     # Ruby's to_json escapes < and > as \u003c and \u003e, preventing XSS
-    content_tag(:script, data.to_json.html_safe, type: "application/ld+json")
+    content_tag(:script, data.to_json.html_safe, type: "application/ld+json",
+                nonce: content_security_policy_nonce)
   end
 
   def article_json_ld(article)
