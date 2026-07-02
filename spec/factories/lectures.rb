@@ -46,5 +46,9 @@ FactoryBot.define do
     trait :without_audio do
       audio { nil }
     end
+
+    trait :with_final_audio do
+      final_audio { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
+    end
   end
 end

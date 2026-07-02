@@ -1,0 +1,7 @@
+---
+# Brakeman configuration
+# https://brakemanscanner.org/docs/options/
+
+# Skip local development scripts
+:skip_files:
+  - scripts/
