@@ -66,9 +66,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_05_183251) do
     t.boolean "published", default: false, null: false
     t.datetime "published_at"
     t.string "slug"
+    t.string "category"
+    t.string "source_url"
     t.index ["author_id"], name: "index_articles_on_author_id"
+    t.index ["category"], name: "index_articles_on_category"
     t.index ["published"], name: "index_articles_on_published"
     t.index ["slug"], name: "index_articles_on_slug", unique: true
+    t.index ["source_url"], name: "index_articles_on_source_url"
   end
 
   create_table "books", force: :cascade do |t|

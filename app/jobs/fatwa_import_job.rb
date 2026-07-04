@@ -27,18 +27,43 @@ class FatwaImportJob < ApplicationJob
 
     ActiveRecord::Base.transaction do
       # Find or create scholar
-      if row_data["scholar_id"]
+      if row_data["scholar_id"].present?
         scholar = Scholar.find(row_data["scholar_id"])
       elsif row_data["scholar_full_name"].present?
         scholar = find_or_create_scholar_by_full_name(row_data["scholar_full_name"])
       end
+
+      if scholar.nil?
+        raise ArgumentError, "Scholar information (scholar_id or scholar_full_name) is required"
+      end
+
+      published_at = parse_datetime(row.published_at)
 
       fatwa = Fatwa.find_or_create_by!(
         title: row.title,
         category: row.category,
         scholar_id: scholar.id,
         source_url: row.source_url,
-      )
+      ) do |f|
+        f.published    = published_at.present?
+        f.published_at = published_at
+      end
+
+      dirty = fatwa.changed?
+      if published_at.present? && fatwa.published_at.blank?
+        fatwa.published = true
+        fatwa.published_at = published_at
+        dirty = true
+      end
+      if row.question.present? && fatwa.question&.to_plain_text.to_s.blank?
+        fatwa.question = row.question
+        dirty = true
+      end
+      if row.answer.present? && fatwa.answer&.to_plain_text.to_s.blank?
+        fatwa.answer = row.answer
+        dirty = true
+      end
+      fatwa.save! if dirty
 
       fatwa.assign_to(domain)
 
@@ -59,18 +84,6 @@ class FatwaImportJob < ApplicationJob
     return nil if full_name.blank?
 
     Scholar.find_or_create_by!(full_name: full_name.strip) do |s|
-      s.published = true
-      s.published_at = Time.current
-    end
-  end
-
-  def find_or_create_scholar_by_first_last_name(first_name, last_name)
-    return nil if first_name.blank? && last_name.blank?
-
-    Scholar.find_or_create_by!(
-      first_name: first_name&.strip,
-      last_name: last_name&.strip
-    ) do |s|
       s.published = true
       s.published_at = Time.current
     end

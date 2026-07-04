@@ -11,13 +11,15 @@ class LessonImportJob < ApplicationJob
 
     row = ::OpenStruct.new(row_data)
 
-    if row_data["scholar_id"]
+    if row_data["scholar_id"].present?
       scholar = Scholar.find(row_data["scholar_id"])
     elsif row_data["scholar_full_name"].present?
       scholar = find_or_create_scholar_by_full_name(row_data["scholar_full_name"])
     end
 
     series = find_or_create_series(row.series_title, scholar,) if row.series_title.present?
+
+    published_at = parse_datetime(row.published_at)
 
     lesson = Lesson.find_or_create_by!(
       title: row.title,
@@ -27,7 +29,14 @@ class LessonImportJob < ApplicationJob
       youtube_url: row.youtube_url,
       source_url: row.source_url,
       position: parse_integer(row.position)
-    )
+    ) do |l|
+      l.published    = published_at.present?
+      l.published_at = published_at
+    end
+
+    if published_at.present? && lesson.published_at.blank?
+      lesson.update!(published: true, published_at: published_at)
+    end
 
     lesson.assign_to(Domain.find(domain_id))
 
