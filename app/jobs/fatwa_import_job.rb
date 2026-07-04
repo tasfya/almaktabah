@@ -27,7 +27,7 @@ class FatwaImportJob < ApplicationJob
 
     ActiveRecord::Base.transaction do
       # Find or create scholar
-      if row_data["scholar_id"]
+      if row_data["scholar_id"].present?
         scholar = Scholar.find(row_data["scholar_id"])
       elsif row_data["scholar_full_name"].present?
         scholar = find_or_create_scholar_by_full_name(row_data["scholar_full_name"])
@@ -50,6 +50,11 @@ class FatwaImportJob < ApplicationJob
       end
 
       dirty = fatwa.changed?
+      if published_at.present? && fatwa.published_at.blank?
+        fatwa.published = true
+        fatwa.published_at = published_at
+        dirty = true
+      end
       if row.question.present? && fatwa.question&.to_plain_text.to_s.blank?
         fatwa.question = row.question
         dirty = true

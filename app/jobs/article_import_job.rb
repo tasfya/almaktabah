@@ -25,7 +25,7 @@ class ArticleImportJob < ApplicationJob
     domain = Domain.find(domain_id)
 
     ActiveRecord::Base.transaction do
-      if row_data["scholar_id"]
+      if row_data["scholar_id"].present?
         scholar = Scholar.find(row_data["scholar_id"])
       elsif row_data["scholar_full_name"].present?
         scholar = find_or_create_scholar_by_full_name(row_data["scholar_full_name"])
@@ -48,6 +48,11 @@ class ArticleImportJob < ApplicationJob
       end
 
       dirty = article.changed?
+      if published_at.present? && article.published_at.blank?
+        article.published = true
+        article.published_at = published_at
+        dirty = true
+      end
       if row.source_url.present? && article.source_url.blank?
         article.source_url = row.source_url
         dirty = true
