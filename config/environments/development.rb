@@ -6,6 +6,14 @@ Rails.application.configure do
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 
+  # Allow portless dev URLs on the reserved .localhost TLD through host
+  # authorization. Rails anchors regexps and a leading-dot host only matches
+  # one label deep, so neither ".localhost" nor /\.localhost\z/ covers
+  # multi-label hosts like foo.almaktabah.localhost — match the full host
+  # instead. Custom TLDs (a shared proxy) go through RAILS_DEVELOPMENT_HOSTS
+  # set in a gitignored .dev.local; see CLAUDE.md.
+  config.hosts << /.+\.localhost/
+
   # Do not eager load code on boot.
   config.eager_load = false
 
