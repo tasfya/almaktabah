@@ -70,6 +70,12 @@ tenant, hit the Rails port directly via `http://127.0.0.1:<port>` (printed by
 ### Tests
 
 Run inside the worktree: `bundle exec rspec` uses the worktree's own test DB
-(`storage/test.sqlite3`). The Playwright system specs (`spec/system/`) stub
-Typesense and run locally (skipped only in CI). Plain single-checkout dev
-(`bin/dev` on `localhost:3000`) still works unchanged.
+(`storage/test.sqlite3`). Plain single-checkout dev (`bin/dev` on
+`localhost:3000`) still works unchanged.
+
+The Playwright search system specs (`spec/system/search/`) index **real**
+records into Typesense (tagged `:typesense`, same harness as
+`spec/integration/`) and gate every CI run. Like the integration specs they are
+opt-in locally: they run only when `CI` is set, or when you set
+`RUN_TYPESENSE_SPECS=1` with `TYPESENSE_PORT` pointing at a **disposable**
+Typesense instance (not your dev data). See `spec/support/typesense_integration.rb`.
