@@ -41,12 +41,14 @@ jobs:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     services:
       typesense:
-        image: typesense/typesense:27.1
+        image: typesense/typesense:29.0
         env:
           TYPESENSE_DATA_DIR: /data
           TYPESENSE_API_KEY: xyz
         ports:
           - 8108:8108
+        volumes:
+          - typesense-data:/data
     env:
       TYPESENSE_HOST: localhost
       TYPESENSE_PORT: 8108
@@ -80,6 +82,14 @@ jobs:
 
       - name: migrate database
         run: bin/rails db:create db:migrate RAILS_ENV=test
+
+      - name: Wait for Typesense
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8108/health >/dev/null; then echo "Typesense ready"; exit 0; fi
+            echo "waiting for Typesense ($i)"; sleep 2
+          done
+          echo "Typesense did not become ready"; exit 1
 
       - name: Run tests
         run: bundle exec rspec --format documentation --color --profile --order defined
