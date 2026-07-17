@@ -248,4 +248,37 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
     find("[data-filter-sidebar-target='toggle']", match: :first).click
     within("#search_filters_content_mobile") { expect(page).to have_unchecked_field("Scholar A") }
   end
+
+  # Turbo can restore a snapshot cached the instant a box was ticked, so a
+  # restored page may carry a checkbox that disagrees with its URL (real Chrome
+  # exhibits this; the Playwright harness does not). The controller re-syncs
+  # checkboxes to the URL on connect(), which re-fires when Turbo swaps the frame
+  # on restoration. This test drives that mechanism directly: it forces a
+  # checkbox to disagree with the URL, then forces the Stimulus controller to
+  # reconnect, and asserts the checkbox is corrected to match the URL.
+  it "re-syncs checkboxes to the URL when the controller reconnects" do
+    index_for_domain(
+      create(:article, title: "Sync Piece", scholar: scholar_a),
+      create(:book, title: "Sync Volume", scholar: scholar_a)
+    )
+    book_label = I18n.t("content_types.book")
+
+    visit root_path(q: "Sync")
+    within("#search_filters_content_desktop") { expect(page).to have_unchecked_field(book_label) }
+
+    # Simulate a stale restored snapshot: the box carries a `checked` attribute
+    # while the URL has no content_types filter. Reassigning outerHTML re-parses
+    # that stale markup into a fresh node, which makes Stimulus disconnect the old
+    # controller and connect a new one — exactly what Turbo does when it swaps the
+    # search_content frame on a Back/Forward restoration.
+    page.execute_script(<<~JS)
+      const el = document.querySelector("[data-controller~='filter-sidebar']");
+      el.querySelector("#search_filters_content_desktop input[value='book']")
+        .setAttribute("checked", "checked");
+      el.outerHTML = el.outerHTML;
+    JS
+
+    # connect() must re-sync the box to the (unfiltered) URL, clearing the stale check.
+    within("#search_filters_content_desktop") { expect(page).to have_unchecked_field(book_label) }
+  end
 end

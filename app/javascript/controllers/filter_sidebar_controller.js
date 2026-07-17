@@ -40,7 +40,22 @@ export default class extends Controller {
       );
     }
 
+    // Turbo may restore a snapshot cached the instant a box was ticked (box
+    // checked, filter not yet applied), so Back/Forward can show a checkbox
+    // that disagrees with the URL. connect() re-fires when Turbo swaps the
+    // frame on restoration, so re-sync every filter checkbox to the URL here —
+    // the URL is authoritative and always matches the restored results.
+    this.syncCheckboxesToUrl();
     this.setInitialSidebarState();
+  }
+
+  syncCheckboxesToUrl() {
+    const params = new URLSearchParams(window.location.search);
+    this.element
+      .querySelectorAll("input[type=checkbox][name$='[]']")
+      .forEach((checkbox) => {
+        checkbox.checked = params.getAll(checkbox.name).includes(checkbox.value);
+      });
   }
 
   disconnect() {
