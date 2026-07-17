@@ -15,8 +15,6 @@ export default class extends Controller {
     "sidebar",
     "toggle",
     "overlay",
-    "checkbox",
-    "submitButton",
     "checkboxToggle",
   ];
 
@@ -56,6 +54,9 @@ export default class extends Controller {
       );
     }
     if (this.debounceTimeout) clearTimeout(this.debounceTimeout);
+    // The frame navigation that closes the mobile drawer replaces these nodes
+    // rather than calling close(), so clear the scroll lock here to be safe.
+    document.body.classList.remove("overflow-hidden");
   }
 
   handleCheckboxToggle() {
