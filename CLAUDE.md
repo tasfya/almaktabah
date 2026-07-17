@@ -26,6 +26,11 @@ bin/worktree rm tafsir       # remove the worktree, branch and its Typesense
 
 `bin/worktree list` shows what's running.
 
+**After merging a PR, always update the main checkout** so local `main`
+reflects the merge: `git -C <main-checkout> fetch origin --prune && git -C
+<main-checkout> merge --ff-only origin/main`. Do this every time a PR lands,
+whether you merged it or someone else did.
+
 ### How `serve` isolates a worktree
 
 - **URL:** portless derives the hostname from `portless.json` (`almaktabah`)
