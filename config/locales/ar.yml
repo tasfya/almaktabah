@@ -9,6 +9,7 @@ ar:
     scholar: "عالم"
     article: "مقال"
   search:
+    filter_by: "تصفية حسب"
     content_types:
       all: "الكل"
     view_all: "عرض الكل"
