@@ -1,21 +1,27 @@
 import { Controller } from "@hotwired/stimulus";
 
+// Drives the search filter sidebar. Filter changes submit the GET filter form,
+// which Turbo turns into a navigation of the ancestor `search_content` frame
+// (data-turbo-action="advance"). That gives every filter state a real history
+// entry and a server-rendered snapshot matching its URL, so browser Back/Forward
+// stay consistent (issue #385). No manual fetch, replaceState or popstate here —
+// Turbo owns history and rendering.
+//
+// Desktop (sidebar always visible): submit on checkbox change (debounced).
+// Mobile (drawer): submit on the Apply button only, so ticking several boxes is
+// one history entry and the drawer isn't torn down on every tick.
 export default class extends Controller {
   static targets = [
     "sidebar",
     "toggle",
     "overlay",
     "checkbox",
-    "clearButton",
     "submitButton",
     "checkboxToggle",
   ];
 
   static values = {
     open: { type: Boolean, default: false },
-    applyFilters: { type: String, default: "" },
-    loading: { type: String, default: "" },
-    clearAll: { type: String, default: "" },
   };
 
   connect() {
@@ -36,13 +42,7 @@ export default class extends Controller {
       );
     }
 
-    this.initializeFromUrl();
     this.setInitialSidebarState();
-  }
-
-  handleCheckboxToggle() {
-    this.openValue = this.checkboxToggleTarget.checked;
-    this.updateSidebarState();
   }
 
   disconnect() {
@@ -56,6 +56,11 @@ export default class extends Controller {
       );
     }
     if (this.debounceTimeout) clearTimeout(this.debounceTimeout);
+  }
+
+  handleCheckboxToggle() {
+    this.openValue = this.checkboxToggleTarget.checked;
+    this.updateSidebarState();
   }
 
   toggle() {
@@ -85,76 +90,30 @@ export default class extends Controller {
     this.removeFocusTrap();
   }
 
+  // Desktop: submit (debounced) as soon as a filter checkbox changes. On mobile
+  // we wait for the Apply button so several ticks become a single history entry.
   onCheckboxChange(event) {
-    const checkbox = event.target;
-    this.updateUrlParameter(checkbox.name, checkbox.value, checkbox.checked);
-    this.debouncedSubmit();
+    this.changedForm = event.target.form;
+    if (window.innerWidth >= 1024) {
+      this.debouncedSubmit();
+    }
   }
 
   debouncedSubmit() {
     if (this.debounceTimeout) clearTimeout(this.debounceTimeout);
-    this.debounceTimeout = setTimeout(() => this.fetchResults(), 300);
+    this.debounceTimeout = setTimeout(() => this.submitFilters(), 300);
   }
 
-  async submitForm() {
-    await this.fetchResults();
-    if (window.innerWidth < 1024) {
-      this.close();
-    }
+  // Mobile "Apply" button. Submits the drawer's form; the frame navigation that
+  // follows re-renders (and thereby closes) the drawer.
+  submitForm(event) {
+    this.changedForm = event.target.closest("form");
+    this.submitFilters();
   }
 
-  async fetchResults() {
-    this.setLoadingState(true);
-
-    try {
-      const response = await fetch(window.location.href, {
-        headers: {
-          Accept: "text/vnd.turbo-stream.html",
-          "X-Requested-With": "XMLHttpRequest",
-        },
-      });
-
-      if (!response.ok) {
-        console.error("Filter request failed:", response.status);
-        return;
-      }
-
-      const html = await response.text();
-      window.Turbo.renderStreamMessage(html);
-    } catch (error) {
-      console.error("Filter request error:", error);
-    } finally {
-      this.setLoadingState(false);
-    }
-  }
-
-  clearAllFilters(event) {
-    event.preventDefault();
-
-    if (this.hasCheckboxTarget) {
-      this.checkboxTargets.forEach((checkbox) => {
-        checkbox.checked = false;
-      });
-    }
-
-    this.clearUrlParameters();
-    this.submitForm();
-  }
-
-  removeFilter(event) {
-    event.preventDefault();
-    const chip = event.currentTarget;
-    const filterName = chip.dataset.filterName;
-    const filterValue = chip.dataset.filterValue;
-
-    const checkbox = this.checkboxTargets.find(
-      (cb) => cb.name === filterName && cb.value === filterValue
-    );
-
-    if (checkbox) {
-      checkbox.checked = false;
-      this.onCheckboxChange({ target: checkbox });
-    }
+  submitFilters() {
+    const form = this.changedForm || this.element.querySelector("form");
+    form?.requestSubmit();
   }
 
   handleKeydown(event) {
@@ -182,55 +141,6 @@ export default class extends Controller {
     }
   }
 
-  initializeFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-
-    if (this.hasCheckboxTarget) {
-      this.checkboxTargets.forEach((checkbox) => {
-        const paramValues = urlParams.getAll(checkbox.name);
-        checkbox.checked = paramValues.includes(checkbox.value);
-      });
-    }
-  }
-
-  updateUrlParameter(name, value, checked) {
-    const url = new URL(window.location);
-    const params = new URLSearchParams(url.search);
-    const existingValues = params.getAll(name);
-
-    if (checked && value) {
-      if (!existingValues.includes(value)) {
-        params.append(name, value);
-      }
-    } else if (value) {
-      params.delete(name);
-      existingValues
-        .filter((v) => v !== value)
-        .forEach((v) => params.append(name, v));
-    }
-
-    params.delete("page");
-    url.search = params.toString();
-    window.history.replaceState({}, "", url);
-  }
-
-  clearUrlParameters() {
-    const url = new URL(window.location);
-    const params = new URLSearchParams(url.search);
-
-    // Only remove filter parameters, preserve others like 'q' (search query)
-    if (this.hasCheckboxTarget) {
-      const filterNames = [
-        ...new Set(this.checkboxTargets.map((cb) => cb.name)),
-      ];
-      filterNames.forEach((name) => params.delete(name));
-    }
-
-    params.delete("page");
-    url.search = params.toString();
-    window.history.replaceState({}, "", url);
-  }
-
   updateSidebarState() {
     if (!this.hasSidebarTarget) return;
 
@@ -249,29 +159,6 @@ export default class extends Controller {
   setInitialSidebarState() {
     if (window.innerWidth >= 1024) {
       this.openValue = true;
-    }
-  }
-
-  setLoadingState(isLoading) {
-    if (this.hasSubmitButtonTarget) {
-      if (isLoading) {
-        this.submitButtonTarget.disabled = true;
-        this.submitButtonTarget.classList.add("loading");
-        this.submitButtonTarget.innerHTML = `
-          <span class="loading loading-spinner loading-sm"></span>
-          ${this.loadingValue}
-        `;
-      } else {
-        this.submitButtonTarget.disabled = false;
-        this.submitButtonTarget.classList.remove("loading");
-        this.submitButtonTarget.innerHTML = this.applyFiltersValue;
-      }
-    }
-
-    if (this.hasCheckboxTarget) {
-      this.checkboxTargets.forEach((checkbox) => {
-        checkbox.disabled = isLoading;
-      });
     }
   }
 

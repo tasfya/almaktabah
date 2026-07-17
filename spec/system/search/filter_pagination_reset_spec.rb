@@ -5,6 +5,10 @@ require "rails_helper"
 # the `page` param. The scholar checkboxes come from real facet data, so we index
 # articles across two scholars. Previously stubbed and skipped in CI (the in-process
 # stub can't reach the browser's separate server process).
+#
+# Toggling a facet now navigates the `search_content` Turbo frame (issue #385), so
+# the URL updates asynchronously — we wait on `have_current_path` rather than reading
+# `current_url` synchronously.
 RSpec.describe "Filter pagination reset", :typesense, type: :system, js: true do
   let!(:domain) { create(:domain, host: "www.example.com") }
 
@@ -28,7 +32,8 @@ RSpec.describe "Filter pagination reset", :typesense, type: :system, js: true do
 
     within("#search_filters_content_desktop") { check "Scholar A" }
 
-    expect(page.current_url).not_to include("page=")
+    expect(page).to have_current_path(/scholars/, url: true)
+    expect(page).to have_no_current_path(/[?&]page=/, url: true)
   end
 
   it "resets page parameter when filter checkbox is unchecked" do
@@ -38,6 +43,7 @@ RSpec.describe "Filter pagination reset", :typesense, type: :system, js: true do
 
     within("#search_filters_content_desktop") { uncheck "Scholar A" }
 
-    expect(page.current_url).not_to include("page=")
+    expect(page).to have_no_current_path(/scholars/, url: true)
+    expect(page).to have_no_current_path(/[?&]page=/, url: true)
   end
 end
