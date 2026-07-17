@@ -1,22 +1,18 @@
 require "rails_helper"
 
-# Skip in CI - stubs don't work across processes in system specs
-# TODO: Create real indexed data for system specs or use WebMock
-RSpec.describe "Basic Search", type: :system, js: true, skip: ENV["CI"].present? do
-  before do
-    create(:domain, host: "www.example.com")
-  end
+# Runs against a real Typesense instance (see spec/support/typesense_integration.rb
+# for gating and the reset/ensure-collections lifecycle). Earlier this spec stubbed
+# the search services in-process, which cannot work in a `js: true` system spec: the
+# browser drives the app in a separate process the stub never reaches, so it was
+# skipped in CI. Indexing real records instead lets it gate every CI run.
+RSpec.describe "Basic Search", :typesense, type: :system, js: true do
+  let!(:domain) { create(:domain, host: "www.example.com") }
 
   it "displays search results" do
-    article_hit = build_search_hit(
-      type: :article,
-      title: "Test Article",
-      scholar_name: "Scholar Name"
-    )
-    stub_typesense_search(build_search_result(
-      hits_by_type: { articles: [ article_hit ] },
-      total: 1
-    ))
+    scholar = create(:scholar, full_name: "Scholar Name")
+    article = create(:article, title: "Test Article", scholar: scholar)
+    article.update!(domains: [ domain ])
+    index_records(article)
 
     visit root_path(q: "Test")
 
@@ -24,8 +20,6 @@ RSpec.describe "Basic Search", type: :system, js: true, skip: ENV["CI"].present?
   end
 
   it "shows no results message for empty search" do
-    stub_typesense_search(empty_search_result)
-
     visit root_path(q: "nonexistent")
 
     expect(page).to have_content(I18n.t("search.index.no_results_title"))
