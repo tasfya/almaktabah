@@ -84,3 +84,18 @@ records into Typesense (tagged `:typesense`, same harness as
 opt-in locally: they run only when `CI` is set, or when you set
 `RUN_TYPESENSE_SPECS=1` with `TYPESENSE_PORT` pointing at a **disposable**
 Typesense instance (not your dev data). See `spec/support/typesense_integration.rb`.
+
+**Use `bin/worktree test` to run them.** It spins up a throwaway test Typesense
+container — a **different** port, compose project and volume from the one `serve`
+uses — and runs rspec against it with `RUN_TYPESENSE_SPECS=1` set. This keeps the
+`:typesense` specs (which wipe every collection before/after each example) away
+from your dev index. Extra args pass through to rspec:
+
+```sh
+bin/worktree test                         # whole suite
+bin/worktree test spec/system/search      # a subset
+```
+
+Do **not** point `TYPESENSE_PORT` at the port `serve` prints (that's your dev
+index) when running the specs by hand — `bin/worktree test` picks the right
+throwaway port for you.
