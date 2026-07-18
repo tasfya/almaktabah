@@ -31,6 +31,26 @@ reflects the merge: `git -C <main-checkout> fetch origin --prune && git -C
 <main-checkout> merge --ff-only origin/main`. Do this every time a PR lands,
 whether you merged it or someone else did.
 
+**When your work is shipped, always tear down the worktree you worked on.**
+Once your change is merged, deployed to production, and you've *verified the
+deployment works* (e.g. tested the live site), don't leave the worktree or its
+dev server running — clean up automatically, without waiting to be asked:
+
+```sh
+# 1. Stop your worktree's dev server if `serve` is still running (Ctrl-C, or
+#    kill the puma/portless processes whose cwd is inside your worktree).
+# 2. Update main so it reflects the merge (see above).
+# 3. Remove your worktree — drops the branch and both its Typesense containers.
+bin/worktree rm <your-branch>
+# 4. Show what's left, and DON'T touch it — the remaining worktrees are other
+#    agents' active work.
+bin/worktree list
+```
+
+**Only ever remove the worktree you created.** Other agents run their own
+worktrees in parallel from this repo; `bin/worktree list` shows them (and any of
+your own still in flight). Never `rm` a worktree you didn't set up.
+
 ### How `serve` isolates a worktree
 
 - **URL:** portless derives the hostname from `portless.json` (`almaktabah`)
