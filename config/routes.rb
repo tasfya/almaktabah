@@ -85,6 +85,9 @@ Rails.application.routes.draw do
     mount Avo::Engine => "/avo"
   end
 
+  # Load Avo custom routes
+  draw :avo
+
   root "home#index"
 
   get "library", to: "library#index"
