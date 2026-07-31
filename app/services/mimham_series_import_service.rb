@@ -2,9 +2,9 @@
 
 require "csv"
 
-class MimhamImportService
+class MimhamSeriesImportService
   attr_reader :csv_file, :skip_duplicates, :download_audio, :dry_run,
-              :created_count, :skipped_count, :errors, :scholars_cache,
+              :created_count, :skipped_count, :errors, :scholars_cache, :series_cache,
               :existing_records, :new_records
 
   def initialize(csv_file:, skip_duplicates: true, download_audio: true, dry_run: false)
@@ -16,6 +16,7 @@ class MimhamImportService
     @skipped_count = 0
     @errors = []
     @scholars_cache = {}
+    @series_cache = {}
     @existing_records = []
     @new_records = []
   end
@@ -29,7 +30,7 @@ class MimhamImportService
     csv_content = csv_content.force_encoding("UTF-8")
     csv_data = CSV.parse(csv_content, headers: true)
 
-    required_headers = %w[title scholar_name kind]
+    required_headers = %w[series_title scholar_name title]
     missing = required_headers - csv_data.headers
     if missing.any?
       @errors << "CSV missing required columns: #{missing.join(', ')}"
@@ -49,17 +50,17 @@ class MimhamImportService
     puts "=" * 60
     puts
     puts "Summary:"
-    puts "  New records:      #{new_records.count}"
-    puts "  Existing records: #{existing_records.count}"
+    puts "  New lessons:      #{new_records.count}"
+    puts "  Existing lessons: #{existing_records.count}"
     puts "  Errors:           #{errors.count}"
     puts
 
     if existing_records.any?
       puts "-" * 60
-      puts "EXISTING RECORDS (would be skipped):"
+      puts "EXISTING LESSONS (would be skipped):"
       puts "-" * 60
       existing_records.first(20).each do |record|
-        puts "  [#{record[:scholar_name]}] #{record[:title]}"
+        puts "  [#{record[:series_title]}] #{record[:title]}"
         puts "    Source: #{record[:source_url]}"
       end
       puts "  ... and #{existing_records.count - 20} more" if existing_records.count > 20
@@ -68,11 +69,11 @@ class MimhamImportService
 
     if new_records.any?
       puts "-" * 60
-      puts "NEW RECORDS (#{dry_run ? 'would be imported' : 'imported'}):"
+      puts "NEW LESSONS (#{dry_run ? 'would be imported' : 'imported'}):"
       puts "-" * 60
       new_records.first(20).each do |record|
-        puts "  [#{record[:scholar_name]}] #{record[:title]}"
-        puts "    Kind: #{record[:kind]} | Category: #{record[:category]}"
+        puts "  [#{record[:series_title]}] #{record[:title]}"
+        puts "    Scholar: #{record[:scholar_name]} | Position: #{record[:lesson_number]}"
       end
       puts "  ... and #{new_records.count - 20} more" if new_records.count > 20
       puts
@@ -92,27 +93,31 @@ class MimhamImportService
   private
 
   def process_row(row, line_number)
-    title = row["title"]&.strip
+    series_title = row["series_title"]&.strip
     scholar_name = row["scholar_name"]&.strip
+    title = row["title"]&.strip
 
-    if title.blank? || scholar_name.blank?
+    if series_title.blank? || scholar_name.blank? || title.blank?
       @skipped_count += 1
       return
     end
 
+    source_url = row["source_url"]&.strip.presence
+    lesson_number = row["lesson_number"]&.strip&.to_i
+
     record_info = {
-      title: title,
+      series_title: series_title,
       scholar_name: scholar_name,
-      kind: row["kind"]&.strip,
-      category: row["category"]&.strip,
-      source_url: row["source_url"]&.strip,
+      lesson_number: lesson_number,
+      title: title,
+      source_url: source_url,
       audio_url: row["audio_url"]&.strip,
-      published_at: row["published_at"]&.strip
+      published_at: row["published_at"]&.strip,
+      duration: row["duration"]&.strip
     }
 
-    # Check for duplicates by source_url or title
-    source_url = record_info[:source_url].presence
-    existing = check_existing(scholar_name, title, source_url)
+    # Check for duplicates by source_url
+    existing = check_existing(source_url, series_title, scholar_name, title)
 
     if existing
       @existing_records << record_info.merge(existing_id: existing.id)
@@ -125,76 +130,87 @@ class MimhamImportService
     # If dry run, don't actually create
     return if dry_run
 
-    scholar = find_or_create_scholar(scholar_name)
-    unless scholar
-      @errors << "Line #{line_number}: Could not find or create scholar '#{scholar_name}'"
+    series = find_or_create_series(series_title, scholar_name)
+    unless series
+      @errors << "Line #{line_number}: Could not find or create series '#{series_title}' for scholar '#{scholar_name}'"
       return
     end
 
-    lecture = scholar.lectures.build(
+    lesson = series.lessons.build(
       title: title,
-      kind: parse_kind(row["kind"]),
-      category: row["category"]&.strip.presence,
+      position: lesson_number,
       source_url: source_url,
-      published_at: parse_date(row["published_at"])
+      published_at: parse_date(row["published_at"]),
+      duration: parse_duration(row["duration"])
     )
 
-    if lecture.save
+    if lesson.save
       @created_count += 1
 
       # Queue audio download job if enabled
       audio_url = row["audio_url"]&.strip.presence
       if download_audio && audio_url
-        MimhamAudioDownloadJob.perform_later("Lecture", lecture.id, audio_url)
+        MimhamAudioDownloadJob.perform_later("Lesson", lesson.id, audio_url)
       end
     else
-      @errors << "Line #{line_number}: #{lecture.errors.full_messages.join(', ')}"
+      @errors << "Line #{line_number}: #{lesson.errors.full_messages.join(', ')}"
     end
   rescue => e
     @errors << "Line #{line_number}: #{e.message}"
   end
 
-  def check_existing(scholar_name, title, source_url)
+  def check_existing(source_url, series_title, scholar_name, title)
     if source_url.present?
-      Lecture.find_by(source_url: source_url)
+      Lesson.find_by(source_url: source_url)
     else
-      scholar = Scholar.find_by(name: scholar_name) ||
-                Scholar.where("name LIKE ?", "%#{scholar_name}%").first
-      scholar&.lectures&.find_by(title: title)
+      # Try to find by series + title
+      scholar = find_scholar(scholar_name)
+      return nil unless scholar
+
+      series = scholar.series.find_by(title: series_title)
+      return nil unless series
+
+      series.lessons.find_by(title: title)
     end
   end
 
-  def find_or_create_scholar(name)
+  def find_scholar(name)
     return @scholars_cache[name] if @scholars_cache.key?(name)
 
-    # Try exact match first
     scholar = Scholar.find_by(name: name)
-
-    # Try partial match
     scholar ||= Scholar.where("name LIKE ?", "%#{name}%").first
-
-    # Create new scholar if not found
-    unless scholar
-      scholar = Scholar.create(name: name)
-      unless scholar.persisted?
-        return nil
-      end
-    end
 
     @scholars_cache[name] = scholar
     scholar
   end
 
-  def parse_kind(value)
-    return nil if value.blank?
+  def find_or_create_series(series_title, scholar_name)
+    cache_key = "#{scholar_name}:#{series_title}"
+    return @series_cache[cache_key] if @series_cache.key?(cache_key)
 
-    kind = value.strip.downcase
-    return kind if Lecture.kinds.key?(kind)
+    scholar = find_scholar(scholar_name)
+    unless scholar
+      # Create new scholar if not found
+      scholar = Scholar.create(name: scholar_name)
+      unless scholar.persisted?
+        return nil
+      end
+      @scholars_cache[scholar_name] = scholar
+    end
 
-    int_value = Integer(kind) rescue nil
-    return int_value if int_value && Lecture.kinds.values.include?(int_value)
+    # Try to find existing series
+    series = scholar.series.find_by(title: series_title)
 
-    nil
+    # Create new series if not found
+    unless series
+      series = scholar.series.create(title: series_title, published: false)
+      unless series.persisted?
+        return nil
+      end
+    end
+
+    @series_cache[cache_key] = series
+    series
   end
 
   def parse_date(value)
@@ -202,6 +218,21 @@ class MimhamImportService
     Date.parse(value)
   rescue Date::Error
     nil
+  end
+
+  def parse_duration(value)
+    return nil if value.blank?
+
+    # Handle HH:MM:SS or MM:SS format
+    parts = value.split(":").map(&:to_i)
+    case parts.size
+    when 3
+      parts[0] * 3600 + parts[1] * 60 + parts[2]
+    when 2
+      parts[0] * 60 + parts[1]
+    else
+      nil
+    end
   end
 
   def valid_csv?
@@ -223,7 +254,7 @@ class MimhamImportService
       new_records: @new_records,
       existing_records: @existing_records,
       errors: @errors,
-      scholars_created: dry_run ? 0 : @scholars_cache.values.count { |s| s.created_at > 1.minute.ago }
+      series_created: dry_run ? 0 : @series_cache.values.count { |s| s.created_at > 1.minute.ago }
     }
   end
 end

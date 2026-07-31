@@ -145,15 +145,19 @@ Avo.configure do |config|
   # end
 
   ## == Menus ==
-  config.main_menu = -> {
-    section "Resources", icon: "heroicons/outline/square-3-stack-3d" do
-      all_resources
-    end
+  # config.main_menu = -> {
+  #   section "Dashboards", icon: "avo/dashboards" do
+  #     all_dashboards
+  #   end
 
-    section "Tools", icon: "heroicons/outline/wrench-screwdriver" do
-      link "Mimham Import", path: "/avo/tools/mimham_import", icon: "heroicons/outline/arrow-up-tray"
-    end
-  }
+  #   section "Resources", icon: "avo/resources" do
+  #     all_resources
+  #   end
+
+  #   section "Tools", icon: "avo/tools" do
+  #     all_tools
+  #   end
+  # }
   # config.profile_menu = -> {
   #   link "Profile", path: "/avo/profile", icon: "heroicons/outline/user-circle"
   # }
