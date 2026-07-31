@@ -1,0 +1,165 @@
+#!/usr/bin/env bash
+#
+# Manage per-branch git worktrees for parallel development. Each worktree runs
+# its own dev server (through portless) with an isolated SQLite database and
+# its own Typesense container, so several branches can run at once.
+#
+#   bin/worktree new <name>    create .worktrees/<leaf> on branch <name>, bundle
+#   bin/worktree serve         start Typesense + Rails (run from a worktree)
+#   bin/worktree test [args]   run rspec against a throwaway test Typesense
+#   bin/worktree rm <name>     remove the worktree, its branch and Typesense
+#   bin/worktree list          list worktrees
+#
+# `serve` and `test` use SEPARATE Typesense containers (different port, compose
+# project and volume) so running specs never touches your dev index — the
+# :typesense specs wipe every collection before/after each example.
+#
+# URLs: portless derives the hostname from portless.json ("almaktabah") plus
+# the branch leaf — `main` -> almaktabah.localhost, `feat/foo` ->
+# almaktabah-foo.localhost. The TLD depends on which portless proxy you point
+# at; per-maintainer overrides live in a gitignored `.dev.local` at the repo
+# root (see CLAUDE.md). Nothing machine-specific is committed.
+set -euo pipefail
+
+# Main working tree (git lists it first) — .worktrees/ and .dev.local live here.
+MAIN_ROOT="$(git worktree list --porcelain | awk '/^worktree /{print $2; exit}')"
+
+# Sanitize a branch name to its hostname leaf, matching portless: last
+# /-segment, lowercased, non-[a-z0-9-] -> -, collapsed and trimmed.
+leaf_of() {
+  printf '%s' "${1##*/}" \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed -e 's/[^a-z0-9-]/-/g' -e 's/--*/-/g' -e 's/^-//' -e 's/-$//'
+}
+
+# Deterministic Typesense host port + compose project for a branch and role
+# ("dev" for serve, "test" for rspec). dev: main -> 8108 / almaktabah;
+# branches -> 8200-8399 / almaktabah-<leaf>. test shifts the port by +400
+# (8508, 8600-8799) and suffixes the project with "-test", giving specs their
+# own container + volume that never clashes with dev. Both bands stay clear of
+# 8443-8447 (Caddy + the portless proxies); override with TYPESENSE_PORT if two
+# worktrees still collide.
+typesense_env_for() {
+  local branch="$1" role="${2:-dev}" leaf port project
+  leaf="$(leaf_of "$branch")"
+  if [[ "$branch" == "main" || "$branch" == "master" ]]; then
+    port=8108; project="almaktabah"
+  else
+    port=$((8200 + $(printf '%s' "$leaf" | cksum | cut -d' ' -f1) % 200))
+    project="almaktabah-$leaf"
+  fi
+  if [[ "$role" == "test" ]]; then
+    port=$((port + 400)); project="$project-test"
+  fi
+  echo "$port $project"
+}
+
+cmd_new() {
+  local name="${1:-}"
+  [[ -n "$name" ]] || { echo "usage: bin/worktree new <name>" >&2; exit 1; }
+  local leaf wt
+  leaf="$(leaf_of "$name")"
+  wt="$MAIN_ROOT/.worktrees/$leaf"
+
+  if git -C "$MAIN_ROOT" show-ref --verify --quiet "refs/heads/$name"; then
+    git -C "$MAIN_ROOT" worktree add "$wt" "$name"
+  else
+    git -C "$MAIN_ROOT" worktree add "$wt" -b "$name"
+  fi
+
+  ( cd "$wt"
+    command -v mise >/dev/null 2>&1 && mise trust >/dev/null 2>&1 || true
+    bundle install )
+
+  echo
+  echo "Worktree ready: $wt"
+  echo "Next:  cd .worktrees/$leaf && bin/worktree serve"
+}
+
+cmd_serve() {
+  cd "$(git rev-parse --show-toplevel)"
+
+  # Per-maintainer overrides (PORTLESS_STATE_DIR, RAILS_DEVELOPMENT_HOSTS, …).
+  # Optional: without it you get plain portless localhost URLs.
+  [[ -f "$MAIN_ROOT/.dev.local" ]] && source "$MAIN_ROOT/.dev.local"
+
+  # The agent harness leaks npm_*/PNPM_*/COREPACK_* into every shell; the
+  # portless fork refuses to start under them.
+  while IFS='=' read -r _name _; do
+    case "$_name" in npm_* | PNPM_* | pnpm_* | COREPACK_*) unset "$_name" ;; esac
+  done < <(env)
+
+  local branch tsport project
+  branch="$(git rev-parse --abbrev-ref HEAD)"
+  read -r tsport project < <(typesense_env_for "$branch")
+  export TYPESENSE_PORT="${TYPESENSE_PORT:-$tsport}"
+  export COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-$project}"
+
+  echo "Typesense: port $TYPESENSE_PORT (compose project $COMPOSE_PROJECT_NAME)"
+  docker compose up -d typesense
+
+  # Create/migrate/seed this worktree's DB (no-op once current). Runs with
+  # TYPESENSE_PORT exported so the seed reindex hits this worktree's Typesense.
+  bin/rails db:prepare
+
+  local portless_bin="${PORTLESS_BIN:-$HOME/.local/share/mise/shims/portless}"
+  # IPv4 bind: the proxy dials 127.0.0.1.
+  exec "$portless_bin" run sh -c 'bin/rails server -p "$PORT" -b 127.0.0.1'
+}
+
+# Run rspec against a throwaway test Typesense (separate container/volume from
+# the dev one that `serve` starts), so the :typesense specs — which wipe every
+# collection before/after each example — can never touch your dev index.
+# Any extra args are passed straight through to rspec, e.g.
+#   bin/worktree test spec/system/search
+cmd_test() {
+  cd "$(git rev-parse --show-toplevel)"
+
+  local branch tsport project
+  branch="$(git rev-parse --abbrev-ref HEAD)"
+  read -r tsport project < <(typesense_env_for "$branch" test)
+  export TYPESENSE_PORT="${TYPESENSE_PORT:-$tsport}"
+  export COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-$project}"
+
+  echo "Test Typesense: port $TYPESENSE_PORT (compose project $COMPOSE_PROJECT_NAME)"
+  docker compose up -d typesense
+
+  # Wait for health — the :typesense specs SKIP (not fail) when Typesense is
+  # unreachable, so a not-yet-ready container would silently pass nothing.
+  local i
+  for i in $(seq 1 30); do
+    curl -sf "http://localhost:$TYPESENSE_PORT/health" >/dev/null 2>&1 && break
+    [[ $i == 30 ]] && { echo "Typesense not healthy on $TYPESENSE_PORT after 30s" >&2; exit 1; }
+    sleep 1
+  done
+
+  # Ensure the worktree's test DB schema is current (idempotent).
+  bin/rails db:test:prepare
+
+  export RUN_TYPESENSE_SPECS=1
+  exec bundle exec rspec "$@"
+}
+
+cmd_rm() {
+  local name="${1:-}"
+  [[ -n "$name" ]] || { echo "usage: bin/worktree rm <name>" >&2; exit 1; }
+  local leaf dev_project test_project _
+  leaf="$(leaf_of "$name")"
+  read -r _ dev_project  < <(typesense_env_for "$name")
+  read -r _ test_project < <(typesense_env_for "$name" test)
+
+  docker compose --project-directory "$MAIN_ROOT" -p "$dev_project"  down -v 2>/dev/null || true
+  docker compose --project-directory "$MAIN_ROOT" -p "$test_project" down -v 2>/dev/null || true
+  git -C "$MAIN_ROOT" worktree remove --force ".worktrees/$leaf" 2>/dev/null || true
+  git -C "$MAIN_ROOT" branch -D "$name" 2>/dev/null || true
+  echo "Removed worktree .worktrees/$leaf, branch $name, Typesense projects $dev_project + $test_project"
+}
+
+case "${1:-}" in
+  new)   shift; cmd_new "$@" ;;
+  serve) shift; cmd_serve "$@" ;;
+  test)  shift; cmd_test "$@" ;;
+  rm)    shift; cmd_rm "$@" ;;
+  list)  git -C "$MAIN_ROOT" worktree list ;;
+  *) echo "usage: bin/worktree {new|serve|test|rm|list} [name|rspec-args]" >&2; exit 1 ;;
+esac

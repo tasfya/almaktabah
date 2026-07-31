@@ -21,6 +21,9 @@ class ApplicationController < ActionController::Base
 
   def set_domain
     @domain = Domain.find_by_host(request.host)
+    # Portless worktree URLs (e.g. almaktabah-<branch>.localhost) match no
+    # Domain row; fall back to the main seeded site in development.
+    @domain ||= Domain.find_by_host("127.0.0.1") if Rails.env.development?
     if @domain&.logo.present?
       @logo_url = url_for(@domain.logo)
     else

@@ -2,7 +2,7 @@ services:
   typesense:
     image: typesense/typesense:29.0
     ports:
-      - "8108:8108"
+      - "${TYPESENSE_PORT:-8108}:8108"
     volumes:
       - typesense_data:/data
     environment:

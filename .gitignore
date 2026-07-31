@@ -66,3 +66,6 @@ opencode.json
 .claude/
 /justfile
 /seo/
+/docs/superpowers/
+/.worktrees/
+/.dev.local

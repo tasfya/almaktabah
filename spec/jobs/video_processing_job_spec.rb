@@ -28,6 +28,7 @@ RSpec.describe VideoProcessingJob, type: :job do
       allow(movie).to receive(:screenshot) do |output_path, options|
         File.write(output_path, 'fake_thumbnail_content', mode: 'wb')
       end
+      allow(movie).to receive(:duration).and_return(120.0)
       movie
     end
   end

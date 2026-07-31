@@ -1,0 +1,121 @@
+# almaktabah
+
+Rails 8 app (SQLite + solid_queue, Typesense for search). Ruby is mise-managed
+(`mise.toml`). There is intentionally **no `package.json`** — JS is served via
+importmap; don't add one.
+
+## Dev workflow (worktrees)
+
+**The main checkout stays on `main` — always.** Other agents work in parallel
+from this repo; switching its branch blocks them. Every feature or bug fix
+happens in a worktree on its own branch, pushed from there. Never
+`git checkout <branch>` in the main checkout. Exception: documentation-only
+changes may be committed directly on `main`.
+
+Worktrees live under `.worktrees/` (gitignored) and are managed by
+`bin/worktree`:
+
+```sh
+bin/worktree new tafsir      # create .worktrees/tafsir on branch `tafsir`, bundle
+cd .worktrees/tafsir
+bin/worktree serve           # Typesense + db:prepare + Rails, through portless
+# ... work, commit, push, open PR from here ...
+cd ../..
+bin/worktree rm tafsir       # remove the worktree, branch and its Typesense
+```
+
+`bin/worktree list` shows what's running.
+
+**After merging a PR, always update the main checkout** so local `main`
+reflects the merge: `git -C <main-checkout> fetch origin --prune && git -C
+<main-checkout> merge --ff-only origin/main`. Do this every time a PR lands,
+whether you merged it or someone else did.
+
+**When your work is shipped, always tear down the worktree you worked on.**
+Once your change is merged, deployed to production, and you've *verified the
+deployment works* (e.g. tested the live site), don't leave the worktree or its
+dev server running — clean up automatically, without waiting to be asked:
+
+```sh
+# 1. Stop your worktree's dev server if `serve` is still running (Ctrl-C, or
+#    kill the puma/portless processes whose cwd is inside your worktree).
+# 2. Update main so it reflects the merge (see above).
+# 3. Remove your worktree — drops the branch and both its Typesense containers.
+bin/worktree rm <your-branch>
+# 4. Show what's left, and DON'T touch it — the remaining worktrees are other
+#    agents' active work.
+bin/worktree list
+```
+
+**Only ever remove the worktree you created.** Other agents run their own
+worktrees in parallel from this repo; `bin/worktree list` shows them (and any of
+your own still in flight). Never `rm` a worktree you didn't set up.
+
+### How `serve` isolates a worktree
+
+- **URL:** portless derives the hostname from `portless.json` (`almaktabah`)
+  plus the branch leaf (last `/`-segment, sanitized). The exact label shape
+  depends on your portless/proxy — stock portless gives
+  `<leaf>.almaktabah.localhost` (and `almaktabah.localhost` on `main`); the
+  single-label fork gives `almaktabah-<leaf>.<tld>`. `serve` prints the URL at
+  startup — use that. **Collision risk:** `feat/foo` and `fix/foo` share a
+  leaf → same URL; pick unique leaves.
+- **Typesense:** its own compose project + volume + host port (`8108` on main,
+  `8200-8399` on branches, below the Caddy/proxy ports). Starts empty — reindex if the branch
+  needs search. Escape hatch for a port clash:
+  `TYPESENSE_PORT=xxxx bin/worktree serve`.
+- **Database:** `serve` runs `db:prepare` (seed + reindex) into the worktree's
+  own SQLite, with `TYPESENSE_PORT` exported so the reindex targets the right
+  instance — don't run `db:prepare`/`db:seed` by hand before it.
+
+### Per-maintainer overrides (`.dev.local`)
+
+Nothing machine-specific is committed. By default `serve` uses plain portless
+`*.localhost` URLs. To point at a shared proxy with a custom TLD / trusted
+HTTPS, create `.dev.local` (gitignored) at the repo root — `serve` sources it:
+
+```sh
+export PORTLESS_STATE_DIR="$HOME/.portless-dev"   # the proxy's state dir
+export RAILS_DEVELOPMENT_HOSTS=".example.dev"     # allow the custom TLD
+```
+
+`*.localhost` hosts pass Rails host authorization via the `config.hosts` regexp
+in `config/environments/development.rb`; a custom TLD needs the
+`RAILS_DEVELOPMENT_HOSTS` entry (Rails' built-in mechanism).
+
+### Multi-tenancy on dev URLs
+
+The app is multi-tenant by hostname (`Domain.find_by_host(request.host)`).
+Seeds map `127.0.0.1` → Hajri site and `localhost` → ilm site. Portless
+hostnames match no Domain row, so in development `set_domain` falls back to the
+Hajri domain — every worktree URL serves the main site. To exercise the ilm
+tenant, hit the Rails port directly via `http://127.0.0.1:<port>` (printed by
+`serve` at startup).
+
+### Tests
+
+Run inside the worktree: `bundle exec rspec` uses the worktree's own test DB
+(`storage/test.sqlite3`). Plain single-checkout dev (`bin/dev` on
+`localhost:3000`) still works unchanged.
+
+The Playwright search system specs (`spec/system/search/`) index **real**
+records into Typesense (tagged `:typesense`, same harness as
+`spec/integration/`) and gate every CI run. Like the integration specs they are
+opt-in locally: they run only when `CI` is set, or when you set
+`RUN_TYPESENSE_SPECS=1` with `TYPESENSE_PORT` pointing at a **disposable**
+Typesense instance (not your dev data). See `spec/support/typesense_integration.rb`.
+
+**Use `bin/worktree test` to run them.** It spins up a throwaway test Typesense
+container — a **different** port, compose project and volume from the one `serve`
+uses — and runs rspec against it with `RUN_TYPESENSE_SPECS=1` set. This keeps the
+`:typesense` specs (which wipe every collection before/after each example) away
+from your dev index. Extra args pass through to rspec:
+
+```sh
+bin/worktree test                         # whole suite
+bin/worktree test spec/system/search      # a subset
+```
+
+Do **not** point `TYPESENSE_PORT` at the port `serve` prints (that's your dev
+index) when running the specs by hand — `bin/worktree test` picks the right
+throwaway port for you.

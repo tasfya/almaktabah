@@ -22,6 +22,10 @@ FactoryBot.define do
       audio { nil }
     end
 
+    trait :with_final_audio do
+      final_audio { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'files', 'audio.mp3'), 'audio/mpeg') }
+    end
+
     trait :without_domain do
       after(:create) do |lesson|
         lesson.domains = []

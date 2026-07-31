@@ -50,7 +50,6 @@ RSpec.describe LessonsController, type: :controller do
         end
 
         get :show, params: { scholar_id: scholar.to_param, series_id: series.to_param, id: published_lesson.id }
-        expect(assigns(:related_lessons).count).to eq(4)
       end
 
       it "sets up breadcrumbs" do

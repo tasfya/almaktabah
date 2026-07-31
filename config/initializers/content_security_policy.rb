@@ -11,7 +11,7 @@ Rails.application.configure do
       policy.connect_src :self, :https, "http://localhost:3036", "ws://localhost:3036", "http://127.0.0.1:3036", "ws://127.0.0.1:3036", "http://127.0.0.1:3000"
       policy.style_src :self, :unsafe_inline, "http://localhost:3036", "http://127.0.0.1:3036", "http://127.0.0.1:3000"
     else
-      policy.script_src :self, "https://www.googletagmanager.com"
+      policy.script_src :self, "https://www.googletagmanager.com", "https://static.cloudflareinsights.com"
       policy.style_src :self, :unsafe_inline
     end
   end

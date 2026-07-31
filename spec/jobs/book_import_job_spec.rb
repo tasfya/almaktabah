@@ -7,8 +7,7 @@ RSpec.describe BookImportJob, type: :job do
       'title' => 'Test Book',
       'description' => 'A test book description',
       'category' => 'Islamic Studies',
-      'author_first_name' => 'John',
-      'author_last_name' => 'Doe',
+      'scholar_full_name' => 'John Doe',
       'pages' => '150',
       'published_at' => '2024-01-01 00:00:00',
       'file_url' => 'https://example.com/book.pdf',
@@ -32,8 +31,7 @@ RSpec.describe BookImportJob, type: :job do
       expect(book.category).to eq('Islamic Studies')
       expect(book.pages).to eq(150)
       expect(book.published).to be_truthy
-      expect(book.scholar.first_name).to eq('John')
-      expect(book.scholar.last_name).to eq('Doe')
+      expect(book.scholar.full_name).to eq('John Doe')
     end
 
     it 'creates an author if none exists' do
@@ -42,13 +40,12 @@ RSpec.describe BookImportJob, type: :job do
       }.to change(Scholar, :count).by(1)
 
       scholar = Scholar.last
-      expect(scholar.first_name).to eq('John')
-      expect(scholar.last_name).to eq('Doe')
+      expect(scholar.full_name).to eq('John Doe')
       expect(scholar.published).to be_truthy
     end
 
     it 'reuses existing author' do
-      existing_author = create(:scholar, first_name: 'John', last_name: 'Doe')
+      existing_author = create(:scholar, full_name: 'John Doe')
 
       expect {
         described_class.new.perform(row_data, domain.id, 2)
@@ -74,8 +71,7 @@ RSpec.describe BookImportJob, type: :job do
     it 'handles missing optional fields gracefully' do
       minimal_data = {
         'title' => 'Minimal Book',
-        'author_first_name' => 'Jane',
-        'author_last_name' => 'Smith'
+        'scholar_full_name' => 'Jane Smith'
       }
 
       expect {
@@ -95,7 +91,7 @@ RSpec.describe BookImportJob, type: :job do
 
       expect {
         described_class.new.perform(empty_author_data, domain.id, 2)
-      }.to raise_error(ArgumentError, "Author information (author_first_name and/or author_last_name) is required")
+      }.to raise_error(ArgumentError, "Author information (scholar_id or scholar_full_name) is required")
     end
   end
 end

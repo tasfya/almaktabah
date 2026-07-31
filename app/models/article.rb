@@ -70,6 +70,7 @@ class Article < ApplicationRecord
   end
 
   scope :recent, -> { order(published_at: :desc) }
+  scope :by_category, ->(category) { where(category: category) if category.present? }
 
   def read_time_minutes
     return 0 unless content.present?
@@ -79,7 +80,7 @@ class Article < ApplicationRecord
 
   # Ransack configuration
   def self.ransackable_attributes(auth_object = nil)
-    [ "id", "title", "description", "slug", "author_id", "published", "published_at", "created_at", "updated_at" ]
+    [ "id", "title", "description", "category", "slug", "source_url", "author_id", "published", "published_at", "created_at", "updated_at" ]
   end
 
   # Virtual attribute for filter compatibility

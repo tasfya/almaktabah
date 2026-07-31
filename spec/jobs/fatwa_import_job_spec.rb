@@ -25,6 +25,20 @@ RSpec.describe FatwaImportJob, type: :job do
       expect(fatwa.category).to eq('Religious')
     end
 
+    it 'backfills published state on existing fatwas when re-run' do
+      described_class.new.perform(row_data, domain.id, 2)
+      fatwa = Fatwa.last
+      fatwa.update!(published: false, published_at: nil)
+
+      expect {
+        described_class.new.perform(row_data, domain.id, 2)
+      }.not_to change(Fatwa, :count)
+
+      fatwa.reload
+      expect(fatwa.published).to be(true)
+      expect(fatwa.published_at).to eq(DateTime.parse('2024-01-01 00:00:00'))
+    end
+
     # it 'assigns fatwa to domain' do
     #   described_class.new.perform(row_data, domain.id, 2)
 

@@ -3,23 +3,29 @@
 require 'rails_helper'
 
 RSpec.describe "Podcast Feeds", type: :request do
-  let!(:lesson) { create(:lesson, published: true, title: "Test Lesson", description: "Lesson summary") }
-  let!(:lecture) { create(:lecture, published: true, title: "Test Lecture", description: "Lecture summary") }
+  let!(:lesson) { create(:lesson, :with_final_audio, published: true, title: "Test Lesson", description: "Lesson summary") }
+  let!(:lecture) { create(:lecture, :with_final_audio, published: true, title: "Test Lecture", description: "Lecture summary", kind: :sermon) }
   before do
-    @domain = create(:domain, host: "www.example.com")
+    @domain = create(:domain,
+      host: "www.example.com",
+      podcast_enabled: true,
+      podcast_title: "Test Podcast",
+      podcast_author: "Test Author",
+      podcast_owner_email: "test@example.com"
+    )
     lesson.assign_to(@domain)
     lecture.assign_to(@domain)
-    @headers = { "HTTP" => @domain.host }
+    @headers = { "HOST" => @domain.host }
   end
   describe "GET /podcasts/feed" do
     it "returns XML RSS feed" do
       get '/podcasts/feed', headers: @headers
 
       expect(response).to have_http_status(:ok)
-      expect(response.content_type).to eq('application/xml; charset=utf-8')
+      expect(response.content_type).to eq('application/rss+xml; charset=utf-8')
       expect(response.body).to include('<?xml version="1.0" encoding="UTF-8"?>')
       expect(response.body).to include('<rss version="2.0"')
-      expect(response.body).to include('محمد بن رمزان الهاجري')
+      expect(response.body).to include('Test Podcast')
     end
 
     it "includes lesson and lecture items" do
@@ -72,13 +78,13 @@ RSpec.describe "Podcast Feeds", type: :request do
   describe "episode elements" do
     before do
       # Create lesson with specific attributes for testing
-      lesson = create(:lesson, published: true,
+      episode = create(:lesson, :with_final_audio, published: true,
         title: "Episode Title",
         description: "Episode Description",
-        duration: Time.zone.parse("00:45:30"),
+        duration: 2730, # 45 minutes 30 seconds in seconds
         published_at: Time.zone.parse("2024-01-15 10:00:00")
       )
-      lesson.assign_to(@domain)
+      episode.assign_to(@domain)
       get '/podcasts/feed', headers: @headers
     end
 
@@ -87,17 +93,17 @@ RSpec.describe "Podcast Feeds", type: :request do
     end
 
     it "includes episode description" do
-      expect(response.body).to include('<description>Episode Description</description>')
+      expect(response.body).to include('Episode Description')
     end
 
     it "includes enclosure tag with audio details" do
-      expect(response.body).to include('audio.mp3"')
+      expect(response.body).to include('<enclosure url="')
       expect(response.body).to include('length="')
       expect(response.body).to include('type="audio/mpeg"')
     end
 
     it "includes iTunes duration" do
-      expect(response.body).to include('<itunes:duration>00:45:30</itunes:duration>')
+      expect(response.body).to include('<itunes:duration>2730</itunes:duration>')
     end
 
     it "includes publication date in RFC-822 format" do

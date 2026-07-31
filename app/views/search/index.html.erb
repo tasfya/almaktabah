@@ -5,28 +5,31 @@
 <% show_scholars_filter = scholar_facets.size > 1 || scholars_filter_active %>
 <% show_content_type_filter = !@hide_content_type_filter %>
 <% show_sidebar = show_scholars_filter || show_content_type_filter %>
-<div class="container mx-auto pt-6"
-     data-controller="filter-sidebar"
-     data-filter-sidebar-apply-filters-value="<%= t('search.filters.apply') %>"
-     data-filter-sidebar-loading-value="<%= t('search.loading') %>"
-     data-filter-sidebar-clear-all-value="<%= t('search.filters.clear_all') %>">
-  <% if show_sidebar %>
-    <%# Mobile Drawer - Overlay and sidebar for mobile filters %>
-    <%= render 'search/filters/mobile_drawer' %>
-  <% end %>
-  <%# Search Header - Page title with mobile filter button %>
-  <%= render 'search/search_header', show_sidebar: show_sidebar %>
-  <%# Main Content Area with Sidebar Layout %>
-  <div class="flex flex-col lg:flex-row gap-6 <%= 'max-w-4xl mx-auto' unless show_sidebar %>">
+<%# Filtering navigates this frame with turbo_action "advance", so every filter %>
+<%# state becomes a real history entry with a matching server-rendered snapshot %>
+<%# (results + checkbox state). The whole filter-sidebar controller lives inside the %>
+<%# frame so Stimulus disconnect/connect re-run on each navigation and rebind the %>
+<%# drawer's checkboxToggle listener. See docs .../2026-07-17-search-history-...md. %>
+<%= turbo_frame_tag "search_content", data: { turbo_action: "advance" } do %>
+  <div class="container mx-auto pt-6" data-controller="filter-sidebar">
     <% if show_sidebar %>
-      <%# Desktop Sidebar - Filter sidebar (hidden on mobile) %>
-      <div class="hidden lg:block lg:w-80 lg:flex-shrink-0">
-        <%= render 'search/filters/filter_sidebar' %>
-      </div>
+      <%# Mobile Drawer - Overlay and sidebar for mobile filters %>
+      <%= render 'search/filters/mobile_drawer' %>
     <% end %>
-    <%# Main Content - Search Results %>
-    <div class="flex-1 min-w-0">
-      <%= render 'search/search_results' %>
+    <%# Search Header - Page title with mobile filter button %>
+    <%= render 'search/search_header', show_sidebar: show_sidebar %>
+    <%# Main Content Area with Sidebar Layout %>
+    <div class="flex flex-col lg:flex-row gap-6 <%= 'max-w-4xl mx-auto' unless show_sidebar %>">
+      <% if show_sidebar %>
+        <%# Desktop Sidebar - Filter sidebar (hidden on mobile) %>
+        <div class="hidden lg:block lg:w-80 lg:flex-shrink-0">
+          <%= render 'search/filters/filter_sidebar' %>
+        </div>
+      <% end %>
+      <%# Main Content - Search Results %>
+      <div class="flex-1 min-w-0">
+        <%= render 'search/search_results' %>
+      </div>
     </div>
   </div>
-</div>
+<% end %>
