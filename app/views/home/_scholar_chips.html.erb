@@ -1,0 +1,18 @@
+<%#
+  Locals:
+    scholars: Array<Hash> with keys :scholar (Scholar) and :count (Integer)
+%>
+<% return if scholars.blank? %>
+<div class="bg-base-100 rounded-2xl border border-base-300 p-4">
+  <h3 class="font-bold mb-3 flex items-center gap-2">
+    <%= icon "user-group", class: "w-5 h-5 text-primary" %>
+    <%= t("home.sections.spotlight_scholars") %>
+  </h3>
+  <div class="flex flex-wrap gap-2">
+    <% scholars.first(8).each do |entry| %>
+      <%= link_to entry[:scholar].full_name, lectures_path(scholars: entry[:scholar].full_name),
+                  class: "text-sm rounded-full px-3 py-1.5 border border-base-300 text-base-content/80 hover:border-primary hover:text-primary transition-colors",
+                  data: { turbo_frame: "_top" } %>
+    <% end %>
+  </div>
+</div>

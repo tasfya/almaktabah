@@ -1,0 +1,38 @@
+<%#
+  Locals:
+    hits: Array<TypesenseSearch::SearchHit>
+%>
+<% return if hits.blank? %>
+<div class="bg-base-100 rounded-2xl border border-base-300 overflow-hidden">
+  <div class="flex items-center justify-between px-4 py-3 border-b border-base-300">
+    <h3 class="font-bold flex items-center gap-2">
+      <%= icon "fire", class: "w-5 h-5 text-primary" %>
+      <%= t("home.trending.title") %>
+    </h3>
+  </div>
+  <ol>
+    <% hits.each_with_index do |hit, index| %>
+      <% action = home_action(hit) %>
+      <li class="flex items-center gap-3 p-3 <%= 'border-t border-base-300' unless index.zero? %>">
+        <span class="text-lg font-bold text-base-content/25 w-5 text-center tabular-nums"><%= index + 1 %></span>
+        <div class="w-11 h-11 rounded-lg overflow-hidden shrink-0 grid place-items-center" style="<%= home_gradient(hit) unless hit.thumbnail_url.present? %>">
+          <% if hit.thumbnail_url.present? %>
+            <%= image_tag hit.thumbnail_url, alt: hit.title, loading: "lazy", decoding: "async",
+                          class: "w-full h-full object-cover" %>
+          <% else %>
+            <%= icon home_type_icon(hit), class: "w-5 h-5 text-white/80" %>
+          <% end %>
+        </div>
+        <div class="flex-1 min-w-0">
+          <%= link_to hit.url, class: "font-semibold text-sm leading-tight line-clamp-2 hover:text-primary transition-colors", data: { turbo_frame: "_top" } do %>
+            <%= hit.title %>
+          <% end %>
+          <p class="text-xs text-base-content/55 truncate mt-0.5"><%= home_type_label(hit) %></p>
+        </div>
+        <%= link_to action[:label], hit.url,
+                    class: "btn btn-xs #{action[:style]} shrink-0",
+                    data: { turbo_frame: "_top" } %>
+      </li>
+    <% end %>
+  </ol>
+</div>

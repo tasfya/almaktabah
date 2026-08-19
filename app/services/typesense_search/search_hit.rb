@@ -25,6 +25,7 @@ module TypesenseSearch
     def kind = @document["kind"]
     def lesson_count = @document["lesson_count"]
     def url = @document["url"]
+    def created_at_ts = @document["created_at_ts"]
 
     def highlighted_title
       find_highlight("title") || find_highlight("name") || title

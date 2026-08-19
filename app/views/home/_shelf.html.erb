@@ -1,0 +1,35 @@
+<%#
+  Locals:
+    title:          section heading (String)
+    icon_name:      Heroicon name (String)
+    count:          total available items for the link target (Integer or nil)
+    view_all_path:  URL string for the "view all" link
+    hits:           Array<TypesenseSearch::SearchHit>
+    card_partial:   String, e.g. "search/results/lecture"
+    card_local:     Symbol, the local var the partial expects (e.g. :lecture)
+    grid_class:     Optional Tailwind grid template (default: 3-col responsive)
+%>
+<% return if hits.blank? %>
+<% grid_class = local_assigns.fetch(:grid_class, "grid-cols-1 md:grid-cols-2 lg:grid-cols-3") %>
+<section class="mt-10">
+  <div class="flex items-center justify-between mb-3">
+    <h2 class="text-lg md:text-xl font-semibold flex items-center gap-2">
+      <%= icon icon_name, class: "w-5 h-5 text-primary" %>
+      <%= title %>
+      <% if count.present? && count > 0 %>
+        <span class="text-sm font-normal text-base-content/60">
+          (<%= number_with_delimiter(count) %>)
+        </span>
+      <% end %>
+    </h2>
+    <%= link_to view_all_path, class: "btn btn-ghost btn-sm gap-1", data: { turbo_frame: "_top" } do %>
+      <%= t("search.view_all") %>
+      <%= icon "chevron-left", class: "w-4 h-4" %>
+    <% end %>
+  </div>
+  <div class="grid gap-4 <%= grid_class %>">
+    <% hits.each do |hit| %>
+      <%= render partial: card_partial, locals: { card_local => hit } %>
+    <% end %>
+  </div>
+</section>
