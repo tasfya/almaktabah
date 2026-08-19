@@ -12,16 +12,19 @@ class FatwasController < ApplicationController
 
   def show
     cache_page(duration: 1.week)
-    description = @fatwa.question.present? ? @fatwa.question.to_plain_text.truncate(MetaTags.config.description_limit) : ""
+    description = seo_text(
+      @fatwa.question,
+      fallback: "فتوى بعنوان: #{@fatwa.title} للشيخ #{@fatwa.scholar.full_name}، ضمن فتاوى موقع العلم."
+    )
     set_meta_tags(
       title: @fatwa.title,
       description: description,
-      canonical: canonical_url_for(@fatwa),
+      canonical: canonical_url_for,
       og: {
         title: @fatwa.title,
         description: description,
         type: "article",
-        url: canonical_url_for(@fatwa)
+        url: canonical_url_for
       }
     )
   end

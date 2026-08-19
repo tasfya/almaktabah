@@ -213,9 +213,10 @@ RSpec.describe "SEO Meta Tags", type: :request do
         article
       end
 
-      it "points to scholar's default domain" do
+      it "self-canonicalizes to the current host (does not point cross-domain)" do
         get article_path(scholar_with_domain, article)
-        expect(response.body).to include('rel="canonical" href="http://scholar.example.com')
+        expect(response.body).to include('rel="canonical" href="http://www.example.com')
+        expect(response.body).not_to include('rel="canonical" href="http://scholar.example.com')
       end
     end
 
@@ -227,9 +228,10 @@ RSpec.describe "SEO Meta Tags", type: :request do
         book
       end
 
-      it "falls back to ilm domain" do
+      it "self-canonicalizes to the current host (does not fall back to ilm domain)" do
         get book_path(scholar, book)
-        expect(response.body).to include('rel="canonical" href="http://ilm.example.com')
+        expect(response.body).to include('rel="canonical" href="http://www.example.com')
+        expect(response.body).not_to include('rel="canonical" href="http://ilm.example.com')
       end
     end
 
@@ -240,7 +242,7 @@ RSpec.describe "SEO Meta Tags", type: :request do
         fatwa
       end
 
-      it "falls back to current request domain" do
+      it "uses the current request domain" do
         get fatwa_path(scholar, fatwa)
         expect(response.body).to include('rel="canonical" href="http://www.example.com')
       end

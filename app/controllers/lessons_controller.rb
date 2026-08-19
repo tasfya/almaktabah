@@ -10,16 +10,16 @@ class LessonsController < ApplicationController
                              .where.not(id: @lesson.id)
                              .order(:position)
 
-    description = @lesson.description.to_s.truncate(MetaTags.config.description_limit)
+    description = seo_text(@lesson.description, fallback: "درس #{@lesson.title} من سلسلة #{@lesson.series.title} للشيخ #{@lesson.scholar.full_name}، متاح للاستماع والمتابعة عبر موقع العلم.")
     set_meta_tags(
       title: @lesson.title,
       description: description,
-      canonical: canonical_url_for(@lesson),
+      canonical: canonical_url_for,
       og: {
         title: @lesson.title,
         description: description,
         type: "article",
-        url: canonical_url_for(@lesson)
+        url: canonical_url_for
       }
     )
   end
