@@ -78,9 +78,7 @@ class LessonImportJob < ApplicationJob
 
   def find_or_create_series(title, scholar)
     return nil if title.blank? || scholar.nil?
-    Series.find_or_create_by!(title: title.strip) do |s|
-      s.scholar = scholar
-    end
+    Series.find_or_create_by!(title: title.strip, scholar: scholar)
   rescue
     nil
   end
