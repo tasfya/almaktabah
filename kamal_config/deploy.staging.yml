@@ -1,0 +1,85 @@
+# Staging environment for almaktabah.
+# Runs on the same host as production but as a fully isolated Kamal service:
+# separate containers, separate volumes, separate Typesense accessory, separate
+# Litestream replica bucket. Deployed by its own job in the same GitHub Actions
+# workflow as production (same commit, same CI gate), not a promoted artifact —
+# each job runs `kamal deploy`, which builds and pushes its own image.
+service: almaktabah_staging
+
+image: mohamedrez/almaktabah
+
+servers:
+  web:
+    - 188.245.209.159
+  job:
+    hosts:
+      - 188.245.209.159
+    cmd: bin/jobs
+
+proxy:
+  ssl: true
+  hosts:
+    - staging.3ilm.org
+
+registry:
+  username: mohamedrez
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+env:
+  secret:
+    - RAILS_MASTER_KEY
+    - TYPESENSE_API_KEY
+    - GROQ_API_KEY
+    - PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID
+    - PUBLIC_AWS_S3_3ILM_ACCESS_KEY
+  clear:
+    JOB_CONCURRENCY: 10
+
+    # Accessory containers are namespaced by Kamal as <service>-<accessory_name>.
+    TYPESENSE_HOST: almaktabah_staging-typesense
+    TYPESENSE_PORT: 8108
+
+aliases:
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  dbc: app exec --interactive --reuse "bin/rails dbconsole"
+
+# Isolated volume — staging never touches prod SQLite files.
+volumes:
+  - "almaktabah_staging_storage:/rails/storage"
+
+asset_path: /rails/public/assets
+
+builder:
+  arch: amd64
+  cache:
+    type: gha
+    options: mode=max
+    image: app-build-cache
+
+accessories:
+  typesense:
+    image: typesense/typesense:29.0
+    host: 188.245.209.159
+    env:
+      secret:
+        - TYPESENSE_API_KEY
+      clear:
+        TYPESENSE_DATA_DIR: /data
+        TYPESENSE_ENABLE_CORS: "false"
+        TYPESENSE_MEMORY_LIMIT: 1GB
+    directories:
+      - typesense_staging_data:/data
+  litestream:
+    image: litestream/litestream:sha-8fa09d7a6ea15c66309b7d799518ffbaa8d1ee69
+    host: 188.245.209.159
+    cmd: litestream replicate --config=/etc/litestream.yml
+    env:
+      secret:
+        - LITESTREAM_ACCESS_KEY_ID
+        - LITESTREAM_SECRET_ACCESS_KEY
+        - LITESTREAM_STAGING_REPLICA_BUCKET
+    files:
+      - config/litestream/staging.yml:/etc/litestream.yml

@@ -1,0 +1,35 @@
+# Litestream replica config for the staging environment.
+# Uses the same SQLite file names as production (because RAILS_ENV=production
+# inside the staging container), so it MUST replicate to a bucket distinct
+# from production's — hence its own LITESTREAM_STAGING_REPLICA_BUCKET secret,
+# not the LITESTREAM_REPLICA_BUCKET production uses. Provision that bucket and
+# the matching GitHub Actions secret before the first staging deploy.
+dbs:
+  - path: storage/production.sqlite3
+    replicas:
+      - type: s3
+        bucket: $LITESTREAM_STAGING_REPLICA_BUCKET
+        path: storage/production.sqlite3
+        access-key-id: $LITESTREAM_ACCESS_KEY_ID
+        secret-access-key: $LITESTREAM_SECRET_ACCESS_KEY
+  - path: storage/production_cache.sqlite3
+    replicas:
+      - type: s3
+        bucket: $LITESTREAM_STAGING_REPLICA_BUCKET
+        path: storage/production_cache.sqlite3
+        access-key-id: $LITESTREAM_ACCESS_KEY_ID
+        secret-access-key: $LITESTREAM_SECRET_ACCESS_KEY
+  - path: storage/production_queue.sqlite3
+    replicas:
+      - type: s3
+        bucket: $LITESTREAM_STAGING_REPLICA_BUCKET
+        path: storage/production_queue.sqlite3
+        access-key-id: $LITESTREAM_ACCESS_KEY_ID
+        secret-access-key: $LITESTREAM_SECRET_ACCESS_KEY
+  - path: storage/production_cable.sqlite3
+    replicas:
+      - type: s3
+        bucket: $LITESTREAM_STAGING_REPLICA_BUCKET
+        path: storage/production_cable.sqlite3
+        access-key-id: $LITESTREAM_ACCESS_KEY_ID
+        secret-access-key: $LITESTREAM_SECRET_ACCESS_KEY

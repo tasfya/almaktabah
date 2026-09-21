@@ -6,31 +6,31 @@ env:
   COMPOSE_DOCKER_CLI_BUILD: 1
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
     branches:
       - main
-      - staging
-  # pull_request:
-  #   branches-ignore:
-  #     - main
-  #     - staging
-concurrency:
-  group: ${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
+    types:
+      - completed
 
 jobs:
-  # This job runs only when a pull request is merged
-  deployment:
+  deploy-production:
+    # Gate: only deploy if the CI run that triggered us actually succeeded.
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: blacksmith-4vcpu-ubuntu-2404
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
     env:
       DOCKER_BUILDKIT: 1
       RAILS_ENV: production
 
-    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+    environment: production
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v5
         with:
+          ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 1
           submodules: false #TODO: enable this back when we need to deploy frontend
       - name: Set up Docker Buildx
@@ -56,13 +56,8 @@ jobs:
 
       - name: Kamal Deploy
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "Deploying to production"
-            kamal deploy
-          elif [ "${{ github.ref }}" == "refs/heads/staging" ]; then
-            echo "Deploying to staging"
-            kamal deploy -c kamal_config/deploy.staging.yml
-          fi
+          echo "Deploying to production"
+          kamal deploy
         env:
           DOCKER_BUILDKIT: 1
           RAILS_ENV: production
@@ -72,4 +67,62 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID }}
           PUBLIC_AWS_S3_3ILM_ACCESS_KEY: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY }}
+          KAMAL_REGISTRY_USERNAME: mohamedrez
+
+  deploy-staging:
+    # Gate: only deploy if the CI run that triggered us actually succeeded.
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    concurrency:
+      group: deploy-staging
+      cancel-in-progress: false
+    env:
+      DOCKER_BUILDKIT: 1
+      RAILS_ENV: production
+
+    environment: staging
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 1
+          submodules: false #TODO: enable this back when we need to deploy frontend
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Expose GitHub Runtime for cache
+        uses: crazy-max/ghaction-github-runtime@v3
+
+      # KAMAL
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.6
+
+      # todo make this dynamic
+      - name: Install Kamal dependencies
+        run: |
+          gem install kamal -v 2.5.3
+
+      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Kamal Deploy
+        run: |
+          echo "Deploying to staging"
+          kamal deploy -c kamal_config/deploy.staging.yml
+        env:
+          DOCKER_BUILDKIT: 1
+          RAILS_ENV: production
+          KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID }}
+          PUBLIC_AWS_S3_3ILM_ACCESS_KEY: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY }}
+          LITESTREAM_ACCESS_KEY_ID: ${{ secrets.LITESTREAM_ACCESS_KEY_ID }}
+          LITESTREAM_SECRET_ACCESS_KEY: ${{ secrets.LITESTREAM_SECRET_ACCESS_KEY }}
+          LITESTREAM_STAGING_REPLICA_BUCKET: ${{ secrets.LITESTREAM_STAGING_REPLICA_BUCKET }}
           KAMAL_REGISTRY_USERNAME: mohamedrez
