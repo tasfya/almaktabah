@@ -3,6 +3,7 @@
 class HomeController < ApplicationController
   def index
     cache_page(duration: 1.day)
+    set_collection_meta_tags("home")
 
     @query = params[:q].is_a?(String) ? params[:q].strip.presence : nil
     @search_filters = { scholars: params[:scholars], content_types: params[:content_types] }

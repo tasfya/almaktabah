@@ -18,17 +18,17 @@ class BooksController < ApplicationController
                          .recent
                          .limit(4)
 
-    description = @book.description.to_s.truncate(MetaTags.config.description_limit)
+    description = seo_text(@book.description, fallback: "كتاب #{@book.title} للشيخ #{@book.scholar.full_name} ضمن مكتبة العلم، مع روابط القراءة أو التحميل والاستفادة من المادة العلمية.")
     image_url = @book.cover_image.attached? ? url_for(@book.cover_image) : nil
     set_meta_tags(
       title: @book.title,
       description: description,
-      canonical: canonical_url_for(@book),
+      canonical: canonical_url_for,
       og: {
         title: @book.title,
         description: description,
         type: "book",
-        url: canonical_url_for(@book),
+        url: canonical_url_for,
         image: image_url
       }
     )

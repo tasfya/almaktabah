@@ -12,6 +12,8 @@ module TypesenseListable
     @hide_content_type_filter = true
     @hide_section_header = true
 
+    set_collection_meta_tags(content_type)
+
     result = TypesenseSearch::CollectionSearchService.new(
       collection: content_type,
       query: @query,

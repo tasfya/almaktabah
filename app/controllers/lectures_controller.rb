@@ -18,18 +18,18 @@ class LecturesController < ApplicationController
                                .recent
                                .limit(4)
 
-    description = @lecture.description.to_s.truncate(MetaTags.config.description_limit)
+    description = seo_text(@lecture.description, fallback: "#{@lecture.kind_for_url}: #{@lecture.title} للشيخ #{@lecture.scholar.full_name}، متاحة للاستماع أو المشاهدة عبر موقع العلم.")
     image_url = @lecture.thumbnail.attached? ? url_for(@lecture.thumbnail) : nil
     og_type = @lecture.video.attached? ? "video.other" : "music.song"
     set_meta_tags(
       title: @lecture.seo_show_title,
       description: description,
-      canonical: canonical_url_for(@lecture),
+      canonical: canonical_url_for,
       og: {
         title: @lecture.seo_show_title,
         description: description,
         type: og_type,
-        url: canonical_url_for(@lecture),
+        url: canonical_url_for,
         image: image_url
       }
     )
