@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
+  SHELF_PER_PAGE = 6
+  RECENT_MIXED_LIMIT = 6
+  TRENDING_MIX_LIMIT = 6
+  TRENDING_CATEGORIES_LIMIT = 10
+  SPOTLIGHT_LIMIT = 8
+
   def index
     cache_page(duration: 1.day)
 
@@ -8,23 +14,28 @@ class HomeController < ApplicationController
     @search_filters = { scholars: params[:scholars], content_types: params[:content_types] }
     @all_content_types = TypesenseSearch::Collections::NAMES
 
-    result = if @query.present?
-      TypesenseSearch::MixedSearchService.new(
-        query: @query,
-        domain_id: @domain&.id,
-        content_types: params[:content_types],
-        scholars: params[:scholars],
-        page: params[:page],
-        per_page: 21
-      ).call
+    if search_or_filter_active?
+      render_search_results
     else
-      TypesenseSearch::HomeBrowseService.new(
-        domain_id: @domain&.id,
-        content_types: params[:content_types],
-        scholars: params[:scholars],
-        per_page: 6
-      ).call
+      render_curated_home
     end
+  end
+
+  private
+
+  def search_or_filter_active?
+    @query.present? || params[:scholars].present? || params[:content_types].present?
+  end
+
+  def render_search_results
+    result = TypesenseSearch::MixedSearchService.new(
+      query: @query,
+      domain_id: @domain&.id,
+      content_types: params[:content_types],
+      scholars: params[:scholars],
+      page: params[:page],
+      per_page: 21
+    ).call
 
     @results = result.grouped_hits
     @facets = result.facets
@@ -35,5 +46,79 @@ class HomeController < ApplicationController
 
     set_noindex_meta_tags
     render "search/index"
+  end
+
+  def render_curated_home
+    result = TypesenseSearch::HomeBrowseService.new(
+      domain_id: @domain&.id,
+      per_page: SHELF_PER_PAGE
+    ).call
+
+    @grouped = result.grouped_hits
+    @facets = result.facets
+    @total_results = result.total_found
+
+    @recent_mixed = build_recent_mixed(@grouped)
+    @trending_mix = build_trending_mix(@grouped)
+    @featured = build_featured(@grouped, @recent_mixed)
+    @trending_categories = build_trending_categories(@domain&.id)
+    @spotlight_scholars = build_spotlight_scholars(@domain&.id)
+    @content_counts = build_content_counts(@domain&.id)
+  end
+
+  def build_recent_mixed(grouped)
+    grouped.values.flatten.sort_by { |hit| -hit.created_at_ts.to_i }.first(RECENT_MIXED_LIMIT)
+  end
+
+  # Sidebar "الأكثر رواجاً". No real popularity signal yet, so we interleave the
+  # most-recent item from each content type (recency proxy — see Phase B).
+  def build_trending_mix(grouped)
+    lists = [ :books, :lectures, :series, :fatwas ].map { |type| Array(grouped[type]) }
+    mix = []
+    depth = 0
+    while mix.size < TRENDING_MIX_LIMIT && lists.any? { |l| l[depth] }
+      lists.each do |list|
+        break if mix.size >= TRENDING_MIX_LIMIT
+        mix << list[depth] if list[depth]
+      end
+      depth += 1
+    end
+    mix
+  end
+
+  # Hero item: prefer a recent series/lecture that has artwork, else anything recent.
+  def build_featured(grouped, recent_mixed)
+    candidates = Array(grouped[:series]) + Array(grouped[:lectures])
+    candidates.find { |hit| hit.thumbnail_url.present? } || candidates.first || recent_mixed.first
+  end
+
+  def build_trending_categories(domain_id)
+    return [] if domain_id.blank?
+
+    Rails.cache.fetch([ "home_trending_categories_v1", domain_id ], expires_in: 6.hours) do
+      counts = Hash.new(0)
+      [ Lecture, Book, Series ].each do |model|
+        model.published.for_domain_id(domain_id)
+             .where.not(category: [ nil, "" ])
+             .group(:category).count
+             .each { |category, n| counts[category] += n }
+      end
+      counts.sort_by { |_, n| -n }.first(TRENDING_CATEGORIES_LIMIT).map(&:first)
+    end
+  end
+
+  def build_spotlight_scholars(domain_id)
+    return [] if domain_id.blank?
+
+    Rails.cache.fetch([ "spotlight_scholars_v1", domain_id ], expires_in: 6.hours) do
+      counts = Lecture.published.for_domain_id(domain_id).group(:scholar_id).count
+      top = counts.sort_by { |_, c| -c }.first(SPOTLIGHT_LIMIT)
+      scholars = Scholar.published.where(id: top.map(&:first)).index_by(&:id)
+      top.filter_map { |sid, c| { scholar: scholars[sid], count: c } if scholars[sid] }
+    end
+  end
+
+  def build_content_counts(domain_id)
+    DomainContentTypesService.for_domain(domain_id).each_with_object({}) { |row, h| h[row[:type]] = row[:count] }
   end
 end

@@ -1,0 +1,19 @@
+<%#
+  Locals:
+    categories: Array<String>  (top category names)
+%>
+<% return if categories.blank? %>
+<nav class="bg-base-100 border-b border-base-300" aria-label="<%= t("home.tags.title") %>">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center gap-2 py-3 overflow-x-auto" style="scrollbar-width: thin">
+      <%= link_to t("home.tags.all"), root_path,
+                  class: "shrink-0 text-sm rounded-full px-4 py-1.5 bg-neutral text-neutral-content whitespace-nowrap",
+                  data: { turbo_frame: "_top" } %>
+      <% categories.each do |category| %>
+        <%= link_to category, root_path(q: category),
+                    class: "shrink-0 text-sm rounded-full px-4 py-1.5 border border-base-300 text-base-content/80 hover:border-primary hover:text-primary transition-colors whitespace-nowrap",
+                    data: { turbo_frame: "_top" } %>
+      <% end %>
+    </div>
+  </div>
+</nav>

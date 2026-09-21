@@ -1,0 +1,44 @@
+<% content_for :title, t("navigation.home") %>
+
+<%# Trending tags bar — full bleed under the header %>
+<%= render "home/trending_tags", categories: @trending_categories %>
+
+<div class="container mx-auto px-4 py-6 grid gap-8 lg:grid-cols-[1fr_330px]">
+
+  <%# ---------- MAIN FEED (right in RTL) ---------- %>
+  <div class="min-w-0">
+    <%= render "home/featured", hit: @featured %>
+
+    <% feed = @recent_mixed.reject { |hit| @featured && hit.url == @featured.url } %>
+    <%= render "home/feed_list", hits: feed %>
+
+    <% lectures = Array(@grouped[:lectures]) %>
+    <%= render "home/shelf",
+              title: t("home.sections.latest_lectures"),
+              icon_name: "microphone",
+              count: @content_counts["lecture"],
+              view_all_path: lectures_path,
+              hits: lectures,
+              card_partial: "search/results/lecture",
+              card_local: :lecture,
+              grid_class: "grid-cols-1 md:grid-cols-2" %>
+
+    <% books = Array(@grouped[:books]) %>
+    <%= render "home/shelf",
+              title: t("home.sections.latest_books"),
+              icon_name: "book-open",
+              count: @content_counts["book"],
+              view_all_path: books_path,
+              hits: books,
+              card_partial: "search/results/book",
+              card_local: :book,
+              grid_class: "grid-cols-1 sm:grid-cols-2" %>
+  </div>
+
+  <%# ---------- SIDEBAR (left in RTL) ---------- %>
+  <aside class="space-y-5 lg:sticky lg:top-24 lg:self-start">
+    <%= render "home/trending_sidebar", hits: @trending_mix %>
+    <%= render "home/scholar_chips", scholars: @spotlight_scholars %>
+    <%= render "home/stats", total: @total_results %>
+  </aside>
+</div>
