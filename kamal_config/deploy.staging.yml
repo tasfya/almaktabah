@@ -4,6 +4,10 @@
 # Litestream replica bucket. Deployed by its own job in the same GitHub Actions
 # workflow as production (same commit, same CI gate), not a promoted artifact —
 # each job runs `kamal deploy`, which builds and pushes its own image.
+#
+# `kamal deploy` never boots accessories. Before the first deploy, boot them
+# once with `kamal setup -c kamal_config/deploy.staging.yml`; after changing an
+# accessory's config, run `kamal accessory reboot <name> -c ...`.
 service: almaktabah_staging
 
 image: mohamedrez/almaktabah
@@ -81,5 +85,7 @@ accessories:
         - LITESTREAM_ACCESS_KEY_ID
         - LITESTREAM_SECRET_ACCESS_KEY
         - LITESTREAM_STAGING_REPLICA_BUCKET
+    volumes:
+      - "almaktabah_staging_storage:/rails/storage"
     files:
       - config/litestream/staging.yml:/etc/litestream.yml
