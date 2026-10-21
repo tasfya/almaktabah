@@ -79,6 +79,11 @@ jobs:
     env:
       DOCKER_BUILDKIT: 1
       RAILS_ENV: production
+      KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      KAMAL_REGISTRY_USERNAME: mohamedrez
 
     environment: staging
     steps:
@@ -109,20 +114,16 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      # `kamal deploy` never boots accessories, and kamal 2.5.3's `accessory boot`
+      # fails if the container already exists, so boot Typesense only when it is
+      # missing. The app's first boot seeds and reindexes into it.
+      - name: Boot Typesense if missing
+        run: |
+          ssh -o StrictHostKeyChecking=accept-new root@188.245.209.159 \
+            docker container inspect almaktabah_staging-typesense >/dev/null 2>&1 \
+            || kamal accessory boot typesense -c kamal_config/deploy.staging.yml
+
       - name: Kamal Deploy
         run: |
           echo "Deploying to staging"
           kamal deploy -c kamal_config/deploy.staging.yml
-        env:
-          DOCKER_BUILDKIT: 1
-          RAILS_ENV: production
-          KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY }}
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID }}
-          PUBLIC_AWS_S3_3ILM_ACCESS_KEY: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY }}
-          LITESTREAM_ACCESS_KEY_ID: ${{ secrets.LITESTREAM_ACCESS_KEY_ID }}
-          LITESTREAM_SECRET_ACCESS_KEY: ${{ secrets.LITESTREAM_SECRET_ACCESS_KEY }}
-          LITESTREAM_STAGING_REPLICA_BUCKET: ${{ secrets.LITESTREAM_STAGING_REPLICA_BUCKET }}
-          KAMAL_REGISTRY_USERNAME: mohamedrez

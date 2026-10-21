@@ -56,5 +56,19 @@ RSpec.describe RobotsController, type: :controller do
         expect(response.body).to include("Sitemap: http://example.com/sitemap.xml")
       end
     end
+
+    context "when DISALLOW_ROBOTS is set" do
+      around do |example|
+        ENV["DISALLOW_ROBOTS"] = "true"
+        example.run
+      ensure
+        ENV.delete("DISALLOW_ROBOTS")
+      end
+
+      it "disallows the whole site and advertises no sitemap" do
+        get :show, format: :text
+        expect(response.body).to eq("User-agent: *\nDisallow: /\n")
+      end
+    end
   end
 end

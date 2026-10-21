@@ -15,8 +15,9 @@ CONTENT_SEEDERS = SEEDERS.except("users")
 parts = ENV["PARTS"]&.split(",") || SEEDERS.keys
 starting_from = ENV["FROM"]&.strip
 
-domain1 = Domain.find_or_initialize_by(host: "127.0.0.1")
-domain1.name = "127.0.0.1"
+domain1_host = ENV.fetch("SEED_DOMAIN_HOST", "127.0.0.1")
+domain1 = Domain.find_or_initialize_by(host: domain1_host)
+domain1.name = domain1_host
 domain1.title ||= "الشيخ محمد بن رمزان الهاجري"
 domain1.description ||= "الموقع الرسمي لفضيلة الشيخ محمد بن رمزان الهاجري - كتب ومحاضرات ودروس وفتاوى"
 domain1.save!

@@ -1,13 +1,15 @@
 # Staging environment for almaktabah.
 # Runs on the same host as production but as a fully isolated Kamal service:
-# separate containers, separate volumes, separate Typesense accessory, separate
-# Litestream replica bucket. Deployed by its own job in the same GitHub Actions
-# workflow as production (same commit, same CI gate), not a promoted artifact —
-# each job runs `kamal deploy`, which builds and pushes its own image.
+# separate containers, volume and Typesense accessory. Staging data is
+# disposable: there is no Litestream replica, and media is stored on the
+# staging volume instead of production's buckets. Deployed by its own job in
+# the same GitHub Actions workflow as production (same commit, same CI gate),
+# not a promoted artifact — each job runs `kamal deploy`, which builds and
+# pushes its own image.
 #
-# `kamal deploy` never boots accessories. Before the first deploy, boot them
-# once with `kamal setup -c kamal_config/deploy.staging.yml`; after changing an
-# accessory's config, run `kamal accessory reboot <name> -c ...`.
+# `kamal deploy` never boots accessories; the deploy-staging job boots
+# Typesense when its container is missing. After changing the accessory's
+# config, run `kamal accessory reboot typesense -c kamal_config/deploy.staging.yml`.
 service: almaktabah_staging
 
 image: mohamedrez/almaktabah
@@ -35,10 +37,16 @@ env:
     - RAILS_MASTER_KEY
     - TYPESENSE_API_KEY
     - GROQ_API_KEY
-    - PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID
-    - PUBLIC_AWS_S3_3ILM_ACCESS_KEY
   clear:
     JOB_CONCURRENCY: 10
+    # Keep uploads on the staging volume, out of production's media buckets.
+    LOCAL_MEDIA_STORAGE: "true"
+    # The seeded main site answers on the staging hostname.
+    SEED_DOMAIN_HOST: staging.3ilm.org
+    # config/recurring.yml's production schedule would otherwise run here too.
+    SOLID_QUEUE_SKIP_RECURRING: "true"
+    # Staging is not for search engines.
+    DISALLOW_ROBOTS: "true"
 
     # Accessory containers are namespaced by Kamal as <service>-<accessory_name>.
     TYPESENSE_HOST: almaktabah_staging-typesense
@@ -76,16 +84,3 @@ accessories:
         TYPESENSE_MEMORY_LIMIT: 1GB
     directories:
       - typesense_staging_data:/data
-  litestream:
-    image: litestream/litestream:sha-8fa09d7a6ea15c66309b7d799518ffbaa8d1ee69
-    host: 188.245.209.159
-    cmd: litestream replicate --config=/etc/litestream.yml
-    env:
-      secret:
-        - LITESTREAM_ACCESS_KEY_ID
-        - LITESTREAM_SECRET_ACCESS_KEY
-        - LITESTREAM_STAGING_REPLICA_BUCKET
-    volumes:
-      - "almaktabah_staging_storage:/rails/storage"
-    files:
-      - config/litestream/staging.yml:/etc/litestream.yml
