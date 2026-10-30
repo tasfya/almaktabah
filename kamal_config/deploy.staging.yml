@@ -12,7 +12,10 @@
 # config, run `kamal accessory reboot typesense -c kamal_config/deploy.staging.yml`.
 service: almaktabah_staging
 
-image: mohamedrez/almaktabah
+# Its own repository: both deploy jobs build the same commit concurrently, and
+# a shared <repo>:<sha> tag would let one job's push overwrite the other's
+# image (kamal refuses to boot an image labelled for another service).
+image: mohamedrez/almaktabah-staging
 
 servers:
   web:
