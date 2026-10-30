@@ -64,6 +64,10 @@ volumes:
 
 asset_path: /rails/public/assets
 
+# The first boot runs db:prepare on an empty volume (schema, seeds, Typesense
+# reindex) before Puma listens; kamal's 30s default would stop it mid-seed.
+deploy_timeout: 600
+
 builder:
   arch: amd64
   cache:
