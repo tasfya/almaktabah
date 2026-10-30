@@ -21,8 +21,10 @@ Rails.application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
-  # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :public_media_hetzner
+  # Store uploaded files in the public media bucket (see config/storage.yml for
+  # options). LOCAL_MEDIA_STORAGE keeps them on the local volume instead, so a
+  # non-production deploy running RAILS_ENV=production never writes to it.
+  config.active_storage.service = ENV["LOCAL_MEDIA_STORAGE"].present? ? :local : :public_media_hetzner
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
@@ -87,7 +89,7 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-  config.public_storage = :public_media_hetzner
+  config.public_storage = config.active_storage.service
 
   config.solid_queue.logger = ActiveSupport::Logger.new(STDOUT)
 end

@@ -5,9 +5,15 @@ module Seeds
     def self.seed(from: nil, domain_ids: nil, scholar: nil)
       puts "Seeding users..."
 
+      # A publicly reachable deploy (staging runs RAILS_ENV=production) must not
+      # get the well-known dev password; set SEED_ADMIN_PASSWORD or reset it
+      # from a console.
+      password = ENV["SEED_ADMIN_PASSWORD"].presence ||
+        (Rails.env.production? ? SecureRandom.base58(32) : "qwerty")
+
       admin_user = User.find_or_initialize_by(email: "admin@admin.com") do |user|
-        user.password = "qwerty"
-        user.password_confirmation = "qwerty"
+        user.password = password
+        user.password_confirmation = password
         user.admin = true
       end
 

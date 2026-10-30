@@ -15,7 +15,7 @@ public_media_hetzner:
   bucket: hachico
   public: true
 
-<% if Rails.env.production? %>
+<% if Rails.env.production? && ENV["LOCAL_MEDIA_STORAGE"].blank? %>
 public_media_aws:
   service: S3
   access_key_id: <%= ENV["PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID"] %>
