@@ -131,6 +131,11 @@ accessories:
       secret:
         - LITESTREAM_ACCESS_KEY_ID
         - LITESTREAM_SECRET_ACCESS_KEY
+        - LITESTREAM_REPLICA_BUCKET
+        - LITESTREAM_REPLICA_ENDPOINT
+    # Litestream reads the app's databases straight from the storage volume.
+    volumes:
+      - "almaktabah_storage:/rails/storage"
     files:
       - config/litestream/production.yml:/etc/litestream.yml
 #     directories:
