@@ -115,12 +115,14 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       # `kamal deploy` never boots accessories, and kamal 2.5.3's `accessory boot`
-      # fails if the container already exists, so boot Typesense only when it is
-      # missing. The app's first boot seeds and reindexes into it.
-      - name: Boot Typesense if missing
+      # fails if the container already exists. `docker start` is a no-op on a
+      # running container and starts a stopped one; it fails only when the
+      # container is missing, and then we boot it. The app's first boot seeds
+      # and reindexes into it.
+      - name: Start or boot Typesense
         run: |
           ssh -o StrictHostKeyChecking=accept-new root@188.245.209.159 \
-            docker container inspect almaktabah_staging-typesense >/dev/null 2>&1 \
+            docker start almaktabah_staging-typesense >/dev/null 2>&1 \
             || kamal accessory boot typesense -c kamal_config/deploy.staging.yml
 
       - name: Kamal Deploy
