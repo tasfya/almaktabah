@@ -9,8 +9,9 @@ importmap; don't add one.
 **The main checkout stays on `main` — always.** Other agents work in parallel
 from this repo; switching its branch blocks them. Every feature or bug fix
 happens in a worktree on its own branch, pushed from there. Never
-`git checkout <branch>` in the main checkout. Exception: documentation-only
-changes may be committed directly on `main`.
+`git checkout <branch>` in the main checkout. Documentation changes too:
+`main` only accepts pull requests whose `lint`, `scan_ruby` and `test` checks
+pass, so open a PR and let it merge with `gh pr merge --auto --squash`.
 
 Worktrees live under `.worktrees/` (gitignored) and are managed by
 `bin/worktree`:
