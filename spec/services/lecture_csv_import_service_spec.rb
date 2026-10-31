@@ -62,8 +62,8 @@ RSpec.describe LectureCsvImportService do
     expect(result[:errors]).to eq([ "No CSV file provided" ])
   end
 
-  it "raises on malformed CSV without creating anything" do
-    expect { import("malformed.csv") }.to raise_error(CSV::MalformedCSVError)
+  it "reports malformed CSV as an error without creating anything" do
+    expect(import("malformed.csv")).to match(created_count: 0, skipped_count: 0, errors: [ a_string_starting_with("Failed to parse CSV: ") ])
     expect(scholar.lectures).to be_empty
   end
 end

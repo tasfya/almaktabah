@@ -34,6 +34,9 @@ class LectureCsvImportService
     end
 
     result
+  rescue CSV::MalformedCSVError => e
+    @errors << "Failed to parse CSV: #{e.message}"
+    result
   end
 
   private
