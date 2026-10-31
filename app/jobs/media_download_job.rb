@@ -36,7 +36,7 @@ class MediaDownloadJob < ApplicationJob
 
       record.send(attachment_name).attach(
         io: tempfile,
-        filename: File.basename(url, ".*").presence || "file_#{Time.current.to_i}",
+        filename: URI.parse(url).path.split("/").last.presence || "file_#{Time.current.to_i}",
         content_type: content_type
       )
 
