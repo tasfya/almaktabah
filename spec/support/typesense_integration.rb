@@ -41,6 +41,19 @@ module TypesenseIntegration
     MODELS.each { |model| model.instance_variable_set(:@typesense_indexes, {}) }
   end
 
+  # The app's 2s request timeout suits page requests, but this harness deletes
+  # and recreates six collections around every example, and on a busy machine
+  # those calls can take longer. The client then retries the timed-out request:
+  # a retried create fails with ObjectAlreadyExists although the first one
+  # succeeded. Give the test client more time and no retries, so a slow call
+  # waits and a real failure surfaces as itself. The models keep the client they
+  # were loaded with, so each gets the new one.
+  def configure_client!
+    Typesense.configuration = Typesense.configuration.merge(connection_timeout_seconds: 10, num_retries: 0)
+    TypesenseSearch::Client.reset!
+    MODELS.each { |model| model.typesense_client = Typesense.client }
+  end
+
   # Create all six collections (empty) so multi-collection services
   # (HomeBrowseService, MixedSearchService) find every collection they query,
   # mirroring production where all collections always exist.
@@ -62,6 +75,8 @@ end
 
 RSpec.configure do |config|
   config.include TypesenseIntegrationHelpers, :typesense
+
+  config.before(:suite) { TypesenseIntegration.configure_client! if TypesenseIntegration.enabled? }
 
   config.before(:each, :typesense) do
     skip "Typesense integration specs are opt-in locally: set RUN_TYPESENSE_SPECS=1 (point TYPESENSE_PORT at a disposable instance, not your dev data)" unless TypesenseIntegration.enabled?
