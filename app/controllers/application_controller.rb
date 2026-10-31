@@ -28,11 +28,17 @@ class ApplicationController < ActionController::Base
     # Portless worktree URLs (e.g. almaktabah-<branch>.localhost) match no
     # Domain row; fall back to the main seeded site in development.
     @domain ||= Domain.find_by_host("127.0.0.1") if Rails.env.development?
+    return render_not_found if @domain.nil? && !devise_controller?
+
     if @domain&.logo.present?
       @logo_url = url_for(@domain.logo)
     else
       @logo_url = ActionController::Base.helpers.asset_path("logo.png")
     end
+  end
+
+  def render_not_found
+    render file: Rails.public_path.join("404.html"), status: :not_found, layout: false, content_type: "text/html"
   end
 
   def setup_breadcrumbs

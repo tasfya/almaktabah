@@ -5,7 +5,7 @@ require "rails_helper"
 # scrollY back under the threshold, the header expanded again, and a gesture
 # made of small scroll steps (Firefox on Android) could never leave the top.
 RSpec.describe "Header scroll", type: :system, js: true do
-  let!(:domain) { create(:domain, host: "www.example.com") }
+  let!(:domain) { create(:domain, host: "127.0.0.1") }
 
   def header_state(pw)
     pw.evaluate(<<~JS)

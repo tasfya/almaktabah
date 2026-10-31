@@ -6,7 +6,7 @@ require "rails_helper"
 # stubbed and skipped in CI (the in-process stub can't reach the browser's separate
 # server process).
 RSpec.describe "View all preserves scholar filters", :typesense, type: :system, js: true do
-  let!(:domain) { create(:domain, host: "www.example.com") }
+  let!(:domain) { create(:domain, host: "127.0.0.1") }
 
   it "preserves scholar filter when clicking View all on home page" do
     scholar_a = create(:scholar, full_name: "Scholar A")
