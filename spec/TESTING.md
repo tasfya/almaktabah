@@ -50,6 +50,16 @@ uploads `coverage/coverage.xml` (Cobertura) to Codecov.
 | Typesense integration | `spec/integration`, tagged `:typesense` | Indexing real records into a real Typesense and reading them back through the search services. |
 | System (JS) | `spec/system`, `js: true` | Behaviour that needs a browser: Stimulus/Turbo interactions, history navigation. Playwright Chromium. Slow; keep it for what only a browser can show. |
 
+### User journeys
+
+`spec/requests/journeys/` and `spec/system/journeys/` follow what a visitor
+does end to end, with real records and real Typesense: browse the home page
+and listings, open a record, play, watch or download its media, search from
+the header, and see what an admin publishes or unpublishes in Avo. Each step
+follows the link or form the page actually rendered rather than a route
+helper, so a dead link, a 500 in a result card or an unservable file fails
+there. Add a step there when a new page or action joins one of those paths.
+
 ### Real Typesense vs stubs
 
 - Anything that depends on **what the search returns** (filters, facets,
