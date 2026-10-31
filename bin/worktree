@@ -136,6 +136,12 @@ cmd_test() {
   # Ensure the worktree's test DB schema is current (idempotent).
   bin/rails db:test:prepare
 
+  # System specs launch the Playwright CLI pinned to playwright-ruby-client;
+  # its browser build must be installed (a no-op once it is).
+  local pw_version
+  pw_version="$(bundle exec ruby -e 'require "playwright"; print Playwright::COMPATIBLE_PLAYWRIGHT_VERSION')"
+  npx --yes "playwright@$pw_version" install chromium
+
   export RUN_TYPESENSE_SPECS=1
   exec bundle exec rspec "$@"
 }
