@@ -33,7 +33,6 @@ RSpec/AnyInstance:
   Enabled: true
   # Existing stubs predating the rule; new code uses instance_double.
   Exclude:
-    - 'spec/support/typesense.rb'
     - 'spec/services/domain_content_types_service_spec.rb'
     - 'spec/jobs/video_processing_job_spec.rb'
 
