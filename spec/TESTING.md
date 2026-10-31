@@ -98,8 +98,8 @@ it_behaves_like "a domain-scoped show page",
   not_found: "messages.book_not_found"
 ```
 
-It checks the three cases: served on its domain, redirected when only on
-another domain, redirected when unpublished. See
+It checks the three cases: served on its domain, a 404 not-found page when only
+on another domain, and a 404 not-found page when unpublished. See
 `spec/requests/show_scoping_spec.rb`.
 
 Listing pages read from Typesense, so their domain scoping is tested in the

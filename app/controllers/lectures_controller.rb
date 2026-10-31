@@ -39,7 +39,7 @@ class LecturesController < ApplicationController
     lecture = Lecture.for_domain_id(@domain.id).published.find(params[:id])
     redirect_to lecture_path(lecture.scholar.slug, lecture, kind: lecture.kind_for_url), status: :moved_permanently
   rescue ActiveRecord::RecordNotFound, NoMethodError
-    redirect_to lectures_path, alert: t("messages.lecture_not_found")
+    render_record_not_found(t("messages.lecture_not_found"), lectures_path)
   end
 
   private
@@ -64,6 +64,6 @@ class LecturesController < ApplicationController
       redirect_to lecture_path(@scholar, @lecture, kind: @lecture.kind_for_url), status: :moved_permanently
     end
   rescue ActiveRecord::RecordNotFound
-    redirect_to lectures_path, alert: t("messages.lecture_not_found")
+    render_record_not_found(t("messages.lecture_not_found"), lectures_path)
   end
 end

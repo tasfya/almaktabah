@@ -32,7 +32,7 @@ class SeriesController < ApplicationController
     series = Series.for_domain_id(@domain.id).published.find(params[:id])
     redirect_to series_path(series.scholar.slug, series), status: :moved_permanently
   rescue ActiveRecord::RecordNotFound, NoMethodError
-    redirect_to series_index_path, alert: t("messages.series_not_found")
+    render_record_not_found(t("messages.series_not_found"), series_index_path)
   end
 
   private
@@ -57,6 +57,6 @@ class SeriesController < ApplicationController
       redirect_to series_path(@scholar, @series), status: :moved_permanently
     end
   rescue ActiveRecord::RecordNotFound
-    redirect_to series_index_path, alert: t("messages.series_not_found")
+    render_record_not_found(t("messages.series_not_found"), series_index_path)
   end
 end

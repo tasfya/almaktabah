@@ -44,8 +44,7 @@ RSpec.describe "Series", type: :request do
     context "when series is not found" do
       it "redirects to series index" do
         get series_path(scholar.id, 999999)
-        expect(response).to redirect_to(series_index_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.series_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.series_not_found"), back_to: series_index_path)
       end
     end
   end
@@ -59,8 +58,7 @@ RSpec.describe "Series", type: :request do
 
     it "redirects to series index when not found" do
       get "/series/999999"
-      expect(response).to redirect_to(series_index_path)
-      expect(flash[:alert]).to eq(I18n.t("messages.series_not_found"))
+      expect(response).to be_not_found_page(I18n.t("messages.series_not_found"), back_to: series_index_path)
     end
   end
 end

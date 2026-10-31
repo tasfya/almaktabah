@@ -30,7 +30,7 @@ class FatwasController < ApplicationController
     fatwa = Fatwa.includes(:scholar).for_domain_id(@domain.id).published.friendly.find(params[:id])
     redirect_to fatwa_path(fatwa.scholar, fatwa), status: :moved_permanently
   rescue ActiveRecord::RecordNotFound
-    redirect_to fatwas_path, alert: t("messages.fatwa_not_found")
+    render_record_not_found(t("messages.fatwa_not_found"), fatwas_path)
   end
 
   private
@@ -46,7 +46,7 @@ class FatwasController < ApplicationController
       redirect_to fatwa_path(@scholar, @fatwa), status: :moved_permanently
     end
   rescue ActiveRecord::RecordNotFound
-    redirect_to fatwas_path, alert: t("messages.fatwa_not_found")
+    render_record_not_found(t("messages.fatwa_not_found"), fatwas_path)
   end
 
   def setup_fatwas_breadcrumbs

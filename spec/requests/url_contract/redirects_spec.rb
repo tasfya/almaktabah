@@ -54,21 +54,6 @@ RSpec.describe "URL contract: redirects", type: :request do
     end
   end
 
-  describe "legacy show paths for a missing record (soft 404, #613)" do
-    {
-      "/news/999999" => "/#{u::NEWS}",
-      "/#{u::NEWS}/999999" => "/#{u::NEWS}",
-      "/fatwas/999999" => "/#{u::FATWAS}",
-      "/#{u::FATWAS}/999999" => "/#{u::FATWAS}",
-      "/books/999999" => "/#{u::BOOKS}",
-      "/series/999999" => "/#{u::SERIES}",
-      "/lectures/999999" => "/#{u::LECTURES}",
-      "/#{u::LESSONS}/999999" => "/#{u::SERIES}"
-    }.each do |from, to|
-      it("#{from} → 302 #{to}") { expect_redirect(from, to: to, status: :found) }
-    end
-  end
-
   describe "lecture kind segment" do
     it "redirects a wrong kind to the lecture's kind" do
       expect_redirect("/#{u::SCHOLAR_SLUG}/#{u::LECTURES}/#{u::KIND_CONFERENCE}/#{u::SERMON_SLUG}", to: paths[:sermon])

@@ -44,8 +44,7 @@ RSpec.describe "Books", type: :request do
     context "when book is not found" do
       it "redirects to books index" do
         get book_path(scholar.to_param, 999999)
-        expect(response).to redirect_to(books_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.book_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.book_not_found"), back_to: books_path)
       end
     end
   end
@@ -59,8 +58,7 @@ RSpec.describe "Books", type: :request do
 
     it "redirects to books index when not found" do
       get "/books/999999"
-      expect(response).to redirect_to(books_path)
-      expect(flash[:alert]).to eq(I18n.t("messages.book_not_found"))
+      expect(response).to be_not_found_page(I18n.t("messages.book_not_found"), back_to: books_path)
     end
   end
 end

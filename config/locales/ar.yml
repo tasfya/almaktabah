@@ -259,6 +259,7 @@ ar:
     contact_us: "اتصل بنا"
     mobile_menu: "القائمة الجانبية"
   common:
+    back_to_list: "العودة إلى القائمة"
     no_media_available: "لا توجد وسائط متاحة حالياً"
     video: "فيديو"
     audio: "صوتي"
@@ -466,6 +467,8 @@ ar:
     lesson_not_found: "الدرس غير موجود"
     series_not_found: "السلسلة غير موجودة"
     fatwa_not_found: "الفتوى غير موجودة"
+    news_not_found: "الخبر غير موجود"
+    invalid_resource: "المحتوى غير موجود"
   scholars:
     show:
       lessons_count:

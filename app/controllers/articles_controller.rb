@@ -48,6 +48,6 @@ class ArticlesController < ApplicationController
       redirect_to article_path(@scholar, @article), status: :moved_permanently
     end
   rescue ActiveRecord::RecordNotFound
-    redirect_to articles_path, alert: t("messages.article_not_found")
+    render_record_not_found(t("messages.article_not_found"), articles_path)
   end
 end

@@ -78,14 +78,12 @@ RSpec.describe "Lessons", type: :request do
     context "when lesson is unpublished or not found" do
       it "redirects for unpublished lesson" do
         get series_lesson_path(scholar.to_param, series.to_param, unpublished_lesson.id)
-        expect(response).to redirect_to(series_index_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.lesson_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.lesson_not_found"), back_to: series_index_path)
       end
 
       it "redirects for missing lesson" do
         get series_lesson_path(scholar.to_param, series.to_param, 999999)
-        expect(response).to redirect_to(series_index_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.lesson_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.lesson_not_found"), back_to: series_index_path)
       end
     end
   end
@@ -107,8 +105,7 @@ RSpec.describe "Lessons", type: :request do
 
     it "redirects to series index when lesson not found" do
       get "#{legacy_lessons_path}/999999"
-      expect(response).to redirect_to(series_index_path)
-      expect(flash[:alert]).to eq(I18n.t("messages.lesson_not_found"))
+      expect(response).to be_not_found_page(I18n.t("messages.lesson_not_found"), back_to: series_index_path)
     end
   end
 end

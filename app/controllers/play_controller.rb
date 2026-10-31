@@ -21,9 +21,9 @@ class PlayController < ApplicationController
     resource_class = resource_class(resource_type)
     @resource = resource_class.for_domain_id(@domain.id).published.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to root_path, alert: t("messages.#{params[:resource_type]}_not_found")
+    render_record_not_found(t("messages.#{params[:resource_type]}_not_found"), root_path)
   rescue NameError
-    redirect_to root_path, alert: t("messages.invalid_resource")
+    render_record_not_found(t("messages.invalid_resource"), root_path)
   end
 
   def resource_class(resource_type)

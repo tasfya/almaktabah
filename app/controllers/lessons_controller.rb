@@ -35,10 +35,10 @@ class LessonsController < ApplicationController
     if series && scholar
       redirect_to series_lesson_path(scholar.slug, series, lesson), status: :moved_permanently
     else
-      redirect_to series_index_path, alert: t("messages.lesson_not_found")
+      render_record_not_found(t("messages.lesson_not_found"), series_index_path)
     end
   rescue ActiveRecord::RecordNotFound
-    redirect_to series_index_path, alert: t("messages.lesson_not_found")
+    render_record_not_found(t("messages.lesson_not_found"), series_index_path)
   end
 
   private
@@ -58,6 +58,6 @@ class LessonsController < ApplicationController
     end
   rescue ActiveRecord::RecordNotFound => e
     Rails.logger.info "Lesson lookup failed: #{e.message} (scholar_id=#{params[:scholar_id]}, series_id=#{params[:series_id]}, id=#{params[:id]})"
-    redirect_to series_index_path, alert: t("messages.lesson_not_found")
+    render_record_not_found(t("messages.lesson_not_found"), series_index_path)
   end
 end
