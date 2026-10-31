@@ -1,5 +1,8 @@
-<header class="bg-base-200 shadow-sm sticky top-0 left-0 right-0 z-50"
-  data-controller="navigation header-scroll"
+<div data-controller="header-scroll">
+<div data-header-scroll-target="spacer"></div>
+<header class="bg-base-200 shadow-sm fixed top-0 left-0 right-0 z-50"
+  data-controller="navigation"
+  data-header-scroll-target="header"
   data-action="click@window->navigation#clickOutside">
   <%# Main header row with logo, search, and social icons %>
   <div class="bg-primary" data-header-scroll-target="logo">
@@ -121,3 +124,4 @@
     </div>
   <% end %>
 </header>
+</div>
