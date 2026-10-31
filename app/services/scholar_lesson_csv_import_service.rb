@@ -13,6 +13,7 @@ class ScholarLessonCsvImportService
     @series_created_count = 0
     @errors = []
     @series_cache = {}
+    @series_titles = {}
   end
 
   def import
@@ -32,6 +33,9 @@ class ScholarLessonCsvImportService
       process_row(row, line_number)
     end
 
+    result
+  rescue CSV::MalformedCSVError => e
+    @errors << "Failed to parse CSV: #{e.message}"
     result
   end
 
@@ -54,6 +58,12 @@ class ScholarLessonCsvImportService
     end
 
     series = find_or_create_series(series_title)
+    existing_titles = @series_titles[series.id] ||= series.lessons.pluck(:title).map(&:downcase)
+
+    if existing_titles.include?(title.downcase)
+      @skipped_count += 1
+      return
+    end
 
     lesson = series.lessons.build(
       title: title,
@@ -63,6 +73,7 @@ class ScholarLessonCsvImportService
 
     if lesson.save
       @created_count += 1
+      existing_titles << title.downcase
     else
       @errors << "Line #{line_number}: #{lesson.errors.full_messages.join(', ')}"
     end

@@ -61,7 +61,8 @@ RSpec.describe LessonCsvImportService do
     expect(described_class.new(csv_file: nil, series: series).import[:errors]).to eq([ "No CSV file provided" ])
   end
 
-  it "raises on malformed CSV" do
-    expect { import("malformed.csv") }.to raise_error(CSV::MalformedCSVError)
+  it "reports malformed CSV as an error without creating anything" do
+    expect(import("malformed.csv")).to match(created_count: 0, skipped_count: 0, errors: [ a_string_starting_with("Failed to parse CSV: ") ])
+    expect(series.lessons).to be_empty
   end
 end

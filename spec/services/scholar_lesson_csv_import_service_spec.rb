@@ -54,16 +54,30 @@ RSpec.describe ScholarLessonCsvImportService do
     expect(result[:skipped_count]).to eq(4)
   end
 
-  # Re-import is idempotent only for rows that carry a YouTube URL: rows
-  # without one are created again.
-  it "re-imports only the rows without a YouTube URL" do
+  it "creates nothing when the same file is imported again" do
     import("scholar_lessons.csv")
 
     result = import("scholar_lessons.csv")
 
-    expect(result).to eq(created_count: 1, skipped_count: 6, series_created_count: 0, errors: [])
-    expect(Lesson.where(title: "No URL Lesson").count).to eq(2)
+    expect(result).to eq(created_count: 0, skipped_count: 7, series_created_count: 0, errors: [])
+    expect(Lesson.where(title: "No URL Lesson").count).to eq(1)
     expect(scholar.series.count).to eq(2)
+  end
+
+  it "skips a row whose title the series already has, ignoring case" do
+    series = create(:series, scholar: scholar, title: "شرح كتاب التوحيد")
+    create(:lesson, series: series, title: "no url lesson")
+
+    result = import("scholar_lessons.csv")
+
+    expect(result[:created_count]).to eq(3)
+    expect(series.lessons.pluck(:title)).to contain_exactly("no url lesson", "الدرس الأول")
+  end
+
+  it "keeps a lesson whose title only another series has" do
+    create(:lesson, series: create(:series, scholar: scholar, title: "Other"), title: "No URL Lesson")
+
+    expect(import("scholar_lessons.csv")[:created_count]).to eq(4)
   end
 
   it "rejects a CSV without both title and series columns" do
@@ -75,7 +89,8 @@ RSpec.describe ScholarLessonCsvImportService do
     expect(described_class.new(csv_file: nil, scholar: scholar).import[:errors]).to eq([ "No CSV file provided" ])
   end
 
-  it "raises on malformed CSV" do
-    expect { import("malformed.csv") }.to raise_error(CSV::MalformedCSVError)
+  it "reports malformed CSV as an error without creating anything" do
+    expect(import("malformed.csv")).to match(created_count: 0, skipped_count: 0, series_created_count: 0, errors: [ a_string_starting_with("Failed to parse CSV: ") ])
+    expect(scholar.series).to be_empty
   end
 end
