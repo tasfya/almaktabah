@@ -1,0 +1,46 @@
+GET /api/lectures/pending_downloads(.:format) api/lectures#pending_downloads
+POST /api/lectures/:id/upload_video(.:format) api/lectures#upload_video
+GET /api/lessons/pending_downloads(.:format) api/lessons#pending_downloads
+POST /api/lessons/:id/upload_video(.:format) api/lessons#upload_video
+GET /api/transcriptions/pending(.:format) api/transcriptions#pending
+POST /api/transcriptions/:type/:id/upload(.:format) api/transcriptions#upload
+GET /robots.txt(.:format) robots#show format=text
+GET /sitemap.xml(.:format) sitemaps#index format=xml
+GET /sitemaps/:type(-:page).xml(.:format) sitemaps#show format=xml page=\d+ type=articles|books|lectures|series|fatwas|news|lessons|listings|static
+GET /%D8%A7%D9%84%D9%83%D8%AA%D8%A8(.:format) books#index
+GET /%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A7%D8%AA(.:format) lectures#index
+GET /%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D8%B3%D9%84(.:format) series#index
+GET /%D8%A7%D9%84%D9%85%D9%82%D8%A7%D9%84%D8%A7%D8%AA(.:format) articles#index
+GET /:scholar_id/%D8%A7%D9%84%D9%83%D8%AA%D8%A8/:id(.:format) books#show
+GET /:scholar_id/%D8%A7%D9%84%D9%85%D9%82%D8%A7%D9%84%D8%A7%D8%AA/:id(.:format) articles#show
+GET /:scholar_id/%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D8%B3%D9%84/:series_id/%D8%A7%D9%84%D8%AF%D8%B1%D9%88%D8%B3/:id(.:format) lessons#show
+GET /:scholar_id/%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D8%B3%D9%84/:id(.:format) series#show
+GET /:scholar_id/%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/:id(.:format) news#show
+GET /:scholar_id/%D8%A7%D9%84%D9%81%D8%AA%D8%A7%D9%88%D9%89/:id(.:format) fatwas#show
+GET /:scholar_id/%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A7%D8%AA(/:kind)/:id(.:format) lectures#show
+GET /%D8%A7%D9%84%D8%AF%D8%B1%D9%88%D8%B3(.:format) lessons#legacy_index_redirect
+GET /%D8%A7%D9%84%D8%AF%D8%B1%D9%88%D8%B3/:id(.:format) lessons#legacy_redirect
+GET /lectures(.:format) redirect
+GET /fatwas(.:format) redirect
+GET /news(.:format) redirect
+GET /lessons(.:format) lessons#legacy_index_redirect
+GET /%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/:id(.:format) news#legacy_redirect
+GET /%D8%A7%D9%84%D9%81%D8%AA%D8%A7%D9%88%D9%89/:id(.:format) fatwas#legacy_redirect
+GET /news/:id(.:format) news#legacy_redirect
+GET /fatwas/:id(.:format) fatwas#legacy_redirect
+GET /books/:id(.:format) books#legacy_redirect id=\d+
+GET /series/:id(.:format) series#legacy_redirect id=\d+
+GET /lectures/:id(.:format) lectures#legacy_redirect id=\d+
+GET /%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1(.:format) news#index
+GET /%D8%A7%D9%84%D9%81%D8%AA%D8%A7%D9%88%D9%89(.:format) fatwas#index
+GET /play/:resource_type/:id(.:format) play#show
+GET /play/stop(.:format) play#stop
+GET /about(.:format) about#index
+GET /up(.:format) rails/health#show
+GET / home#index
+GET /library(.:format) library#index
+GET /playlist/:id(.:format) playlist#show
+GET /category/:id(.:format) category#show
+GET /artist/:id(.:format) artist#show
+GET /album/:id(.:format) album#show
+GET /podcasts/feed(.:format) podcasts#feed format=xml
