@@ -15,6 +15,33 @@ This is the README for Almaktabah application.
 - Follow the code style using `bundle exec rubocop` (enforced via pre-commit hook).
 - Submit a pull request.
 
+## Rolling back a release
+
+Run the **Rollback** workflow (Actions → Rollback → Run workflow) and pick the
+environment:
+
+1. Leave `version` empty first: the run lists the app containers on the host.
+   Each release is tagged with its full git SHA; Kamal keeps the last 5, so
+   only those can be rolled back to. The SHAs of past releases are also in the
+   Deployment runs' history.
+2. Run it again with that SHA as `version`. The run fails if the host is not
+   running that version afterwards.
+
+A rollback only swaps the app containers; the database stays as it is.
+That makes two rules matter:
+
+- **Migrations must work with the previous release.** Change the schema in
+  backwards-compatible steps (expand, then contract in a later release): add
+  columns and tables before code uses them, and drop or rename them only once
+  no deployed release reads them. Then the previous release can run against
+  the migrated database.
+- **Restore from Litestream instead** when the bad release damaged data, or ran
+  a migration the previous release cannot run against. Rolling the code back
+  does not undo either.
+
+The next green `main` deploys again, so fix or revert the bad commit on
+`main` after rolling back.
+
 ## Admin Dashboard
 
 The application includes an admin dashboard powered by [Avo](https://avohq.io/). The dashboard is protected and only accessible to admin users.

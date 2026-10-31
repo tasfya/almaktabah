@@ -1,0 +1,63 @@
+name: Rollback
+
+# Boots a previous release that is still on the host as a stopped container
+# (Kamal keeps the last 5). Leave `version` empty to list them. See "Rolling
+# back a release" in the README.
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to roll back
+        type: choice
+        options:
+          - staging
+          - production
+        required: true
+      version:
+        description: Full git SHA of the release to boot (empty lists the available ones)
+        type: string
+        required: false
+
+jobs:
+  rollback:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    environment: ${{ inputs.environment }}
+    # Shares the deploy job's group, so a rollback never overlaps a deploy.
+    concurrency:
+      group: deploy-${{ inputs.environment }}
+      cancel-in-progress: false
+    env:
+      CONFIG_FILE: ${{ inputs.environment == 'production' && 'config/deploy.yml' || 'kamal_config/deploy.staging.yml' }}
+      VERSION: ${{ inputs.version }}
+      RAILS_ENV: production
+      KAMAL_REGISTRY_USERNAME: mohamedrez
+      KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID }}
+      PUBLIC_AWS_S3_3ILM_ACCESS_KEY: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: List available versions
+        if: inputs.version == ''
+        run: bin/kamal app containers -c "$CONFIG_FILE"
+
+      # `kamal rollback` exits 0 when the version is not on the host, so check
+      # that the running version is the requested one.
+      - name: Roll back
+        if: inputs.version != ''
+        run: |
+          bin/kamal rollback "$VERSION" -c "$CONFIG_FILE"
+          bin/kamal app version -c "$CONFIG_FILE" | tee .rollback-version
+          grep --quiet --fixed-strings "$VERSION" .rollback-version
