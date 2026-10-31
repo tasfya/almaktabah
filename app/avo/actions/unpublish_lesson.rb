@@ -5,7 +5,7 @@ class Avo::Actions::UnpublishLesson < Avo::BaseAction
   end
 
   def handle(**args)
-    lessons = Lesson.where(id: args[:fields][:records])
+    lessons = Lesson.where(id: args[:records])
 
     lessons.each do |lesson|
       lesson.update!(published: false)

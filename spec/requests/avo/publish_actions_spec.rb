@@ -38,8 +38,6 @@ RSpec.describe "Avo publish actions", type: :request do
         expect(untouched.reload.published).to be(false)
       end
 
-      next if unpublish == Avo::Actions::UnpublishLesson
-
       it "#{unpublish.name} unpublishes the selected records and clears published_at" do
         live = create_list(factory, 2, published: true, published_at: 1.day.ago)
         untouched = create(factory, published: true)
@@ -50,17 +48,6 @@ RSpec.describe "Avo publish actions", type: :request do
         expect(untouched.reload.published).to be(true)
       end
     end
-  end
-
-  # UnpublishLesson reads the ids from args[:fields][:records] instead of
-  # args[:records], so it never finds the selected lessons (issue #617).
-  it "Avo::Actions::UnpublishLesson leaves the selected lessons published" do
-    live = create_list(:lesson, 2, published: true, published_at: 1.day.ago)
-
-    run_action("lessons", Avo::Actions::UnpublishLesson, live)
-    expect(flash[:success][:body]).to eq("Successfully unpublished 0 lesson(s)")
-
-    expect(live.map(&:reload)).to all(have_attributes(published: true))
   end
 
   it "refuses a non-admin" do
