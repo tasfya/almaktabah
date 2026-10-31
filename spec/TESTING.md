@@ -36,6 +36,8 @@ uploads `coverage/coverage.xml` (Cobertura) to Codecov.
 - The floor (`minimum_coverage` in `spec/spec_helper.rb`) is enforced only
   when `CI` is set, because a partial local run is always below it. Raise it
   when coverage goes up; never lower it to get a PR through.
+- CI eager-loads the app (`config.eager_load = ENV["CI"].present?`), so its
+  numbers differ from a local run's. Compare with `CI=1 bin/worktree test`.
 - Codecov comments on PRs (project: no drop over 1%; patch: 80%) but its
   statuses are informational, not required checks.
 
