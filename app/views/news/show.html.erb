@@ -6,7 +6,8 @@
     <article class="bg-base-100 rounded-2xl shadow-xl overflow-hidden">
       <% if @news.thumbnail.present? %>
         <div class="w-full">
-          <%= image_tag @news.thumbnail, class: "w-full h-auto max-h-[400px] object-cover", alt: @news.title %>
+          <%= image_tag @news.thumbnail, class: "w-full h-auto max-h-[400px] object-cover", alt: @news.title,
+              data: { controller: "image-fallback", image_fallback_src_value: image_path("media-placeholder.svg") } %>
         </div>
       <% end %>
 

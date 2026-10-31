@@ -1,0 +1,7 @@
+<div class="w-full bg-black" data-controller="media-fallback">
+  <video controls class="w-full max-h-[500px] mx-auto" data-media-fallback-target="media">
+    <source src="<%= url_for(video) %>" type="<%= video.content_type %>">
+    <%= t('common.browser_no_support_video') %>
+  </video>
+  <p class="p-6 text-center text-white" data-media-fallback-target="notice" hidden><%= t('common.media_unavailable') %></p>
+</div>

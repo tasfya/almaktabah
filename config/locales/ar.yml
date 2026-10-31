@@ -300,6 +300,7 @@ ar:
     fatwa_not_found: "الفتوى غير موجودة"
     browser_no_support_video: "متصفحك لا يدعم تشغيل الفيديو."
     browser_no_support_audio: "متصفحك لا يدعم تشغيل الصوت."
+    media_unavailable: "هذه المادة غير متوفرة حالياً."
     search_placeholder_general: "ابحث في العنوان أو الوصف..."
     duration_minutes: "دقيقة"
     esc_to_close: "للإغلاق"

@@ -7,12 +7,7 @@
   <div class="container mx-auto px-4 max-w-4xl">
     <article class="bg-base-100 rounded-2xl shadow-xl overflow-hidden">
       <% if @fatwa.video? %>
-        <div class="w-full bg-black">
-          <video controls class="w-full max-h-[500px] mx-auto">
-            <source src="<%= url_for(@fatwa.video) %>" type="<%= @fatwa.video.content_type %>">
-            <%= t('common.browser_no_support_video') %>
-          </video>
-        </div>
+        <%= render "shared/video_player", video: @fatwa.video %>
       <% end %>
 
       <div class="p-8 lg:p-12">

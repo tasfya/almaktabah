@@ -82,8 +82,9 @@
     </div>
 
     <!-- Audio Player -->
-    <div class="px-3 py-3 bg-gray-50 sticky bottom-0">
+    <div class="px-3 py-3 bg-gray-50 sticky bottom-0" data-controller="media-fallback">
       <% if resource.has_any_audio? %>
+        <p class="text-sm text-center" data-media-fallback-target="notice" hidden><%= t("common.media_unavailable") %></p>
         <%= audio_tag resource.audio_url,
             class: "w-full h-10 rounded-lg",
             controls: true,
@@ -92,6 +93,7 @@
             muted: Rails.env.test?,
             data: {
               controller: "player",
+              media_fallback_target: "media",
               action: "loadeddata->player#play",
               player_title_value: resource.title,
               player_artist_value: resource.respond_to?(:series) && resource.series.present? ? resource.series.title : site_info[:name],
