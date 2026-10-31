@@ -19,7 +19,25 @@ RSpec.describe "Lectures", type: :request do
   end
 
   describe "GET /lectures" do
-    before { stub_typesense_search(empty_search_result) }
+    let(:collection_search) { instance_double(TypesenseSearch::CollectionSearchService, call: empty_search_result) }
+
+    before { allow(TypesenseSearch::CollectionSearchService).to receive(:new).and_return(collection_search) }
+
+    it "searches the lecture collection on the request's domain, 15 per page by default" do
+      get lectures_path
+
+      expect(TypesenseSearch::CollectionSearchService).to have_received(:new).with(
+        collection: "lecture", query: nil, domain_id: domain.id, scholars: nil, page: nil, per_page: 15
+      )
+    end
+
+    it "passes the query, scholar filter and paging params through" do
+      get lectures_path, params: { q: " tawhid ", scholars: [ "Scholar A" ], page: "3", per_page: "9" }
+
+      expect(TypesenseSearch::CollectionSearchService).to have_received(:new).with(
+        collection: "lecture", query: "tawhid", domain_id: domain.id, scholars: [ "Scholar A" ], page: "3", per_page: 9
+      )
+    end
 
     it "renders the search page" do
       get lectures_path
