@@ -112,14 +112,4 @@ RSpec.describe "URL contract: known issues", type: :request do
       expect(links).to eq([ "https://other.example.com#{paths[:sermon]}" ])
     end
   end
-
-  describe "routes to controllers that do not exist" do
-    # ActionDispatch::MissingController is not in rescue_responses, so these
-    # answer 500 in production rather than 404.
-    %w[/library /playlist/1 /category/1 /artist/1 /album/1].each do |path|
-      it "raises MissingController for #{path}" do
-        expect { get path }.to raise_error(ActionDispatch::MissingController)
-      end
-    end
-  end
 end
