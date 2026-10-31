@@ -29,10 +29,13 @@ RSpec.describe "Header scroll", type: :system, js: true do
             document.querySelector("main").appendChild(spacer);
           }
         JS
-        expanded = header_state(pw)
-        expect(pw.evaluate(<<~JS)).to eq(expanded["height"])
-          () => document.querySelector("[data-header-scroll-target=spacer]").offsetHeight
+        # The spacer follows the header through a ResizeObserver, so it catches up
+        # with the viewport change a frame later.
+        pw.wait_for_function(<<~JS)
+          () => document.querySelector("[data-header-scroll-target=spacer]").offsetHeight ===
+            document.querySelector("header").offsetHeight
         JS
+        expanded = header_state(pw)
 
         # Without compiled CSS the header never shrinks and the trap can't occur,
         # so make sure compacting really changes the header before testing it.
