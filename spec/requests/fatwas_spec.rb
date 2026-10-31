@@ -84,16 +84,14 @@ RSpec.describe "Fatwas", type: :request do
     context "when scholar does not exist" do
       it "redirects to fatwas index" do
         get fatwa_path("nonexistent-scholar", published_fatwa.to_param)
-        expect(response).to redirect_to(fatwas_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.fatwa_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.fatwa_not_found"), back_to: fatwas_path)
       end
     end
 
     context "when fatwa does not exist" do
       it "redirects to fatwas index" do
         get fatwa_path(scholar.slug, 99999)
-        expect(response).to redirect_to(fatwas_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.fatwa_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.fatwa_not_found"), back_to: fatwas_path)
       end
     end
   end
@@ -107,8 +105,7 @@ RSpec.describe "Fatwas", type: :request do
 
     it "redirects to fatwas index when not found" do
       get legacy_fatwa_path("nonexistent-slug")
-      expect(response).to redirect_to(fatwas_path)
-      expect(flash[:alert]).to eq(I18n.t("messages.fatwa_not_found"))
+      expect(response).to be_not_found_page(I18n.t("messages.fatwa_not_found"), back_to: fatwas_path)
     end
   end
 end

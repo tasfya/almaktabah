@@ -41,6 +41,16 @@ class ApplicationController < ActionController::Base
     render file: Rails.public_path.join("404.html"), status: :not_found, layout: false, content_type: "text/html"
   end
 
+  # A real 404 (not a redirect to the listing) so search engines drop the URL.
+  # Never cached: the record may be published later.
+  def render_record_not_found(message, back_path)
+    no_store
+    @not_found_message = message
+    @not_found_back_path = back_path
+    set_meta_tags(title: message)
+    render "shared/not_found", status: :not_found
+  end
+
   def setup_breadcrumbs
     cleanup_old_breadcrumbs(24) # Remove breadcrumbs older than 24 hours
     set_breadcrumb_limits(8) # Keep max 8 breadcrumbs

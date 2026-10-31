@@ -42,16 +42,14 @@ RSpec.describe "News", type: :request do
     context "when scholar does not exist" do
       it "redirects to news index" do
         get news_path("nonexistent-scholar", published_news.to_param)
-        expect(response).to redirect_to(news_index_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.news_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.news_not_found"), back_to: news_index_path)
       end
     end
 
     context "when news does not exist" do
       it "redirects to news index" do
         get news_path(published_news.scholar.slug, "nonexistent-slug")
-        expect(response).to redirect_to(news_index_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.news_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.news_not_found"), back_to: news_index_path)
       end
     end
   end
@@ -65,8 +63,7 @@ RSpec.describe "News", type: :request do
 
     it "redirects to news index when not found" do
       get legacy_news_path("nonexistent-slug")
-      expect(response).to redirect_to(news_index_path)
-      expect(flash[:alert]).to eq(I18n.t("messages.news_not_found"))
+      expect(response).to be_not_found_page(I18n.t("messages.news_not_found"), back_to: news_index_path)
     end
   end
 end

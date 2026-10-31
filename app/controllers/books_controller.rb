@@ -38,7 +38,7 @@ class BooksController < ApplicationController
     book = Book.for_domain_id(@domain.id).published.find(params[:id])
     redirect_to book_path(book.scholar.slug, book), status: :moved_permanently
   rescue ActiveRecord::RecordNotFound, NoMethodError
-    redirect_to books_path, alert: t("messages.book_not_found")
+    render_record_not_found(t("messages.book_not_found"), books_path)
   end
 
   private
@@ -63,6 +63,6 @@ class BooksController < ApplicationController
       redirect_to book_path(@scholar, @book), status: :moved_permanently
     end
   rescue ActiveRecord::RecordNotFound
-    redirect_to books_path, alert: t("messages.book_not_found")
+    render_record_not_found(t("messages.book_not_found"), books_path)
   end
 end

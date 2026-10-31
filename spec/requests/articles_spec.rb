@@ -44,8 +44,7 @@ RSpec.describe "Articles", type: :request do
     context "when article is not found" do
       it "redirects to articles index" do
         get article_path(scholar.id, 999999)
-        expect(response).to redirect_to(articles_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.article_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.article_not_found"), back_to: articles_path)
       end
     end
   end

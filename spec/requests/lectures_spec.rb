@@ -119,14 +119,12 @@ RSpec.describe "Lectures", type: :request do
     context "when lecture is unpublished or not found" do
       it "redirects and shows alert for unpublished lecture" do
         get lecture_path(scholar.id, unpublished_lecture.id, kind: unpublished_lecture.kind_for_url)
-        expect(response).to redirect_to(lectures_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.lecture_not_found"), back_to: lectures_path)
       end
 
       it "redirects and shows alert for missing lecture" do
         get lecture_path(scholar.id, 999999, kind: I18n.t("activerecord.attributes.lecture.kind.sermon"))
-        expect(response).to redirect_to(lectures_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.lecture_not_found"), back_to: lectures_path)
       end
     end
   end
@@ -140,8 +138,7 @@ RSpec.describe "Lectures", type: :request do
 
     it "redirects to lectures index when not found" do
       get "/lectures/999999"
-      expect(response).to redirect_to(lectures_path)
-      expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
+      expect(response).to be_not_found_page(I18n.t("messages.lecture_not_found"), back_to: lectures_path)
     end
   end
 end

@@ -75,6 +75,28 @@ RSpec::Matchers.define :have_sitemap_locs do |*expected|
   failure_message { "expected sitemap <loc>s to include #{expected.inspect}, got #{@locs.inspect}" }
 end
 
+# Passes for the not-found page of a missing record: status 404, the message
+# in the page, a link back to the listing, and a response no cache may keep
+# (the record may be published later).
+#
+#   expect(response).to be_not_found_page(I18n.t("messages.book_not_found"), back_to: books_path)
+RSpec::Matchers.define :be_not_found_page do |message, back_to:|
+  match do |response|
+    page = MarkupHelpers.parse_html(response)
+    @status = response.status
+    @cache_control = response.headers["Cache-Control"]
+    @message_found = page.at_css("main")&.text.to_s.include?(message)
+    @back_found = page.css("main a").any? { |a| CGI.unescape(a["href"].to_s) == CGI.unescape(back_to) }
+    @status == 404 && @message_found && @back_found && @cache_control.to_s.include?("no-store")
+  end
+
+  failure_message do
+    "expected a 404 not-found page with #{message.inspect} and a link to #{back_to}, " \
+      "got status #{@status}, message #{@message_found ? "present" : "missing"}, " \
+      "link #{@back_found ? "present" : "missing"}, Cache-Control #{@cache_control.inspect}"
+  end
+end
+
 RSpec.configure do |config|
   config.include MarkupHelpers, type: :request
 end

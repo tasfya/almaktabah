@@ -36,7 +36,7 @@ class NewsController < ApplicationController
                .find(params[:id])
     redirect_to news_path(news.scholar, news), status: :moved_permanently
   rescue ActiveRecord::RecordNotFound
-    redirect_to news_index_path, alert: t("messages.news_not_found")
+    render_record_not_found(t("messages.news_not_found"), news_index_path)
   end
 
   private
@@ -52,7 +52,7 @@ class NewsController < ApplicationController
       redirect_to news_path(@scholar, @news), status: :moved_permanently
     end
   rescue ActiveRecord::RecordNotFound
-    redirect_to news_index_path, alert: t("messages.news_not_found")
+    render_record_not_found(t("messages.news_not_found"), news_index_path)
   end
 
   def setup_news_breadcrumbs

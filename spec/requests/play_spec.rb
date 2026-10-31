@@ -33,14 +33,12 @@ RSpec.describe "Play", type: :request do
 
       it "redirects to root_path when lesson is not published" do
         get play_path("lesson", unpublished_lesson.id)
-        expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.lesson_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.lesson_not_found"), back_to: root_path)
       end
 
       it "redirects to root_path when lesson not found" do
         get play_path("lesson", 99999)
-        expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.lesson_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.lesson_not_found"), back_to: root_path)
       end
     end
 
@@ -61,22 +59,19 @@ RSpec.describe "Play", type: :request do
 
       it "redirects to root_path when lecture is not published" do
         get play_path("lecture", unpublished_lecture.id)
-        expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.lecture_not_found"), back_to: root_path)
       end
 
       it "redirects to root_path when lecture not found" do
         get play_path("lecture", 99999)
-        expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.lecture_not_found"))
+        expect(response).to be_not_found_page(I18n.t("messages.lecture_not_found"), back_to: root_path)
       end
     end
 
     context "with invalid resource type" do
       it "redirects to root_path with invalid resource alert" do
         get play_path("invalid_type", 1)
-        expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq(I18n.t("messages.invalid_resource"))
+        expect(response).to be_not_found_page(I18n.t("messages.invalid_resource"), back_to: root_path)
       end
     end
   end

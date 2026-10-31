@@ -12,42 +12,6 @@ RSpec.describe "URL contract: known issues", type: :request do
   u = UrlContract
   paths = UrlContract::SHOW_PATHS
 
-  describe "missing or unpublished records answer 302 to the index (#613)" do
-    {
-      "/#{u::SCHOLAR_SLUG}/#{u::BOOKS}/missing" => "/#{u::BOOKS}",
-      "/#{u::SCHOLAR_SLUG}/#{u::ARTICLES}/missing" => "/#{u::ARTICLES}",
-      "/#{u::SCHOLAR_SLUG}/#{u::SERIES}/missing" => "/#{u::SERIES}",
-      "/#{u::SCHOLAR_SLUG}/#{u::SERIES}/#{u::SERIES_SLUG}/#{u::LESSONS}/999999" => "/#{u::SERIES}",
-      "/#{u::SCHOLAR_SLUG}/#{u::NEWS}/missing" => "/#{u::NEWS}",
-      "/#{u::SCHOLAR_SLUG}/#{u::FATWAS}/missing" => "/#{u::FATWAS}",
-      "/#{u::SCHOLAR_SLUG}/#{u::LECTURES}/#{u::KIND_SERMON}/missing" => "/#{u::LECTURES}",
-      "/missing-scholar/#{u::BOOKS}/#{u::BOOK_SLUG}" => "/#{u::BOOKS}"
-    }.each do |from, to|
-      it "#{from} → 302 #{to}" do
-        get from
-        expect(response).to have_http_status(:found)
-        expect(response.location).to eq(absolute(to))
-      end
-    end
-
-    {
-      book: "/#{u::BOOKS}",
-      article: "/#{u::ARTICLES}",
-      series: "/#{u::SERIES}",
-      lesson: "/#{u::SERIES}",
-      news: "/#{u::NEWS}",
-      fatwa: "/#{u::FATWAS}",
-      sermon: "/#{u::LECTURES}"
-    }.each do |type, to|
-      it "redirects an unpublished #{type} with 302 to #{to}" do
-        public_send(type).update!(published: false)
-        get paths[type]
-        expect(response).to have_http_status(:found)
-        expect(response.location).to eq(absolute(to))
-      end
-    end
-  end
-
   describe "sitemap <loc> host vs canonical host (#614)" do
     # The sitemap builds every <loc> on request.host, while the show page's
     # canonical points at the scholar's default domain. When they differ, the
