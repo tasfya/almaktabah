@@ -51,15 +51,16 @@ jobs:
         uses: crazy-max/ghaction-github-runtime@v3
 
       # KAMAL
+      # Kamal comes from Gemfile.lock, so production is deployed with the same
+      # version developers run.
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.3.6
+          ruby-version: .ruby-version
+          bundler-cache: true
 
-      # todo make this dynamic
-      - name: Install Kamal dependencies
-        run: |
-          gem install kamal -v 2.5.3
+      - name: Show Kamal version
+        run: bin/kamal version
 
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd
         with:
@@ -68,17 +69,17 @@ jobs:
       - name: Kamal Deploy
         run: |
           echo "Deploying to production"
-          kamal deploy
+          bin/kamal deploy
 
-      # `kamal deploy` never boots accessories, and kamal 2.5.3's `accessory boot`
-      # fails if the container already exists. `docker start` is a no-op on a
+      # `kamal deploy` never boots accessories, and `accessory boot` skips an
+      # existing container without starting it. `docker start` is a no-op on a
       # running container and starts a stopped one; it fails only when the
       # container is missing, and then we boot it.
       - name: Start or boot Litestream
         run: |
           ssh -o StrictHostKeyChecking=accept-new root@188.245.209.159 \
             docker start almaktabah-litestream >/dev/null 2>&1 \
-            || kamal accessory boot litestream
+            || bin/kamal accessory boot litestream
 
   deploy-staging:
     # Gate: only deploy if the CI run that triggered us actually succeeded.
@@ -111,22 +112,23 @@ jobs:
         uses: crazy-max/ghaction-github-runtime@v3
 
       # KAMAL
+      # Kamal comes from Gemfile.lock, so production is deployed with the same
+      # version developers run.
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.3.6
+          ruby-version: .ruby-version
+          bundler-cache: true
 
-      # todo make this dynamic
-      - name: Install Kamal dependencies
-        run: |
-          gem install kamal -v 2.5.3
+      - name: Show Kamal version
+        run: bin/kamal version
 
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # `kamal deploy` never boots accessories, and kamal 2.5.3's `accessory boot`
-      # fails if the container already exists. `docker start` is a no-op on a
+      # `kamal deploy` never boots accessories, and `accessory boot` skips an
+      # existing container without starting it. `docker start` is a no-op on a
       # running container and starts a stopped one; it fails only when the
       # container is missing, and then we boot it. The app's first boot seeds
       # and reindexes into it.
@@ -134,9 +136,9 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=accept-new root@188.245.209.159 \
             docker start almaktabah_staging-typesense >/dev/null 2>&1 \
-            || kamal accessory boot typesense -c kamal_config/deploy.staging.yml
+            || bin/kamal accessory boot typesense -c kamal_config/deploy.staging.yml
 
       - name: Kamal Deploy
         run: |
           echo "Deploying to staging"
-          kamal deploy -c kamal_config/deploy.staging.yml
+          bin/kamal deploy -c kamal_config/deploy.staging.yml
