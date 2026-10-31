@@ -197,19 +197,6 @@ RSpec.describe Lecture, type: :model do
         expect(l.format_timestamp(3665)).to eq('1:01:05')
       end
     end
-
-    describe '#generate_optimize_audio_bucket_key' do
-      let(:scholar) { create(:scholar, first_name: 'محمد', last_name: 'العثيمين') }
-      let(:lecture) { create(:lecture, title: 'محاضرة في الفقه', scholar: scholar) }
-
-      before do
-        lecture.audio.attach(
-          io: StringIO.new("audio content"),
-          filename: "test.mp3",
-          content_type: "audio/mpeg"
-        )
-      end
-    end
   end
 
   describe 'domain assignment' do

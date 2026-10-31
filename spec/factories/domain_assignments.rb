@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :domain_assignment do
-    assignable { nil }
-    domain { nil }
+    assignable { association(:book) }
+    domain
   end
 end

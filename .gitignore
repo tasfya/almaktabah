@@ -69,3 +69,5 @@ opencode.json
 /docs/superpowers/
 /.worktrees/
 /.dev.local
+
+/spec/examples.txt

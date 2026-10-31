@@ -134,12 +134,6 @@ RSpec.describe Domain, type: :model do
           expect(domain.should_auto_generate_favicons?).to be false
         end
       end
-
-      context 'when no logo and no custom favicons' do
-        it 'returns false' do
-          expect(domain.should_auto_generate_favicons?).to be false
-        end
-      end
     end
   end
 end
