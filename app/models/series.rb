@@ -38,9 +38,6 @@ class Series < ApplicationRecord
         attribute :domain_ids do
             domain_assignments.pluck(:domain_id)
         end
-        attribute :published_at_ts do
-            published_at&.to_i
-        end
         attribute :created_at_ts do
             created_at&.to_i
         end
@@ -60,7 +57,6 @@ class Series < ApplicationRecord
             { "name" => "scholar_id", "type" => "int32", "facet" => true },
             { "name" => "media_type", "type" => "string", "facet" => true },
             { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
-            { "name" => "published_at_ts", "type" => "int64", "optional" => true },
             { "name" => "created_at_ts", "type" => "int64" },
             { "name" => "url", "type" => "string" }
         ]

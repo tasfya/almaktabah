@@ -2,10 +2,9 @@
 
 module TypesenseSearch
   class FilterBuilder
-    def initialize(domain_id: nil, scholars: [], content_types: [])
+    def initialize(domain_id: nil, scholars: [])
       @domain_id = domain_id
       @scholars = Array(scholars).map(&:to_s).reject(&:blank?)
-      @content_types = Array(content_types).map(&:to_s).map(&:downcase).reject(&:blank?)
     end
 
     def build
@@ -16,7 +15,6 @@ module TypesenseSearch
     end
 
     # Returns filter without scholar constraint (for disjunctive faceting)
-    # Note: No content_types_filter because extra queries target specific collections
     def without_scholars
       filters = []
       filters << domain_filter if @domain_id.present?
@@ -24,13 +22,6 @@ module TypesenseSearch
     end
 
     private
-
-    def content_types_filter
-      return nil if @content_types.empty?
-
-      values = @content_types.map { |t| "`#{sanitize(t)}`" }.join(",")
-      "content_type:=[#{values}]"
-    end
 
     def domain_filter
       "domain_ids:=[#{@domain_id}]"

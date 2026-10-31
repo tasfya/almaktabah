@@ -43,9 +43,6 @@ class Book < ApplicationRecord
     end
 
     # Timestamp fields for sorting (named _ts to avoid overriding model attributes)
-    attribute :published_at_ts do
-      published_at&.to_i
-    end
     attribute :created_at_ts do
       created_at&.to_i
     end
@@ -68,7 +65,6 @@ class Book < ApplicationRecord
       { "name" => "scholar_id", "type" => "int32", "facet" => true },
       { "name" => "media_type", "type" => "string", "facet" => true },
       { "name" => "domain_ids", "type" => "int32[]", "facet" => true },
-      { "name" => "published_at_ts", "type" => "int64", "optional" => true },
       { "name" => "created_at_ts", "type" => "int64" },
       { "name" => "thumbnail_url", "type" => "string", "optional" => true },
       { "name" => "url", "type" => "string" }
