@@ -46,6 +46,9 @@ export default class extends Controller {
     // frame on restoration, so re-sync every filter checkbox to the URL here —
     // the URL is authoritative and always matches the restored results.
     this.syncCheckboxesToUrl();
+    // The same restored snapshot can also carry the mobile drawer open; its
+    // state is not part of the URL, so a (re)connected drawer starts closed.
+    if (this.hasCheckboxToggleTarget) this.checkboxToggleTarget.checked = false;
     this.setInitialSidebarState();
   }
 

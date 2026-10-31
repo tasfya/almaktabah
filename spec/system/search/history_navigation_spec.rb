@@ -237,8 +237,6 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
   end
 
   it "mobile drawer: applying a filter creates history, Back restores, and the drawer reopens" do
-    pending "Back restores the drawer open: Turbo's snapshot keeps #mobile-filter-drawer checked " \
-            "and syncCheckboxesToUrl only re-syncs the filter boxes. Hidden until CI compiled Tailwind."
     page.current_window.resize_to(390, 844)
     index_for_domain(
       create(:article, title: "Mobile Alpha", scholar: scholar_a),
@@ -262,6 +260,8 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
     settled_navigation { page.go_back }
     expect(page).to have_content("Mobile Beta")
     expect(query_params).not_to have_key("scholars")
+    # Turbo restores the snapshot cached while the drawer was open (#622).
+    expect(page).to have_no_css("#mobile-filter-drawer:checked", visible: :all)
 
     # Reopening the drawer proves the daisyUI toggle still works after the frame
     # navigation replaced its elements (the checkboxToggle-listener hazard).
