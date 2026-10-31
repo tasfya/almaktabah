@@ -106,6 +106,8 @@ class AudioDeduplicationService
   # Analyze a single audio file for internal duplication
   def analyze_file(file_path)
     movie = FFMPEG::Movie.new(file_path)
+    raise ProcessingError, "#{File.basename(file_path)} is not a readable audio file" unless movie.valid?
+
     duration = movie.duration
 
     return { is_duplicate: false, duration: duration, reason: "too_short" } if duration < min_duration
