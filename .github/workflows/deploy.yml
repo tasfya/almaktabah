@@ -24,6 +24,17 @@ jobs:
     env:
       DOCKER_BUILDKIT: 1
       RAILS_ENV: production
+      KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID }}
+      PUBLIC_AWS_S3_3ILM_ACCESS_KEY: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY }}
+      LITESTREAM_ACCESS_KEY_ID: ${{ secrets.LITESTREAM_ACCESS_KEY_ID }}
+      LITESTREAM_SECRET_ACCESS_KEY: ${{ secrets.LITESTREAM_SECRET_ACCESS_KEY }}
+      LITESTREAM_REPLICA_BUCKET: ${{ secrets.LITESTREAM_REPLICA_BUCKET }}
+      LITESTREAM_REPLICA_ENDPOINT: ${{ secrets.LITESTREAM_REPLICA_ENDPOINT }}
+      KAMAL_REGISTRY_USERNAME: mohamedrez
 
     environment: production
     steps:
@@ -58,16 +69,16 @@ jobs:
         run: |
           echo "Deploying to production"
           kamal deploy
-        env:
-          DOCKER_BUILDKIT: 1
-          RAILS_ENV: production
-          KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY }}
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID }}
-          PUBLIC_AWS_S3_3ILM_ACCESS_KEY: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY }}
-          KAMAL_REGISTRY_USERNAME: mohamedrez
+
+      # `kamal deploy` never boots accessories, and kamal 2.5.3's `accessory boot`
+      # fails if the container already exists. `docker start` is a no-op on a
+      # running container and starts a stopped one; it fails only when the
+      # container is missing, and then we boot it.
+      - name: Start or boot Litestream
+        run: |
+          ssh -o StrictHostKeyChecking=accept-new root@188.245.209.159 \
+            docker start almaktabah-litestream >/dev/null 2>&1 \
+            || kamal accessory boot litestream
 
   deploy-staging:
     # Gate: only deploy if the CI run that triggered us actually succeeded.
