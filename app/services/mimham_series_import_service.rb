@@ -177,11 +177,16 @@ class MimhamSeriesImportService
   def find_scholar(name)
     return @scholars_cache[name] if @scholars_cache.key?(name)
 
-    scholar = Scholar.find_by(name: name)
-    scholar ||= Scholar.where("name LIKE ?", "%#{name}%").first
+    scholar = lookup_scholar(name)
 
     @scholars_cache[name] = scholar
     scholar
+  end
+
+  def lookup_scholar(name)
+    Scholar.find_by(full_name: name) ||
+      Scholar.find_by(full_name_alias: name) ||
+      Scholar.where("full_name LIKE ?", "%#{Scholar.sanitize_sql_like(name)}%").first
   end
 
   def find_or_create_series(series_title, scholar_name)
@@ -191,7 +196,7 @@ class MimhamSeriesImportService
     scholar = find_scholar(scholar_name)
     unless scholar
       # Create new scholar if not found
-      scholar = Scholar.create(name: scholar_name)
+      scholar = Scholar.create(full_name: scholar_name)
       unless scholar.persisted?
         return nil
       end
