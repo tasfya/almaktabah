@@ -93,10 +93,9 @@ RSpec.describe AudioDeduplicationService do
       result = nil
 
       expect { result = service.analyze_folder(input) }.to output(/\[DUPLICATE\] doubled\.mp3/).to_stdout
-      expect(result).to include(total_files: 3, analyzed: 3, duplicates_found: 1)
+      expect(result).to include(total_files: 3, analyzed: 2, duplicates_found: 1)
       expect(result[:duplicate_files]).to contain_exactly(a_hash_including(path: File.join(input, "series", "doubled.mp3"), repeat_factor: 2))
-      # ffmpeg reads an unreadable file as zero-length, so it counts as too short, not as an error.
-      expect(result[:errors]).to be_empty
+      expect(result[:errors]).to contain_exactly(path: File.join(input, "broken.mp3"), error: a_string_matching(/not a readable audio file/))
       expect(duration(File.join(input, "series", "doubled.mp3"))).to be_within(1).of(116)
     end
 
@@ -104,10 +103,11 @@ RSpec.describe AudioDeduplicationService do
       result = nil
 
       expect { result = service.process_folder(input, output_dir) }.to output.to_stdout
-      expect(result).to include(total_files: 3, processed: 3, duplicates_found: 1)
+      expect(result).to include(total_files: 3, processed: 2, duplicates_found: 1)
+      expect(result[:errors]).to contain_exactly(a_hash_including(path: File.join(input, "broken.mp3")))
       expect(duration(File.join(output_dir, "series", "doubled.mp3"))).to be_within(1).of(58)
       expect(FileUtils.identical?(File.join(input, "clean.mp3"), File.join(output_dir, "clean.mp3"))).to be(true)
-      expect(File.read(File.join(output_dir, "broken.mp3"))).to eq("not audio")
+      expect(File.exist?(File.join(output_dir, "broken.mp3"))).to be(false)
     end
 
     it "raises for a missing folder" do

@@ -36,7 +36,7 @@ RSpec.describe LessonImportJob, type: :job do
     expect(lesson.series).to have_attributes(title: "شرح الأصول الثلاثة")
     expect(lesson.series.scholar).to have_attributes(full_name: "صالح الفوزان", published: true)
     expect(lesson.domains).to include(domain)
-    expect(lesson.audio.filename.to_s).to eq("1")
+    expect(lesson.audio.filename.to_s).to eq("1.mp3")
     expect(lesson.thumbnail).to be_attached
   end
 

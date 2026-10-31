@@ -365,6 +365,8 @@ class YoutubeDownloaderService
   def parse_format_list(output)
     formats = []
     output.split("\n").each do |line|
+      next if line.start_with?("ID ")
+
       if line.match(/^(\w+)\s+(\w+)\s+(\d+x\d+|\w+)\s+/)
         formats << {
           format_id: $1,

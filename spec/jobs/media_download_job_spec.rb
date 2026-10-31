@@ -6,15 +6,24 @@ RSpec.describe MediaDownloadJob, type: :job do
   let(:lecture) { create(:lecture, thumbnail: nil) }
   let(:url) { "https://cdn.example.com/media/cover.jpg" }
 
-  it "downloads the file and attaches it under the URL's basename" do
+  it "downloads the file and attaches it under the URL's file name" do
     stub_request(:get, url).to_return(status: 200, body: Rails.root.join("spec/files/thumbnail.jpg").binread)
 
     described_class.perform_now(lecture, :thumbnail, url, "image/jpeg")
 
     lecture.reload
-    expect(lecture.thumbnail.filename.to_s).to eq("cover")
+    expect(lecture.thumbnail.filename.to_s).to eq("cover.jpg")
     expect(lecture.thumbnail.content_type).to eq("image/jpeg")
     expect(lecture.thumbnail.download).to eq(Rails.root.join("spec/files/thumbnail.jpg").binread)
+  end
+
+  it "leaves the query string out of the file name" do
+    signed_url = "#{url}?sig=abc.def"
+    stub_request(:get, signed_url).to_return(status: 200, body: "jpeg-bytes")
+
+    described_class.perform_now(lecture, :thumbnail, signed_url, "image/jpeg")
+
+    expect(lecture.reload.thumbnail.filename.to_s).to eq("cover.jpg")
   end
 
   it "follows redirects" do
