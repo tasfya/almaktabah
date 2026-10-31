@@ -4,16 +4,16 @@
 # disposable: there is no Litestream replica, and media is stored on the
 # staging volume instead of production's buckets. Deployed by its own job in
 # the same GitHub Actions workflow as production; production deploys only
-# after this job succeeds and its smoke check passes. Each job runs
-# `kamal deploy`, which builds and pushes its own image.
+# after this job succeeds and its smoke check passes. Neither job builds:
+# both deploy (`--skip-push`) the image the workflow's build job pushed.
 #
 # `kamal deploy` never boots accessories; the deploy-staging job runs
 # bin/reconcile-accessory, which reboots Typesense when its config changed.
 service: almaktabah_staging
 
-# Its own repository: both deploy jobs build the same commit concurrently, and
-# a shared <repo>:<sha> tag would let one job's push overwrite the other's
-# image (kamal refuses to boot an image labelled for another service).
+# Its own repository: kamal refuses to boot an image labelled for another
+# service, so the build job pushes a copy of the production image relabelled
+# `service=almaktabah_staging` here (same layers, see .github/workflows/deploy.yml).
 image: mohamedrez/almaktabah-staging
 
 servers:

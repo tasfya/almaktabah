@@ -4,6 +4,9 @@ name: Deployment
 env:
   DOCKER_BUILDKIT: 1
   COMPOSE_DOCKER_CLI_BUILD: 1
+  # Kamal's release version (image tag). Set explicitly so every job uses the
+  # commit CI tested, never a "_uncommitted" suffix.
+  VERSION: ${{ github.event.workflow_run.head_sha }}
 
 on:
   workflow_run:
@@ -14,6 +17,53 @@ on:
       - completed
 
 jobs:
+  # The app image is built once per commit. Kamal only boots an image whose
+  # `service` label matches the config, so staging gets a one-line image on top
+  # of the production one: the same layers, relabelled for its service.
+  build:
+    # Gate: only build if the CI run that triggered us actually succeeded.
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    env:
+      KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+      KAMAL_REGISTRY_USERNAME: mohamedrez
+    # Only for the registry password; nothing is deployed from this job.
+    environment: staging
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 1
+          submodules: false #TODO: enable this back when we need to deploy frontend
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Expose GitHub Runtime for cache
+        uses: crazy-max/ghaction-github-runtime@v3
+
+      # Kamal comes from Gemfile.lock, so production is deployed with the same
+      # version developers run.
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Show Kamal version
+        run: bin/kamal version
+
+      - name: Build and push the app image
+        run: bin/kamal build push
+
+      # Pinned by digest, so staging is built on exactly the image just pushed.
+      - name: Push the staging image
+        run: |
+          digest=$(docker buildx imagetools inspect "mohamedrez/almaktabah:$VERSION" --format '{{.Manifest.Digest}}')
+          printf 'FROM mohamedrez/almaktabah@%s\nLABEL service=almaktabah_staging\n' "$digest" \
+            | docker buildx build --platform linux/amd64 --push \
+                --tag "mohamedrez/almaktabah-staging:$VERSION" -
+
   deploy-production:
     # Production deploys only once the same commit is up on staging.
     needs: deploy-staging
@@ -22,7 +72,6 @@ jobs:
       group: deploy-production
       cancel-in-progress: false
     env:
-      DOCKER_BUILDKIT: 1
       RAILS_ENV: production
       KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
       RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
@@ -44,15 +93,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 1
           submodules: false #TODO: enable this back when we need to deploy frontend
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
 
-      - name: Expose GitHub Runtime for cache
-        uses: crazy-max/ghaction-github-runtime@v3
-
-      # KAMAL
-      # Kamal comes from Gemfile.lock, so production is deployed with the same
-      # version developers run.
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -74,20 +115,18 @@ jobs:
       - name: Kamal Deploy
         run: |
           echo "Deploying to production"
-          bin/kamal deploy
+          bin/kamal deploy --skip-push
 
       - name: Reconcile Litestream
         run: bin/reconcile-accessory litestream
 
   deploy-staging:
-    # Gate: only deploy if the CI run that triggered us actually succeeded.
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: build
     runs-on: blacksmith-4vcpu-ubuntu-2404
     concurrency:
       group: deploy-staging
       cancel-in-progress: false
     env:
-      DOCKER_BUILDKIT: 1
       RAILS_ENV: production
       KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
       RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
@@ -103,15 +142,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 1
           submodules: false #TODO: enable this back when we need to deploy frontend
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
 
-      - name: Expose GitHub Runtime for cache
-        uses: crazy-max/ghaction-github-runtime@v3
-
-      # KAMAL
-      # Kamal comes from Gemfile.lock, so production is deployed with the same
-      # version developers run.
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -133,7 +164,7 @@ jobs:
       - name: Kamal Deploy
         run: |
           echo "Deploying to staging"
-          bin/kamal deploy -c kamal_config/deploy.staging.yml
+          bin/kamal deploy --skip-push -c kamal_config/deploy.staging.yml
 
       - name: Smoke check staging
         run: |
