@@ -7,6 +7,7 @@ Capybara.javascript_driver = :playwright
 Capybara.register_driver(:playwright) do |app|
   Capybara::Playwright::Driver.new(app,
     browser_type: :chromium,
+    playwright_cli_executable_path: "npx --yes playwright@#{Playwright::COMPATIBLE_PLAYWRIGHT_VERSION}",
     headless: ENV.fetch("HEADLESS", "true") == "true"
   )
 end
