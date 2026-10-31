@@ -110,4 +110,23 @@ RSpec.describe "Podcast Feeds", type: :request do
       expect(response.body).to match(/<pubDate>.*2024.*<\/pubDate>/)
     end
   end
+
+  describe "published episodes without a published_at" do
+    before do
+      # Publishable fills published_at on save, so bypass callbacks the way
+      # imports or raw SQL updates would.
+      lesson.update_column(:published_at, nil)
+      lecture.update_column(:published_at, nil)
+      get '/podcasts/feed', headers: @headers
+    end
+
+    it "still renders the feed" do
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "leaves them out of the feed" do
+      expect(response.body).not_to include('Test Lesson')
+      expect(response.body).not_to include('Test Lecture')
+    end
+  end
 end
