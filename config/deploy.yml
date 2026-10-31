@@ -126,7 +126,8 @@ accessories:
   litestream:
     image: litestream/litestream:0.5.17
     host: 188.245.209.159
-    cmd: litestream replicate --config=/etc/litestream.yml
+    # The image entrypoint is already `litestream`.
+    cmd: replicate --config=/etc/litestream.yml
     env:
       secret:
         - LITESTREAM_ACCESS_KEY_ID
