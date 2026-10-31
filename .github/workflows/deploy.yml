@@ -15,8 +15,8 @@ on:
 
 jobs:
   deploy-production:
-    # Gate: only deploy if the CI run that triggered us actually succeeded.
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # Production deploys only once the same commit is up on staging.
+    needs: deploy-staging
     runs-on: blacksmith-4vcpu-ubuntu-2404
     concurrency:
       group: deploy-production
@@ -134,3 +134,10 @@ jobs:
         run: |
           echo "Deploying to staging"
           bin/kamal deploy -c kamal_config/deploy.staging.yml
+
+      - name: Smoke check staging
+        run: |
+          curl --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 5 \
+            https://staging.3ilm.org/up > /dev/null
+          curl --fail --silent --show-error https://staging.3ilm.org/ \
+            | grep --quiet 'data-theme="staging.3ilm.org"'
