@@ -15,7 +15,11 @@ class ApplicationController < ActionController::Base
   # Cache for Cloudflare edge and browser
   # Show pages: 1 week (content rarely changes)
   # Index pages: 1 day (may have new items)
+  # Skipped when caching is off (development, unless `rails dev:cache`), so the
+  # browser doesn't keep showing a stale page after a template edit.
   def cache_page(duration: 1.week)
+    return unless perform_caching
+
     expires_in duration, public: true, stale_while_revalidate: 1.hour
   end
 
