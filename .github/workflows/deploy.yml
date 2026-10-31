@@ -66,20 +66,18 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      # `kamal deploy` never boots or reboots accessories; bin/reconcile-accessory
+      # reboots one when its config changed and starts it otherwise.
+      - name: Reconcile Typesense
+        run: bin/reconcile-accessory typesense
+
       - name: Kamal Deploy
         run: |
           echo "Deploying to production"
           bin/kamal deploy
 
-      # `kamal deploy` never boots accessories, and `accessory boot` skips an
-      # existing container without starting it. `docker start` is a no-op on a
-      # running container and starts a stopped one; it fails only when the
-      # container is missing, and then we boot it.
-      - name: Start or boot Litestream
-        run: |
-          ssh -o StrictHostKeyChecking=accept-new root@188.245.209.159 \
-            docker start almaktabah-litestream >/dev/null 2>&1 \
-            || bin/kamal accessory boot litestream
+      - name: Reconcile Litestream
+        run: bin/reconcile-accessory litestream
 
   deploy-staging:
     # Gate: only deploy if the CI run that triggered us actually succeeded.
@@ -127,16 +125,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # `kamal deploy` never boots accessories, and `accessory boot` skips an
-      # existing container without starting it. `docker start` is a no-op on a
-      # running container and starts a stopped one; it fails only when the
-      # container is missing, and then we boot it. The app's first boot seeds
-      # and reindexes into it.
-      - name: Start or boot Typesense
-        run: |
-          ssh -o StrictHostKeyChecking=accept-new root@188.245.209.159 \
-            docker start almaktabah_staging-typesense >/dev/null 2>&1 \
-            || bin/kamal accessory boot typesense -c kamal_config/deploy.staging.yml
+      # The app's first boot seeds and reindexes into Typesense, so it has to be
+      # up before the deploy.
+      - name: Reconcile Typesense
+        run: bin/reconcile-accessory typesense kamal_config/deploy.staging.yml
 
       - name: Kamal Deploy
         run: |
