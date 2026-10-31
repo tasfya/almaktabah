@@ -10,6 +10,8 @@ require_relative "fixed_content"
 RSpec.describe "URL contract: crawler documents", type: :request do
   include_context "with fixed url contract content"
 
+  paths = UrlContract::SHOW_PATHS
+
   # Records share one frozen updated_at, so their database order is not
   # defined; compare the <url> entries sorted by their text.
   def sorted_urlset(xml)
@@ -18,6 +20,58 @@ RSpec.describe "URL contract: crawler documents", type: :request do
     entries.each(&:unlink)
     entries.each { |entry| doc.root.add_child(entry) }
     doc.to_xml(indent: 2)
+  end
+
+  describe "sitemaps list only records whose canonical is on the serving domain (#614)" do
+    def sitemap_on(host, type)
+      host!(host)
+      get "/sitemaps/#{type}.xml"
+      sitemap_locs
+    end
+
+    def canonical_on(host, path)
+      host!(host)
+      get path
+      MarkupHelpers.parse_html(response).at_css('link[rel="canonical"]')&.[]("href")
+    end
+
+    before { book.domains << other_domain }
+
+    it "lists a record only on its scholar's default domain, where the page's canonical agrees" do
+      scholar.update!(default_domain: other_domain)
+
+      expect(sitemap_on(tenant_host, :books)).to be_empty
+      expect(sitemap_on("other.example.com", :books)).to eq([ absolute(paths[:book], host: "other.example.com") ])
+      expect(canonical_on(tenant_host, paths[:book])).to eq(absolute(paths[:book], host: "other.example.com"))
+    end
+
+    it "lists a record of a scholar without default domain only on the ilm domain" do
+      other_domain.update!(name: Domain::ILM_NAME)
+      Rails.cache.delete("ilm_domain")
+
+      expect(sitemap_on(tenant_host, :books)).to be_empty
+      expect(sitemap_on("other.example.com", :books)).to eq([ absolute(paths[:book], host: "other.example.com") ])
+      expect(canonical_on(tenant_host, paths[:book])).to eq(absolute(paths[:book], host: "other.example.com"))
+    end
+
+    it "lists the lessons of a series by their scholar's default domain" do
+      lesson.domains << other_domain
+      scholar.update!(default_domain: other_domain)
+
+      expect(sitemap_on(tenant_host, :lessons)).to be_empty
+      expect(sitemap_on("other.example.com", :lessons)).to eq([ absolute(paths[:lesson], host: "other.example.com") ])
+    end
+
+    it "lists every record on every domain when there is no ilm domain and no default domain" do
+      expect(sitemap_on(tenant_host, :books)).to eq([ absolute(paths[:book]) ])
+      expect(canonical_on(tenant_host, paths[:book])).to eq(absolute(paths[:book]))
+    end
+
+    it "keeps the listing page in the listings sitemap" do
+      scholar.update!(default_domain: other_domain)
+
+      expect(sitemap_on(tenant_host, :listings)).to include(absolute("/#{UrlContract::BOOKS}"))
+    end
   end
 
   describe "sitemaps" do

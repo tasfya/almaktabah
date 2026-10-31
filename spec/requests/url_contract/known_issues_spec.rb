@@ -12,32 +12,6 @@ RSpec.describe "URL contract: known issues", type: :request do
   u = UrlContract
   paths = UrlContract::SHOW_PATHS
 
-  describe "sitemap <loc> host vs canonical host (#614)" do
-    # The sitemap builds every <loc> on request.host, while the show page's
-    # canonical points at the scholar's default domain. When they differ, the
-    # sitemap lists URLs whose canonical is on another host.
-    before { scholar.update!(default_domain: other_domain) }
-
-    it "lists the book on the requesting host" do
-      get "/sitemaps/books.xml"
-      expect(sitemap_locs).to eq([ absolute(paths[:book]) ])
-    end
-
-    it "gives the same book a canonical on the scholar's default domain" do
-      get paths[:book]
-      expect(response).to have_canonical(absolute(paths[:book], host: "other.example.com"))
-      expect(response).to have_meta_tag("og:url", absolute(paths[:book], host: "other.example.com"))
-    end
-
-    it "agrees when the scholar has no default domain" do
-      scholar.update!(default_domain: nil)
-      get "/sitemaps/books.xml"
-      sitemap = sitemap_locs
-      get paths[:book]
-      expect(response).to have_canonical(sitemap.first)
-    end
-  end
-
   describe "podcast episode <link> host (#615)" do
     # Lecture#podcast_episode_url / Lesson#podcast_episode_url use the
     # record's first domain assignment, not the domain serving the feed.

@@ -74,19 +74,35 @@ class SitemapService
   end
 
   def base_scope_for(type)
-    config = CONTENT_TYPES[type.to_sym]
-    model = config[:model]
-    includes = config[:includes]
+    canonical_here(published_scope_for(type), type)
+      .includes(CONTENT_TYPES[type.to_sym][:includes])
+      .order(updated_at: :desc)
+  end
 
-    scope = model.published
-    scope = scope.for_domain_id(@domain.id) if config[:domain_scoped]
-    scope = scope.includes(includes) if includes.present?
-    scope.order(updated_at: :desc)
+  def published_scope_for(type)
+    config = CONTENT_TYPES[type.to_sym]
+    scope = config[:model].published
+    config[:domain_scoped] ? scope.for_domain_id(@domain.id) : scope
+  end
+
+  # Keeps the records whose canonical URL is on this domain, mirroring
+  # ApplicationController#canonical_domain_for: the scholar's default domain,
+  # else the ilm domain, else the requesting domain.
+  def canonical_here(scope, type)
+    scholars = Scholar.arel_table
+    here = scholars[:id].eq(nil).or(scholars[:default_domain_id].eq(@domain.id))
+    here = here.or(scholars[:default_domain_id].eq(nil)) if fallback_canonical_here?
+    scope.left_joins(type.to_sym == :lessons ? { series: :scholar } : :scholar).where(here)
+  end
+
+  def fallback_canonical_here?
+    ilm = Domain.find_by(name: Domain::ILM_NAME)
+    ilm.nil? || ilm.id == @domain.id
   end
 
   def listing_urls
     SitemapsHelper::LISTING_LOCS.filter_map do |type|
-      { loc: type } if base_scope_for(type).exists?
+      { loc: type } if published_scope_for(type).exists?
     end
   end
 
