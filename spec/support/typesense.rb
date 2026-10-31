@@ -35,14 +35,6 @@ module TypesenseTestHelpers
     )
   end
 
-  # Stub all Typesense services to return mock results
-  def stub_typesense_search(result = nil, &block)
-    result ||= block ? block.call : build_search_result
-    allow_any_instance_of(TypesenseSearch::HomeBrowseService).to receive(:call).and_return(result)
-    allow_any_instance_of(TypesenseSearch::MixedSearchService).to receive(:call).and_return(result)
-    allow_any_instance_of(TypesenseSearch::CollectionSearchService).to receive(:call).and_return(result)
-  end
-
   # Build a mock mixed SearchResult for union search mode
   def build_mixed_search_result(hits:, facets: nil, total: nil, page: 1, per_page: 20)
     facets ||= default_facets
