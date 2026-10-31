@@ -7,9 +7,8 @@
 # not a promoted artifact — each job runs `kamal deploy`, which builds and
 # pushes its own image.
 #
-# `kamal deploy` never boots accessories; the deploy-staging job boots
-# Typesense when its container is missing. After changing the accessory's
-# config, run `kamal accessory reboot typesense -c kamal_config/deploy.staging.yml`.
+# `kamal deploy` never boots accessories; the deploy-staging job runs
+# bin/reconcile-accessory, which reboots Typesense when its config changed.
 service: almaktabah_staging
 
 # Its own repository: both deploy jobs build the same commit concurrently, and

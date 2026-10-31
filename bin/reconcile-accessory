@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Usage: bin/reconcile-accessory NAME [CONFIG_FILE]
+#
+# `kamal deploy` never boots or reboots accessories, so the deploy job calls
+# this to bring an accessory in line with its config:
+# - container missing, or config changed since the last reconcile: reboot it;
+# - otherwise: start it (a no-op when it is already running).
+# The applied digest (bin/accessory-digest) is recorded on the host. An existing
+# container with no recorded digest is adopted as-is: its digest is recorded
+# without a reboot, and started if it is stopped.
+set -euo pipefail
+
+name=$1
+config=${2:-config/deploy.yml}
+
+read -r target service digest < <(bin/accessory-digest "$name" "$config")
+state=".kamal/accessory-digests/$service"
+
+remote() { ssh -o StrictHostKeyChecking=accept-new "$target" "$@"; }
+record() { remote "mkdir -p .kamal/accessory-digests && echo $digest > $state"; }
+
+recorded=$(remote "cat $state 2>/dev/null || true")
+container=$(remote "docker ps -aq --filter name=^$service\$")
+
+if [ -n "$container" ] && [ -z "$recorded" ]; then
+  echo "$service: no recorded config digest, adopting the existing container"
+  record
+  bin/kamal accessory start "$name" -c "$config"
+elif [ -z "$container" ] || [ "$recorded" != "$digest" ]; then
+  echo "$service: config changed or container missing, rebooting"
+  bin/kamal accessory reboot "$name" -c "$config"
+  # reboot ignores a failed stop, and boot then skips the existing container
+  # without an error, so check that a new container is running before
+  # recording the digest.
+  rebooted=$(remote "docker ps -q --no-trunc --filter name=^$service\$ --filter status=running")
+  if [ -z "$rebooted" ] || [[ "$rebooted" == "$container"* ]]; then
+    echo "$service: reboot did not replace the container" >&2
+    exit 1
+  fi
+  record
+else
+  echo "$service: config unchanged"
+  bin/kamal accessory start "$name" -c "$config"
+fi

@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+# Usage: bin/accessory-digest NAME [CONFIG_FILE]
+#
+# Prints "<user>@<host> <container name> <digest>" for a Kamal accessory. The
+# digest covers everything `kamal accessory boot` would apply: the exact
+# `docker run` command, the env file it uploads (secret values included) and
+# the contents of the files it mounts (not their mode or owner).
+# bin/reconcile-accessory compares it with the digest recorded on the host to
+# decide whether to reboot the accessory.
+require "bundler/setup"
+require "kamal"
+require "digest"
+
+name, config_file = ARGV
+abort "Usage: bin/accessory-digest NAME [CONFIG_FILE]" unless name
+
+KAMAL.configure(config_file: Pathname.new(File.expand_path(config_file || "config/deploy.yml")), destination: nil, version: "digest")
+accessory = KAMAL.accessory(name)
+host = accessory.hosts.first
+
+parts = [ accessory.run(host: host).join(" "), accessory.secrets_io.read ]
+accessory.files.each_key do |local|
+  parts << (local.respond_to?(:read) ? local.read : File.read(local))
+end
+
+puts "#{KAMAL.config.ssh.user}@#{host} #{accessory.service_name} #{Digest::SHA256.hexdigest(parts.join("\0"))}"
