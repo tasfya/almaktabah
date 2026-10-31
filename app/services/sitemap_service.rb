@@ -82,7 +82,14 @@ class SitemapService
   def published_scope_for(type)
     config = CONTENT_TYPES[type.to_sym]
     scope = config[:model].published
-    config[:domain_scoped] ? scope.for_domain_id(@domain.id) : scope
+    scope = scope.for_domain_id(@domain.id) if config[:domain_scoped]
+    type.to_sym == :lessons ? scope.where(series_id: served_series_ids) : scope
+  end
+
+  # LessonsController finds the series through the same scopes before the
+  # lesson, so a lesson of any other series answers 404.
+  def served_series_ids
+    Series.published.for_domain_id(@domain.id).select(:id)
   end
 
   # Keeps the records whose canonical URL is on this domain, mirroring
