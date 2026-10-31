@@ -120,10 +120,8 @@ RSpec.describe YoutubeDownloaderService do
   end
 
   describe "#get_available_formats" do
-    # The table header matches the row pattern too, so it comes back as a format.
-    it "parses yt-dlp's format list" do
+    it "parses yt-dlp's format list, skipping the table header" do
       expect(service.get_available_formats).to eq([
-        { format_id: "ID", extension: "EXT", resolution: "RESOLUTION" },
         { format_id: "18", extension: "mp4", resolution: "640x360" },
         { format_id: "140", extension: "m4a", resolution: "audio" }
       ])
