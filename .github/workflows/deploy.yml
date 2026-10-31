@@ -59,7 +59,8 @@ jobs:
       # Pinned by digest, so staging is built on exactly the image just pushed.
       - name: Push the staging image
         run: |
-          digest=$(docker buildx imagetools inspect "mohamedrez/almaktabah:$VERSION" --format '{{.Manifest.Digest}}')
+          # A manifest's digest is the sha256 of its raw bytes.
+          digest=sha256:$(docker buildx imagetools inspect --raw "mohamedrez/almaktabah:$VERSION" | sha256sum | cut -d' ' -f1)
           printf 'FROM mohamedrez/almaktabah@%s\nLABEL service=almaktabah_staging\n' "$digest" \
             | docker buildx build --platform linux/amd64 --push \
                 --tag "mohamedrez/almaktabah-staging:$VERSION" -
