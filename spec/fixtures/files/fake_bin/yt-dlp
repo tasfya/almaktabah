@@ -1,0 +1,30 @@
+#!/bin/sh
+# Stand-in for yt-dlp in specs. Records its arguments to $FAKE_YTDLP_LOG and,
+# on a download, copies $FAKE_YTDLP_SOURCE to the --output template.
+[ -n "$FAKE_YTDLP_LOG" ] && printf '%s\n' "$@" > "$FAKE_YTDLP_LOG"
+
+case "$1" in
+  --list-formats)
+    printf "[info] Available formats for dQw4w9WgXcQ:\nID  EXT  RESOLUTION FPS | FILESIZE\n--------------------------------\n18  mp4  640x360    25  | 5.00MiB\n140 m4a  audio only     | 1.00MiB\n"
+    exit "${FAKE_YTDLP_EXIT:-0}" ;;
+esac
+
+output=""
+url=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --output) output="$2"; shift ;;
+    --format|--merge-output-format) shift ;;
+    -*) ;;
+    *) url="$1" ;;
+  esac
+  shift
+done
+
+echo "[download]  50.0% of 1.00MiB at 2.00MiB/s ETA 00:01"
+echo "[download] 100% of 1.00MiB" >&2
+[ "${FAKE_YTDLP_EXIT:-0}" != "0" ] && exit "$FAKE_YTDLP_EXIT"
+
+id=$(printf '%s' "$url" | sed -n 's/.*v=\([A-Za-z0-9_-]\{11\}\).*/\1/p')
+target=$(printf '%s' "$output" | sed -e "s/%(title)s/Fake Title/" -e "s/%(id)s/$id/" -e "s/%(ext)s/mp4/")
+cp "$FAKE_YTDLP_SOURCE" "$target"
