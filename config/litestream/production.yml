@@ -9,6 +9,9 @@
 # `replicate` command.
 #
 # For more details, see: https://litestream.io/reference/config/
+# Only the primary database is replicated. Cache, queue and cable are rebuilt
+# by db:prepare and hold transient state, while the queue database churns
+# constantly and would dominate upload volume.
 dbs:
   - path: /rails/storage/production.sqlite3
     replicas:
@@ -16,29 +19,5 @@ dbs:
         bucket: $LITESTREAM_REPLICA_BUCKET
         endpoint: $LITESTREAM_REPLICA_ENDPOINT
         path: storage/production.sqlite3
-        access-key-id: $LITESTREAM_ACCESS_KEY_ID
-        secret-access-key: $LITESTREAM_SECRET_ACCESS_KEY
-  - path: /rails/storage/production_cache.sqlite3
-    replicas:
-      - type: s3
-        bucket: $LITESTREAM_REPLICA_BUCKET
-        endpoint: $LITESTREAM_REPLICA_ENDPOINT
-        path: storage/production_cache.sqlite3
-        access-key-id: $LITESTREAM_ACCESS_KEY_ID
-        secret-access-key: $LITESTREAM_SECRET_ACCESS_KEY
-  - path: /rails/storage/production_queue.sqlite3
-    replicas:
-      - type: s3
-        bucket: $LITESTREAM_REPLICA_BUCKET
-        endpoint: $LITESTREAM_REPLICA_ENDPOINT
-        path: storage/production_queue.sqlite3
-        access-key-id: $LITESTREAM_ACCESS_KEY_ID
-        secret-access-key: $LITESTREAM_SECRET_ACCESS_KEY
-  - path: /rails/storage/production_cable.sqlite3
-    replicas:
-      - type: s3
-        bucket: $LITESTREAM_REPLICA_BUCKET
-        endpoint: $LITESTREAM_REPLICA_ENDPOINT
-        path: storage/production_cable.sqlite3
         access-key-id: $LITESTREAM_ACCESS_KEY_ID
         secret-access-key: $LITESTREAM_SECRET_ACCESS_KEY

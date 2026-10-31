@@ -124,7 +124,7 @@ accessories:
     directories:
       - typesense_data:/data
   litestream:
-    image: litestream/litestream:sha-8fa09d7a6ea15c66309b7d799518ffbaa8d1ee69
+    image: litestream/litestream:0.5.17
     host: 188.245.209.159
     cmd: litestream replicate --config=/etc/litestream.yml
     env:
