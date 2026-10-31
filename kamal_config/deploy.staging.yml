@@ -88,5 +88,7 @@ accessories:
         TYPESENSE_DATA_DIR: /data
         TYPESENSE_ENABLE_CORS: "false"
         TYPESENSE_MEMORY_LIMIT: 1GB
+        # Log searches slower than 2s, to spot slow queries before production.
+        TYPESENSE_LOG_SLOW_REQUESTS_TIME_MS: "2000"
     directories:
       - typesense_staging_data:/data
