@@ -22,6 +22,30 @@ RSpec.describe "URL contract: crawler documents", type: :request do
     doc.to_xml(indent: 2)
   end
 
+  describe "the lessons sitemap lists only lessons the lesson page serves" do
+    # The lesson page loads the series through the domain and published scopes
+    # first, so a lesson whose series is unpublished or not on this domain
+    # answers 404 there even when the lesson itself is.
+    it "lists a lesson whose series is published and on this domain" do
+      get "/sitemaps/lessons.xml"
+      expect(sitemap_locs).to eq([ absolute(paths[:lesson]) ])
+    end
+
+    it "leaves out a lesson whose series is not assigned to this domain" do
+      series.update!(domains: [ other_domain ])
+      get "/sitemaps/lessons.xml"
+      expect(response).to have_http_status(:not_found)
+      get paths[:lesson]
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "leaves out a lesson whose series is unpublished" do
+      series.update!(published: false)
+      get "/sitemaps/lessons.xml"
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
   describe "sitemaps list only records whose canonical is on the serving domain (#614)" do
     def sitemap_on(host, type)
       host!(host)
@@ -55,7 +79,7 @@ RSpec.describe "URL contract: crawler documents", type: :request do
     end
 
     it "lists the lessons of a series by their scholar's default domain" do
-      lesson.domains << other_domain
+      [ lesson, series ].each { |record| record.domains << other_domain }
       scholar.update!(default_domain: other_domain)
 
       expect(sitemap_on(tenant_host, :lessons)).to be_empty
