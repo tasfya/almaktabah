@@ -15,6 +15,35 @@ RSpec.describe "Pages with missing media", type: :request do
     File.delete(ActiveStorage::Blob.service.path_for(attachment.blob.key))
   end
 
+  describe "book download" do
+    let(:book) { create(:book, scholar: scholar).tap { |b| b.update!(domains: [ domain ]) } }
+
+    it "offers the download when the PDF object exists" do
+      get book_path(scholar, book)
+
+      expect(html.at_css("article a[target='_blank'][href*='/rails/active_storage/']")).to be_present
+    end
+
+    it "replaces the download with the unavailable notice when its object is gone" do
+      delete_object(book.file)
+
+      get book_path(scholar, book)
+
+      expect(response).to have_http_status(:ok)
+      expect(html.at_css("article a[href*='/rails/active_storage/']")).to be_nil
+      expect(html.at_css("article").text).to include(I18n.t("common.media_unavailable"))
+    end
+
+    it "keeps the download when the storage service cannot be reached" do
+      allow(ActiveStorage::Blob.service).to receive(:exist?).and_raise(Errno::ECONNREFUSED)
+
+      get book_path(scholar, book)
+
+      expect(response).to have_http_status(:ok)
+      expect(html.at_css("article a[href*='/rails/active_storage/']")).to be_present
+    end
+  end
+
   describe "news show" do
     let(:news) { create(:news, scholar: scholar, published_at: 1.day.ago).tap { |n| n.update!(domains: [ domain ]) } }
 

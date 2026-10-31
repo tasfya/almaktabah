@@ -28,10 +28,12 @@
                 <%= @book.title %>
               </h1>
               <div class="flex flex-wrap items-center gap-4">
-                <% if @book.file.present? %>
+                <% if stored_file_available?(@book.file) %>
                   <%= link_to @book.file, target: "_blank", class: "btn btn-secondary btn-sm" do %>
                     <%= icon "arrow-down-tray", class: "size-4" %>
                   <% end %>
+                <% elsif @book.file.attached? %>
+                  <span class="text-sm text-base-content/60"><%= t("common.media_unavailable") %></span>
                 <% end %>
                 <button class="btn btn-secondary btn-sm"
                         data-controller="share-trigger"

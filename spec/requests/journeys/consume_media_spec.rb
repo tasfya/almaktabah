@@ -116,17 +116,12 @@ RSpec.describe "Journey: listen to, watch and download a record", type: :request
     expect_served(pdf_link["href"], "application/pdf")
   end
 
-  # Current behaviour, not the goal (#636): the page stays up, but its download
-  # button leads to a 404 because nothing checks that the object still exists.
-  it "keeps the book page up when its PDF object is gone" do
+  it "keeps the book page up without a dead download link when its PDF object is gone" do
     book = on_domain(create(:book, title: "Media Book", scholar: scholar))
     File.delete(ActiveStorage::Blob.service.path_for(book.file.blob.key))
 
     get book_path(scholar, book)
     expect(response).to have_http_status(:ok)
-    pdf_link = html.at_css("article a[target='_blank'][href*='/rails/active_storage/']")
-    expect(pdf_link).to be_present
-
-    expect(fetch(pdf_link["href"])).to have_http_status(:not_found)
+    expect(html.at_css("article a[href*='/rails/active_storage/']")).to be_nil
   end
 end
