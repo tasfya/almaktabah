@@ -10,7 +10,7 @@ require "rails_helper"
 # the URL updates asynchronously — we wait on `have_current_path` rather than reading
 # `current_url` synchronously.
 RSpec.describe "Filter pagination reset", :typesense, type: :system, js: true do
-  let!(:domain) { create(:domain, host: "www.example.com") }
+  let!(:domain) { create(:domain, host: "127.0.0.1") }
 
   before do
     scholar_a = create(:scholar, full_name: "Scholar A")

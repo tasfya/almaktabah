@@ -6,7 +6,7 @@ require "rails_helper"
 # browser drives the app in a separate process the stub never reaches, so it was
 # skipped in CI. Indexing real records instead lets it gate every CI run.
 RSpec.describe "Basic Search", :typesense, type: :system, js: true do
-  let!(:domain) { create(:domain, host: "www.example.com") }
+  let!(:domain) { create(:domain, host: "127.0.0.1") }
 
   it "displays search results" do
     scholar = create(:scholar, full_name: "Scholar Name")
