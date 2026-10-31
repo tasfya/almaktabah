@@ -23,6 +23,24 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
 
   def query_params = Rack::Utils.parse_nested_query(URI.parse(page.current_url).query.to_s)
 
+  # A frame "advance" navigation pushes the history entry and swaps the frame
+  # before Turbo runs the page-level visit that completes it, so the new results
+  # and URL are visible while that visit is still pending. Pressing Back in that
+  # window races the pending visit against the restoration, and the page can stay
+  # on the filtered results. Every step that moves through history therefore waits
+  # for its turbo:load. A step that lands on a fresh document (Forward does here)
+  # drops the flag along with the old window, which counts as settled too.
+  def settled_navigation
+    page.execute_script(<<~JS)
+      window.turboNavigationPending = true;
+      document.addEventListener("turbo:load", () => { window.turboNavigationPending = false }, { once: true });
+    JS
+    yield
+    page.document.synchronize do
+      raise Capybara::ExpectationNotMet, "Turbo navigation still pending" if page.evaluate_script("window.turboNavigationPending === true")
+    end
+  end
+
   it "home search: a scholar filter is undone by Back and redone by Forward" do
     index_for_domain(
       create(:article, title: "Test Alpha", scholar: scholar_a),
@@ -33,18 +51,18 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
     expect(page).to have_content("Test Alpha")
     expect(page).to have_content("Test Beta")
 
-    desktop_filters { check "Scholar A" }
+    settled_navigation { desktop_filters { check "Scholar A" } }
     expect(page).to have_content("Test Alpha")
     expect(page).to have_no_content("Test Beta")
     expect(query_params).to have_key("scholars")
     desktop_filters { expect(page).to have_checked_field("Scholar A") }
 
-    page.go_back
+    settled_navigation { page.go_back }
     expect(page).to have_content("Test Beta")
     expect(query_params).not_to have_key("scholars")
     desktop_filters { expect(page).to have_unchecked_field("Scholar A") }
 
-    page.go_forward
+    settled_navigation { page.go_forward }
     expect(page).to have_no_content("Test Beta")
     expect(query_params).to have_key("scholars")
     desktop_filters { expect(page).to have_checked_field("Scholar A") }
@@ -61,17 +79,17 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
     expect(page).to have_content("Test Piece")
     expect(page).to have_content("Test Volume")
 
-    desktop_filters { check book_label }
+    settled_navigation { desktop_filters { check book_label } }
     expect(page).to have_content("Test Volume")
     expect(page).to have_no_content("Test Piece")
     expect(query_params).to have_key("content_types")
 
-    page.go_back
+    settled_navigation { page.go_back }
     expect(page).to have_content("Test Piece")
     expect(query_params).not_to have_key("content_types")
     desktop_filters { expect(page).to have_unchecked_field(book_label) }
 
-    page.go_forward
+    settled_navigation { page.go_forward }
     expect(page).to have_no_content("Test Piece")
     expect(query_params).to have_key("content_types")
     desktop_filters { expect(page).to have_checked_field(book_label) }
@@ -87,17 +105,17 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
     expect(page).to have_content("Browse Alpha")
     expect(page).to have_content("Browse Beta")
 
-    desktop_filters { check "Scholar A" }
+    settled_navigation { desktop_filters { check "Scholar A" } }
     expect(page).to have_content("Browse Alpha")
     expect(page).to have_no_content("Browse Beta")
     expect(query_params).to have_key("scholars")
 
-    page.go_back
+    settled_navigation { page.go_back }
     expect(page).to have_content("Browse Beta")
     expect(query_params).not_to have_key("scholars")
     desktop_filters { expect(page).to have_unchecked_field("Scholar A") }
 
-    page.go_forward
+    settled_navigation { page.go_forward }
     expect(page).to have_no_content("Browse Beta")
     expect(query_params).to have_key("scholars")
     desktop_filters { expect(page).to have_checked_field("Scholar A") }
@@ -109,15 +127,15 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
     visit books_path(per_page: 2)
     expect(page).to have_css(".btn-active", text: "1")
 
-    within("nav.join") { click_link "2" }
+    settled_navigation { within("nav.join") { click_link "2" } }
     expect(page).to have_css(".btn-active", text: "2")
     expect(query_params["page"]).to eq("2")
 
-    page.go_back
+    settled_navigation { page.go_back }
     expect(page).to have_css(".btn-active", text: "1")
     expect(query_params).not_to have_key("page")
 
-    page.go_forward
+    settled_navigation { page.go_forward }
     expect(page).to have_css(".btn-active", text: "2")
     expect(query_params["page"]).to eq("2")
   end
@@ -129,22 +147,22 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
     visit root_path(q: "Test")
     expect(page).to have_content("Testsolo Marker")
 
-    desktop_filters { check "Scholar A" }
+    settled_navigation { desktop_filters { check "Scholar A" } }
     expect(page).to have_no_content("Testsolo Marker")
     expect(page).to have_css(".btn-active", text: "1")
 
-    within("nav.join") { click_link "2" }
+    settled_navigation { within("nav.join") { click_link "2" } }
     expect(page).to have_css(".btn-active", text: "2")
     expect(query_params["page"]).to eq("2")
     expect(query_params).to have_key("scholars")
 
-    page.go_back
+    settled_navigation { page.go_back }
     expect(page).to have_css(".btn-active", text: "1")
     expect(query_params).to have_key("scholars")
     expect(query_params).not_to have_key("page")
     desktop_filters { expect(page).to have_checked_field("Scholar A") }
 
-    page.go_back
+    settled_navigation { page.go_back }
     expect(page).to have_content("Testsolo Marker")
     expect(query_params).not_to have_key("scholars")
     desktop_filters { expect(page).to have_unchecked_field("Scholar A") }
@@ -163,17 +181,17 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
     expect(page).to have_content("Test Tome A")
     expect(page).to have_content("Test Doc B")
 
-    desktop_filters { check "Scholar A" }
+    settled_navigation { desktop_filters { check "Scholar A" } }
     expect(page).to have_no_content("Test Doc B")
     expect(page).to have_content("Test Tome A")
 
-    desktop_filters { check book_label }
+    settled_navigation { desktop_filters { check book_label } }
     expect(page).to have_no_content("Test Doc A")
     expect(page).to have_content("Test Tome A")
     expect(query_params).to have_key("scholars")
     expect(query_params).to have_key("content_types")
 
-    page.go_back
+    settled_navigation { page.go_back }
     expect(page).to have_content("Test Doc A")
     expect(query_params).to have_key("scholars")
     expect(query_params).not_to have_key("content_types")
@@ -182,12 +200,12 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
       expect(page).to have_unchecked_field(book_label)
     end
 
-    page.go_back
+    settled_navigation { page.go_back }
     expect(page).to have_content("Test Doc B")
     expect(query_params).not_to have_key("scholars")
     desktop_filters { expect(page).to have_unchecked_field("Scholar A") }
 
-    page.go_forward
+    settled_navigation { page.go_forward }
     expect(page).to have_no_content("Test Doc B")
     expect(query_params).to have_key("scholars")
   end
@@ -202,17 +220,17 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
     expect(page).to have_content("Book By Aye")
     expect(page).to have_content("Book By Bee")
 
-    desktop_filters { check "Scholar A" }
+    settled_navigation { desktop_filters { check "Scholar A" } }
     expect(page).to have_content("Book By Aye")
     expect(page).to have_no_content("Book By Bee")
     expect(query_params).to have_key("scholars")
 
-    page.go_back
+    settled_navigation { page.go_back }
     expect(page).to have_content("Book By Bee")
     expect(query_params).not_to have_key("scholars")
     desktop_filters { expect(page).to have_unchecked_field("Scholar A") }
 
-    page.go_forward
+    settled_navigation { page.go_forward }
     expect(page).to have_no_content("Book By Bee")
     expect(query_params).to have_key("scholars")
     desktop_filters { expect(page).to have_checked_field("Scholar A") }
@@ -232,14 +250,14 @@ RSpec.describe "Search history navigation (#385)", :typesense, type: :system, js
     find("[data-filter-sidebar-target='toggle']", match: :first).click
     within(:xpath, "//*[@id='search_filters_content_mobile']/ancestor::form[1]") do
       check "Scholar A"
-      click_button I18n.t("search.filters.apply")
+      settled_navigation { click_button I18n.t("search.filters.apply") }
     end
 
     expect(page).to have_content("Mobile Alpha")
     expect(page).to have_no_content("Mobile Beta")
     expect(query_params).to have_key("scholars")
 
-    page.go_back
+    settled_navigation { page.go_back }
     expect(page).to have_content("Mobile Beta")
     expect(query_params).not_to have_key("scholars")
 
