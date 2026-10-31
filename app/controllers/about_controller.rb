@@ -1,7 +1,7 @@
 class AboutController < ApplicationController
   before_action :setup_breadcrumbs, only: [ :index ]
   def index
-    expires_in 1.hour, public: true
+    expires_in 1.hour, public: true if perform_caching
   end
 
   private
