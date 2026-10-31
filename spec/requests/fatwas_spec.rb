@@ -2,64 +2,42 @@
 
 require "rails_helper"
 
-RSpec.describe FatwasController, type: :controller do
-  before(:each) do
-    Faker::UniqueGenerator.clear
-    request.host = "localhost"
-  end
-
+RSpec.describe "Fatwas", type: :request do
   let!(:domain) { create(:domain, host: "localhost") }
   let!(:scholar) { create(:scholar) }
   let(:published_fatwa) { create(:fatwa, published: true, published_at: 1.day.ago) }
 
-  describe "GET #index" do
-    before do
-      stub_typesense_search(empty_search_result)
+  before { host! "localhost" }
+
+  describe "GET /fatwas" do
+    before { stub_typesense_search(empty_search_result) }
+
+    it "renders the search page" do
+      get fatwas_path
+      expect(response).to have_http_status(:ok)
+      expect(search_page_rendered?).to be(true)
     end
 
-    it "returns a successful response" do
-      get :index
-      expect(response).to be_successful
-    end
-
-    it "renders search/index template" do
-      get :index
-      expect(response).to render_template("search/index")
-    end
-
-    it "sets up fatwas breadcrumbs" do
-      expect(controller).to receive(:breadcrumb_for).with(
-        I18n.t("breadcrumbs.fatwas"),
-        fatwas_path
-      )
-
-      get :index
+    it "shows the fatwas breadcrumb" do
+      get fatwas_path
+      expect(breadcrumb_trail).to eq([ [ I18n.t("breadcrumbs.fatwas"), nil ] ])
     end
   end
 
-  describe "GET #show" do
+  describe "GET /:scholar_id/fatwas/:id" do
     context "when fatwa exists" do
-      it "returns a successful response" do
-        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.to_param }
-        expect(response).to be_successful
+      it "shows the fatwa" do
+        get fatwa_path(published_fatwa.scholar.slug, published_fatwa.to_param)
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(ERB::Util.html_escape(published_fatwa.title))
       end
 
-      it "assigns the requested fatwa" do
-        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.to_param }
-        expect(assigns(:fatwa)).to eq(published_fatwa)
-      end
-
-      it "sets up show breadcrumbs" do
-        expect(controller).to receive(:breadcrumb_for).with(
-          I18n.t("breadcrumbs.fatwas"),
-          fatwas_path
-        )
-        expect(controller).to receive(:breadcrumb_for).with(
-          published_fatwa.title,
-          fatwa_path(published_fatwa.scholar, published_fatwa)
-        )
-
-        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: published_fatwa.to_param }
+      it "shows the fatwas index and fatwa breadcrumbs" do
+        get fatwa_path(published_fatwa.scholar.slug, published_fatwa.to_param)
+        expect(breadcrumb_trail).to eq([
+          [ I18n.t("breadcrumbs.fatwas"), fatwas_path ],
+          [ published_fatwa.title, nil ]
+        ])
       end
     end
 
@@ -68,7 +46,7 @@ RSpec.describe FatwasController, type: :controller do
         old_slug = published_fatwa.scholar.slug
         published_fatwa.scholar.update!(first_name: "NewUniqueName", last_name: "NewUniqueLast", full_name: "NewUniqueName NewUniqueLast")
 
-        get :show, params: { scholar_id: old_slug, id: published_fatwa.to_param }
+        get fatwa_path(old_slug, published_fatwa.to_param)
         expect(response).to have_http_status(:moved_permanently)
         expect(response).to redirect_to(fatwa_path(published_fatwa.scholar, published_fatwa))
       end
@@ -79,7 +57,7 @@ RSpec.describe FatwasController, type: :controller do
         old_slug = published_fatwa.slug
         published_fatwa.update!(title: "New Unique Fatwa Title #{SecureRandom.hex(4)}")
 
-        get :show, params: { scholar_id: published_fatwa.scholar.slug, id: old_slug }
+        get fatwa_path(published_fatwa.scholar.slug, old_slug)
         expect(response).to have_http_status(:moved_permanently)
         expect(response).to redirect_to(fatwa_path(published_fatwa.scholar, published_fatwa))
       end
@@ -87,7 +65,7 @@ RSpec.describe FatwasController, type: :controller do
 
     context "when scholar does not exist" do
       it "redirects to fatwas index" do
-        get :show, params: { scholar_id: "nonexistent-scholar", id: published_fatwa.to_param }
+        get fatwa_path("nonexistent-scholar", published_fatwa.to_param)
         expect(response).to redirect_to(fatwas_path)
         expect(flash[:alert]).to eq(I18n.t("messages.fatwa_not_found"))
       end
@@ -95,22 +73,22 @@ RSpec.describe FatwasController, type: :controller do
 
     context "when fatwa does not exist" do
       it "redirects to fatwas index" do
-        get :show, params: { scholar_id: scholar.slug, id: 99999 }
+        get fatwa_path(scholar.slug, 99999)
         expect(response).to redirect_to(fatwas_path)
         expect(flash[:alert]).to eq(I18n.t("messages.fatwa_not_found"))
       end
     end
   end
 
-  describe "GET #legacy_redirect" do
+  describe "GET /fatwas/:id (legacy)" do
     it "redirects to canonical fatwa URL with 301" do
-      get :legacy_redirect, params: { id: published_fatwa.slug }
+      get legacy_fatwa_path(published_fatwa.slug)
       expect(response).to have_http_status(:moved_permanently)
       expect(response).to redirect_to(fatwa_path(published_fatwa.scholar, published_fatwa))
     end
 
     it "redirects to fatwas index when not found" do
-      get :legacy_redirect, params: { id: "nonexistent-slug" }
+      get legacy_fatwa_path("nonexistent-slug")
       expect(response).to redirect_to(fatwas_path)
       expect(flash[:alert]).to eq(I18n.t("messages.fatwa_not_found"))
     end
