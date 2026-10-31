@@ -66,10 +66,10 @@ RSpec.describe YoutubeInfoService do
       )
     end
 
-    it "cuts the scraped description at the first escaped quote" do
-      stub_request(:get, url).to_return(status: 200, body: '"shortDescription":"قال \"نعم\" ثم"')
+    it "keeps escaped quotes in the scraped description" do
+      stub_request(:get, url).to_return(status: 200, body: '"shortDescription":"قال \"نعم\" ثم","isLive":false')
 
-      expect(service.get_video_info["description"]).to eq("قال \\")
+      expect(service.get_video_info["description"]).to eq('قال "نعم" ثم')
     end
 
     it "returns the oEmbed data alone when the watch page fails" do

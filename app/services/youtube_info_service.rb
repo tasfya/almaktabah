@@ -120,7 +120,7 @@ class YoutubeInfoService
       info["upload_date"] = date_match[1] if date_match
 
       # Extract description with proper encoding handling
-      desc_match = html.match(/"shortDescription":"([^"]*)"/)
+      desc_match = html.match(/"shortDescription":"((?:[^"\\]|\\.)*)"/)
       if desc_match
         description = desc_match[1].gsub(/\\n/, "\n").gsub(/\\"/, '"')
         # Ensure proper UTF-8 encoding
