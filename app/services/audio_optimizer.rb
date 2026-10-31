@@ -9,7 +9,8 @@ class AudioOptimizer
   end
 
   def optimize
-    movie = FFMPEG::Movie.new(@input_path)
+    single_copy = single_copy_of_doubled_input
+    movie = FFMPEG::Movie.new(single_copy&.path || @input_path)
     input_duration = movie.duration
     puts "Optimizing audio file: #{@input_path} to #{@output_path} as MP3 (speech-optimized)"
     puts "Input audio duration: #{input_duration.round(2)}s"
@@ -37,9 +38,28 @@ class AudioOptimizer
   rescue => e
     puts "Error optimizing audio: #{e.message}"
     raise e
+  ensure
+    single_copy&.close!
   end
 
   private
+
+  # Some imported files are the same MP3 written twice back to back. The header
+  # describes one copy, but decoding plays both, so transcode one copy only.
+  def single_copy_of_doubled_input
+    size = File.size(@input_path)
+    return if size.zero? || size.odd?
+
+    half = size / 2
+    first = File.binread(@input_path, half, 0)
+    return unless first == File.binread(@input_path, half, half)
+
+    puts "Input is two identical copies of one file, optimizing a single copy"
+    tempfile = Tempfile.new([ "single_copy", File.extname(@input_path) ], binmode: true)
+    tempfile.write(first)
+    tempfile.flush
+    tempfile
+  end
 
   def default_output_path
     dir = File.dirname(@input_path)
