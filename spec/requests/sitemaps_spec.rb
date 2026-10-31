@@ -3,10 +3,9 @@
 require "rails_helper"
 
 RSpec.describe "Sitemaps", type: :request do
-  let!(:domain) { create(:domain, host: "localhost") }
-  let!(:scholar) { create(:scholar) }
+  include_context "with tenant domain"
 
-  before { host! "localhost" }
+  let!(:scholar) { create(:scholar) }
 
   def published_on_domain(factory, **attrs)
     create(factory, published: true, published_at: 1.day.ago, **attrs).tap { |record| record.domains << domain }
@@ -39,8 +38,12 @@ RSpec.describe "Sitemaps", type: :request do
       it "includes the root and about URLs" do
         get sitemap_content_path(type: "static")
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include("<loc>http://localhost/</loc>")
-        expect(response.body).to include("<loc>http://localhost/about</loc>")
+        expect(sitemap_locs).to eq([ "http://localhost/", "http://localhost/about" ])
+      end
+
+      it "keeps its published XML unchanged" do
+        get sitemap_content_path(type: "static")
+        expect(response).to match_golden("sitemaps/static.xml").normalized_by { |xml| xml.gsub(/\d{4}-\d{2}-\d{2}/, "YYYY-MM-DD") }
       end
     end
 
@@ -50,7 +53,7 @@ RSpec.describe "Sitemaps", type: :request do
       it "includes article URLs with lastmod" do
         get sitemap_content_path(type: "articles")
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include(article_path(scholar, article))
+        expect(response).to have_sitemap_locs("http://localhost#{article_path(scholar, article)}")
         expect(response.body).to include("<lastmod>#{article.updated_at.strftime('%Y-%m-%d')}</lastmod>")
       end
     end
@@ -126,7 +129,6 @@ RSpec.describe "Sitemaps", type: :request do
     end
 
     it "does not include content from other domains" do
-      other_domain = create(:domain, host: "other.com")
       other_article = create(:article, scholar: scholar, published: true, published_at: 1.day.ago)
       other_article.update!(domains: [ other_domain ])
 

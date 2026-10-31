@@ -102,7 +102,7 @@ jobs:
           echo "Typesense did not become ready"; exit 1
 
       - name: Run tests
-        run: bundle exec rspec --format documentation --color --profile --order defined
+        run: bundle exec rspec --format documentation --color --profile
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v6

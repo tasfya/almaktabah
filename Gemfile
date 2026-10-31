@@ -94,6 +94,7 @@ group :development, :test do
   gem "rspec-github", require: false
   gem "capybara"
   gem "capybara-playwright-driver"
+  gem "webmock", require: false
 end
 
 group :development do

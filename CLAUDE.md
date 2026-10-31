@@ -95,6 +95,8 @@ tenant, hit the Rails port directly via `http://127.0.0.1:<port>` (printed by
 
 ### Tests
 
+See `spec/TESTING.md` for the test layers, helpers and the regression recipe.
+
 Run inside the worktree: `bundle exec rspec` uses the worktree's own test DB
 (`storage/test.sqlite3`). Plain single-checkout dev (`bin/dev` on
 `localhost:3000`) still works unchanged.

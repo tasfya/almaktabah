@@ -3,12 +3,11 @@
 require "rails_helper"
 
 RSpec.describe "SEO Meta Tags", type: :request do
-  let!(:domain) { create(:domain, host: "www.example.com", name: "Test Site") }
-  let!(:scholar) { create(:scholar, full_name: "الشيخ محمد") }
+  include_context "with tenant domain"
 
-  before do
-    host! "www.example.com"
-  end
+  let(:tenant_host) { "www.example.com" }
+  let(:tenant_domain_attributes) { { name: "Test Site" } }
+  let!(:scholar) { create(:scholar, full_name: "الشيخ محمد") }
 
   describe "Articles" do
     let!(:article) do
@@ -26,34 +25,32 @@ RSpec.describe "SEO Meta Tags", type: :request do
 
     it "includes title meta tag" do
       get article_path(scholar, article)
-      expect(response.body).to include("<title>Test Article Title")
+      expect(response).to have_html_title(a_string_starting_with("Test Article Title"))
     end
 
     it "includes description meta tag" do
       get article_path(scholar, article)
-      expect(response.body).to include('name="description"')
+      expect(response).to have_meta_tag("description", a_string_including("article content for testing"))
     end
 
     it "includes canonical URL" do
       get article_path(scholar, article)
-      expect(response.body).to include('rel="canonical"')
+      expect(response).to have_canonical("http://www.example.com#{article_path(scholar, article)}")
     end
 
     it "includes Open Graph title" do
       get article_path(scholar, article)
-      expect(response.body).to include('property="og:title"')
+      expect(response).to have_meta_tag("og:title", a_string_starting_with("Test Article Title"))
     end
 
     it "includes Open Graph type" do
       get article_path(scholar, article)
-      expect(response.body).to include('property="og:type"')
-      expect(response.body).to include("article")
+      expect(response).to have_meta_tag("og:type", "article")
     end
 
     it "includes JSON-LD structured data" do
       get article_path(scholar, article)
-      expect(response.body).to include('type="application/ld+json"')
-      expect(response.body).to include('"@type":"Article"')
+      expect(json_ld).to include(a_hash_including("@type" => "Article"))
     end
   end
 

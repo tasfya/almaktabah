@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :action_log do
     action { "MyString" }
-    actionable { nil }
+    actionable { association(:scholar) }
   end
 end
