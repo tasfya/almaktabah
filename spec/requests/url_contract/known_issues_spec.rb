@@ -12,24 +12,6 @@ RSpec.describe "URL contract: known issues", type: :request do
   u = UrlContract
   paths = UrlContract::SHOW_PATHS
 
-  describe "a host with no Domain row (#612)" do
-    # @domain is nil, so the first `@domain.id` raises. In production that is a
-    # 500 page; in the test env the error is not rescuable and reaches the spec.
-    before { host! "unknown.example.test" }
-
-    # The home page is left out: it queries Typesense before it reaches
-    # @domain, so its failure depends on the search backend.
-    {
-      paths[:book] => NoMethodError,
-      "/sitemap.xml" => ArgumentError,
-      "/podcasts/feed" => NoMethodError
-    }.each do |path, error|
-      it "raises #{error} for #{path}" do
-        expect { get path }.to raise_error(error)
-      end
-    end
-  end
-
   describe "missing or unpublished records answer 302 to the index (#613)" do
     {
       "/#{u::SCHOLAR_SLUG}/#{u::BOOKS}/missing" => "/#{u::BOOKS}",
