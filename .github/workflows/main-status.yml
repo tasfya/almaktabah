@@ -1,0 +1,54 @@
+name: Main status
+
+# Stop the line: when CI or Deployment fails on main, open (or comment on) a
+# single "main is red" issue, which notifies the repository's watchers. A
+# successful Deployment means main is green again and closes it.
+on:
+  workflow_run:
+    workflows: ["CI", "Deployment"]
+    branches: [main]
+    types: [completed]
+
+permissions:
+  issues: write
+
+concurrency:
+  group: main-status
+  cancel-in-progress: false
+
+jobs:
+  report:
+    if: >-
+      github.event.workflow_run.event != 'pull_request' &&
+      (contains(fromJSON('["failure", "timed_out", "startup_failure"]'), github.event.workflow_run.conclusion) ||
+       (github.event.workflow_run.name == 'Deployment' && github.event.workflow_run.conclusion == 'success'))
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TITLE: main is red
+      WORKFLOW: ${{ github.event.workflow_run.name }}
+      CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+      RUN_URL: ${{ github.event.workflow_run.html_url }}
+      SHA: ${{ github.event.workflow_run.head_sha }}
+    steps:
+      - name: Open, update or close the "main is red" issue
+        run: |
+          issue=$(gh issue list --label continuous-delivery --state open --search "\"$TITLE\" in:title" \
+            --json number,title --jq ".[] | select(.title == \"$TITLE\") | .number" | head -n 1)
+
+          if [ "$CONCLUSION" = success ]; then
+            if [ -n "$issue" ]; then
+              gh issue close "$issue" --comment "Green again: $WORKFLOW passed for $SHA ($RUN_URL)."
+            fi
+            exit 0
+          fi
+
+          body="$WORKFLOW failed on main for $SHA: $RUN_URL
+
+          A red main is fixed or reverted before any other change merges. See \"Stop the line\" in the README."
+          if [ -n "$issue" ]; then
+            gh issue comment "$issue" --body "$body"
+          else
+            gh issue create --title "$TITLE" --label continuous-delivery --body "$body"
+          fi

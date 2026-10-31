@@ -15,6 +15,14 @@ This is the README for Almaktabah application.
 - Follow the code style using `bundle exec rubocop` (enforced via pre-commit hook).
 - Submit a pull request.
 
+## Stop the line
+
+When CI or Deployment fails on `main`, the **Main status** workflow opens a
+"main is red" issue (or comments on the open one), which notifies everyone
+watching the repository. A red `main` is fixed or reverted before any other
+change merges: until it is green, nothing reaches production. The issue closes
+itself on the next successful deployment.
+
 ## Rolling back a release
 
 Run the **Rollback** workflow (Actions → Rollback → Run workflow) and pick the
