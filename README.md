@@ -15,6 +15,30 @@ This is the README for Almaktabah application.
 - Follow the code style using `bundle exec rubocop` (enforced via pre-commit hook).
 - Submit a pull request.
 
+## Releasing
+
+The pipeline is the only path to production. Staging and production change
+only through two GitHub Actions workflows:
+
+- **Deployment** runs after CI passes on `main`: it builds the app image once,
+  deploys it to staging, smoke checks staging, then deploys the same image to
+  production.
+- **Rollback** boots a previous release on demand (see below).
+
+Accessories (Typesense, Litestream) are part of that: change their config in
+`config/deploy.yml` or `kamal_config/deploy.staging.yml` and merge, and the
+next deployment reboots the ones whose config changed. Don't run `kamal
+deploy`, `kamal accessory reboot` or other changing `kamal` commands against
+the servers from a laptop: the release would be one CI never checked, and the
+repository would no longer describe what runs. Read-only commands (`kamal app
+logs`, `kamal app details`, `kamal accessory details`) are fine.
+
+The one manual step is upgrading kamal-proxy on the host when a Kamal upgrade
+requires a newer proxy (`kamal deploy` then fails with "kamal-proxy version …
+is too old"). It restarts the proxy, a brief outage for every site on the host.
+
+Commits marked `[skip ci]` (documentation only) run no CI and do not deploy.
+
 ## Stop the line
 
 When CI or Deployment fails on `main`, the **Main status** workflow opens a
