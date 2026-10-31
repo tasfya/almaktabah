@@ -85,6 +85,12 @@ Rails.application.configure do
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = { database: { writing: :queue } }
 
+  # Routes load lazily in development, and that lazy load is not thread-safe.
+  # SolidQueue runs inside Puma here, so its worker threads can race to load
+  # them on the first jobs after boot and fail with NoMethodError on route
+  # helpers (e.g. rails_blob_url while indexing). Load them up front instead.
+  config.after_initialize { Rails.application.routes_reloader.execute_unless_loaded }
+
   # ======== LOGGING SETTINGS ==========
 
   # Show only errors and above in logs (hide debug/info/warn)
