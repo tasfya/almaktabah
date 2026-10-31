@@ -7,8 +7,6 @@ require "rails_helper"
 # routes are left out, as are routes injected by gems (rails_icons,
 # view_component's test entrypoint). Development-only routes
 # (theme-playground) are absent because the snapshot runs in the test env.
-# Routes whose controller does not exist (library, playlist, category, artist,
-# album) are listed as they are: see spec/requests/url_contract/known_issues_spec.rb.
 #
 # Regenerate after an intended routing change with
 #   UPDATE_GOLDEN=1 bin/worktree test spec/routing/public_routes_spec.rb

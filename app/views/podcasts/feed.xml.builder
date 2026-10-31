@@ -77,7 +77,7 @@ xml.rss version: "2.0",
         xml.tag! "itunes:duration", episode.duration.to_i
 
         # Link to episode page (required)
-        xml.link episode.podcast_episode_url || @podcast[:website_url]
+        xml.link episode.podcast_episode_url(@host)
       end
     end
   end
