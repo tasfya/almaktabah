@@ -269,7 +269,19 @@ RSpec.describe "SEO Meta Tags", type: :request do
   end
 
   describe "Robots noindex directives" do
-    before { stub_typesense_search(empty_search_result) }
+    let(:article_results) do
+      build_search_result(hits_by_type: { articles: [ build_search_hit(type: :article, title: "Test") ] }, total: 1)
+    end
+
+    def stub_search(service, result)
+      allow(service).to receive(:new).and_return(instance_double(service, call: result))
+    end
+
+    before do
+      stub_search(TypesenseSearch::HomeBrowseService, empty_search_result)
+      stub_search(TypesenseSearch::MixedSearchService, empty_mixed_search_result)
+      stub_search(TypesenseSearch::CollectionSearchService, empty_search_result)
+    end
 
     it "does not add noindex on home page without params" do
       get root_path
@@ -292,7 +304,7 @@ RSpec.describe "SEO Meta Tags", type: :request do
     end
 
     it "does not add noindex on listing page 1 with results" do
-      stub_typesense_search(build_search_result(hits_by_type: { articles: [ build_search_hit(type: :article, title: "Test") ] }, total: 1))
+      stub_search(TypesenseSearch::CollectionSearchService, article_results)
       get articles_path
       expect(response.body).not_to include('content="noindex')
     end
@@ -302,12 +314,15 @@ RSpec.describe "SEO Meta Tags", type: :request do
       expect(response.body).to include('content="noindex, follow"')
     end
 
+    # Non-empty results, so the noindex can only come from the params.
     it "adds noindex on listing page 2" do
+      stub_search(TypesenseSearch::CollectionSearchService, article_results)
       get articles_path, params: { page: 2 }
       expect(response.body).to include('content="noindex, follow"')
     end
 
     it "adds noindex on listing page with scholars filter" do
+      stub_search(TypesenseSearch::CollectionSearchService, article_results)
       get articles_path, params: { scholars: [ "xyz" ] }
       expect(response.body).to include('content="noindex, follow"')
     end
