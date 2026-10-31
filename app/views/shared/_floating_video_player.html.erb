@@ -21,8 +21,9 @@
       </button>
     </div>
   </div>
-  <div class="bg-white text-black aspect-video" data-floating-video-target="videoContainer">
-    <video data-floating-video-target="video"
+  <div class="bg-white text-black aspect-video" data-floating-video-target="videoContainer" data-controller="media-fallback">
+    <p class="p-6 text-center" data-media-fallback-target="notice" hidden><%= t("common.media_unavailable") %></p>
+    <video data-floating-video-target="video" data-media-fallback-target="media"
            class="w-full h-full hidden"
            controls
            preload="metadata">
