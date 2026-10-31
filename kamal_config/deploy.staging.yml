@@ -3,9 +3,9 @@
 # separate containers, volume and Typesense accessory. Staging data is
 # disposable: there is no Litestream replica, and media is stored on the
 # staging volume instead of production's buckets. Deployed by its own job in
-# the same GitHub Actions workflow as production (same commit, same CI gate),
-# not a promoted artifact — each job runs `kamal deploy`, which builds and
-# pushes its own image.
+# the same GitHub Actions workflow as production; production deploys only
+# after this job succeeds and its smoke check passes. Each job runs
+# `kamal deploy`, which builds and pushes its own image.
 #
 # `kamal deploy` never boots accessories; the deploy-staging job runs
 # bin/reconcile-accessory, which reboots Typesense when its config changed.
