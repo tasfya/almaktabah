@@ -78,12 +78,13 @@ jobs:
           bundler-cache: true
 
       - name: Install Playwright browsers
-        # Must stay unversioned to match the runtime driver: capybara-playwright-driver
-        # launches chromium via `npx playwright` (unversioned => latest), so the browser
-        # build installed here has to come from the same latest CLI. Pinning a version
-        # installs a different chromium build than the driver expects and the specs fail
-        # to find the browser.
-        run: npx playwright install --with-deps
+        # The driver runs `npx playwright@<version>` with the version the
+        # playwright-ruby-client gem declares (spec/support/capybara.rb), so the
+        # browser installed here comes from that same CLI and moves only when the
+        # gem is bumped.
+        run: |
+          version=$(bundle exec ruby -e 'require "playwright"; print Playwright::COMPATIBLE_PLAYWRIGHT_VERSION')
+          npx --yes "playwright@$version" install --with-deps
 
       - name: migrate database
         run: bin/rails db:create db:migrate RAILS_ENV=test
