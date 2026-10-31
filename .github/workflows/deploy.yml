@@ -16,13 +16,22 @@ on:
     types:
       - completed
 
+permissions:
+  contents: read
+
 jobs:
   # The app image is built once per commit. Kamal only boots an image whose
   # `service` label matches the config, so staging gets a one-line image on top
   # of the production one: the same layers, relabelled for its service.
   build:
-    # Gate: only build if the CI run that triggered us actually succeeded.
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # Gate: only a green CI run for a push to this repository's main deploys.
+    # The `branches` filter matches the triggering run's branch name, which a
+    # pull request from a fork controls, so it is not enough on its own.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: blacksmith-4vcpu-ubuntu-2404
     env:
       KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}

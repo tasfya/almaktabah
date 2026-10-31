@@ -37,8 +37,6 @@ The one manual step is upgrading kamal-proxy on the host when a Kamal upgrade
 requires a newer proxy (`kamal deploy` then fails with "kamal-proxy version …
 is too old"). It restarts the proxy, a brief outage for every site on the host.
 
-Commits marked `[skip ci]` (documentation only) run no CI and do not deploy.
-
 ## Stop the line
 
 When CI or Deployment fails on `main`, the **Main status** workflow opens a

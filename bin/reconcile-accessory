@@ -33,7 +33,7 @@ elif [ -z "$container" ] || [ "$recorded" != "$digest" ]; then
   # without an error, so check that a new container is running before
   # recording the digest.
   rebooted=$(remote "docker ps -q --no-trunc --filter name=^$service\$ --filter status=running")
-  if [ -z "$rebooted" ] || [[ "$rebooted" == "$container"* ]]; then
+  if [ -z "$rebooted" ] || { [ -n "$container" ] && [[ "$rebooted" == "$container"* ]]; }; then
     echo "$service: reboot did not replace the container" >&2
     exit 1
   fi
