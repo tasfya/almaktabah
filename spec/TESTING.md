@@ -146,8 +146,8 @@ point of the PR.
 
 The URL contract already pins the public surface with literal paths and
 golden files: `spec/requests/url_contract_spec.rb` (one show URL per type),
-`spec/requests/url_contract/` (redirects, sitemaps, podcast feed, `<head>`
-snapshots, known issues) and `spec/routing/public_routes_spec.rb` (routes
+`spec/requests/url_contract/` (redirects, 404s, sitemaps, podcast feed, `<head>`
+snapshots) and `spec/routing/public_routes_spec.rb` (routes
 table). Its expected URLs are literal on purpose; never rebuild them with
 route helpers or `I18n.t`.
 

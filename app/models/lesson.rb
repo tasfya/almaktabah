@@ -80,12 +80,8 @@ class Lesson < ApplicationRecord
   end
 
   # Returns absolute URL to episode page for podcast feed
-  def podcast_episode_url
-    path = Rails.application.routes.url_helpers.series_lesson_path(scholar, series, self)
-    # Get domain from first assignment or use default
-    domain = domain_assignments.first&.domain
-    return nil unless domain
-    "https://#{domain.host}#{path}"
+  def podcast_episode_url(host)
+    "https://#{host}#{Rails.application.routes.url_helpers.series_lesson_path(scholar, series, self)}"
   end
 
   def generate_optimize_audio_bucket_key

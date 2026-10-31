@@ -89,6 +89,28 @@ RSpec.describe "URL contract: crawler documents", type: :request do
     end
   end
 
+  describe "podcast episode <link> host (#615)" do
+    let(:tenant_domain_attributes) do
+      { name: "contract", title: "Contract Site", podcast_enabled: true, podcast_title: "Contract Podcast", podcast_owner_email: "owner@example.com" }
+    end
+
+    before do
+      [ sermon, lesson ].each do |record|
+        record.domain_assignments.destroy_all
+        record.domain_assignments.create!(domain: other_domain)
+        record.domain_assignments.create!(domain: domain)
+        record.final_audio.attach(io: Rails.root.join("spec/files/audio.mp3").open, filename: "audio.mp3", content_type: "audio/mpeg")
+        record.update!(published_at: 1.day.ago)
+      end
+    end
+
+    it "links each episode on the domain serving the feed, not the record's first domain" do
+      get "/podcasts/feed"
+      links = Nokogiri::XML(response.body).xpath("//item/link").map(&:text)
+      expect(links).to contain_exactly("https://#{tenant_host}#{UrlContract::SHOW_PATHS[:sermon]}", "https://#{tenant_host}#{UrlContract::SHOW_PATHS[:lesson]}")
+    end
+  end
+
   describe "podcast feed" do
     let(:tenant_domain_attributes) do
       {
