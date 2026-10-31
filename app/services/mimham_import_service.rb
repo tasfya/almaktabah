@@ -158,24 +158,17 @@ class MimhamImportService
     if source_url.present?
       Lecture.find_by(source_url: source_url)
     else
-      scholar = Scholar.find_by(name: scholar_name) ||
-                Scholar.where("name LIKE ?", "%#{scholar_name}%").first
-      scholar&.lectures&.find_by(title: title)
+      lookup_scholar(scholar_name)&.lectures&.find_by(title: title)
     end
   end
 
   def find_or_create_scholar(name)
     return @scholars_cache[name] if @scholars_cache.key?(name)
 
-    # Try exact match first
-    scholar = Scholar.find_by(name: name)
+    scholar = lookup_scholar(name)
 
-    # Try partial match
-    scholar ||= Scholar.where("name LIKE ?", "%#{name}%").first
-
-    # Create new scholar if not found
     unless scholar
-      scholar = Scholar.create(name: name)
+      scholar = Scholar.create(full_name: name)
       unless scholar.persisted?
         return nil
       end
@@ -183,6 +176,12 @@ class MimhamImportService
 
     @scholars_cache[name] = scholar
     scholar
+  end
+
+  def lookup_scholar(name)
+    Scholar.find_by(full_name: name) ||
+      Scholar.find_by(full_name_alias: name) ||
+      Scholar.where("full_name LIKE ?", "%#{Scholar.sanitize_sql_like(name)}%").first
   end
 
   def parse_kind(value)

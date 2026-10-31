@@ -2,26 +2,36 @@
 
 require "rails_helper"
 
-# Like MimhamImportService, this looks scholars up by a `name` column that
-# `scholars` does not have, so no lesson is ever created. These examples pin
-# that behaviour (issue #607).
 RSpec.describe MimhamSeriesImportService do
-  let(:missing_column) { a_string_matching(/no such column: scholars\.name/) }
+  let(:scholar_name) { "محمد بن هادي" }
 
   def import(**options)
     described_class.new(csv_file: file_fixture("mimham/series.csv").to_s, **options).import
   end
 
-  it "creates no series or lesson and reports each row as a line error" do
+  it "creates the scholar, the series and a lesson per complete row" do
     result = nil
 
-    expect { result = import }.not_to change { [ Series.count, Lesson.count ] }
-    expect(result).to include(created_count: 0, skipped_count: 1, series_created: 0)
-    expect(result[:errors]).to contain_exactly(
-      a_string_starting_with("Line 2: ").and(missing_column),
-      a_string_starting_with("Line 3: ").and(missing_column),
-      a_string_starting_with("Line 4: ").and(missing_column)
+    expect { result = import }.to change(Lesson, :count).by(3).and change(Series, :count).by(1).and change(Scholar, :count).by(1)
+    expect(result).to include(created_count: 3, skipped_count: 1, series_created: 1, errors: [])
+    series = Series.last
+    expect(series).to have_attributes(title: "شرح السنة", published: false, scholar: have_attributes(full_name: scholar_name))
+    expect(series.lessons.find_by(position: 1)).to have_attributes(
+      title: "الدرس الأول", source_url: "https://mimham.example/lessons/1", duration: 3723
     )
+  end
+
+  it "queues an audio download for a row with an audio_url" do
+    expect { import }.to have_enqueued_job(MimhamAudioDownloadJob).once
+      .with("Lesson", kind_of(Integer), "https://cdn.mimham.example/l1.mp3")
+  end
+
+  it "adds lessons to the existing series of a scholar matched by full_name_alias" do
+    scholar = create(:scholar, full_name: "Muhammad ibn Hadi", full_name_alias: scholar_name)
+    series = create(:series, scholar: scholar, title: "شرح السنة")
+
+    expect { import }.not_to change { [ Scholar.count, Series.count ] }
+    expect(series.lessons.count).to eq(3)
   end
 
   it "skips a row whose source_url is already imported" do
@@ -32,12 +42,20 @@ RSpec.describe MimhamSeriesImportService do
     expect(result[:existing_records]).to contain_exactly(a_hash_including(title: "الدرس الثاني", existing_id: existing.id))
   end
 
-  it "lists new rows in a dry run without creating them" do
-    result = import(dry_run: true)
+  it "creates nothing when the same file is imported again" do
+    import
 
-    expect(result).to include(dry_run: true, created_count: 0, would_create_count: 2)
+    result = nil
+    expect { result = import }.not_to change(Lesson, :count)
+    expect(result).to include(created_count: 0, existing_count: 3, errors: [])
+  end
+
+  it "lists new rows in a dry run without creating them" do
+    result = nil
+
+    expect { result = import(dry_run: true) }.not_to change { [ Scholar.count, Series.count, Lesson.count ] }
+    expect(result).to include(dry_run: true, created_count: 0, would_create_count: 3, errors: [])
     expect(result[:new_records].first).to include(series_title: "شرح السنة", lesson_number: 1, duration: "1:02:03")
-    expect(result[:errors]).to contain_exactly(a_string_starting_with("Line 4: ").and(missing_column))
   end
 
   it "rejects a CSV missing required columns" do
@@ -54,6 +72,6 @@ RSpec.describe MimhamSeriesImportService do
     service = described_class.new(csv_file: file_fixture("mimham/series.csv").to_s, dry_run: true)
     service.import
 
-    expect { service.print_report }.to output(/DRY RUN REPORT.*New lessons:\s+2.*ERRORS/m).to_stdout
+    expect { service.print_report }.to output(/DRY RUN REPORT.*New lessons:\s+3/m).to_stdout
   end
 end
