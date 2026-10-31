@@ -1,0 +1,13 @@
+{
+  "title": "كتاب التوحيد | Contract Site",
+  "canonical": "http://localhost/%D9%85%D8%AD%D9%85%D8%AF-%D8%A7%D9%84%D9%87%D8%A7%D8%AC%D8%B1%D9%8A/%D8%A7%D9%84%D9%83%D8%AA%D8%A8/%D9%83%D8%AA%D8%A7%D8%A8-%D8%A7%D9%84%D8%AA%D9%88%D8%AD%D9%8A%D8%AF",
+  "og:url": "http://localhost/%D9%85%D8%AD%D9%85%D8%AF-%D8%A7%D9%84%D9%87%D8%A7%D8%AC%D8%B1%D9%8A/%D8%A7%D9%84%D9%83%D8%AA%D8%A8/%D9%83%D8%AA%D8%A7%D8%A8-%D8%A7%D9%84%D8%AA%D9%88%D8%AD%D9%8A%D8%AF",
+  "og:type": "book",
+  "robots": null,
+  "json_ld": [
+    {
+      "@type": "Book",
+      "url": "http://localhost/%D9%85%D8%AD%D9%85%D8%AF-%D8%A7%D9%84%D9%87%D8%A7%D8%AC%D8%B1%D9%8A/%D8%A7%D9%84%D9%83%D8%AA%D8%A8/%D9%83%D8%AA%D8%A7%D8%A8-%D8%A7%D9%84%D8%AA%D9%88%D8%AD%D9%8A%D8%AF"
+    }
+  ]
+}

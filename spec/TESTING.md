@@ -134,6 +134,13 @@ Public URLs are indexed by Google. A refactor must not change a URL, a
 redirect, a sitemap entry or the SEO tags of a page unless that change is the
 point of the PR.
 
+The URL contract already pins the public surface with literal paths and
+golden files: `spec/requests/url_contract_spec.rb` (one show URL per type),
+`spec/requests/url_contract/` (redirects, sitemaps, podcast feed, `<head>`
+snapshots, known issues) and `spec/routing/public_routes_spec.rb` (routes
+table). Its expected URLs are literal on purpose; never rebuild them with
+route helpers or `I18n.t`.
+
 Before refactoring code that renders or routes public pages:
 
 1. **Pin current behaviour** on `main`: write request specs for the URLs,
