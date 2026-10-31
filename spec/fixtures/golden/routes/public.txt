@@ -38,9 +38,4 @@ GET /play/stop(.:format) play#stop
 GET /about(.:format) about#index
 GET /up(.:format) rails/health#show
 GET / home#index
-GET /library(.:format) library#index
-GET /playlist/:id(.:format) playlist#show
-GET /category/:id(.:format) category#show
-GET /artist/:id(.:format) artist#show
-GET /album/:id(.:format) album#show
 GET /podcasts/feed(.:format) podcasts#feed format=xml
