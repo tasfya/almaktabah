@@ -80,25 +80,9 @@ RSpec.describe TypesenseSearch::FilterBuilder do
       end
     end
 
-    context "with content_types" do
-      it "ignores content_types (extra queries target specific collections)" do
-        builder = described_class.new(content_types: %w[book lecture])
-
-        expect(builder.without_scholars).to eq("")
-      end
-    end
-
-    context "with domain_id and content_types" do
-      it "returns only domain filter (content_types ignored)" do
-        builder = described_class.new(domain_id: 123, content_types: [ "book" ])
-
-        expect(builder.without_scholars).to eq("domain_ids:=[123]")
-      end
-    end
-
     context "with all filters" do
-      it "returns only domain filter (scholars and content_types excluded)" do
-        builder = described_class.new(domain_id: 123, scholars: [ "Ibn Baz" ], content_types: [ "book" ])
+      it "returns only domain filter (scholars excluded)" do
+        builder = described_class.new(domain_id: 123, scholars: [ "Ibn Baz" ])
 
         expect(builder.without_scholars).to eq("domain_ids:=[123]")
       end

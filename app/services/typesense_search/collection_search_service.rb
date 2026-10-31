@@ -69,7 +69,7 @@ module TypesenseSearch
         "sort_by" => sort_order,
         "page" => @page,
         "per_page" => @per_page,
-        "highlight_full_fields" => "title,description,name,content_text"
+        "highlight_full_fields" => "title,description,content_text"
       }
     end
 

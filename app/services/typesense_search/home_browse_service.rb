@@ -10,8 +10,7 @@ module TypesenseSearch
       @per_page = per_page.to_i.clamp(1, Collections::MAX_PER_PAGE)
       @filter_builder = FilterBuilder.new(
         domain_id: @domain_id,
-        scholars: @scholars,
-        content_types: @content_types
+        scholars: @scholars
       )
     end
 
@@ -74,7 +73,7 @@ module TypesenseSearch
         "sort_by" => "created_at_ts:desc",
         "page" => 1,
         "per_page" => @per_page,
-        "highlight_full_fields" => "title,description,name,content_text"
+        "highlight_full_fields" => "title,description,content_text"
       }
     end
 

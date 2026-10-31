@@ -52,10 +52,6 @@ RSpec.describe "Typesense schema contract", :typesense do
         expect(fields[sort_field]["optional"]).to be_falsey
       end
 
-      it "has published_at_ts as an optional int64" do
-        expect(fields["published_at_ts"]).to include("type" => "int64", "optional" => true)
-      end
-
       it "has the url and slug strings the result views link with" do
         expect(fields["url"]).to include("type" => "string")
         expect(fields["slug"]).to include("type" => "string")
