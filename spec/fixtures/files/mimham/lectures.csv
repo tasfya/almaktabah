@@ -1,0 +1,5 @@
+title,scholar_name,kind,category,source_url,audio_url,published_at
+خطبة جديدة,محمد بن هادي,sermon,خطب,https://mimham.example/lectures/1,https://cdn.mimham.example/1.mp3,2024-01-05
+خطبة موجودة,محمد بن هادي,sermon,خطب,https://mimham.example/lectures/2,,
+بدون رابط,محمد بن هادي,benefit,,,,
+,محمد بن هادي,sermon,,https://mimham.example/lectures/3,,

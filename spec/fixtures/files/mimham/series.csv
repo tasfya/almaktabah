@@ -1,0 +1,5 @@
+series_title,scholar_name,lesson_number,title,source_url,audio_url,published_at,duration
+شرح السنة,محمد بن هادي,1,الدرس الأول,https://mimham.example/lessons/1,https://cdn.mimham.example/l1.mp3,2024-01-05,1:02:03
+شرح السنة,محمد بن هادي,2,الدرس الثاني,https://mimham.example/lessons/2,,,
+شرح السنة,محمد بن هادي,3,بدون رابط,,,,
+شرح السنة,,4,بلا شيخ,https://mimham.example/lessons/4,,,
