@@ -139,5 +139,5 @@ jobs:
         run: |
           curl --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 5 \
             https://staging.3ilm.org/up > /dev/null
-          curl --fail --silent --show-error https://staging.3ilm.org/ \
-            | grep --quiet 'data-theme="staging.3ilm.org"'
+          home=$(curl --fail --silent --show-error https://staging.3ilm.org/)
+          grep --quiet --fixed-strings 'data-theme="staging.3ilm.org"' <<< "$home"
