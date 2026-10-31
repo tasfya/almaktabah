@@ -4,8 +4,9 @@
 # Prints "<user>@<host> <container name> <digest>" for a Kamal accessory. The
 # digest covers everything `kamal accessory boot` would apply: the exact
 # `docker run` command, the env file it uploads (secret values included) and
-# the contents of the files it mounts. bin/reconcile-accessory compares it with
-# the digest recorded on the host to decide whether to reboot the accessory.
+# the contents of the files it mounts (not their mode or owner).
+# bin/reconcile-accessory compares it with the digest recorded on the host to
+# decide whether to reboot the accessory.
 require "bundler/setup"
 require "kamal"
 require "digest"
