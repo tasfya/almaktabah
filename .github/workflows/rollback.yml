@@ -38,14 +38,14 @@ jobs:
       PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY_ID }}
       PUBLIC_AWS_S3_3ILM_ACCESS_KEY: ${{ secrets.PUBLIC_AWS_S3_3ILM_ACCESS_KEY }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd
+      - uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
