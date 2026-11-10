@@ -14,7 +14,7 @@
       </div>
     <% end %>
     <% if news.description.present? %>
-      <p class="text-xs line-clamp-2"><%= truncate(strip_tags(news.description), length: 80) %></p>
+      <p class="text-xs line-clamp-2"><%= plain_excerpt(news.description, length: 80) %></p>
     <% end %>
   </div>
 </div>

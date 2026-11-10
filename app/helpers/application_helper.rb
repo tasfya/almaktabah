@@ -174,4 +174,10 @@ module ApplicationHelper
       rails_blob_url(attachment, disposition: "attachment")
     end
   end
+
+  # strip_tags returns entity-encoded text, and truncate escapes again whenever
+  # it cuts, so decode in between to escape exactly once.
+  def plain_excerpt(html, length:)
+    truncate(CGI.unescapeHTML(strip_tags(html.to_s)), length: length)
+  end
 end

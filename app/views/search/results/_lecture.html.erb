@@ -13,7 +13,7 @@
       </h2>
     </div>
     <% if lecture.description.present? %>
-      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(lecture.description), length: 150) %></p>
+      <p class="text-sm line-clamp-3"><%= plain_excerpt(lecture.description, length: 150) %></p>
     <% end %>
     <div class="flex items-center gap-2 mb-2">
       <% if lecture.scholar_name.present? %>

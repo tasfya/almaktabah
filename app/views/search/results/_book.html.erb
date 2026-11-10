@@ -14,7 +14,7 @@
       </div>
     <% end %>
     <% if book.description.present? %>
-      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(book.description), length: 150) %></p>
+      <p class="text-sm line-clamp-3"><%= plain_excerpt(book.description, length: 150) %></p>
     <% end %>
   </div>
 </div>

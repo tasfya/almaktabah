@@ -19,7 +19,7 @@
     <% end %>
     <% if fatwa.description.present? %>
       <p class="text-sm line-clamp-3">
-        <%= truncate(strip_tags(fatwa.description), length: 120) %>
+        <%= plain_excerpt(fatwa.description, length: 120) %>
       </p>
     <% end %>
     <div class="card-actions justify-end mt-auto pt-2">
