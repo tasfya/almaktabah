@@ -14,7 +14,7 @@
         </h4>
 
         <% if resource.respond_to?(:transcription_segments) && resource.transcription_segments.present? %>
-          <div data-controller="captions" data-captions-player-id-value="<%= dom_id(resource) %>" data-captions-segments-value='<%= raw(resource.transcription_segments.to_json) %>' class="flex flex-col sm:flex-row sm:items-center items-start gap-2 flex-1 w-full">
+          <div data-controller="captions" data-captions-player-id-value="<%= dom_id(resource) %>" data-captions-segments-value="<%= resource.transcription_segments.to_json %>" class="flex flex-col sm:flex-row sm:items-center items-start gap-2 flex-1 w-full">
             <!-- cSpell:disable -->
             <span class="text-xs text-gray-500 whitespace-nowrap" title="<%= t('common.ai_transcript_disclaimer_title') %>"><%= t('common.ai_transcript_disclaimer') %></span>
             <!-- cSpell:enable -->

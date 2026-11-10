@@ -83,4 +83,28 @@ RSpec.describe "Play", type: :request do
       expect(response.body).to include('<turbo-stream action="update" target="audio-player">')
     end
   end
+
+  describe "captions" do
+    let(:text) { %(It's a "quote" </div><img src=x onerror=alert(1)>) }
+    let!(:lesson) do
+      create(:lesson, published: true, published_at: 1.day.ago,
+                      transcription_json: { segments: [ { start: 0, end: 2.5, text: text } ] }.to_json)
+    end
+
+    before { create(:domain_assignment, domain: domain, assignable: lesson) }
+
+    it "hands the segments to the captions controller intact, whatever the transcript contains" do
+      get play_path("lesson", lesson.id)
+
+      captions = Nokogiri::HTML5(response.body).css("[data-controller='captions']")
+      expect(captions.size).to eq(1)
+      expect(captions.first.attribute_nodes.map(&:name)).to contain_exactly(
+        "data-controller", "data-captions-player-id-value", "data-captions-segments-value", "class"
+      )
+      expect(JSON.parse(captions.first["data-captions-segments-value"])).to eq(
+        [ { "start" => 0.0, "end" => 2.5, "text" => text } ]
+      )
+      expect(Nokogiri::HTML5(response.body).css("img[onerror]")).to be_empty
+    end
+  end
 end
