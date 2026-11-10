@@ -57,6 +57,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
+      - name: Week for the apt cache key
+        id: week
+        # Saved caches are immutable; a weekly key picks up Ubuntu package updates.
+        run: echo "week=$(date +%G-%V)" >> "$GITHUB_OUTPUT"
       - name: Cache system dependencies
         # apt's own directories are root-owned (lists/partial is 0700), so the
         # cache step can neither save nor restore them. Cache only the
@@ -64,7 +68,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ~/apt-debs
-          key: apt-debs-${{ runner.os }}-${{ hashFiles('**/ci.yml') }}
+          key: apt-debs-${{ runner.os }}-${{ hashFiles('**/ci.yml') }}-${{ steps.week.outputs.week }}
           restore-keys: |
             apt-debs-${{ runner.os }}-
       - name: Install system dependencies
@@ -90,8 +94,11 @@ jobs:
           npx --yes "playwright@$version" install --with-deps
 
       - name: Keep downloaded packages for the cache
-        # After Playwright's --with-deps so its packages are cached too.
-        run: cp /var/cache/apt/archives/*.deb ~/apt-debs/
+        # After Playwright's --with-deps so its packages are cached too. Refill
+        # from scratch so superseded versions don't pile up in the cache.
+        run: |
+          rm -f ~/apt-debs/*.deb
+          cp /var/cache/apt/archives/*.deb ~/apt-debs/ || true
 
       - name: migrate database
         run: bin/rails db:create db:migrate RAILS_ENV=test
