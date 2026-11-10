@@ -384,4 +384,33 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(helper.resource_path_for(resource)).to eq("/fallback")
     end
   end
+
+  describe "#plain_excerpt" do
+    def rendered_text(html)
+      Nokogiri::HTML5.fragment(html.to_s).text
+    end
+
+    it "shows quotes and ampersands as typed when the text is cut" do
+      excerpt = helper.plain_excerpt(%(<p>He said "hi" & it's</p>) + ("x" * 200), length: 40)
+
+      expect(rendered_text(excerpt)).to start_with(%(He said "hi" & it's))
+      expect(rendered_text(excerpt)).to end_with("...")
+      expect(rendered_text(excerpt).length).to eq(40)
+    end
+
+    it "shows quotes and ampersands as typed when the text fits" do
+      expect(rendered_text(helper.plain_excerpt(%(<b>"a" & 'b'</b>), length: 40))).to eq(%("a" & 'b'))
+    end
+
+    it "keeps markup in the source as escaped text, never as tags" do
+      excerpt = helper.plain_excerpt("&lt;script&gt;alert(1)&lt;/script&gt;", length: 100)
+
+      expect(excerpt).not_to include("<script")
+      expect(rendered_text(excerpt)).to eq("<script>alert(1)</script>")
+    end
+
+    it "returns an empty string for nil" do
+      expect(helper.plain_excerpt(nil, length: 10)).to eq("")
+    end
+  end
 end

@@ -22,7 +22,7 @@
       </div>
     <% end %>
     <% if article.description.present? %>
-      <p class="text-sm line-clamp-3"><%= truncate(strip_tags(article.description), length: 150) %></p>
+      <p class="text-sm line-clamp-3"><%= plain_excerpt(article.description, length: 150) %></p>
     <% end %>
   </div>
 </div>
