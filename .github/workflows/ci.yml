@@ -69,8 +69,6 @@ jobs:
             apt-debs-${{ runner.os }}-
       - name: Install system dependencies
         run: |
-          ls -ld /var/lib/apt/lists/partial /var/cache/apt/archives /var/cache/apt/archives/partial || true
-          apt-config dump | grep -iE 'keep-downloaded|clean' || true
           mkdir -p ~/apt-debs
           sudo cp ~/apt-debs/*.deb /var/cache/apt/archives/ 2>/dev/null || true
           sudo apt-get update
@@ -92,9 +90,8 @@ jobs:
           npx --yes "playwright@$version" install --with-deps
 
       - name: Keep downloaded packages for the cache
-        run: |
-          ls /var/cache/apt/archives/*.deb | wc -l
-          cp /var/cache/apt/archives/*.deb ~/apt-debs/
+        # After Playwright's --with-deps so its packages are cached too.
+        run: cp /var/cache/apt/archives/*.deb ~/apt-debs/
 
       - name: migrate database
         run: bin/rails db:create db:migrate RAILS_ENV=test
