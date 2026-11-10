@@ -58,16 +58,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
       - name: Cache system dependencies
+        # apt's own directories are root-owned (lists/partial is 0700), so the
+        # cache step can neither save nor restore them. Cache only the
+        # downloaded .debs, in a runner-owned directory, and copy them in/out.
         uses: actions/cache@v6
         with:
-          path: |
-            /var/cache/apt/archives/*.deb
-            /var/lib/apt/lists/*
-          key: apt-${{ runner.os }}-${{ hashFiles('**/ci.yml') }}
+          path: ~/apt-debs
+          key: apt-debs-${{ runner.os }}-${{ hashFiles('**/ci.yml') }}
           restore-keys: |
-            apt-${{ runner.os }}-
+            apt-debs-${{ runner.os }}-
       - name: Install system dependencies
         run: |
+          ls -ld /var/lib/apt/lists/partial /var/cache/apt/archives /var/cache/apt/archives/partial || true
+          apt-config dump | grep -iE 'keep-downloaded|clean' || true
+          mkdir -p ~/apt-debs
+          sudo cp ~/apt-debs/*.deb /var/cache/apt/archives/ 2>/dev/null || true
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 ffmpeg imagemagick fonts-noto libmagickcore-6.q16-6-extra
 
@@ -85,6 +90,11 @@ jobs:
         run: |
           version=$(bundle exec ruby -e 'require "playwright"; print Playwright::COMPATIBLE_PLAYWRIGHT_VERSION')
           npx --yes "playwright@$version" install --with-deps
+
+      - name: Keep downloaded packages for the cache
+        run: |
+          ls /var/cache/apt/archives/*.deb | wc -l
+          cp /var/cache/apt/archives/*.deb ~/apt-debs/
 
       - name: migrate database
         run: bin/rails db:create db:migrate RAILS_ENV=test
