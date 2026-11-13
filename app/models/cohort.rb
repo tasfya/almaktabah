@@ -1,6 +1,7 @@
 class Cohort < ApplicationRecord
   belongs_to :program
   has_many :cohort_slots, dependent: :delete_all, inverse_of: :cohort
+  has_many :enrollments, dependent: :restrict_with_error
 
   validates :name, :starts_on, presence: true
   validate :known_time_zone
