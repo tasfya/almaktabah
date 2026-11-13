@@ -60,6 +60,14 @@ RSpec.describe "Learner area", type: :request do
       expect(response.headers["Cache-Control"]).to include("no-store")
     end
 
+    it "keeps the learner's links out of the session breadcrumbs" do
+      get learner_cohort_path(cohort)
+      expect(Nokogiri::HTML(response.body).css(".breadcrumbs a").map { |a| a["href"] }).to include(learner_dashboard_path)
+
+      paths = Array(session[:breadcrumbs]).map { |crumb| crumb["path"] || crumb[:path] }
+      expect(paths).not_to include(learner_dashboard_path, learner_cohort_path(cohort))
+    end
+
     describe "dashboard" do
       it "shows only enrollments whose program is on this domain, with today's items and progress" do
         foreign_program = create(:program, title: "برنامج موقع آخر", published: true).tap { |p| p.update!(domains: [ other_domain ]) }
@@ -168,10 +176,11 @@ RSpec.describe "Learner area", type: :request do
         expect(response.body).to include(%(target="#{ActionView::RecordIdentifier.dom_id(exam)}"), "الاختبار متاح الآن")
       end
 
-      it "rejects ticking a future lesson" do
+      it "rejects ticking a future lesson, telling the learner why" do
         tick(future_lesson)
 
         expect(response).to have_http_status(:unprocessable_content)
+        expect(response.body).to include('target="program_flash"', "لا يمكن تعليم هذا الدرس الآن")
         expect(response.headers["Cache-Control"]).to include("no-store")
         expect(LessonCompletion.count).to eq(0)
       end
@@ -187,6 +196,11 @@ RSpec.describe "Learner area", type: :request do
       it "rejects an item of another program" do
         tick(create(:program_item, :lesson))
         expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it "sends no-store on a successful tick" do
+        tick(first_lesson)
+        expect(response.headers["Cache-Control"]).to include("no-store")
       end
 
       it "falls back to a redirect without Turbo" do
@@ -211,10 +225,28 @@ RSpec.describe "Learner area", type: :request do
         expect(response.body).to include('target="audio-player"', lesson.title)
       end
 
+      it "sends no-store" do
+        get learner_cohort_play_path(cohort, first_lesson), headers: turbo_stream
+        expect(response.headers["Cache-Control"]).to include("no-store")
+      end
+
       it "refuses a lesson that is not released yet" do
         future_lesson.lesson.audio.attach(io: StringIO.new("audio"), filename: "lesson.mp3", content_type: "audio/mpeg")
         get learner_cohort_play_path(cohort, future_lesson), headers: turbo_stream
         expect(response).to have_http_status(:not_found)
+        expect(response.headers["Cache-Control"]).to include("no-store")
+      end
+
+      it "refuses a hidden item, another program's item and an item with no slot" do
+        hidden = scheduled(:lesson, position: 30, on: Date.new(2025, 11, 8), hidden: true, lesson: lesson)
+        unscheduled = create(:program_item, :lesson, program: program, position: 31, lesson: lesson)
+        foreign = create(:program_item, :lesson, lesson: lesson)
+        create(:cohort_slot, program_item: foreign, cohort: create(:cohort, program: foreign.program), available_on: Date.new(2025, 11, 8))
+
+        [ hidden, unscheduled, foreign ].each do |item|
+          get learner_cohort_play_path(cohort, item), headers: turbo_stream
+          expect(response).to have_http_status(:not_found)
+        end
       end
     end
   end

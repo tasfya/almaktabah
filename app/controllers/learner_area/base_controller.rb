@@ -1,5 +1,7 @@
 module LearnerArea
   class BaseController < ApplicationController
+    include TransientBreadcrumbs
+
     before_action :no_store
     before_action :authenticate_learner!
     before_action :setup_learner_breadcrumbs

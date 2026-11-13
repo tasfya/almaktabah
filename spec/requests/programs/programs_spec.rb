@@ -81,6 +81,7 @@ RSpec.describe "Programs", type: :request do
       create(:cohort, program: hidden)
       get program_path(hidden)
       expect(response.body).not_to include(program_enrollments_path(hidden))
+      expect(Array(session[:breadcrumbs]).to_s).not_to include(hidden.title)
     end
 
     it "lists open cohorts with an enroll button and hides closed ones" do

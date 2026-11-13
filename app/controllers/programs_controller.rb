@@ -1,4 +1,6 @@
 class ProgramsController < ApplicationController
+  include TransientBreadcrumbs
+
   before_action :setup_program_breadcrumbs
 
   def index
