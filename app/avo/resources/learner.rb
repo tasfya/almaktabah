@@ -14,12 +14,12 @@ class Avo::Resources::Learner < Avo::BaseResource
 
   def fields
     field :id, as: :id
-    field :full_name, as: :text, sortable: true
-    field :email, as: :text, sortable: true
-    field :gender, as: :select, enum: ::Learner.genders
-    field :confirmed_at, as: :date_time, hide_on: :index
-    field :created_at, as: :date_time, sortable: true, name: "Signed up"
-    field :enrollments, as: :has_many, attach_scope: -> { query.none }
+    field :full_name, as: :text, name: "الاسم الكامل", sortable: true
+    field :email, as: :text, name: "البريد الإلكتروني", sortable: true
+    field :gender, as: :select, name: "الجنس", enum: ::Learner.genders
+    field :confirmed_at, as: :date_time, name: "تأكيد البريد", hide_on: :index
+    field :created_at, as: :date_time, sortable: true, name: "تاريخ التسجيل"
+    field :enrollments, as: :has_many, translation_key: "avo.resource_translations.enrollment", attach_scope: -> { query.none }
   end
 
   def actions

@@ -14,3 +14,12 @@
 # ActiveSupport::Inflector.inflections(:en) do |inflect|
 #   inflect.acronym "RESTful"
 # end
+
+# Avo singularizes a has_many panel's Arabic title (config/locales/avo.ar.yml)
+# with the English rules to label its buttons ("إنشاء موعد جديد", "حذف موعد").
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  {
+    "برنامج" => "برامج", "عنصر" => "عناصر", "اختبار" => "اختبارات", "سؤال" => "أسئلة",
+    "دفعة" => "دفعات", "موعد" => "مواعيد", "طالب" => "طلاب", "تسجيل" => "تسجيلات"
+  }.each { |singular, plural| inflect.irregular(singular, plural) }
+end

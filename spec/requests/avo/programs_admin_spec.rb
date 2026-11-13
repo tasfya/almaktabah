@@ -4,8 +4,13 @@ require "rails_helper"
 
 RSpec.describe "Avo admin for programs", type: :request do
   include Devise::Test::IntegrationHelpers
+  include ActiveSupport::Testing::TimeHelpers
 
   include_context "with tenant domain"
+
+  # The cohort starts on 2025-11-08; generating its schedule later would put
+  # every exam window in the past, which Generate refuses.
+  before { travel_to Time.zone.local(2025, 11, 1, 12) }
 
   let(:admin) { create(:user, admin: true) }
   let(:turbo) { { "Accept" => "text/vnd.turbo-stream.html, text/html" } }
@@ -363,6 +368,12 @@ RSpec.describe "Avo admin for programs", type: :request do
       expect(cohort.cohort_slots.minimum(:available_on)).to eq(Date.new(2025, 11, 11))
     end
 
+    it "reads breaks typed with Arabic-Indic or Persian digits" do
+      generate(skip_ranges: "٢٠٢٥-١١-٠٨..۲۰۲۵-۱۱-۱۰\n")
+
+      expect(cohort.cohort_slots.minimum(:available_on)).to eq(Date.new(2025, 11, 11))
+    end
+
     {
       "no weekday" => { weekdays: [ "" ] },
       "a bad break" => { skip_ranges: "2025-11-08..soon" },
@@ -380,6 +391,66 @@ RSpec.describe "Avo admin for programs", type: :request do
         expect(response.body).to include("bg-red-400")
         expect(cohort.cohort_slots.pluck(:id)).to eq(before)
       end
+    end
+  end
+
+  describe "Generate schedule guards" do
+    let(:other) { create(:cohort, program: program, name: "Other cohort", starts_on: Date.new(2025, 11, 8)) }
+
+    def generate_on(cohorts)
+      run_action("cohorts", Avo::Actions::GenerateCohortSchedule, cohorts,
+                 weekdays: [ "", "0", "1", "2", "3", "4", "6" ], lessons_per_day: "1",
+                 exam_open_wday: "3", exam_close_wday: "5", exam_close_hour: "22", skip_ranges: "")
+    end
+
+    def slot_rows(*cohorts)
+      CohortSlot.where(cohort: cohorts).order(:id).pluck(:id, :available_on)
+    end
+
+    before do
+      generate
+      Programs::ScheduleGenerator.new(other, weekdays: [ 1 ]).call
+    end
+
+    it "refuses every selected cohort once one has a ticked lesson" do
+      enrollment = create(:enrollment, cohort: cohort, domain: domain)
+      create(:lesson_completion, enrollment: enrollment, program_item: lesson_items.first)
+      before = slot_rows(cohort, other)
+
+      generate_on([ other, cohort ])
+
+      expect(response.body).to include("bg-red-400")
+      expect(response.body).to include(cohort.name)
+      expect(slot_rows(cohort, other)).to eq(before)
+    end
+
+    it "refuses once a learner has taken an exam" do
+      create(:exam_attempt, exam: exam_item.exam, enrollment: create(:enrollment, cohort: cohort, domain: domain))
+      before = slot_rows(cohort)
+
+      generate_on(cohort)
+
+      expect(response.body).to include("bg-red-400")
+      expect(slot_rows(cohort)).to eq(before)
+    end
+
+    it "refuses every selected cohort when one would get an exam window that is already closed" do
+      other.update!(starts_on: Date.new(2025, 10, 1))
+      before = slot_rows(cohort, other)
+
+      generate_on([ cohort, other ])
+
+      expect(response.body).to include("bg-red-400")
+      expect(response.body).to include("Other cohort")
+      expect(slot_rows(cohort, other)).to eq(before)
+    end
+
+    it "regenerates cohorts with enrolled learners who have not started" do
+      create(:enrollment, cohort: cohort, domain: domain)
+
+      generate_on(cohort)
+
+      expect(response.body).not_to include("bg-red-400")
     end
   end
 
@@ -409,9 +480,31 @@ RSpec.describe "Avo admin for programs", type: :request do
     create(:cohort_slot, :exam, cohort: cohort, program_item: create(:program_item, :exam, program: program, exam: empty))
 
     get "/avo/resources/cohorts/#{cohort.id}"
-    expect(response.body).to include("No questions yet: Unwritten exam")
+    expect(response.body).to include("«Unwritten exam»")
+    expect(response.body).to include("لا يحصل أي طالب في هذه الدفعة على شهادة")
     get "/avo/resources/cohorts"
-    expect(response.body).to include("No questions yet: Unwritten exam")
+    expect(response.body).to include("اختبار بلا أسئلة")
+    get "/avo/resources/exams/#{empty.id}"
+    expect(response.body).to include("هذا الاختبار بلا أسئلة")
+    get "/avo/resources/exams"
+    expect(response.body).to include("بلا أسئلة")
+  end
+
+  it "shows no warning when every scheduled exam has questions" do
+    generate
+
+    get "/avo/resources/cohorts/#{cohort.id}"
+    expect(response.body).not_to include("بلا أسئلة")
+    get "/avo/resources/exams/#{exam_item.exam_id}"
+    expect(response.body).not_to include("بلا أسئلة")
+  end
+
+  it "names the program and cohort of each certificate on the index" do
+    create(:certificate, enrollment: create(:enrollment, cohort: cohort, domain: domain))
+
+    get "/avo/resources/certificates"
+
+    expect(response.body).to include(program.title, cohort.name)
   end
 
   describe "Shift schedule" do
@@ -425,6 +518,51 @@ RSpec.describe "Avo admin for programs", type: :request do
 
       expect(first.reload.available_on).to eq(first.available_on)
       expect(rest.first.reload.available_on).to eq(after + 7)
+    end
+
+    { "the picker's format" => "%Y/%m/%d", "ISO" => "%Y-%m-%d" }.each do |label, format|
+      it "takes the date in #{label}" do
+        slot = cohort.cohort_slots.order(:available_on).last
+        after = slot.available_on
+
+        run_action("cohorts", Avo::Actions::ShiftCohortSchedule, cohort, after: after.strftime(format), days: "2")
+
+        expect(response.body).not_to include("bg-red-400")
+        expect(slot.reload.available_on).to eq(after + 2)
+      end
+    end
+
+    it "takes the date in Arabic-Indic digits, as the picker posts in an Arabic browser locale" do
+      slot = cohort.cohort_slots.order(:available_on).last
+      after = slot.available_on
+
+      run_action("cohorts", Avo::Actions::ShiftCohortSchedule, cohort, after: after.strftime("%Y/%m/%d").tr("0-9", "٠-٩"), days: "2")
+
+      expect(response.body).not_to include("bg-red-400")
+      expect(slot.reload.available_on).to eq(after + 2)
+    end
+
+    it "refuses a shift that would close an open or upcoming exam window, and moves nothing" do
+      dates = cohort.cohort_slots.order(:id).pluck(:available_on, :closes_at)
+      expect(cohort.exam_slots.where(closes_at: ..Time.current)).to be_empty
+
+      run_action("cohorts", Avo::Actions::ShiftCohortSchedule, cohort, after: cohort.starts_on.iso8601, days: "-20")
+
+      expect(response.body).to include("bg-red-400")
+      expect(response.body).to include("الإزاحة تُغلق نافذة اختبار")
+      expect(cohort.cohort_slots.order(:id).pluck(:available_on, :closes_at)).to eq(dates)
+    end
+
+    [ "15/11/2025", "2025/02/30", "2025/11/15x", "2025-W46-6", "20251115", "25/11/15", "2025-11/15" ].each do |value|
+      it "refuses #{value.inspect} and moves nothing" do
+        dates = cohort.cohort_slots.order(:id).pluck(:available_on)
+
+        run_action("cohorts", Avo::Actions::ShiftCohortSchedule, cohort, after: value, days: "2")
+
+        expect(response.body).to include("bg-red-400")
+        expect(response.body).to include("تاريخ غير صحيح")
+        expect(cohort.cohort_slots.order(:id).pluck(:available_on)).to eq(dates)
+      end
     end
 
     it "shows an error and moves nothing without a date or days" do
@@ -476,6 +614,8 @@ RSpec.describe "Avo admin for programs", type: :request do
     it "refuses a too short password" do
       run_action("learners", Avo::Actions::ResetLearnerPassword, learner, password: "1")
 
+      expect(response.body).to include("كلمة المرور قصيرة")
+      expect(response.body).not_to include("كلمة المرور كلمة المرور")
       expect(learner.reload.valid_password?("1")).to be(false)
     end
   end
