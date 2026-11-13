@@ -7,7 +7,8 @@
     <div class="flex items-start gap-3">
       <span class="text-xl leading-none" aria-hidden="true">📝</span>
       <div class="flex-1 min-w-0">
-        <p class="font-semibold"><%= link_to exam_title(item), learner_cohort_exam_path(cohort, item.exam_id), class: "link link-hover" %></p>
+        <p class="font-semibold"><%= link_to exam_title(item), learner_cohort_exam_path(cohort, item.exam_id), class: "link link-hover",
+              data: { turbo_prefetch: false } %></p>
         <% if item.exam.questions.any? %>
           <p class="text-sm text-base-content/80"><%= exam_window(slot, cohort, progress.today) %></p>
         <% end %>

@@ -601,7 +601,7 @@ ar:
     cohort:
       lessons_progress: "الدروس المسموعة: %{done} من %{total}"
       exams_progress: "الاختبارات المسلّمة: %{done} من %{total}"
-      certificate_out_of_reach: "لن تُمنح الشهادة في هذه الدفعة بسبب نتيجة %{title}، ويمكنك متابعة الدروس."
+      certificate_out_of_reach: "لن تُمنح الشهادة في هذه الدفعة بسبب %{title}، ويمكنك متابعة الدروس."
       time_zone: "المواعيد بتوقيت %{zone}"
       certificate_issued: "مبارك! أتممت البرنامج، رقم شهادتك: %{number}"
       ticked: "سمعته"
@@ -684,7 +684,6 @@ ar:
       not_ready_female: "أكملي سماع الدروس السابقة أولًا، بقي %{lessons}."
       go_to_lesson: "انتقل إلى الدرس %{number}"
       open: "الاختبار متاح الآن"
-      submitted: "تم التسليم — نتيجتك %{score}٪"
       missed: "فات موعد الاختبار"
       missed_score: "فات موعد الاختبار — نتيجتك 0٪"
       certificate_lost: "لن تُمنح الشهادة في هذه الدفعة، لأن نتيجة هذا الاختبار دون درجة النجاح. ويمكنك متابعة الدروس."

@@ -20,7 +20,8 @@ export default class extends Controller {
   }
 
   tick() {
-    const left = Math.max(0, Math.floor((this.closesAtValue - (Date.now() + this.offset)) / 1000))
+    // Rounded up: "time up" only once the close has passed, never in its last second.
+    const left = Math.max(0, Math.ceil((this.closesAtValue - (Date.now() + this.offset)) / 1000))
     this.element.hidden = left > SHOWN_WITHIN
     const short = left < SHORT_WITHIN
     this.element.classList.toggle("text-red-700", short)

@@ -147,7 +147,7 @@ RSpec.describe "Learner area", type: :request do
 
         row = Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(exam)}")
         expect(row.at_css(".text-red-700").text).to eq("نتيجتك 40٪ — لم تبلغ درجة النجاح (60٪)")
-        expect(response.body).to include("لن تُمنح الشهادة في هذه الدفعة بسبب نتيجة")
+        expect(response.body).to include("لن تُمنح الشهادة في هذه الدفعة بسبب")
       end
 
       it "marks a passed exam as passed, with no certificate warning" do
