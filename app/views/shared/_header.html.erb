@@ -95,12 +95,18 @@
     </div>
   </div>
   <%# Navigation row - desktop only %>
-  <% if available_content_types.any? %>
+  <% if available_content_types.any? || programs_nav? %>
     <nav class="hidden bg-secondary md:flex border-t py-3" data-header-scroll-target="nav">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex gap-6 text-sm">
         <%= link_to t('navigation.home'), root_path, class: "text-secondary-content hover:link" %>
         <% available_content_types.each do |ct| %>
           <%= link_to t("navigation.#{content_type_nav_key(ct[:type])}"), content_type_path(ct[:type]), class: "text-secondary-content hover:link" %>
+        <% end %>
+        <% if programs_nav? %>
+          <%= link_to t("navigation.programs"), programs_path, class: "text-secondary-content hover:link" %>
+          <%= link_to learner_dashboard_path, class: "text-secondary-content hover:link ms-auto inline-flex items-center gap-1" do %>
+            <%= icon "user-circle", class: "size-4" %><%= t("navigation.my_programs") %>
+          <% end %>
         <% end %>
       </div>
     </nav>
@@ -110,7 +116,7 @@
     data-navigation-target="overlay"
     class="fixed top-(--header-height) left-0 right-0 bottom-0 bg-black/50 backdrop-blur-sm hidden md:hidden z-40 pointer-events-auto">
   </div>
-  <% if available_content_types.any? %>
+  <% if available_content_types.any? || programs_nav? %>
     <div
       id="mobile-menu"
       data-navigation-target="menu"
@@ -121,6 +127,12 @@
         <%= link_to t('navigation.home'), root_path, class: "block py-2 hover:link" %>
         <% available_content_types.each do |ct| %>
           <%= link_to t("navigation.#{content_type_nav_key(ct[:type])}"), content_type_path(ct[:type]), class: "block py-2 hover:link" %>
+        <% end %>
+        <% if programs_nav? %>
+          <%= link_to t("navigation.programs"), programs_path, class: "block py-2 hover:link" %>
+          <%= link_to learner_dashboard_path, class: "flex items-center gap-1 py-2 hover:link border-t border-base-300" do %>
+            <%= icon "user-circle", class: "size-4" %><%= t("navigation.my_programs") %>
+          <% end %>
         <% end %>
       </div>
     </div>

@@ -24,6 +24,14 @@ module ApplicationHelper
     @available_content_types ||= DomainContentTypesService.for_domain(@domain&.id)
   end
 
+  # Domain-level only: the header and footer are part of publicly cached pages.
+  def programs_nav?
+    return @programs_nav if defined?(@programs_nav)
+
+    @programs_nav = Rails.configuration.x.learners_enabled && @domain.present? &&
+      Program.for_domain_id(@domain.id).published.exists?
+  end
+
   def content_type_path(type)
     route_method = CONTENT_TYPE_ROUTES[type]
     return root_path unless route_method

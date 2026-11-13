@@ -8,7 +8,12 @@
         <% end %>
       </div>
       <% flash.each do |type, message| %>
-        <div role="alert" class="alert <%= type.to_s == "notice" ? "alert-success" : "alert-error" %> alert-soft text-sm"><%= message %></div>
+        <div role="<%= type.to_s == "alert" ? "alert" : "status" %>" class="alert <%= flash_alert_class(type) %> alert-soft text-sm"><%= message %></div>
+      <% end %>
+      <% if (pending = pending_enrollment_cohort) && %w[sessions registrations].include?(controller_name) %>
+        <div role="status" class="alert alert-info alert-soft text-sm">
+          <%= t("programs.learner_auth.pending_enrollment.#{controller_name}", program: pending.program.title, cohort: pending.name) %>
+        </div>
       <% end %>
       <%= yield %>
     </div>

@@ -259,6 +259,8 @@ ar:
     about_sheikh_alt: "عن الشيخ"
     contact_us: "اتصل بنا"
     mobile_menu: "القائمة الجانبية"
+    programs: "البرامج العلمية"
+    my_programs: "برامجي"
   common:
     back_to_list: "العودة إلى القائمة"
     no_media_available: "لا توجد وسائط متاحة حالياً"
@@ -496,6 +498,9 @@ ar:
       have_account: "لديك حساب؟ سجّل الدخول"
       no_account: "ليس لديك حساب؟ أنشئ حسابًا"
       rate_limited: "محاولات كثيرة، يُرجى المحاولة بعد دقائق."
+      pending_enrollment:
+        registrations: "يلزم إنشاء حساب للالتحاق بـ«%{program}» (%{cohort})."
+        sessions: "بعد تسجيل الدخول يتم التحاقك بـ«%{program}» (%{cohort})."
     mail:
       greeting: "السلام عليكم ورحمة الله وبركاته، %{name}"
       ignore_notice: "إن لم تطلب ذلك فتجاهل هذه الرسالة."

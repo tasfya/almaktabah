@@ -61,6 +61,24 @@ RSpec.describe "Learner account mail", type: :request do
       expect(response).to redirect_to(learner_dashboard_path)
     end
 
+    it "keeps the enrollment a guest asked for through sign-up and email confirmation" do
+      program = create(:program, published: true).tap { |p| p.update!(domains: [ domain ]) }
+      cohort = create(:cohort, program: program)
+
+      post program_enrollments_path(program), params: { cohort_id: cohort.id }
+      perform_enqueued_jobs { post learner_registration_path, params: sign_up_params }
+      expect(response).to redirect_to(new_learner_session_path)
+      expect(Learner.last.enrollments.sole).to have_attributes(cohort: cohort, domain: domain)
+
+      reset!
+      host! tenant_host
+      get mail_link(ActionMailer::Base.deliveries.last).delete_prefix("https://fawzan.3ilm.org")
+      post learner_session_path, params: { learner: { email: "fatima@example.com", password: "secret123" } }
+      follow_redirect!
+
+      expect(response.body).to include(program.title, learner_cohort_path(cohort))
+    end
+
     it "mails a password reset whose link opens on the requesting site" do
       learner = create(:learner, email: "ali@example.com", domain: other_domain)
 

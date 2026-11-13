@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Programs", type: :request do
   include Devise::Test::IntegrationHelpers
+  include ActiveSupport::Testing::TimeHelpers
 
   include_context "with tenant domain"
 
@@ -109,14 +110,80 @@ RSpec.describe "Programs", type: :request do
     let(:program) { program_on(domain) }
     let(:cohort) { create(:cohort, program: program) }
 
-    it "redirects a guest who tries to enroll to sign in, then back to the program" do
-      post program_enrollments_path(program), params: { cohort_id: cohort.id }
+    describe "as a guest" do
+      let(:sign_up_params) do
+        { learner: { full_name: "فاطمة بنت أحمد", gender: "female", email: "fatima@example.com",
+                     password: "password123", password_confirmation: "password123" } }
+      end
 
-      expect(response).to redirect_to(new_learner_session_path)
-      expect(Enrollment.count).to eq(0)
+      it "sends the guest to sign up with a neutral notice naming the cohort, and enrolls them after sign-up" do
+        post program_enrollments_path(program), params: { cohort_id: cohort.id }
 
-      post learner_session_path, params: { learner: { email: learner.email, password: "password123" } }
-      expect(response).to redirect_to(program_path(program))
+        expect(response).to redirect_to(new_learner_registration_path)
+        expect(Enrollment.count).to eq(0)
+
+        follow_redirect!
+        notice = Nokogiri::HTML(response.body).at_css(".alert-info")
+        expect(notice.text).to include(program.title, cohort.name)
+        expect(response.body).not_to include("alert-error")
+
+        post learner_registration_path, params: sign_up_params
+        expect(response).to redirect_to(learner_cohort_path(cohort))
+        expect(Learner.last.enrollments.sole).to have_attributes(cohort: cohort, domain: domain)
+        expect(flash[:notice]).to eq(I18n.t("programs.enrollments.enrolled"))
+      end
+
+      it "keeps the cohort through a failed sign-up and enrolls on sign-in instead" do
+        post program_enrollments_path(program), params: { cohort_id: cohort.id }
+        post learner_registration_path, params: { learner: sign_up_params[:learner].merge(full_name: "") }
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(Nokogiri::HTML(response.body).at_css(".alert-info").text).to include(program.title)
+
+        post learner_session_path, params: { learner: { email: learner.email, password: "password123" } }
+        expect(response).to redirect_to(learner_cohort_path(cohort))
+        expect(learner.enrollments.sole.cohort).to eq(cohort)
+      end
+
+      it "forgets a stale request, so a later sign-in doesn't enroll" do
+        post program_enrollments_path(program), params: { cohort_id: cohort.id }
+
+        travel(PendingEnrollment::TTL + 1.minute) do
+          post learner_session_path, params: { learner: { email: learner.email, password: "password123" } }
+        end
+
+        expect(response).to redirect_to(program_path(program))
+        expect(Enrollment.count).to eq(0)
+      end
+
+      it "doesn't enroll when the program was unpublished in the meantime" do
+        post program_enrollments_path(program), params: { cohort_id: cohort.id }
+        program.update!(published: false)
+
+        post learner_session_path, params: { learner: { email: learner.email, password: "password123" } }
+
+        expect(response).not_to redirect_to(learner_cohort_path(cohort))
+        expect(Enrollment.count).to eq(0)
+      end
+
+      it "doesn't carry the request to another site" do
+        post program_enrollments_path(program), params: { cohort_id: cohort.id }
+        program.update!(domains: [ other_domain ])
+
+        post learner_session_path, params: { learner: { email: learner.email, password: "password123" } }
+
+        expect(Enrollment.count).to eq(0)
+      end
+
+      it "doesn't enroll when the cohort closed in the meantime" do
+        post program_enrollments_path(program), params: { cohort_id: cohort.id }
+        cohort.update!(enrollment_closes_at: 1.minute.ago)
+
+        post learner_session_path, params: { learner: { email: learner.email, password: "password123" } }
+
+        expect(response).to redirect_to(program_path(program))
+        expect(flash[:alert]).to eq(I18n.t("programs.enrollments.closed"))
+        expect(Enrollment.count).to eq(0)
+      end
     end
 
     it "enrolls a learner in an open cohort and records the domain" do
