@@ -261,6 +261,11 @@ RSpec.describe "Learner accounts", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
+    it "treats a malformed learner parameter as a normal failed sign-in" do
+      expect { post learner_session_path, params: { learner: "foo" } }.not_to raise_error
+      expect(response.status).to be < 500
+    end
+
     it "counts two visitors behind one Cloudflare edge separately" do
       learner = create(:learner, password: "secret123")
       via_edge = ->(visitor) { { "X-Forwarded-For" => "172.71.178.144", "CF-Connecting-IP" => visitor } }

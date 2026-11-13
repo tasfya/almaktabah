@@ -16,7 +16,9 @@ module LearnerSite
   private
 
   def learner_email_rate_key
-    params.dig(:learner, :email).to_s.strip.downcase.presence || request.remote_ip
+    learner = params[:learner]
+    email = learner[:email] if learner.is_a?(ActionController::Parameters)
+    email.to_s.strip.downcase.presence || request.remote_ip
   end
 
   def refuse_rate_limited
