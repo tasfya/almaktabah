@@ -28,6 +28,13 @@ RSpec.describe Learners::Mailer do
     expect(mail.html_part.body.to_s).to include("https://binramzan.net/learners/password/edit?reset_password_token=tok456")
   end
 
+  it "links to the given request host in development" do
+    mail = described_class.reset_password_instructions(learner, "tok", url_options: { host: "almaktabah-x.localhost", port: 1355, protocol: "http://" })
+
+    expect(mail.text_part.body.to_s).to include("http://almaktabah-x.localhost:1355/learners/password/edit?reset_password_token=tok")
+    expect(mail.from).to eq([ "no-reply@3ilm.org" ])
+  end
+
   it "is Arabic RTL with a text part" do
     mail = described_class.reset_password_instructions(learner, "tok", {})
 

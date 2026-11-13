@@ -25,6 +25,8 @@ class Learner < ApplicationRecord
   def send_devise_notification(notification, *args)
     opts = args.extract_options!
     opts[:domain_id] ||= (Current.domain || domain)&.id
+    # Development hosts (portless, 127.0.0.1:<port>) are not the Domain's host.
+    opts[:url_options] ||= Current.request_url_options if Rails.env.development?
     devise_mailer.send(notification, self, *args, opts).deliver_later
   end
 end

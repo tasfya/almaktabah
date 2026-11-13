@@ -19,8 +19,7 @@ module Learners
     end
 
     def url_options
-      defaults = Rails.application.config.action_mailer.default_url_options.to_h.except(:host)
-      defaults.merge(host: host, protocol: Rails.env.development? ? "http" : "https")
+      { host: host, protocol: "https" }
     end
 
     private

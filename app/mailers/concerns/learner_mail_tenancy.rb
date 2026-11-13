@@ -7,12 +7,15 @@ module LearnerMailTenancy
   end
 
   def default_url_options
-    @identity ? @identity.url_options : super
+    return super unless @identity
+
+    @url_options.presence || @identity.url_options
   end
 
   private
 
-  def use_domain(domain)
+  def use_domain(domain, url_options: nil)
+    @url_options = url_options
     @domain = domain
     @identity = Learners::MailIdentity.new(domain)
   end

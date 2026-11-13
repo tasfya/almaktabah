@@ -5,7 +5,10 @@ module Learners
     protected
 
     def devise_mail(record, action, opts = {}, &block)
-      use_domain(Domain.find_by(id: opts.delete(:domain_id)) || record.domain || raise(ArgumentError, "no site to send learner mail from"))
+      domain = Domain.find_by(id: opts.delete(:domain_id)) || record.domain
+      raise ArgumentError, "no site to send learner mail from" unless domain
+
+      use_domain(domain, url_options: opts.delete(:url_options))
       super(record, action, opts.merge(from: @identity.from, reply_to: nil), &block)
     end
   end

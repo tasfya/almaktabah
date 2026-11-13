@@ -1,3 +1,3 @@
 class Current < ActiveSupport::CurrentAttributes
-  attribute :domain
+  attribute :domain, :request_url_options
 end

@@ -33,6 +33,7 @@ class ApplicationController < ActionController::Base
     # Domain row; fall back to the main seeded site in development.
     @domain ||= Domain.find_by_host("127.0.0.1") if Rails.env.development?
     Current.domain = @domain
+    Current.request_url_options = { host: request.host, port: request.optional_port, protocol: request.protocol }
     return render_not_found if @domain.nil? && !devise_controller?
 
     if @domain&.logo.present?
