@@ -48,12 +48,17 @@ module Programs
       :open
     end
 
+    # The cohort's visible items (lessons, books, exams) in position order.
+    def items
+      @items ||= slots_by_item_id.values.map(&:program_item).reject(&:hidden?).sort_by(&:position)
+    end
+
     def lesson_items
-      scheduled_items.select(&:lesson?)
+      items.select(&:lesson?)
     end
 
     def exam_items
-      scheduled_items.select(&:exam?)
+      items.select(&:exam?)
     end
 
     def percent_complete
@@ -64,7 +69,7 @@ module Programs
     end
 
     def todays_items
-      scheduled_items.select { |item| slot_for(item).available_on == today }
+      items.select { |item| slot_for(item).available_on == today }
     end
 
     def slot_for(item)
@@ -86,11 +91,7 @@ module Programs
     end
 
     def slots_by_item_id
-      @slots_by_item_id ||= enrollment.cohort.cohort_slots.includes(program_item: { exam: :questions }).index_by(&:program_item_id)
-    end
-
-    def scheduled_items
-      @scheduled_items ||= slots_by_item_id.values.map(&:program_item).reject(&:hidden?).sort_by(&:position)
+      @slots_by_item_id ||= enrollment.cohort.cohort_slots.includes(program_item: [ :lesson, :book, { exam: :questions } ]).index_by(&:program_item_id)
     end
 
     def submitted_exam_ids

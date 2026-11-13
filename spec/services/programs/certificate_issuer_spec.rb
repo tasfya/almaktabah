@@ -41,7 +41,7 @@ RSpec.describe Programs::CertificateIssuer do
     certificate = issue
 
     expect(certificate).to be_persisted
-    expect(certificate.number).to match(/\A#{cohort.id}-[A-Z0-9]{8}\z/o)
+    expect(certificate.number).to match(/\A#{cohort.id}-[A-Z0-9]{8}\z/)
     expect(certificate.domain).to eq(enrollment.domain)
     expect(enrollment.reload.completed_at).to be_present
   end
@@ -76,6 +76,15 @@ RSpec.describe Programs::CertificateIssuer do
     create(:program_item, :exam, program: program, position: 3)
     hidden = create(:program_item, :lesson, program: program, position: 4, hidden: true)
     create(:cohort_slot, cohort: cohort, program_item: hidden, available_on: Date.new(2025, 11, 8))
+    tick_all
+
+    expect(issue).to be_present
+  end
+
+  it "does not let a hidden exam block the certificate" do
+    hidden = create(:program_item, :exam, program: program, position: 3, hidden: true)
+    create(:cohort_slot, cohort: cohort, program_item: hidden, available_on: Date.new(2025, 11, 19),
+                         opens_at: riyadh.local(2025, 11, 19), closes_at: riyadh.local(2025, 11, 21, 22))
     tick_all
 
     expect(issue).to be_present

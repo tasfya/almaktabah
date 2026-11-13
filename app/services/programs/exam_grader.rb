@@ -31,6 +31,8 @@ module Programs
 
     def create_attempt(answers)
       questions = @exam_item.exam.questions.includes(:choices).to_a
+      raise NotOpen if questions.empty?
+
       chosen = valid_choices(questions, answers)
       correct = chosen.count(&:correct?)
 

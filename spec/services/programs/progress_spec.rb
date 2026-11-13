@@ -163,6 +163,18 @@ RSpec.describe Programs::Progress do
     end
   end
 
+  describe "#items" do
+    it "lists the cohort's visible items, books included, in position order" do
+      book = slot(item(:book, position: 2), on: Date.new(2025, 11, 8))
+      lesson = slot(item(:lesson, position: 1), on: Date.new(2025, 11, 8))
+      exam = exam_slot(item(:exam, position: 3))
+      slot(item(:lesson, position: 4, hidden: true), on: Date.new(2025, 11, 8))
+      item(:lesson, position: 5)
+
+      expect(progress(first_day).items).to eq([ lesson, book, exam ])
+    end
+  end
+
   describe "#percent_complete" do
     it "counts ticked lessons over the cohort's lessons, ignoring books, hidden and unscheduled lessons" do
       lessons = (1..3).map { |n| slot(item(:lesson, position: n), on: Date.new(2025, 11, 8)) }

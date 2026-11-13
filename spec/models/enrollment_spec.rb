@@ -29,6 +29,15 @@ RSpec.describe Enrollment, type: :model do
     expect(enrollment.cohort.errors).to be_present
   end
 
+  it "keeps a program with enrollments from being destroyed, saying why" do
+    enrollment = create(:enrollment)
+    program = enrollment.cohort.program
+
+    expect(program.destroy).to be(false)
+    expect(program.errors).to be_of_kind(:base, :has_enrollments)
+    expect(enrollment.cohort.reload).to be_persisted
+  end
+
   it "keeps a ticked program item from being destroyed" do
     completion = create(:lesson_completion)
     expect(completion.program_item.destroy).to be(false)

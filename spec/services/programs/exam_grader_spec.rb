@@ -106,9 +106,25 @@ RSpec.describe Programs::ExamGrader do
     expect(Programs::Progress.new(enrollment, at: after_window).exam_state(exam_item)).to eq(:submitted)
   end
 
-  it "keeps a taken exam and its questions from being destroyed" do
+  it "keeps a taken exam and its questions from being destroyed, saying why" do
     submit({ questions.first.id => correct(questions.first) })
+
     expect(exam.destroy).to be(false)
+    expect(exam.errors).to be_of_kind(:base, :has_exam_attempts)
+    expect(exam.reload.questions.count).to eq(3)
     expect(questions.first.destroy).to be(false)
+  end
+
+  it "keeps a program with exam attempts from being destroyed" do
+    submit({})
+    expect(program.destroy).to be(false)
+    expect(program.errors).to be_of_kind(:base, :has_enrollments)
+  end
+
+  it "refuses an exam whose questions were removed after it was checked" do
+    allow(Programs::Progress).to receive(:new).and_return(instance_double(Programs::Progress, exam_state: :open))
+    exam.questions.destroy_all
+
+    expect { submit({}) }.to raise_error(described_class::NotOpen)
   end
 end
