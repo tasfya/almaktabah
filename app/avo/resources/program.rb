@@ -14,10 +14,13 @@ class Avo::Resources::Program < Avo::BaseResource
     field :published, as: :boolean, sortable: true
     field :published_at, as: :date_time, hide_on: :index
     field :pass_mark, as: :number, min: 0, max: 100, help: "Minimum exam score (%) for a certificate"
-    field :sites, as: :boolean_group,
+    field :sites, as: :boolean_group, only_on: :forms,
       options: -> { ::Domain.order(:name).pluck(:id, :name).to_h { |id, name| [ id.to_s, name ] } },
       format_using: -> { record.domain_ids.to_h { |id| [ id.to_s, true ] } },
       help: "The sites that list and serve this program"
+    field :site_names, as: :text, name: "Sites", only_on: :show do
+      record.domains.map(&:name).to_sentence
+    end
     field :program_items, as: :has_many, name: "Items"
     field :exams, as: :has_many
     field :cohorts, as: :has_many
@@ -25,8 +28,8 @@ class Avo::Resources::Program < Avo::BaseResource
 
   # The site checkboxes are not a Program attribute: Avo would try to write
   # `sites=`, so they are taken out and applied as domain assignments.
-  def hydrate_model_with_default_values
-    Avo::FormOnlyFields.allow_prefill(record, [ :sites ])
+  def hydrate(**args)
+    Avo::FormOnlyFields.define_on(args[:record], [ :sites ])
     super
   end
 

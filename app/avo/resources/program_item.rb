@@ -13,9 +13,9 @@ class Avo::Resources::ProgramItem < Avo::BaseResource
       (program&.program_items&.maximum(:position) || 0) + 1
     }
     field :kind, as: :select, enum: ::ProgramItem.kinds
-    field :lesson, as: :belongs_to, searchable: true, nullable: true
-    field :book, as: :belongs_to, searchable: true, nullable: true
-    field :exam, as: :belongs_to, nullable: true,
+    field :lesson, as: :belongs_to, nullable: true, hide_on: :index
+    field :book, as: :belongs_to, nullable: true, hide_on: :index
+    field :exam, as: :belongs_to, nullable: true, hide_on: :index,
       attach_scope: -> { parent.program_id ? query.where(program_id: parent.program_id) : query.none }
     field :display_title, as: :text, only_on: :index, name: "Title"
     field :title_override, as: :text, hide_on: :index

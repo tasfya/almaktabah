@@ -73,7 +73,7 @@ RSpec.describe "Avo admin for programs", type: :request do
     it "shows an enrollment's progress" do
       get "/avo/resources/enrollments/#{enrollment.id}"
 
-      expect(response.body).to include(Programs::Progress.new(enrollment).percent_complete.to_s)
+      expect(response.body).to include("#{Programs::Progress.new(enrollment).percent_complete}%")
     end
 
     it "prefills the next position for a new item of a program" do
@@ -99,6 +99,15 @@ RSpec.describe "Avo admin for programs", type: :request do
       expect(Program.find_by!(title: "برنامج").domains).to contain_exactly(other_domain)
     end
 
+    it "shows the assigned sites as checked boxes on the edit form" do
+      program.assign_to(other_domain)
+
+      get "/avo/resources/programs/#{program.to_param}/edit"
+
+      expect(response.body).to match(/id="program_sites_#{other_domain.id}"[^>]*checked="checked"/)
+      expect(response.body).to match(/id="program_sites_#{domain.id}"(?![^>]*checked)[^>]*>/)
+    end
+
     it "removes the unchecked sites on update" do
       program.assign_to(domain)
       program.assign_to(other_domain)
@@ -122,8 +131,30 @@ RSpec.describe "Avo admin for programs", type: :request do
       delete "/avo/resources/programs/#{program.to_param}", headers: turbo
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(I18n.t("activerecord.errors.models.program.attributes.base.has_enrollments", default: "طلاب مسجلون"))
+      expect(response.body).to include("طلاب مسجلون في دفعات هذا البرنامج")
+      expect(response.body).not_to include("Failed to destroy")
       expect(Program.exists?(program.id)).to be(true)
+    end
+
+    it "shows the model's error when an exam has attempts" do
+      exam = exam_item.exam
+      create(:exam_attempt, exam: exam, enrollment: create(:enrollment, cohort: cohort, domain: domain))
+
+      delete "/avo/resources/exams/#{exam.id}", headers: turbo
+
+      expect(response.body).to include("طلاب أجابوا عن هذا الاختبار")
+      expect(Exam.exists?(exam.id)).to be(true)
+    end
+
+    it "refuses to delete a cohort with enrollments without failing" do
+      create(:enrollment, cohort: cohort, domain: domain)
+
+      delete "/avo/resources/cohorts/#{cohort.id}", headers: turbo
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("طلاب مسجلون في هذه الدفعة")
+      expect(response.body).not_to include("Failed to destroy")
+      expect(Cohort.exists?(cohort.id)).to be(true)
     end
   end
 
@@ -142,7 +173,18 @@ RSpec.describe "Avo admin for programs", type: :request do
 
     def question_params(**attributes)
       { exam_id: exam.id, position: "9", kind: "single_choice", body: "سؤال؟",
-        choice_1: "أ", choice_2: "ب", choice_3: "ج", choice_4: "", choice_5: "", correct_choice: "2" }.merge(attributes)
+        choice_1: "أ", choice_2: "ب", choice_3: "ج", choice_4: "", choice_5: "", correct_slot: "2" }.merge(attributes)
+    end
+
+    it "shows the choices in the edit form" do
+      question = exam.questions.first
+
+      get "/avo/resources/questions/#{question.id}/edit"
+
+      question.choices.each_with_index do |choice, index|
+        expect(response.body).to match(/value="#{Regexp.escape(ERB::Util.h(choice.body))}"[^>]*name="question\[choice_#{index + 1}\]"/)
+      end
+      expect(response.body).to match(/name="question\[correct_slot\]".*?<option selected="selected" value="1">/m)
     end
 
     it "creates a question with its choices and one correct answer" do
@@ -153,7 +195,7 @@ RSpec.describe "Avo admin for programs", type: :request do
     end
 
     it "fills true/false choices when left blank" do
-      post "/avo/resources/questions", params: { question: question_params(kind: "true_false", choice_1: "", choice_2: "", choice_3: "", correct_choice: "1") }
+      post "/avo/resources/questions", params: { question: question_params(kind: "true_false", choice_1: "", choice_2: "", choice_3: "", correct_slot: "1") }
 
       expect(exam.questions.find_by!(position: 9).choices.map { |c| [ c.body, c.correct ] }).to eq([ [ "صح", true ], [ "خطأ", false ] ])
     end
@@ -163,13 +205,13 @@ RSpec.describe "Avo admin for programs", type: :request do
       bodies = question.choices.map(&:body)
 
       patch "/avo/resources/questions/#{question.id}",
-            params: { question: question_params(position: question.position.to_s, choice_1: bodies[0], choice_2: "", choice_3: bodies[2], correct_choice: "3") }
+            params: { question: question_params(position: question.position.to_s, choice_1: bodies[0], choice_2: "", choice_3: bodies[2], correct_slot: "3") }
 
       expect(question.reload.choices.map { |c| [ c.body, c.correct ] }).to eq([ [ bodies[0], false ], [ bodies[2], true ] ])
     end
 
     it "refuses a question without a correct answer" do
-      post "/avo/resources/questions", params: { question: question_params(correct_choice: "") }
+      post "/avo/resources/questions", params: { question: question_params(correct_slot: "") }
 
       expect(response).to have_http_status(:unprocessable_content)
       expect(response.body).to include(I18n.t("activerecord.errors.models.question.attributes.choices.exactly_one_correct", default: "جواب صحيح واحد"))
@@ -177,7 +219,7 @@ RSpec.describe "Avo admin for programs", type: :request do
     end
 
     it "refuses a true/false question with three choices" do
-      post "/avo/resources/questions", params: { question: question_params(kind: "true_false", correct_choice: "1") }
+      post "/avo/resources/questions", params: { question: question_params(kind: "true_false", correct_slot: "1") }
 
       expect(response).to have_http_status(:unprocessable_content)
       expect(exam.questions.where(position: 9)).to be_empty
@@ -190,9 +232,10 @@ RSpec.describe "Avo admin for programs", type: :request do
       AttemptAnswer.create!(exam_attempt: attempt, question: question, choice: answered)
 
       patch "/avo/resources/questions/#{question.id}",
-            params: { question: question_params(position: question.position.to_s, choice_1: question.choices[0].body, choice_2: question.choices[1].body, choice_3: "", correct_choice: "1") }
+            params: { question: question_params(position: question.position.to_s, choice_1: question.choices[0].body, choice_2: question.choices[1].body, choice_3: "", correct_slot: "1") }
 
       expect(response).to have_http_status(:unprocessable_content)
+      expect(response.body).to include("طلاب اختاروا هذا الجواب")
       expect(Choice.exists?(answered.id)).to be(true)
     end
   end

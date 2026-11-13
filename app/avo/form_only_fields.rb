@@ -1,8 +1,11 @@
 # Form fields that are not model attributes (site checkboxes, choice slots).
-# Resources take their values out of the params themselves; this only stops
-# Avo's new-form prefill, which reads and writes every field on the record.
+# Avo only renders a form field when the record has a writer for it, and its
+# new-form prefill reads and writes every field, so the record gets inert
+# accessors. Resources take the submitted values out of the params themselves.
 module Avo::FormOnlyFields
-  def self.allow_prefill(record, names)
+  def self.define_on(record, names)
+    return if record.nil?
+
     names.each do |name|
       next if record.respond_to?(name)
 

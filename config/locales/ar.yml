@@ -429,6 +429,30 @@ ar:
         two_for_true_false: "سؤال الصواب والخطأ له خياران فقط"
         has_exam_attempts: "لا يمكن الحذف: طلاب أجابوا عن هذا الاختبار"
         has_enrollments: "لا يمكن الحذف: طلاب مسجلون في دفعات هذا البرنامج"
+        restrict_dependent_destroy:
+          has_one: "لا يمكن الحذف: توجد سجلات مرتبطة (%{record})"
+          has_many: "لا يمكن الحذف: توجد سجلات مرتبطة (%{record})"
+      models:
+        cohort:
+          attributes:
+            base:
+              restrict_dependent_destroy:
+                has_many: "لا يمكن الحذف: طلاب مسجلون في هذه الدفعة"
+        program_item:
+          attributes:
+            base:
+              restrict_dependent_destroy:
+                has_many: "لا يمكن الحذف: طلاب أتمّوا هذا الدرس"
+        question:
+          attributes:
+            base:
+              restrict_dependent_destroy:
+                has_many: "لا يمكن الحذف: طلاب أجابوا عن هذا السؤال"
+        choice:
+          attributes:
+            base:
+              restrict_dependent_destroy:
+                has_many: "لا يمكن الحذف: طلاب اختاروا هذا الجواب"
     models:
       lesson: "درس"
       fatwa: "فتوى"
