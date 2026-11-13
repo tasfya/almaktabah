@@ -31,6 +31,12 @@
                   <%= pluralize(@series.lessons.published.count, 'درس') %>
                 </span>
               </div>
+              <% if stored_file_available?(@series.explainable) %>
+                <%= link_to @series.explainable, target: "_blank", rel: "noopener", class: "btn btn-secondary btn-sm mt-4" do %>
+                  <%= icon "document-text", class: "size-4" %>
+                  <%= t(".explainable_pdf") %>
+                <% end %>
+              <% end %>
               <% if @series.description.present? %>
                 <p class="text-base-content/70 mt-4">
                   <%= truncate(@series.description, length: 180) %>
