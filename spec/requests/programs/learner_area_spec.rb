@@ -75,7 +75,7 @@ RSpec.describe "Learner area", type: :request do
 
         get learner_dashboard_path
 
-        expect(response.body).to include(program.title, cohort.name, second_lesson.display_title, learner_cohort_path(cohort))
+        expect(response.body).to include(program.title, cohort.name, ERB::Util.h(second_lesson.display_title), learner_cohort_path(cohort))
         expect(response.body).not_to include("برنامج موقع آخر")
         expect(response.body).to include("أتممت 0٪")
       end
@@ -222,7 +222,7 @@ RSpec.describe "Learner area", type: :request do
         get learner_cohort_play_path(cohort, first_lesson), headers: turbo_stream
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('target="audio-player"', lesson.title)
+        expect(response.body).to include('target="audio-player"', ERB::Util.h(lesson.title))
       end
 
       it "sends no-store" do
