@@ -47,4 +47,11 @@ RSpec.describe Question, type: :model do
     question.save!
     expect(question.reload.choices.size).to eq(2)
   end
+
+  it "explains its choice errors in Arabic" do
+    question = question_with(true, true)
+    question.validate
+    expect(question.errors.full_messages.join).to include("جواب صحيح واحد")
+    expect(question.errors.full_messages.join).not_to include("Translation missing")
+  end
 end

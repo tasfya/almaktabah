@@ -5,10 +5,8 @@ class Cohort < ApplicationRecord
   validates :name, :starts_on, presence: true
   validate :known_time_zone
 
-  before_save :default_enrollment_closes_at
-
-  def today
-    Time.current.in_time_zone(time_zone).to_date
+  def today(at = Time.current)
+    at.in_time_zone(time_zone).to_date
   end
 
   def lesson_slots
@@ -19,31 +17,21 @@ class Cohort < ApplicationRecord
     slots_of_kind(:exam)
   end
 
-  def enrollment_open?(at = Time.current)
-    enrollment_closes_at.nil? || at < enrollment_closes_at
+  # enrollment_closes_at is an admin override; by default enrollment closes
+  # with the first exam window, and a cohort without exams stays open.
+  def enrollment_deadline
+    enrollment_closes_at || exam_slots.minimum(:closes_at)
   end
 
-  # Runs a change to the slots. An enrollment close that still equals the
-  # first exam close was defaulted, so it follows the new first exam; one an
-  # admin chose is kept.
-  def reschedule
-    transaction do
-      defaulted = enrollment_closes_at.present? && enrollment_closes_at == exam_slots.minimum(:closes_at)
-      yield
-      cohort_slots.reset
-      self.enrollment_closes_at = nil if defaulted
-      save!
-    end
+  def enrollment_open?(at = Time.current)
+    deadline = enrollment_deadline
+    deadline.nil? || at < deadline
   end
 
   private
 
   def slots_of_kind(kind)
     cohort_slots.joins(:program_item).merge(ProgramItem.where(kind: kind).order(:position))
-  end
-
-  def default_enrollment_closes_at
-    self.enrollment_closes_at ||= exam_slots.minimum(:closes_at) if persisted?
   end
 
   def known_time_zone

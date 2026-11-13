@@ -22,6 +22,10 @@ RSpec.describe Cohort, type: :model do
     end
   end
 
+  it "computes the date at a given time in its time zone" do
+    expect(build(:cohort).today(Time.utc(2025, 11, 8, 20, 59))).to eq(Date.new(2025, 11, 8))
+  end
+
   describe "enrollment" do
     let(:cohort) { create(:cohort) }
 
@@ -30,32 +34,33 @@ RSpec.describe Cohort, type: :model do
       create(:cohort_slot, cohort: cohort, program_item: item, opens_at: closes_at - 2.days, closes_at: closes_at)
     end
 
-    it "defaults enrollment_closes_at to the first exam close" do
+    it "closes by default when the first exam closes" do
       first_close = riyadh.local(2025, 11, 21, 22)
       add_exam_slot(riyadh.local(2025, 12, 5, 22))
       add_exam_slot(first_close)
-      cohort.save!
-      expect(cohort.enrollment_closes_at).to eq(first_close)
+      expect(cohort.enrollment_deadline).to eq(first_close)
+      expect(cohort.enrollment_open?(first_close - 1.minute)).to be(true)
+      expect(cohort.enrollment_open?(first_close)).to be(false)
     end
 
-    it "keeps an enrollment_closes_at set by an admin" do
+    it "follows an exam slot edited by hand" do
+      slot = add_exam_slot(riyadh.local(2025, 11, 21, 22))
+      slot.update!(closes_at: riyadh.local(2025, 11, 28, 22))
+      expect(cohort.enrollment_open?(riyadh.local(2025, 11, 25, 12))).to be(true)
+    end
+
+    it "uses the deadline an admin set over the default" do
       chosen = riyadh.local(2025, 11, 30, 12)
       add_exam_slot(riyadh.local(2025, 11, 21, 22))
       cohort.update!(enrollment_closes_at: chosen)
-      expect(cohort.reload.enrollment_closes_at).to eq(chosen)
+      expect(cohort.enrollment_deadline).to eq(chosen)
+      expect(cohort.enrollment_open?(riyadh.local(2025, 11, 25, 12))).to be(true)
+      expect(cohort.enrollment_open?(chosen)).to be(false)
     end
 
     it "stays open forever without exams" do
-      cohort.save!
-      expect(cohort.enrollment_closes_at).to be_nil
+      expect(cohort.enrollment_deadline).to be_nil
       expect(cohort.enrollment_open?(10.years.from_now)).to be(true)
-    end
-
-    it "is closed from enrollment_closes_at on" do
-      closes_at = riyadh.local(2025, 11, 21, 22)
-      cohort.update!(enrollment_closes_at: closes_at)
-      expect(cohort.enrollment_open?(closes_at - 1.minute)).to be(true)
-      expect(cohort.enrollment_open?(closes_at)).to be(false)
     end
   end
 

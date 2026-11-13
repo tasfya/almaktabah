@@ -21,10 +21,11 @@ module Programs
 
     def call
       attributes = slot_attributes
-      @cohort.reschedule do
+      CohortSlot.transaction do
         CohortSlot.where(cohort: @cohort).delete_all
         attributes.each { |slot| @cohort.cohort_slots.create!(slot) }
       end
+      @cohort.cohort_slots.reset
     end
 
     private

@@ -59,9 +59,9 @@ RSpec.describe Programs::ScheduleGenerator do
       expect(cohort.cohort_slots.count).to eq(6)
     end
 
-    it "sets the default enrollment close to the first exam close" do
+    it "makes the first exam close the default enrollment deadline" do
       generate
-      expect(cohort.enrollment_closes_at).to eq(riyadh.local(2025, 11, 21, 22, 0))
+      expect(cohort.enrollment_deadline).to eq(riyadh.local(2025, 11, 21, 22, 0))
     end
   end
 
@@ -111,20 +111,20 @@ RSpec.describe Programs::ScheduleGenerator do
     expect(slot_for(lesson).available_on).to eq(Date.new(2025, 11, 8))
   end
 
-  it "moves a defaulted enrollment close when regenerating" do
+  it "moves the default enrollment deadline when regenerating" do
     add_items(:lesson, :exam)
     generate
     cohort.update!(starts_on: Date.new(2025, 11, 15))
     generate
-    expect(cohort.enrollment_closes_at).to eq(riyadh.local(2025, 11, 21, 22, 0))
+    expect(cohort.enrollment_deadline).to eq(riyadh.local(2025, 11, 21, 22, 0))
   end
 
-  it "keeps an enrollment close chosen by an admin when regenerating" do
+  it "keeps an enrollment deadline chosen by an admin when regenerating" do
     chosen = riyadh.local(2025, 12, 1, 12, 0)
     add_items(:lesson, :exam)
     generate
     cohort.update!(enrollment_closes_at: chosen)
     generate
-    expect(cohort.enrollment_closes_at).to eq(chosen)
+    expect(cohort.enrollment_deadline).to eq(chosen)
   end
 end

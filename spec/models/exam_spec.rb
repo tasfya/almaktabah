@@ -17,9 +17,10 @@ RSpec.describe Exam, type: :model do
       .and change(Choice, :count).by(-9)
   end
 
-  it "destroys the program items that reference it" do
+  it "cannot be destroyed while a program item uses it" do
     item = create(:program_item, :exam)
-    expect { item.exam.destroy! }.to change(ProgramItem, :count).by(-1)
+    expect(item.exam.destroy).to be(false)
+    expect(item.reload.exam).to be_present
   end
 
   it "builds three single-choice questions with the first choice correct" do

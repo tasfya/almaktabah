@@ -45,15 +45,14 @@ RSpec.describe Programs::ScheduleShifter do
     expect(other.reload.available_on).to eq(Date.new(2026, 2, 20))
   end
 
-  it "moves a defaulted enrollment close with the first exam" do
+  it "moves the default enrollment deadline with the first exam" do
     create(:cohort_slot, :exam, cohort: cohort,
       available_on: Date.new(2026, 3, 4),
       opens_at: riyadh.local(2026, 3, 4, 0, 0),
       closes_at: riyadh.local(2026, 3, 6, 22, 0))
-    cohort.save!
 
     described_class.new(cohort, after: Date.new(2026, 2, 18), days: 21).call
 
-    expect(cohort.reload.enrollment_closes_at).to eq(riyadh.local(2026, 3, 27, 22, 0))
+    expect(cohort.reload.enrollment_deadline).to eq(riyadh.local(2026, 3, 27, 22, 0))
   end
 end
