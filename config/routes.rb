@@ -102,6 +102,7 @@ Rails.application.routes.draw do
     resources :programs, only: [ :index, :show ], path: I18n.t("routes.programs", default: "programs") do
       resources :enrollments, only: :create
     end
+    resources :certificates, only: :show, path: I18n.t("routes.certificates", default: "certificates")
 
     get "reminders/off/:token", to: "reminder_opt_outs#show", as: :reminder_opt_out
     post "reminders/off/:token", to: "reminder_opt_outs#create"
@@ -111,10 +112,12 @@ Rails.application.routes.draw do
       resources :cohorts, only: :show, as: :learner_cohorts do
         resources :completions, only: [ :create, :destroy ]
         get "play/:program_item_id", to: "plays#show", as: :play
+        resource :reminders, only: :update
         resources :exams, only: :show do
           post :submit, on: :member
         end
       end
+      resource :account, only: [ :show, :update, :destroy ], as: :learner_account
     end
   end
 

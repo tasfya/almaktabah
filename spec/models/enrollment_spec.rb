@@ -23,6 +23,14 @@ RSpec.describe Enrollment, type: :model do
     expect(LessonCompletion.count).to eq(0)
   end
 
+  it "revokes its certificate but keeps the name when destroyed on its own" do
+    certificate = create(:certificate)
+    certificate.enrollment.destroy!
+
+    expect(certificate.reload).to have_attributes(enrollment_id: nil, full_name_snapshot: certificate.full_name_snapshot)
+    expect(certificate.revoked_at).to be_present
+  end
+
   it "keeps a cohort with enrollments from being destroyed" do
     enrollment = create(:enrollment)
     expect(enrollment.cohort.destroy).to be(false)
