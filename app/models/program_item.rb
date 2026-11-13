@@ -12,12 +12,17 @@ class ProgramItem < ApplicationRecord
   validates :kind, presence: true
   validates :position, presence: true, uniqueness: { scope: :program_id }
   validate :reference_matches_kind
+  validate :exam_of_same_program
 
   def display_title
     title_override.presence || (lesson || book || exam)&.title
   end
 
   private
+
+  def exam_of_same_program
+    errors.add(:exam, :invalid) if exam && exam.program_id != program_id
+  end
 
   def reference_matches_kind
     REFERENCES.each do |reference|

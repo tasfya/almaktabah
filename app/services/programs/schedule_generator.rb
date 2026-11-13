@@ -7,25 +7,23 @@ module Programs
   class ScheduleGenerator
     def initialize(cohort, weekdays:, lessons_per_day: 1, exam_open_wday: 3, exam_close_wday: 5, exam_close_hour: 22, skip_ranges: [])
       raise ArgumentError, "weekdays must not be empty" if weekdays.blank?
-      raise ArgumentError, "lessons_per_day must be positive" unless lessons_per_day.to_i.positive?
+      raise ArgumentError, "skip ranges need both ends" if skip_ranges.any? { |range| range.begin.nil? || range.end.nil? }
 
       @cohort = cohort
-      @weekdays = weekdays.map(&:to_i)
-      @lessons_per_day = lessons_per_day.to_i
-      @exam_open_wday = exam_open_wday
-      @exam_close_wday = exam_close_wday
-      @exam_close_hour = exam_close_hour
+      @weekdays = weekdays.map { |day| bounded(day, 0..6, "weekday") }
+      @lessons_per_day = bounded(lessons_per_day, 1.., "lessons_per_day")
+      @exam_open_wday = bounded(exam_open_wday, 0..6, "exam_open_wday")
+      @exam_close_wday = bounded(exam_close_wday, 0..6, "exam_close_wday")
+      @exam_close_hour = bounded(exam_close_hour, 0..23, "exam_close_hour")
       @skip_ranges = skip_ranges
       @zone = ActiveSupport::TimeZone[cohort.time_zone]
     end
 
     def call
       attributes = slot_attributes
-      CohortSlot.transaction do
+      @cohort.reschedule do
         CohortSlot.where(cohort: @cohort).delete_all
         attributes.each { |slot| @cohort.cohort_slots.create!(slot) }
-        @cohort.cohort_slots.reset
-        @cohort.save!
       end
     end
 
@@ -67,6 +65,10 @@ module Programs
       day = from
       day += 1 until @weekdays.include?(day.wday) && !skipped?(day)
       day
+    end
+
+    def bounded(value, range, name)
+      Integer(value).tap { |number| raise ArgumentError, "#{name} must be in #{range}" unless range.cover?(number) }
     end
 
     def skipped?(date)

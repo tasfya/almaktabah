@@ -23,6 +23,19 @@ class Cohort < ApplicationRecord
     enrollment_closes_at.nil? || at < enrollment_closes_at
   end
 
+  # Runs a change to the slots. An enrollment close that still equals the
+  # first exam close was defaulted, so it follows the new first exam; one an
+  # admin chose is kept.
+  def reschedule
+    transaction do
+      defaulted = enrollment_closes_at.present? && enrollment_closes_at == exam_slots.minimum(:closes_at)
+      yield
+      cohort_slots.reset
+      self.enrollment_closes_at = nil if defaulted
+      save!
+    end
+  end
+
   private
 
   def slots_of_kind(kind)

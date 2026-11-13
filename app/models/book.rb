@@ -6,6 +6,7 @@ class Book < ApplicationRecord
   include AttachmentSerializable
 
   belongs_to :scholar, class_name: "Scholar", foreign_key: "author_id", inverse_of: :books
+  has_many :program_items, dependent: :restrict_with_error
   has_one_attached :file, service: Rails.application.config.public_storage
   has_one_attached :cover_image, service: Rails.application.config.public_storage
 

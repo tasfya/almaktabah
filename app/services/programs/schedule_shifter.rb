@@ -10,7 +10,7 @@ module Programs
     end
 
     def call
-      CohortSlot.transaction do
+      @cohort.reschedule do
         @cohort.cohort_slots.where(available_on: @after..).find_each do |slot|
           slot.update!(
             available_on: slot.available_on + @days,

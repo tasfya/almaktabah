@@ -53,4 +53,18 @@ RSpec.describe ProgramItem, type: :model do
       expect(item.display_title).to eq(item.exam.title)
     end
   end
+
+  it "rejects an exam of another program" do
+    item = build(:program_item, :exam)
+    item.exam = create(:exam)
+    expect(item).not_to be_valid
+  end
+
+  it "keeps a referenced lesson or book from being deleted" do
+    lesson_item = create(:program_item, :lesson)
+    book_item = create(:program_item, :book)
+    expect(lesson_item.lesson.destroy).to be(false)
+    expect(book_item.book.destroy).to be(false)
+    expect(ProgramItem.count).to eq(2)
+  end
 end

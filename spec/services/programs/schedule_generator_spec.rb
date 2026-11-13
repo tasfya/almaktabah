@@ -92,4 +92,39 @@ RSpec.describe Programs::ScheduleGenerator do
   it "rejects an empty weekday list" do
     expect { described_class.new(cohort, weekdays: []).call }.to raise_error(ArgumentError)
   end
+
+  it "rejects weekdays and hours out of range" do
+    expect { described_class.new(cohort, weekdays: [ 7 ]) }.to raise_error(ArgumentError)
+    expect { described_class.new(cohort, weekdays: sat_sun_mon, exam_open_wday: 9) }.to raise_error(ArgumentError)
+    expect { described_class.new(cohort, weekdays: sat_sun_mon, exam_close_hour: 24) }.to raise_error(ArgumentError)
+    expect { described_class.new(cohort, weekdays: sat_sun_mon, lessons_per_day: 0) }.to raise_error(ArgumentError)
+  end
+
+  it "rejects endless skip ranges" do
+    expect { described_class.new(cohort, weekdays: sat_sun_mon, skip_ranges: [ Date.new(2025, 11, 9).. ]) }.to raise_error(ArgumentError)
+  end
+
+  it "accepts form strings" do
+    lesson, exam = add_items(:lesson, :exam)
+    described_class.new(cohort, weekdays: %w[6 0 1], exam_open_wday: "3", exam_close_wday: "5", exam_close_hour: "22").call
+    expect(slot_for(exam).closes_at).to eq(riyadh.local(2025, 11, 14, 22, 0))
+    expect(slot_for(lesson).available_on).to eq(Date.new(2025, 11, 8))
+  end
+
+  it "moves a defaulted enrollment close when regenerating" do
+    add_items(:lesson, :exam)
+    generate
+    cohort.update!(starts_on: Date.new(2025, 11, 15))
+    generate
+    expect(cohort.enrollment_closes_at).to eq(riyadh.local(2025, 11, 21, 22, 0))
+  end
+
+  it "keeps an enrollment close chosen by an admin when regenerating" do
+    chosen = riyadh.local(2025, 12, 1, 12, 0)
+    add_items(:lesson, :exam)
+    generate
+    cohort.update!(enrollment_closes_at: chosen)
+    generate
+    expect(cohort.enrollment_closes_at).to eq(chosen)
+  end
 end

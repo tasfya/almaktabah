@@ -9,6 +9,7 @@ class Lesson < ApplicationRecord
   enum :audio_review_status, { pending: 0, flagged: 1, verified: 2, duplicate: 3 }
 
   belongs_to :series
+  has_many :program_items, dependent: :restrict_with_error
   delegate :scholar, to: :series
 
   validates :title, presence: true
