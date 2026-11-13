@@ -1,5 +1,5 @@
 <div id="program_flash">
   <% flash.each do |type, message| %>
-    <div role="alert" class="alert <%= type.to_s == "notice" ? "alert-success" : "alert-error" %> alert-soft text-sm mb-4"><%= message %></div>
+    <div role="<%= type.to_s == "alert" ? "alert" : "status" %>" class="alert <%= flash_alert_class(type) %> alert-soft text-sm mb-4"><%= message %></div>
   <% end %>
 </div>

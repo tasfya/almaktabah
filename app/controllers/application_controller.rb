@@ -9,11 +9,15 @@ class ApplicationController < ActionController::Base
   include BreadcrumbHelper
   include Pagy::Backend
   include ViewResolver
+  include PendingEnrollment
 
   protected
 
   def after_sign_in_path_for(resource)
-    resource.is_a?(Learner) ? stored_location_for(resource) || learner_dashboard_path : super
+    return super unless resource.is_a?(Learner)
+
+    stored = stored_location_for(resource)
+    complete_pending_enrollment(resource) || stored || learner_dashboard_path
   end
 
   # Cache for Cloudflare edge and browser

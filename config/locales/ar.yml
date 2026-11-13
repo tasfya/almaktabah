@@ -495,6 +495,9 @@ ar:
       have_account: "لديك حساب؟ سجّل الدخول"
       no_account: "ليس لديك حساب؟ أنشئ حسابًا"
       rate_limited: "محاولات كثيرة، يُرجى المحاولة بعد دقائق."
+      pending_enrollment:
+        registrations: "يلزم إنشاء حساب للالتحاق بـ«%{program}» (%{cohort})."
+        sessions: "بعد تسجيل الدخول يتم التحاقك بـ«%{program}» (%{cohort})."
     mail:
       greeting: "السلام عليكم ورحمة الله وبركاته، %{name}"
       ignore_notice: "إن لم تطلب ذلك فتجاهل هذه الرسالة."

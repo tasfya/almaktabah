@@ -11,7 +11,8 @@ module Learners
     end
 
     def after_sign_up_path_for(resource)
-      stored_location_for(resource) || learner_dashboard_path
+      stored = stored_location_for(resource)
+      complete_pending_enrollment(resource) || stored || learner_dashboard_path
     end
 
     def after_inactive_sign_up_path_for(_resource)

@@ -1,4 +1,8 @@
 module LearnerAreaHelper
+  def flash_alert_class(type)
+    { "notice" => "alert-success", "info" => "alert-info" }.fetch(type.to_s, "alert-error")
+  end
+
   def cohort_time(time, cohort)
     local = time.in_time_zone(cohort.time_zone)
     "#{l(local.to_date, format: :long)} #{l(local, format: :short)}"
