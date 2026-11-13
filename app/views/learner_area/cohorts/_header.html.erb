@@ -18,6 +18,10 @@
               class: "btn btn-primary btn-sm min-h-11" %>
       <% end %>
     </div>
+    <% blocking = progress.blocking_exams.first %>
+    <% if blocking && step[:item] != blocking %>
+      <p role="note" class="mt-2 text-sm font-semibold text-red-700"><%= t("programs.cohort.certificate_out_of_reach", title: exam_title(blocking)) %></p>
+    <% end %>
   <% end %>
   <p class="text-xs text-base-content/70 mt-2"><%= t("programs.cohort.time_zone", zone: cohort_time_zone_name(cohort)) %></p>
 </header>

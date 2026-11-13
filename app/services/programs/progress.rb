@@ -61,9 +61,14 @@ module Programs
       return :locked if slot.nil? || exam_item.hidden? || exam_item.exam.questions.none?
       return :missed if slot.closed?(at)
       return :locked unless slot.open?(at)
-      return :not_ready if lesson_items.any? { |lesson| lesson.position < exam_item.position && !ticked?(lesson) }
+      return :not_ready if lessons_left_before(exam_item).any?
 
       :open
+    end
+
+    # Earlier lessons the learner still has to tick before the exam opens.
+    def lessons_left_before(exam_item)
+      lesson_items.select { |lesson| lesson.position < exam_item.position && !ticked?(lesson) }
     end
 
     # The cohort's visible items (lessons, books, exams) in position order.

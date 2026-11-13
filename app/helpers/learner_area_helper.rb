@@ -1,6 +1,13 @@
 module LearnerAreaHelper
   LEARNER_FORM_FIELDS = %i[full_name gender email password password_confirmation].freeze
 
+  EXAM_STATUS_CLASSES = {
+    open: "badge badge-success font-semibold",
+    success: "font-semibold text-green-800",
+    error: "font-semibold text-red-700",
+    neutral: "text-base-content/80"
+  }.freeze
+
   # Field errors in the order the fields appear on the form.
   def learner_form_errors(resource)
     LEARNER_FORM_FIELDS.flat_map { |attribute| resource.errors.messages_for(attribute) } +
@@ -142,14 +149,18 @@ module LearnerAreaHelper
     { text: t("programs.next_step.finished") }
   end
 
+  # The exam's state as the learner should read it: a missed or failed exam
+  # says what it costs, a pass says so.
   def exam_status(progress, item, scores)
-    case progress.exam_state(item)
-    when :open then t("programs.exam.open")
-    when :not_ready then learner_t("programs.exam.not_ready")
-    when :submitted then t("programs.exam.submitted", score: scores[item.exam_id])
-    when :missed then t("programs.exam.missed")
-    else exam_lock_message(progress, item)
-    end
+    text, tone =
+      case progress.exam_state(item)
+      when :open then [ t("programs.exam.open"), :open ]
+      when :not_ready then [ exam_not_ready_message(progress, item), :neutral ]
+      when :submitted then exam_result_status(scores[item.exam_id], progress.enrollment.cohort.program.pass_mark)
+      when :missed then [ t("programs.exam.missed_score"), :error ]
+      else [ exam_lock_message(progress, item), :neutral ]
+      end
+    tag.span(text, class: EXAM_STATUS_CLASSES.fetch(tone))
   end
 
   # A certificate is served only on the site it was issued on, which may not be
@@ -161,6 +172,24 @@ module LearnerAreaHelper
   end
 
   private
+
+  def exam_result_status(score, pass_mark)
+    if score.to_i >= pass_mark
+      [ "#{t("programs.exam.result", score: score)} — #{learner_t("programs.exam.passed")} ✓", :success ]
+    else
+      [ "#{t("programs.exam.result", score: score)} — #{learner_t("programs.exam.failed", pass_mark: pass_mark)}", :error ]
+    end
+  end
+
+  def exam_not_ready_message(progress, item)
+    left = progress.lessons_left_before(item)
+    first = left.first
+    safe_join([
+      learner_t("programs.exam.not_ready", lessons: arabic_count("programs.counts.lessons", left.size)), " ",
+      link_to(t("programs.exam.go_to_lesson", number: progress.lesson_number(first)),
+              learner_cohort_path(progress.enrollment.cohort, anchor: dom_id(first)), class: "link link-primary")
+    ])
+  end
 
   # :locked means either "the window has not opened yet" or "this exam cannot
   # be taken" (no questions written yet); only the first has a date to show.
