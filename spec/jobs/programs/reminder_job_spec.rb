@@ -98,6 +98,13 @@ RSpec.describe Programs::ReminderJob do
       expect(deliveries).to be_empty
     end
 
+    it "does not send to an unconfirmed learner" do
+      enrollment.learner.update_columns(confirmed_at: nil)
+      run
+
+      expect(deliveries).to be_empty
+    end
+
     it "does not send once reminders were turned off" do
       enrollment.update!(reminders_enabled: false)
       run

@@ -37,6 +37,14 @@ RSpec.describe Programs::ReminderDispatchJob do
       expect(dispatched_at(new_york.local(2025, 11, 3, 5, 5))).to be_empty
     end
 
+    it "does nothing while learner accounts are switched off" do
+      Rails.configuration.x.learners_enabled = false
+
+      expect(dispatched_at(riyadh.local(2025, 11, 19, 6, 5))).to be_empty
+    ensure
+      Rails.configuration.x.learners_enabled = true
+    end
+
     it "skips enrollments with reminders off, completed, or an unconfirmed learner" do
       riyadh_enrollment.update!(reminders_enabled: false)
       cohort = riyadh_enrollment.cohort

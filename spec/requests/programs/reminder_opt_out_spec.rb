@@ -31,6 +31,17 @@ RSpec.describe "Reminder opt-out", type: :request do
     expect(enrollment.reload.reminders_enabled).to be(false)
   end
 
+  it "works from an old browser that the rest of the site turns away" do
+    old_chrome = "Mozilla/5.0 (Linux; Android 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Mobile Safari/537.36"
+
+    get reminder_opt_out_path(token: token), headers: { "User-Agent" => old_chrome }
+    expect(response).to have_http_status(:ok)
+
+    post reminder_opt_out_path(token: token), headers: { "User-Agent" => old_chrome }
+    expect(response).to have_http_status(:ok)
+    expect(enrollment.reload.reminders_enabled).to be(false)
+  end
+
   it "returns not found for a tampered token" do
     get reminder_opt_out_path(token: "#{token}x")
     expect(response).to have_http_status(:not_found)

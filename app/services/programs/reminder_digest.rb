@@ -20,7 +20,7 @@ module Programs
     end
 
     def exams_opening
-      @exams_opening ||= exam_slots.select { |slot| slot.opens_at >= start_of_day && slot.opens_at < next_reminder }
+      @exams_opening ||= exam_slots.select { |slot| slot.opens_at >= start_of_day && slot.opens_at < next_reminder && slot.closes_at > at }
     end
 
     def exams_closing
@@ -45,9 +45,11 @@ module Programs
       at + 24.hours
     end
 
-    # Exams the learner can still act on: visible, with a window, not submitted.
+    # Exams the learner can still act on: visible, with questions and a window,
+    # not submitted.
     def exam_slots
       @exam_slots ||= progress.exam_items
+        .select { |item| item.exam.questions.any? }
         .reject { |item| progress.exam_state(item) == :submitted }
         .filter_map { |item| progress.slot_for(item) }
         .select { |slot| slot.opens_at && slot.closes_at }

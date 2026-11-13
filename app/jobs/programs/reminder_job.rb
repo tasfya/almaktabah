@@ -11,10 +11,10 @@ module Programs
     ].freeze
 
     def perform(enrollment_id, local_date)
-      return unless Rails.configuration.x.learner_mail_enabled
+      return unless Rails.configuration.x.learners_enabled && Rails.configuration.x.learner_mail_enabled
 
       enrollment = Enrollment.find_by(id: enrollment_id)
-      return unless enrollment&.reminders_enabled? && enrollment.completed_at.nil?
+      return unless enrollment&.reminders_enabled? && enrollment.completed_at.nil? && enrollment.learner.confirmed?
       return unless enrollment.cohort.today.iso8601 == local_date
       return unless ReminderDispatchJob::WINDOW.cover?(Time.current.in_time_zone(enrollment.cohort.time_zone).hour)
 

@@ -6,7 +6,7 @@ module Programs
     WINDOW = 6..11
 
     def perform
-      return unless Rails.configuration.x.learner_mail_enabled
+      return unless Rails.configuration.x.learners_enabled && Rails.configuration.x.learner_mail_enabled
 
       now = Time.current
       Cohort.find_each do |cohort|

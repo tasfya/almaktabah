@@ -17,8 +17,9 @@ RSpec.describe Programs::ReminderDigest do
     item
   end
 
-  def exam_slot(opens_at:, closes_at:, **attributes)
+  def exam_slot(opens_at:, closes_at:, questions: true, **attributes)
     item = create(:program_item, :exam, program: program, **attributes)
+    create(:question, exam: item.exam) if questions
     create(:cohort_slot, cohort: cohort, program_item: item, available_on: opens_at.to_date, opens_at: opens_at, closes_at: closes_at)
   end
 
@@ -67,6 +68,19 @@ RSpec.describe Programs::ReminderDigest do
 
   it "ignores an exam that already closed" do
     exam_slot(opens_at: riyadh.local(2025, 11, 16), closes_at: riyadh.local(2025, 11, 19, 6))
+
+    expect(digest).to be_empty
+  end
+
+  it "does not announce an exam that opened and closed before the reminder" do
+    exam_slot(opens_at: riyadh.local(2025, 11, 19), closes_at: riyadh.local(2025, 11, 19, 5))
+
+    expect(digest).to be_empty
+  end
+
+  it "does not announce an exam without questions or a hidden one" do
+    exam_slot(opens_at: riyadh.local(2025, 11, 19), closes_at: riyadh.local(2025, 11, 19, 22), questions: false)
+    exam_slot(opens_at: riyadh.local(2025, 11, 19), closes_at: riyadh.local(2025, 11, 19, 22), hidden: true)
 
     expect(digest).to be_empty
   end

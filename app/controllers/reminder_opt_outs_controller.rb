@@ -16,6 +16,10 @@ class ReminderOptOutsController < ApplicationController
 
   private
 
+  # Unsubscribing must work from any browser or mail client, however old.
+  def allow_browser(**)
+  end
+
   def set_enrollment
     @enrollment = Enrollment.find_by_token_for(:reminders_off, params[:token])
     render_not_found unless @enrollment

@@ -20,6 +20,7 @@ RSpec.describe ReminderMailer do
 
   def exam_closing_tonight
     item = create(:program_item, :exam, program: program, title_override: "الاختبار الأول")
+    create(:question, exam: item.exam)
     create(:cohort_slot, cohort: cohort, program_item: item, available_on: Date.new(2025, 11, 17),
       opens_at: riyadh.local(2025, 11, 17), closes_at: riyadh.local(2025, 11, 19, 22))
   end
