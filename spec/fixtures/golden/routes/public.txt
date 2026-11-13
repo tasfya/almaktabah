@@ -49,7 +49,10 @@ GET /reminders/off/:token(.:format) reminder_opt_outs#show
 POST /reminders/off/:token(.:format) reminder_opt_outs#create
 GET /my(.:format) learner_area/dashboard#show
 POST /my/cohorts/:learner_cohort_id/completions(.:format) learner_area/completions#create
+DELETE /my/cohorts/:learner_cohort_id/completions/:id(.:format) learner_area/completions#destroy
 GET /my/cohorts/:learner_cohort_id/play/:program_item_id(.:format) learner_area/plays#show
+POST /my/cohorts/:learner_cohort_id/exams/:id/submit(.:format) learner_area/exams#submit
+GET /my/cohorts/:learner_cohort_id/exams/:id(.:format) learner_area/exams#show
 GET /my/cohorts/:id(.:format) learner_area/cohorts#show
 GET / home#index
 GET /podcasts/feed(.:format) podcasts#feed format=xml

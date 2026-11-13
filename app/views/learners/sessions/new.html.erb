@@ -11,8 +11,8 @@
       <%= f.password_field :password, required: true, autocomplete: "current-password", dir: "ltr", class: "input w-full" %>
     </div>
 
-    <label class="flex items-center gap-2 cursor-pointer text-sm">
-      <%= f.check_box :remember_me, class: "checkbox checkbox-sm" %>
+    <label class="flex items-center gap-2 min-h-11 cursor-pointer text-sm">
+      <%= f.check_box :remember_me, class: "checkbox checkbox-sm rounded-sm" %>
       <span><%= t("auth.remember_me") %></span>
     </label>
 

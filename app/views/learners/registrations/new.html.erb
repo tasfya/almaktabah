@@ -5,38 +5,47 @@
 
     <div>
       <%= f.label :full_name, t("programs.learner_auth.full_name"), class: "block text-sm font-semibold mb-1" %>
-      <%= f.text_field :full_name, required: true, autofocus: true, autocomplete: "name", class: "input w-full" %>
-      <p class="text-xs opacity-70 mt-1"><%= t("programs.learner_auth.full_name_hint") %></p>
+      <%= f.text_field :full_name, required: true, autofocus: true, autocomplete: "name", class: "input w-full",
+            aria: learner_field_aria(resource, :full_name, hint: true) %>
+      <p id="learner_full_name_hint" class="text-xs opacity-80 mt-1"><%= t("programs.learner_auth.full_name_hint") %></p>
+      <%= learner_field_error(resource, :full_name) %>
     </div>
 
     <fieldset>
       <legend class="block text-sm font-semibold mb-1"><%= t("programs.learner_auth.gender") %></legend>
-      <div class="flex gap-6">
+      <div class="grid grid-cols-2 gap-3">
         <% Learner.genders.each_key do |gender| %>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <%= f.radio_button :gender, gender, required: true, class: "radio radio-sm" %>
+          <label class="flex items-center justify-center gap-2 min-h-11 rounded-field border border-base-300 px-4 cursor-pointer has-checked:border-primary has-checked:bg-primary/10 has-focus-visible:outline-2 has-focus-visible:outline-primary">
+            <%= f.radio_button :gender, gender, required: true, class: "radio radio-sm", aria: learner_field_aria(resource, :gender) %>
             <span><%= t("programs.learner_auth.#{gender}") %></span>
           </label>
         <% end %>
       </div>
+      <%= learner_field_error(resource, :gender) %>
     </fieldset>
 
     <div>
       <%= f.label :email, t("auth.email"), class: "block text-sm font-semibold mb-1" %>
-      <%= f.email_field :email, required: true, autocomplete: "email", dir: "ltr", class: "input w-full" %>
+      <%= f.email_field :email, required: true, autocomplete: "email", dir: "ltr", class: "input w-full",
+            aria: learner_field_aria(resource, :email) %>
+      <%= learner_field_error(resource, :email) %>
     </div>
 
     <div>
       <%= f.label :password, t("auth.password"), class: "block text-sm font-semibold mb-1" %>
-      <%= f.password_field :password, required: true, autocomplete: "new-password", dir: "ltr", class: "input w-full" %>
+      <%= f.password_field :password, required: true, autocomplete: "new-password", dir: "ltr", class: "input w-full",
+            aria: learner_field_aria(resource, :password, hint: @minimum_password_length.present?) %>
       <% if @minimum_password_length %>
-        <p class="text-xs opacity-70 mt-1"><%= t("auth.minimum_password_length", count: @minimum_password_length) %></p>
+        <p id="learner_password_hint" class="text-xs opacity-80 mt-1"><%= t("auth.minimum_password_length", count: @minimum_password_length) %></p>
       <% end %>
+      <%= learner_field_error(resource, :password) %>
     </div>
 
     <div>
       <%= f.label :password_confirmation, t("auth.password_confirmation"), class: "block text-sm font-semibold mb-1" %>
-      <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password", dir: "ltr", class: "input w-full" %>
+      <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password", dir: "ltr", class: "input w-full",
+            aria: learner_field_aria(resource, :password_confirmation) %>
+      <%= learner_field_error(resource, :password_confirmation) %>
     </div>
 
     <%= f.submit t("programs.learner_auth.sign_up"), class: "btn btn-primary w-full" %>

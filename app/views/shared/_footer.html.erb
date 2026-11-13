@@ -3,14 +3,15 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <div class="md:col-span-1">
         <div class="flex items-center gap-3 mb-4">
-          <%= image_tag @logo_url, alt: (@domain&.title.presence || "Logo"), width: 400, height: 150, class: "rounded-full",
-                        data: { controller: "image-fallback", image_fallback_src_value: image_path("logo.png") } %>
+          <%= render "shared/site_brand",
+                     image_class: "rounded-full", image_size: { width: 400, height: 150 },
+                     name_class: "text-2xl" %>
         </div>
         <p class="text-sm text-primary-content">
           <%= t('sheikh.description') %>
         </p>
       </div>
-      <% if available_content_types.any? %>
+      <% if available_content_types.any? || programs_nav? %>
         <% many_content_types = available_content_types.size > 4 %>
         <div class="<%= many_content_types ? 'md:col-span-2' : '' %>">
           <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('navigation.quick_links') %></h4>
@@ -19,20 +20,30 @@
             <% available_content_types.each do |ct| %>
               <li><%= link_to t("navigation.#{content_type_nav_key(ct[:type])}"), content_type_path(ct[:type]), class: "btn hover:underline btn-primary" %></li>
             <% end %>
+            <% if programs_nav? %>
+              <li><%= link_to t("navigation.programs"), programs_path, class: "btn hover:underline btn-primary" %></li>
+              <li><%= link_to t("navigation.my_programs"), learner_dashboard_path, class: "btn hover:underline btn-primary" %></li>
+            <% end %>
           </ul>
         </div>
       <% end %>
-      <div>
-        <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('footer.contact_title') %></h4>
-        <div class="mt-4 flex gap-4">
-          <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
-            <%= icon "youtube", library: "lucide", class: "size-5" %>
-          <% end %>
-          <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
-            <%= icon "twitter", library: "lucide", class: "size-5" %>
-          <% end %>
+      <% if site_info[:youtube_url] || site_info[:twitter_url] %>
+        <div>
+          <h4 class="text-lg font-semibold text-primary-content mb-4"><%= t('footer.contact_title') %></h4>
+          <div class="mt-4 flex gap-4">
+            <% if site_info[:youtube_url] %>
+              <%= link_to site_info[:youtube_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
+                <%= icon "youtube", library: "lucide", class: "size-5" %>
+              <% end %>
+            <% end %>
+            <% if site_info[:twitter_url] %>
+              <%= link_to site_info[:twitter_url], class: "btn btn-ghost btn-secondary btn-sm text-primary-content hover:text-secondary-content" do %>
+                <%= icon "twitter", library: "lucide", class: "size-5" %>
+              <% end %>
+            <% end %>
+          </div>
         </div>
-      </div>
+      <% end %>
     </div>
   <div class="border-t border-base-300 mt-8 pt-8 text-center">
     <p class="text-sm text-primary-content">

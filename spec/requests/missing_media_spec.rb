@@ -69,7 +69,7 @@ RSpec.describe "Pages with missing media", type: :request do
   end
 
   describe "domain logo" do
-    it "falls back to the default logo in the header and footer when its object is gone" do
+    it "falls back to the site's name, not a bundled logo, in the header and footer when its object is gone" do
       domain.logo.attach(io: Rails.root.join("spec/files/logo.png").open, filename: "logo.png", content_type: "image/png")
       delete_object(domain.logo)
       news = create(:news, scholar: scholar, published_at: 1.day.ago).tap { |n| n.update!(domains: [ domain ]) }
@@ -77,11 +77,12 @@ RSpec.describe "Pages with missing media", type: :request do
       get news_path(scholar, news)
 
       expect(response).to have_http_status(:ok)
-      [ "header img", "footer img" ].each do |selector|
-        img = html.at_css(selector)
-        expect(img["data-controller"]).to eq("image-fallback")
-        expect(img["data-image-fallback-src-value"]).to match(%r{/assets/logo})
+      %w[header footer].each do |region|
+        brand = html.at_css("#{region} [data-controller='site-logo']")
+        expect(brand.at_css("img[data-site-logo-target='image']")).to be_present
+        expect(brand.at_css("[data-site-logo-target='name']").text).to eq(domain.title)
       end
+      expect(response.body).not_to include("/assets/logo")
     end
   end
 

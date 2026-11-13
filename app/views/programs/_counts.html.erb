@@ -1,0 +1,9 @@
+<%# locals: (program:) %>
+<% lessons = program.program_items.lesson.where(hidden: false).count %>
+<% exams = program.program_items.exam.where(hidden: false).count %>
+<% parts = [] %>
+<% parts << arabic_count("programs.counts.lessons", lessons) if lessons.positive? %>
+<% parts << arabic_count("programs.counts.exams", exams) if exams.positive? %>
+<% if parts.any? %>
+  <p class="text-sm font-semibold text-base-content/80"><%= parts.join(" · ") %></p>
+<% end %>

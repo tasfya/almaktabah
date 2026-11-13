@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_13_161000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_13_170000) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.integer "actionable_id", null: false
@@ -186,6 +186,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_161000) do
     t.string "template_name", default: "default", null: false
     t.string "title"
     t.datetime "updated_at", null: false
+    t.string "youtube_url"
+    t.string "x_url"
     t.index ["is_default"], name: "index_domains_on_is_default", unique: true, where: "is_default = true"
   end
 

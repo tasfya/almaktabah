@@ -1,4 +1,9 @@
+<% ticked = @progress.ticked?(@item) %>
+<%= turbo_stream.replace "program_flash" do %>
+  <%= render "learner_area/completions/confirmation", item: @item, progress: @progress, cohort: @cohort, ticked: ticked %>
+<% end %>
 <%= turbo_stream.replace "cohort_header", partial: "learner_area/cohorts/header", locals: { cohort: @cohort, progress: @progress, certificate: @certificate } %>
 <% ([ @item ] + @progress.exam_items).uniq.each do |item| %>
   <%= turbo_stream.replace dom_id(item), partial: "learner_area/cohorts/item", locals: { item: item, progress: @progress, cohort: @cohort, scores: @scores } %>
 <% end %>
+<%= turbo_stream.replace "player_tick_#{dom_id(@item)}", partial: "learner_area/plays/tick_prompt", locals: { item: @item, progress: @progress, cohort: @cohort } %>

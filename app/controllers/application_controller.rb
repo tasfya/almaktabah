@@ -9,11 +9,15 @@ class ApplicationController < ActionController::Base
   include BreadcrumbHelper
   include Pagy::Backend
   include ViewResolver
+  include PendingEnrollment
 
   protected
 
   def after_sign_in_path_for(resource)
-    resource.is_a?(Learner) ? stored_location_for(resource) || learner_dashboard_path : super
+    return super unless resource.is_a?(Learner)
+
+    stored = stored_location_for(resource)
+    complete_pending_enrollment(resource) || stored || learner_dashboard_path
   end
 
   # Cache for Cloudflare edge and browser
@@ -36,11 +40,7 @@ class ApplicationController < ActionController::Base
     Current.request_url_options = { host: request.host, port: request.optional_port, protocol: request.protocol }
     return render_not_found if @domain.nil? && !devise_controller?
 
-    if @domain&.logo.present?
-      @logo_url = url_for(@domain.logo)
-    else
-      @logo_url = ActionController::Base.helpers.asset_path("logo.png")
-    end
+    @logo_url = url_for(@domain.logo) if @domain&.logo.present?
   end
 
   def render_not_found
