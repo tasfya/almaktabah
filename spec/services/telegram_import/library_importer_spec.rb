@@ -83,6 +83,72 @@ RSpec.describe TelegramImport::LibraryImporter do
     end
   end
 
+  context "when the existing lesson's video id contains an underscore" do
+    let!(:existing) { create(:lesson, youtube_url: "https://www.youtube.com/live/AA_AAAAAAA1") }
+
+    before { manifest["texts"][1]["lessons"][0]["video_id"] = "AA_AAAAAAA1" }
+
+    it "links it instead of creating a duplicate" do
+      report = import
+
+      expect(report.linked).to eq("Lesson" => 1)
+      expect(TelegramImportRecord.find_by(external_id: "message:107").record).to eq(existing)
+    end
+  end
+
+  it "stores each file on the service its attachment is configured for" do
+    import
+
+    expect(created(Lesson).map { _1.audio.blob.service_name }.uniq)
+      .to eq([ Lesson.attachment_reflections["audio"].options[:service_name].to_s ])
+    expect(created(Book).map { _1.file.blob.service_name }.uniq)
+      .to eq([ Book.attachment_reflections["file"].options[:service_name].to_s ])
+  end
+
+  it "skips a lesson whose original audio was purged after final_audio was made" do
+    import
+    lesson = TelegramImportRecord.lookup("t.me/fixture_channel", "message:107")
+    lesson.final_audio.attach(io: Rails.root.join("spec/files/audio.mp3").open, filename: "1.mp3")
+    lesson.audio.purge
+    blobs = ActiveStorage::Blob.count
+
+    report = import
+
+    expect(report.completed).to eq({})
+    expect(lesson.reload.audio).not_to be_attached
+    expect(ActiveStorage::Blob.count).to eq(blobs)
+  end
+
+  it "re-uploads a file whose attachment exists but whose object is missing" do
+    import
+    book = TelegramImportRecord.lookup("t.me/fixture_channel", "message:106")
+    book.file.blob.service.delete(book.file.blob.key)
+
+    report = import
+
+    expect(report.completed).to eq("Book" => 1)
+    expect(book.reload.file.blob.service.exist?(book.file.blob.key)).to be(true)
+  end
+
+  it "reports a mapping whose lesson or book was deleted, and skips it" do
+    import
+    TelegramImportRecord.lookup("t.me/fixture_channel", "message:113").destroy!
+
+    report = import
+
+    expect(report.warnings).to include("message:113 maps to a deleted Lesson; skipped")
+    expect(report.created.values.sum).to eq(0)
+  end
+
+  it "refuses to run when a mapped series was deleted" do
+    import
+    series = TelegramImportRecord.lookup("t.me/fixture_channel", "series:qawaid")
+    series.lessons.each(&:destroy!)
+    series.destroy!
+
+    expect { import }.to raise_error(TelegramImport::PreflightError, /series:qawaid maps to a deleted record/)
+  end
+
   it "never changes a record it did not create" do
     untouched = [ scholar, create(:book), create(:lesson) ].map(&:reload)
     snapshot = untouched.map(&:attributes)
