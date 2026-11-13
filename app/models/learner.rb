@@ -9,7 +9,7 @@ class Learner < ApplicationRecord
 
   normalizes :full_name, with: ->(name) { name.squish }
 
-  validates :full_name, :gender, presence: true
+  validates :full_name, presence: true
   validates :full_name, length: { maximum: 100 }
 
   before_create :skip_confirmation!, unless: -> { Rails.configuration.x.learner_mail_enabled }

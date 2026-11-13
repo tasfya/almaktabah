@@ -106,7 +106,7 @@ Rails.application.routes.draw do
     scope "my", module: "learner_area" do
       get "/", to: "dashboard#show", as: :learner_dashboard
       resources :cohorts, only: :show, as: :learner_cohorts do
-        resources :completions, only: :create
+        resources :completions, only: [ :create, :destroy ]
         get "play/:program_item_id", to: "plays#show", as: :play
         resources :exams, only: :show do
           post :submit, on: :member

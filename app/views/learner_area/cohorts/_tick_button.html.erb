@@ -1,0 +1,7 @@
+<%# locals: (item:, cohort:) %>
+<%= button_to learner_cohort_completions_path(cohort, program_item_id: item.id),
+      class: "btn btn-primary btn-sm min-h-11 whitespace-nowrap",
+      aria: { label: t("programs.cohort.tick_label", title: item.display_title) },
+      data: { turbo_submits_with: t("programs.cohort.tick") } do %>
+  <%= t("programs.cohort.tick") %> <span aria-hidden="true">✓</span>
+<% end %>
