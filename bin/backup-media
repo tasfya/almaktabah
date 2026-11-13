@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Usage: bin/backup-media SRC DST [SRC DST ...]
+#
+# Backs up the media buckets: copies each rclone SRC into its DST, then checks
+# that DST holds every SRC file. Remotes come from RCLONE_CONFIG_<NAME>_*
+# environment variables, so this script holds no credentials or endpoints.
+#
+# Copy only, never sync, and --immutable: nothing at DST is ever deleted or
+# overwritten, so the backup keeps files later removed from SRC, and a SRC file
+# whose size changed fails the run instead of replacing the copy. --size-only
+# keeps the run to LIST requests on DST, which matters when DST is an archive
+# storage class where reading an object needs a paid restore.
+#
+# Exits non-zero when any copy fails or a DST is still missing files.
+set -uo pipefail
+
+if (( $# < 2 || $# % 2 )); then
+  echo "usage: $0 SRC DST [SRC DST ...]" >&2
+  exit 64
+fi
+
+common=(--size-only --fast-list --checkers 16 --retries 5 --low-level-retries 20)
+failed=()
+while (( $# )); do
+  src=$1 dst=$2
+  shift 2
+  rclone copy "$src" "$dst" "${common[@]}" --immutable --transfers 8 --bwlimit 25M \
+    --log-level INFO --stats 10m --stats-one-line || failed+=("copy $src -> $dst")
+  rclone check "$src" "$dst" "${common[@]}" --one-way || failed+=("check: $dst is behind $src")
+done
+
+if (( ${#failed[@]} )); then
+  printf 'FAILED: %s\n' "${failed[@]}" >&2
+  exit 1
+fi
+echo "backup up to date"
