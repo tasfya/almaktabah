@@ -1,0 +1,20 @@
+<% set_meta_tags(title: t("auth.change_password"), noindex: true) %>
+<%= render layout: "learners/shared/card", locals: { title: t("auth.change_password"), subtitle: t("auth.change_password_subtitle") } do %>
+  <%= form_for(resource, as: resource_name, url: learner_password_path, html: { method: :put, class: "flex flex-col gap-4" }) do |f| %>
+    <%= render "learners/shared/error_messages", resource: resource %>
+    <%= f.hidden_field :reset_password_token %>
+    <div>
+      <%= f.label :password, t("auth.new_password"), class: "block text-sm font-semibold mb-1" %>
+      <%= f.password_field :password, required: true, autofocus: true, autocomplete: "new-password", dir: "ltr", class: "input w-full" %>
+      <% if @minimum_password_length %>
+        <p class="text-xs opacity-70 mt-1"><%= t("auth.minimum_password_length", count: @minimum_password_length) %></p>
+      <% end %>
+    </div>
+    <div>
+      <%= f.label :password_confirmation, t("auth.confirm_new_password"), class: "block text-sm font-semibold mb-1" %>
+      <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password", dir: "ltr", class: "input w-full" %>
+    </div>
+    <%= f.submit t("auth.update_password"), class: "btn btn-primary w-full" %>
+  <% end %>
+  <%= render "learners/shared/links" %>
+<% end %>

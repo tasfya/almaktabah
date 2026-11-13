@@ -37,5 +37,8 @@ GET /play/:resource_type/:id(.:format) play#show
 GET /play/stop(.:format) play#stop
 GET /about(.:format) about#index
 GET /up(.:format) rails/health#show
+GET /learners/sign_up(.:format) learners/registrations#new
+POST /learners(.:format) learners/registrations#create
+GET /my(.:format) learner_area/dashboard#show
 GET / home#index
 GET /podcasts/feed(.:format) podcasts#feed format=xml

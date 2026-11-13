@@ -1,0 +1,22 @@
+<% set_meta_tags(title: t("programs.learner_auth.sign_in"), noindex: true) %>
+<%= render layout: "learners/shared/card", locals: { title: t("programs.learner_auth.sign_in"), subtitle: t("programs.learner_auth.sign_in_subtitle") } do %>
+  <%= form_for(resource, as: resource_name, url: learner_session_path, html: { class: "flex flex-col gap-4" }) do |f| %>
+    <div>
+      <%= f.label :email, t("auth.email"), class: "block text-sm font-semibold mb-1" %>
+      <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email", dir: "ltr", class: "input w-full" %>
+    </div>
+
+    <div>
+      <%= f.label :password, t("auth.password"), class: "block text-sm font-semibold mb-1" %>
+      <%= f.password_field :password, required: true, autocomplete: "current-password", dir: "ltr", class: "input w-full" %>
+    </div>
+
+    <label class="flex items-center gap-2 cursor-pointer text-sm">
+      <%= f.check_box :remember_me, class: "checkbox checkbox-sm" %>
+      <span><%= t("auth.remember_me") %></span>
+    </label>
+
+    <%= f.submit t("auth.login"), class: "btn btn-primary w-full" %>
+  <% end %>
+  <%= render "learners/shared/links" %>
+<% end %>
