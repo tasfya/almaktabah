@@ -20,8 +20,11 @@ module LearnerArea
     def destroy
       @learner = current_learner
       unless @learner.valid_password?(params[:current_password].to_s)
-        flash.now[:alert] = t("programs.account.wrong_password")
-        return render :show, status: :unprocessable_content
+        @password_error = t("programs.account.wrong_password")
+        return respond_to do |format|
+          format.turbo_stream { render turbo_stream: turbo_stream.replace("delete_account", partial: "learner_area/accounts/delete_account"), status: :unprocessable_content }
+          format.html { render :show, status: :unprocessable_content }
+        end
       end
 
       @learner.destroy!

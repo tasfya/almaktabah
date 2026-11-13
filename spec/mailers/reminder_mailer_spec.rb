@@ -36,10 +36,34 @@ RSpec.describe ReminderMailer do
     expect(mail.text_part.body.to_s).to include("https://binramzan.net/my/cohorts/#{cohort.id}", "الدرس الأول")
   end
 
-  it "shows exam times in the cohort time zone" do
+  it "shows exam times in the cohort time zone, naming the zone" do
     exam_closing_tonight
 
-    expect(mail.text_part.body.to_s).to include("الاختبار الأول", "22:00")
+    [ mail.text_part, mail.html_part ].each do |part|
+      expect(part.body.to_s).to include("الاختبار الأول", "الأربعاء 19 نوفمبر، الساعة 10:00 م", "المواعيد بتوقيت مكة المكرمة")
+    end
+  end
+
+  it "drops the hour of an exam opening at midnight" do
+    item = create(:program_item, :exam, program: program, title_override: "اختبار القواعد")
+    create(:question, exam: item.exam)
+    create(:cohort_slot, cohort: cohort, program_item: item, available_on: Date.new(2025, 11, 19),
+      opens_at: riyadh.local(2025, 11, 19), closes_at: riyadh.local(2025, 11, 21, 22))
+
+    body = mail.text_part.body.to_s
+    expect(body).to include("اختبار القواعد — يُفتح الأربعاء 19 نوفمبر")
+    expect(body).not_to include("00:00")
+  end
+
+  it "addresses a female learner in the feminine" do
+    learner.update!(gender: :female)
+
+    expect(mail.html_part.body.to_s).to include("لأنك مسجّلة في هذا البرنامج")
+    expect(mail.text_part.body.to_s).to include("لأنك مسجّلة في هذا البرنامج")
+  end
+
+  it "addresses a male learner in the masculine" do
+    expect(mail.text_part.body.to_s).to include("لأنك مسجّل في هذا البرنامج")
   end
 
   it "says exam in the subject when there is no lesson today" do

@@ -25,7 +25,7 @@
         <%= icon "check-badge", class: "size-6 shrink-0" %>
         <div>
           <p class="font-bold"><%= t("programs.certificate.valid") %> — <%= @certificate.full_name_snapshot %></p>
-          <p class="text-sm"><%= t("programs.certificate.valid_detail", site: site, date: l(@certificate.issued_at.to_date, format: :long)) %></p>
+          <p class="text-sm"><%= t("programs.certificate.valid_detail", site: site, date: l(@certificate.issued_on, format: :long)) %></p>
         </div>
       </div>
       <button type="button" class="btn btn-primary" data-controller="print" data-action="print#print">
@@ -46,10 +46,10 @@
 
           <div class="flex flex-col items-center gap-3 md:gap-4 leading-loose">
             <p class="text-base md:text-xl print:text-2xl"><%= t("programs.certificate.intro", site: site) %> <%= t("#{wording}.student") %></p>
-            <p class="text-2xl md:text-4xl print:text-5xl font-bold font-title border-b-2 border-primary/30 px-6 pb-2"><%= @certificate.full_name_snapshot %></p>
+            <p class="<%= certificate_name_classes(@certificate.full_name_snapshot) %>"><%= @certificate.full_name_snapshot %></p>
             <p class="text-base md:text-xl print:text-2xl">
               <%= t("#{wording}.completed") %>
-              <strong class="font-bold">«<%= @cohort.program.title %>»</strong>
+              <%= certificate_program_name(@cohort.program) %>
             </p>
             <p class="text-sm md:text-lg print:text-xl text-base-content/80"><%= t("#{wording}.prayer") %></p>
           </div>
@@ -57,12 +57,12 @@
           <footer class="w-full flex flex-col gap-3">
             <dl class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm md:text-base">
               <div><dt class="text-base-content/60"><%= t("programs.certificate.cohort") %></dt><dd class="font-semibold"><%= @cohort.name %></dd></div>
-              <div><dt class="text-base-content/60"><%= t("programs.certificate.issued_on") %></dt><dd class="font-semibold"><%= l(@certificate.issued_at.to_date, format: :long) %></dd></div>
-              <div><dt class="text-base-content/60"><%= t("programs.certificate.number") %></dt><dd class="font-semibold" dir="ltr"><%= @certificate.number %></dd></div>
+              <div><dt class="text-base-content/60"><%= t("programs.certificate.issued_on") %></dt><dd class="font-semibold"><%= l(@certificate.issued_on, format: :long) %></dd></div>
+              <div><dt class="text-base-content/60"><%= t("programs.certificate.number") %></dt><dd class="font-semibold"><%= certificate_number_tag(@certificate.number) %></dd></div>
             </dl>
             <p class="text-xs md:text-sm text-base-content/60 break-all">
               <%= t("programs.certificate.verify") %>
-              <span dir="ltr"><%= CGI.unescape(certificate_url(@certificate)).gsub("/", "\u200E/\u200E") %></span>
+              <%= certificate_verify_link(@certificate) %>
             </p>
           </footer>
         </div>
@@ -73,7 +73,7 @@
       <%= icon "x-circle", class: "size-8 shrink-0" %>
       <div>
         <h1 class="text-xl font-bold"><%= t("programs.certificate.revoked_title") %></h1>
-        <p><%= t("programs.certificate.revoked_detail_html", number: tag.bdi(@certificate.number, dir: "ltr")) %></p>
+        <p><%= t("programs.certificate.revoked_detail_html", number: certificate_number_tag(@certificate.number)) %></p>
       </div>
     </section>
   <% end %>

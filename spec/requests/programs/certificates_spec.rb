@@ -81,6 +81,64 @@ RSpec.describe "Certificate page", type: :request do
     expect(response.body).not_to include("فاطمة بنت محمد")
   end
 
+  it "dates the certificate in the cohort's time zone, not UTC" do
+    cohort.update!(time_zone: "Asia/Riyadh")
+    certificate.update!(issued_at: Time.utc(2026, 11, 13, 22, 15))
+
+    get path
+
+    expect(response.body).to include(I18n.l(Date.new(2026, 11, 14), format: :long))
+    expect(response.body).not_to include(I18n.l(Date.new(2026, 11, 13), format: :long))
+  end
+
+  it "finds the certificate whatever the case the number is typed in" do
+    certificate
+
+    get path.sub("7-ABCD1234", "7-abcd1234")
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("فاطمة بنت محمد")
+  end
+
+  it "links the verify URL without invisible direction marks" do
+    certificate
+
+    get path
+
+    url = "http://#{domain.host}#{path}"
+    link = Nokogiri::HTML(response.body).at_css("a[href='#{url}']")
+    expect(link).to be_present
+    expect(link.text.strip).to eq(CGI.unescape(url))
+    expect(response.body).not_to include("\u200E")
+  end
+
+  it "does not repeat the word برنامج when the title starts with it" do
+    program.update!(title: "برنامج تجريبي: التوحيد")
+    certificate
+
+    get path
+
+    text = Nokogiri::HTML(response.body).at_css(".certificate-sheet").text.squish
+    expect(text).to include("قد أتمّت دراسة «برنامج تجريبي: التوحيد»")
+  end
+
+  it "names the program with the word برنامج when the title lacks it" do
+    certificate
+
+    get path
+
+    text = Nokogiri::HTML(response.body).at_css(".certificate-sheet").text.squish
+    expect(text).to include("قد أتمّت دراسة برنامج «متون التوحيد»")
+  end
+
+  it "says the certificate is issued by the site" do
+    certificate
+
+    get path
+
+    expect(response.body).to include("صادرة عن موقع")
+  end
+
   describe "link from the cohort page" do
     include Devise::Test::IntegrationHelpers
 

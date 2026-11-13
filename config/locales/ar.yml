@@ -540,7 +540,6 @@ ar:
     reminders:
       subject: "درس اليوم: %{program}"
       exam_subject: "تذكير بالاختبار: %{program}"
-      time_format: "%A %-d %B، الساعة %H:%M"
       intro: "هذا تذكير ببرنامج «%{program}» لهذا اليوم."
       lessons: "دروس اليوم"
       exams_opening: "اختبار يُفتح"
@@ -549,13 +548,16 @@ ar:
       closes_at: "آخر موعد للتسليم %{time}"
       action: "افتح صفحة البرنامج"
       footer: "وصلتك هذه الرسالة لأنك مسجّل في هذا البرنامج."
+      footer_female: "وصلتك هذه الرسالة لأنك مسجّلة في هذا البرنامج."
       turn_off: "إيقاف التذكيرات اليومية"
       dashboard: "صفحة برامجي"
       opt_out:
         title: "إيقاف التذكيرات اليومية"
         confirm: "هل تريد إيقاف رسائل التذكير اليومية لبرنامج «%{program}»؟"
-        action: "نعم، أوقف التذكيرات"
+        action: "نعم، إيقاف التذكيرات"
         done: "تم إيقاف التذكيرات اليومية لبرنامج «%{program}». لن تصلك رسائل تذكير بعد الآن."
+        already_off: "التذكيرات اليومية لبرنامج «%{program}» متوقفة."
+        turn_back_on: "يمكن إعادة تفعيلها من صفحة"
     dashboard:
       title: "برامجي"
       greeting: "مرحبًا %{name}"
@@ -603,7 +605,9 @@ ar:
       exams_progress: "الاختبارات المسلّمة: %{done} من %{total}"
       certificate_out_of_reach: "لن تُمنح الشهادة في هذه الدفعة بسبب %{title}، ويمكنك متابعة الدروس."
       time_zone: "المواعيد بتوقيت %{zone}"
-      certificate_issued: "مبارك! أتممت البرنامج، رقم شهادتك: %{number}"
+      certificate_issued_html: "مبارك! أتممت البرنامج، رقم شهادتك: %{number}"
+      certificate_revoked_html: "أُلغيت شهادتك رقم %{number}، فلم تعد صالحة."
+      schedule_pending: "جدول الدفعة قيد الإعداد، ولم يُنشر بعد."
       open_certificate: "اعرض الشهادة"
       ticked: "سمعته"
       tick: "سمعته"
@@ -746,7 +750,7 @@ ar:
       not_found: "الشهادة غير موجودة"
       heading: "شهادة إتمام"
       valid: "شهادة صحيحة"
-      valid_detail: "صادرة من %{site} بتاريخ %{date}"
+      valid_detail: "صادرة عن موقع %{site} بتاريخ %{date}"
       print: "طباعة أو حفظ PDF"
       revoked_title: "هذه الشهادة ملغاة"
       revoked_detail_html: "الشهادة رقم %{number} لم تعد صالحة، فلا يُعتدّ بها."
@@ -755,14 +759,15 @@ ar:
       issued_on: "تاريخ الإصدار"
       number: "رقم الشهادة"
       verify: "للتحقق من صحة الشهادة:"
+      program_word: "برنامج"
       body:
         male:
           student: "الطالب"
-          completed: "قد أتمّ دراسة برنامج"
+          completed: "قد أتمّ دراسة"
           prayer: "نسأل الله أن ينفعه بما تعلّم، وأن يجعله مباركًا أينما كان."
         female:
           student: "الطالبة"
-          completed: "قد أتمّت دراسة برنامج"
+          completed: "قد أتمّت دراسة"
           prayer: "نسأل الله أن ينفعها بما تعلّمت، وأن يجعلها مباركةً أينما كانت."
   sheikh:
     name: "الشيخ"

@@ -82,7 +82,7 @@ RSpec.describe "Journey: a learner completes a program", type: :system, js: true
 
     click_link I18n.t("programs.exam.back")
     certificate = Certificate.last
-    expect(page).to have_text(I18n.t("programs.cohort.certificate_issued", number: certificate.number))
+    expect(page).to have_text(I18n.t("programs.cohort.certificate_issued_html", number: certificate.number))
     click_link I18n.t("programs.cohort.open_certificate")
 
     expect(page).to have_text(I18n.t("programs.certificate.valid"))

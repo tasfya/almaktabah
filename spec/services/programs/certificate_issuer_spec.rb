@@ -41,7 +41,7 @@ RSpec.describe Programs::CertificateIssuer do
     certificate = issue
 
     expect(certificate).to be_persisted
-    expect(certificate.number).to match(/\A#{cohort.id}-[A-Z0-9]{8}\z/)
+    expect(certificate.number).to match(/\A#{cohort.id}-[A-HJ-NP-Z2-9]{8}\z/)
     expect(certificate.domain).to eq(enrollment.domain)
     expect(enrollment.reload.completed_at).to be_present
   end

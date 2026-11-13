@@ -1,5 +1,6 @@
 <div id="program_flash">
   <% flash.each do |type, message| %>
+    <% next if type.to_s == "reminders_saved_for" %>
     <div role="<%= type.to_s == "alert" ? "alert" : "status" %>" class="alert <%= flash_alert_class(type) %> alert-soft text-sm mb-4"><%= message %></div>
   <% end %>
 </div>

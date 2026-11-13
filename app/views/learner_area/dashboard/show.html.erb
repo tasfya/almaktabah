@@ -22,14 +22,20 @@
               <h2 class="card-title text-lg"><%= cohort.program.title %></h2>
             </div>
             <%= render "learner_area/cohorts/progress", progress: progress, id: "enrollment_#{progress.enrollment.id}_progress" %>
-            <% if certificate && !certificate.revoked? %>
-              <p class="font-semibold"><%= t("programs.cohort.certificate_issued", number: certificate.number) %></p>
+            <% if certificate&.revoked? %>
+              <p class="font-semibold"><%= t("programs.cohort.certificate_revoked_html", number: certificate_number_tag(certificate.number)) %></p>
+              <% step = {} %>
+            <% elsif certificate %>
+              <p class="font-semibold"><%= t("programs.cohort.certificate_issued_html", number: certificate_number_tag(certificate.number)) %></p>
               <% step = {} %>
             <% else %>
               <% step = learner_next_step(progress) %>
               <p class="font-semibold"><%= step[:text] %></p>
             <% end %>
             <div class="card-actions justify-end">
+              <% if certificate && !certificate.revoked? %>
+                <%= link_to t("programs.cohort.open_certificate"), learner_certificate_link_target(certificate), class: "btn btn-ghost btn-sm min-h-11", data: { turbo: false } %>
+              <% end %>
               <% if step[:item] %>
                 <%= link_to t(step[:item].exam? ? "programs.dashboard.go_to_exam" : "programs.dashboard.go_to_item"),
                       learner_cohort_path(cohort, anchor: dom_id(step[:item])), class: "btn btn-primary btn-sm min-h-11" %>

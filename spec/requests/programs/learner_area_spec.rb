@@ -92,6 +92,50 @@ RSpec.describe "Learner area", type: :request do
       end
     end
 
+    describe "certificate on the dashboard and cohort page" do
+      let!(:certificate) { create(:certificate, enrollment: enrollment, number: "7-ABCD2345") }
+
+      it "isolates the number left to right and links the dashboard card to the certificate" do
+        [ learner_dashboard_path, learner_cohort_path(cohort) ].each do |path|
+          get path
+
+          number = Nokogiri::HTML(response.body).at_css("bdi[dir=ltr]:contains('7-ABCD2345')")
+          expect(number).to be_present, path
+          expect(number["class"]).to include("whitespace-nowrap")
+        end
+
+        get learner_dashboard_path
+        expect(Nokogiri::HTML(response.body).at_css("a[href='#{certificate_path(certificate)}']")).to be_present
+      end
+
+      it "says a revoked certificate is revoked instead of congratulating" do
+        certificate.update!(revoked_at: Time.current)
+
+        [ learner_dashboard_path, learner_cohort_path(cohort) ].each do |path|
+          get path
+
+          expect(response.body).to include("أُلغيت شهادتك رقم")
+          expect(response.body).to include("7-ABCD2345")
+          expect(response.body).not_to include("مبارك!")
+          expect(response.body).not_to include(%(href="#{certificate_path(certificate)}"))
+        end
+      end
+    end
+
+    describe "cohort without a schedule" do
+      before { cohort.cohort_slots.delete_all }
+
+      it "says the schedule is not published yet instead of completed" do
+        [ learner_dashboard_path, learner_cohort_path(cohort) ].each do |path|
+          get path
+
+          expect(response.body).to include(I18n.t("programs.cohort.schedule_pending"))
+          expect(response.body).not_to include(I18n.t("programs.next_step.finished"))
+          expect(response.body).not_to include("0 من 0")
+        end
+      end
+    end
+
     describe "cohort timeline" do
       it "returns not found for another learner's cohort" do
         other_cohort = create(:cohort, program: program)
