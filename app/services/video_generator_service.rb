@@ -2,7 +2,7 @@ class VideoGeneratorService
   attr_reader :title, :description, :audio_file, :logo_file, :temp_dir
   include ArabicHelper
 
-  def initialize(title:, description: nil, audio_file:, logo_file:)
+  def initialize(title:, description: nil, audio_file:, logo_file: nil)
     @title       = title
     @description = description
     @audio_file  = audio_file
@@ -14,7 +14,7 @@ class VideoGeneratorService
     setup_temp_directory
     begin
       mp3_path  = copy_file_to_temp(audio_file, "audio.mp3")
-      logo_path = copy_file_to_temp(logo_file,  "logo.png")
+      logo_path = copy_file_to_temp(logo_file, "logo.png") if logo_file
 
       background_path = create_background_image(logo_path, temp_dir.join("background.png"))
       output_path     = temp_dir.join("output.mp4")
@@ -73,7 +73,7 @@ class VideoGeneratorService
   end
 
   def add_logo_to_image(base_image, logo_path)
-    return base_image unless File.exist?(logo_path)
+    return base_image unless logo_path && File.exist?(logo_path)
     logo = MiniMagick::Image.open(logo_path)
     logo.resize "600x600>"
     x_offset = (1920 - logo.width) / 2

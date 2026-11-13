@@ -27,15 +27,32 @@ RSpec.describe "Missing media", type: :system, js: true do
     expect(image_loaded?("article img")).to be(true)
   end
 
-  it "replaces a domain logo whose object is gone with the default logo" do
+  it "replaces a domain logo whose object is gone with the site's name, not another site's logo" do
+    domain.update!(title: "العلم")
     domain.logo.attach(io: Rails.root.join("spec/files/logo.png").open, filename: "logo.png", content_type: "image/png")
     delete_object(domain.logo)
 
     news = create(:news, scholar: scholar, published_at: 1.day.ago).tap { |n| n.update!(domains: [ domain ]) }
     visit news_path(scholar, news)
 
-    expect(page).to have_css("header img[src*='/assets/logo']")
+    [ "header[data-controller='navigation']", "footer" ].each do |region|
+      within(region) do
+        expect(page).to have_css("[data-site-name]", text: "العلم", visible: :visible)
+        expect(page).to have_no_css("img", visible: :visible)
+      end
+    end
+    expect(page).to have_no_css("img[src*='/assets/logo']", visible: :all)
+  end
+
+  it "keeps a domain logo that loads, with its name hidden" do
+    domain.logo.attach(io: Rails.root.join("spec/files/logo.png").open, filename: "logo.png", content_type: "image/png")
+
+    news = create(:news, scholar: scholar, published_at: 1.day.ago).tap { |n| n.update!(domains: [ domain ]) }
+    visit news_path(scholar, news)
+
+    expect(page).to have_css("header img[data-site-logo-target='image']", visible: :visible)
     expect(image_loaded?("header img")).to be(true)
+    expect(page).to have_no_css("header [data-site-name]", visible: :visible)
   end
 
   it "hides a lecture video whose object is gone and says it is unavailable" do

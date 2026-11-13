@@ -16,6 +16,8 @@ class Avo::Resources::Domain < Avo::BaseResource
     field :active, as: :boolean, help: "Enable/disable this domain"
     field :logo, as: :file, accept: "image/*", max_size: 5.megabytes, hide_on: :index
     field :description, as: :textarea, hide_on: :index
+    field :youtube_url, as: :text, help: "YouTube channel link shown in the footer (leave blank to hide)", hide_on: :index
+    field :x_url, as: :text, help: "X (Twitter) account link shown in the footer (leave blank to hide)", hide_on: :index
     field :custom_css, as: :code, language: :css, help: "Custom CSS that will be applied to this domain only", hide_on: :index
 
     field :favicon_ico, as: :file, accept: "image/x-icon,.ico", max_size: 1.megabytes,

@@ -13,6 +13,21 @@ RSpec.describe Domain, type: :model do
     it { should have_many(:domain_assignments).dependent(:destroy) }
   end
 
+  describe 'social links' do
+    it { should allow_value("https://www.youtube.com/@bin-ramzan", "", nil).for(:youtube_url) }
+    it { should allow_value("https://x.com/Moh1Rz2H3?ref").for(:x_url) }
+    it { should_not allow_value("javascript:alert(1)", "www.youtube.com/@x").for(:youtube_url) }
+    it { should_not allow_value("javascript:alert(1)").for(:x_url) }
+  end
+
+  describe '#site_name' do
+    it 'is the title, then the name, then the host' do
+      expect(build(:domain, title: "العلم", name: "ilm", host: "3ilm.org").site_name).to eq("العلم")
+      expect(build(:domain, title: "", name: "ilm", host: "3ilm.org").site_name).to eq("ilm")
+      expect(build(:domain, title: nil, name: nil, host: "3ilm.org").site_name).to eq("3ilm.org")
+    end
+  end
+
   describe 'class methods' do
     describe '.find_by_host' do
       let!(:domain1) { create(:domain, host: 'example.com') }

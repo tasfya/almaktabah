@@ -20,6 +20,8 @@ domain1 = Domain.find_or_initialize_by(host: domain1_host)
 domain1.name = domain1_host
 domain1.title ||= "الشيخ محمد بن رمزان الهاجري"
 domain1.description ||= "الموقع الرسمي لفضيلة الشيخ محمد بن رمزان الهاجري - كتب ومحاضرات ودروس وفتاوى"
+domain1.youtube_url ||= "https://www.youtube.com/@bin-ramzan"
+domain1.x_url ||= "https://x.com/Moh1Rz2H3?ref"
 domain1.save!
 
 domain2 = Domain.find_or_initialize_by(host: "localhost")
