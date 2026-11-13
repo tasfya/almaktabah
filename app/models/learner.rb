@@ -2,7 +2,7 @@ class Learner < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :validatable, :confirmable
 
-  enum :gender, { male: 0, female: 1 }
+  enum :gender, { male: 0, female: 1 }, validate: true
 
   has_many :enrollments, dependent: :destroy
 

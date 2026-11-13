@@ -95,6 +95,41 @@ RSpec.describe "Learner accounts", type: :request do
       expect(response).to redirect_to(new_learner_session_path)
     end
 
+    it "re-renders the form instead of failing on an unknown gender" do
+      post learner_registration_path, params: { learner: sign_up_params[:learner].merge(gender: "other") }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(Learner.count).to eq(0)
+    end
+
+    it "signs a learner out without ending the staff session" do
+      sign_in create(:user, admin: true)
+      sign_in create(:learner)
+
+      delete destroy_learner_session_path
+      get "/avo"
+      follow_redirect! while response.redirect?
+
+      expect(request.path).to start_with("/avo")
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "offers no password reset or confirmation while learner mail is off" do
+      get "/learners/sign_in"
+      expect(response.body).not_to include("/learners/password/new")
+
+      get "/learners/password/new"
+      expect(response).to have_http_status(:not_found)
+
+      email = create(:learner).email
+      expect { post "/learners/password", params: { learner: { email: email } } }
+        .not_to change(ActionMailer::Base.deliveries, :count)
+      expect(response).to have_http_status(:not_found)
+
+      get "/learners/confirmation/new"
+      expect(response).to have_http_status(:not_found)
+    end
+
     it "offers only sign-up, not account edit or deletion" do
       learner = create(:learner)
       sign_in learner
@@ -105,6 +140,25 @@ RSpec.describe "Learner accounts", type: :request do
       delete "/learners"
       expect(response).to have_http_status(:not_found)
       expect(Learner.exists?(learner.id)).to be(true)
+    end
+  end
+
+  describe "with learner mail on" do
+    around do |example|
+      Rails.configuration.x.learner_mail_enabled = true
+      Rails.application.reload_routes!
+      example.run
+    ensure
+      Rails.configuration.x.learner_mail_enabled = false
+      Rails.application.reload_routes!
+    end
+
+    it "offers password reset" do
+      get "/learners/sign_in"
+      expect(response.body).to include("/learners/password/new")
+
+      get "/learners/password/new"
+      expect(response).to have_http_status(:ok)
     end
   end
 

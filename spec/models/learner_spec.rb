@@ -24,7 +24,10 @@ RSpec.describe Learner do
 
   it "is unconfirmed on create when learner mail is enabled" do
     allow(Rails.configuration.x).to receive(:learner_mail_enabled).and_return(true)
+    learner = build(:learner)
+    learner.skip_confirmation_notification!
+    learner.save!
 
-    expect(create(:learner)).not_to be_confirmed
+    expect(learner).not_to be_confirmed
   end
 end
