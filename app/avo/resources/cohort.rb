@@ -13,8 +13,8 @@ class Avo::Resources::Cohort < Avo::BaseResource
     field :enrollment_closes_at, as: :date_time, timezone: -> { record.time_zone },
       help: "Optional override. By default enrollment closes when the first exam window closes."
     field :enrollment_deadline, as: :date_time, only_on: :show, timezone: -> { record.time_zone }
-    field :cohort_slots, as: :has_many, name: "Schedule"
-    field :enrollments, as: :has_many
+    field :cohort_slots, as: :has_many, name: "Schedule", attach_scope: -> { query.none }
+    field :enrollments, as: :has_many, attach_scope: -> { query.none }
   end
 
   def actions

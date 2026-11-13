@@ -19,7 +19,7 @@ class Avo::Resources::Learner < Avo::BaseResource
     field :gender, as: :select, enum: ::Learner.genders
     field :confirmed_at, as: :date_time, hide_on: :index
     field :created_at, as: :date_time, sortable: true, name: "Signed up"
-    field :enrollments, as: :has_many
+    field :enrollments, as: :has_many, attach_scope: -> { query.none }
   end
 
   def actions

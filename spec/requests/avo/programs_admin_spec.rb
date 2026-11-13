@@ -117,6 +117,15 @@ RSpec.describe "Avo admin for programs", type: :request do
       expect(program.reload.domains).to contain_exactly(domain)
     end
 
+    it "keeps the sites when the update fails validation" do
+      program.assign_to(domain)
+
+      patch "/avo/resources/programs/#{program.to_param}", params: { program: { title: "", sites: [ "", other_domain.id.to_s ] } }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(program.reload.domains).to contain_exactly(domain)
+    end
+
     it "leaves the sites alone when the form does not send them" do
       program.assign_to(other_domain)
 
@@ -214,7 +223,7 @@ RSpec.describe "Avo admin for programs", type: :request do
       post "/avo/resources/questions", params: { question: question_params(correct_slot: "") }
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(response.body).to include(I18n.t("activerecord.errors.models.question.attributes.choices.exactly_one_correct", default: "جواب صحيح واحد"))
+      expect(response.body).to include(I18n.t("activerecord.errors.messages.exactly_one_correct", locale: :ar))
       expect(exam.questions.where(position: 9)).to be_empty
     end
 
@@ -237,6 +246,32 @@ RSpec.describe "Avo admin for programs", type: :request do
       expect(response).to have_http_status(:unprocessable_content)
       expect(response.body).to include("طلاب اختاروا هذا الجواب")
       expect(Choice.exists?(answered.id)).to be(true)
+    end
+
+    it "refuses to delete an answered question with the model's message" do
+      question = exam.questions.first
+      attempt = create(:exam_attempt, exam: exam, enrollment: create(:enrollment, cohort: cohort, domain: domain))
+      AttemptAnswer.create!(exam_attempt: attempt, question: question, choice: question.choices.first)
+
+      delete "/avo/resources/questions/#{question.id}", headers: turbo
+
+      expect(response.body).to include("طلاب أجابوا عن هذا السؤال")
+      expect(response.body).not_to include("Failed to destroy")
+      expect(Question.exists?(question.id)).to be(true)
+    end
+  end
+
+  describe "panels of related records" do
+    it "offers no existing enrollment to attach to a learner or a cohort" do
+      learner = create(:learner)
+      create(:enrollment, cohort: cohort, domain: domain)
+
+      [ "/avo/resources/learners/#{learner.id}/enrollments/new", "/avo/resources/cohorts/#{cohort.id}/enrollments/new" ].each do |path|
+        get path
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).not_to match(/<option value="\d+"/)
+      end
     end
   end
 
@@ -291,7 +326,9 @@ RSpec.describe "Avo admin for programs", type: :request do
       dates = cohort.cohort_slots.order(:id).pluck(:available_on)
 
       run_action("cohorts", Avo::Actions::ShiftCohortSchedule, cohort, after: "", days: "7")
+      expect(response.body).to include("bg-red-400")
       run_action("cohorts", Avo::Actions::ShiftCohortSchedule, cohort, after: "2025-11-08", days: "")
+      expect(response.body).to include("bg-red-400")
 
       expect(cohort.cohort_slots.order(:id).pluck(:available_on)).to eq(dates)
     end
@@ -316,6 +353,7 @@ RSpec.describe "Avo admin for programs", type: :request do
       patch "/avo/resources/learners/#{learner.id}", params: { learner: { full_name: "غيره" } }
       delete "/avo/resources/learners/#{learner.id}"
       get "/avo/resources/learners/#{learner.id}/edit"
+      expect(response.body).not_to include('name="learner[full_name]"')
 
       expect(learner.reload.full_name).to eq("طالب العلم")
     end

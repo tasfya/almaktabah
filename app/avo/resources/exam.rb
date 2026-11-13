@@ -11,6 +11,6 @@ class Avo::Resources::Exam < Avo::BaseResource
     field :program, as: :belongs_to
     field :title, as: :text, sortable: true
     field :description, as: :textarea
-    field :questions, as: :has_many
+    field :questions, as: :has_many, attach_scope: -> { query.none }
   end
 end

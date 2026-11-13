@@ -21,13 +21,16 @@ class Avo::Resources::Program < Avo::BaseResource
     field :site_names, as: :text, name: "Sites", only_on: :show do
       record.domains.map(&:name).to_sentence
     end
-    field :program_items, as: :has_many, name: "Items"
-    field :exams, as: :has_many
-    field :cohorts, as: :has_many
+    field :program_items, as: :has_many, name: "Items", attach_scope: -> { query.none }
+    field :exams, as: :has_many, attach_scope: -> { query.none }
+    field :cohorts, as: :has_many, attach_scope: -> { query.none }
   end
 
-  # The site checkboxes are not a Program attribute: Avo would try to write
-  # `sites=`, so they are taken out and applied as domain assignments.
+  # Site ids submitted by the form, or nil when it sent none. The checkboxes
+  # are not a Program attribute, so they are taken out of the params here and
+  # the controller applies them after the program saves.
+  attr_reader :submitted_site_ids
+
   def hydrate(**args)
     Avo::FormOnlyFields.define_on(args[:record], [ :sites ])
     super
@@ -35,8 +38,7 @@ class Avo::Resources::Program < Avo::BaseResource
 
   def fill_record(record, permitted_params, **)
     sites = permitted_params.delete(:sites)
-    super.tap do |program|
-      program.domain_ids = Array(sites).compact_blank.map(&:to_i) unless sites.nil?
-    end
+    @submitted_site_ids = Array(sites).compact_blank.map(&:to_i) unless sites.nil?
+    super
   end
 end
