@@ -397,6 +397,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_170000) do
     t.index ["exam_id"], name: "index_questions_on_exam_id"
   end
 
+  create_table "reminder_deliveries", force: :cascade do |t|
+    t.integer "enrollment_id", null: false
+    t.date "local_date", null: false
+    t.datetime "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enrollment_id", "local_date"], name: "index_reminder_deliveries_on_enrollment_id_and_local_date", unique: true
+  end
+
   create_table "scholars", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "default_domain_id"
@@ -638,6 +647,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_170000) do
   add_foreign_key "program_items", "lessons"
   add_foreign_key "program_items", "programs"
   add_foreign_key "questions", "exams"
+  add_foreign_key "reminder_deliveries", "enrollments", on_delete: :cascade
   add_foreign_key "scholars", "domains", column: "default_domain_id"
   add_foreign_key "series", "scholars"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
