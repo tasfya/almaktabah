@@ -3,8 +3,9 @@ class Program < ApplicationRecord
   include Publishable
   include DomainAssignable
 
-  has_many :program_items, -> { order(:position) }, dependent: :destroy, inverse_of: :program
   has_many :cohorts, dependent: :destroy
+  has_many :program_items, -> { order(:position) }, dependent: :destroy, inverse_of: :program
+  has_many :exams, dependent: :destroy
 
   validates :title, presence: true
   validates :pass_mark, numericality: { only_integer: true, in: 0..100 }

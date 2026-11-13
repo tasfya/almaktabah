@@ -47,5 +47,10 @@ RSpec.describe ProgramItem, type: :model do
       item = build(:program_item, :book)
       expect(item.display_title).to eq(item.book.title)
     end
+
+    it "falls back to the exam title" do
+      item = build(:program_item, :exam)
+      expect(item.display_title).to eq(item.exam.title)
+    end
   end
 end
