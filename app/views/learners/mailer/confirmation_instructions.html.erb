@@ -1,0 +1,4 @@
+<p><%= t("programs.mail.greeting", name: @resource.full_name) %></p>
+<p><%= t("programs.mail.confirmation.intro") %></p>
+<%= render "learners/mailer/button", url: learner_confirmation_url(confirmation_token: @token), label: t("programs.mail.confirmation.action") %>
+<p style="font-size:13px;color:#57534e;"><%= t("programs.mail.ignore_notice") %></p>

@@ -4,6 +4,7 @@ class Learner < ApplicationRecord
 
   enum :gender, { male: 0, female: 1 }, validate: true
 
+  belongs_to :domain, optional: true
   has_many :enrollments, dependent: :destroy
 
   normalizes :full_name, with: ->(name) { name.squish }
@@ -12,4 +13,18 @@ class Learner < ApplicationRecord
   validates :full_name, length: { maximum: 100 }
 
   before_create :skip_confirmation!, unless: -> { Rails.configuration.x.learner_mail_enabled }
+
+  def devise_mailer
+    Learners::Mailer
+  end
+
+  protected
+
+  # Mail goes out on behalf of the site the request came from, or the site the
+  # learner signed up on when there is no request (console, jobs).
+  def send_devise_notification(notification, *args)
+    opts = args.extract_options!
+    opts[:domain_id] ||= (Current.domain || domain)&.id
+    devise_mailer.send(notification, self, *args, opts).deliver_later
+  end
 end
