@@ -10,6 +10,15 @@ RSpec.describe Learner do
     expect(learner.errors).to include(:full_name, :gender)
   end
 
+  it "squishes the full name it prints on certificates" do
+    expect(build(:learner, full_name: "  عبد   الله  ").full_name).to eq("عبد الله")
+  end
+
+  it "caps the full name at 100 characters" do
+    expect(build(:learner, full_name: "ا" * 100)).to be_valid
+    expect(build(:learner, full_name: "ا" * 101)).not_to be_valid
+  end
+
   it "keeps the email unique regardless of case" do
     create(:learner, email: "taleb@example.com")
 

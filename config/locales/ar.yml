@@ -466,6 +466,7 @@ ar:
       female: "طالبة"
       have_account: "لديك حساب؟ سجّل الدخول"
       no_account: "ليس لديك حساب؟ أنشئ حسابًا"
+      rate_limited: "محاولات كثيرة، يُرجى المحاولة بعد دقائق."
     dashboard:
       title: "برامجي"
       greeting: "مرحبًا %{name}"

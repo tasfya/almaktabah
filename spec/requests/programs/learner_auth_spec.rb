@@ -165,11 +165,9 @@ RSpec.describe "Learner accounts", type: :request do
   describe "with the launch switch off" do
     around do |example|
       Rails.configuration.x.learners_enabled = false
-      Rails.application.reload_routes!
       example.run
     ensure
       Rails.configuration.x.learners_enabled = true
-      Rails.application.reload_routes!
     end
 
     %w[/my /learners/sign_up /learners/sign_in /learners/password/new].each do |path|
@@ -191,6 +189,44 @@ RSpec.describe "Learner accounts", type: :request do
       get new_user_session_path
 
       expect(response).to have_http_status(:ok)
+    end
+
+    it "still defines the learner helpers for shared pages" do
+      get root_path
+
+      expect(response).to have_http_status(:ok)
+      expect(controller.learner_signed_in?).to be(false)
+      expect(controller.current_learner).to be_nil
+    end
+  end
+
+  describe "rate limiting" do
+    let(:counter) { ActiveSupport::Cache::MemoryStore.new }
+
+    before do
+      # Controllers capture the (null, in test) cache store when they load.
+      allow(ApplicationController.cache_store).to receive(:increment) { |*args, **opts| counter.increment(*args, **opts) }
+    end
+
+    it "stops sign-up after 10 attempts from one address" do
+      10.times { post learner_registration_path, params: { learner: sign_up_params[:learner].merge(full_name: "") } }
+
+      post learner_registration_path, params: sign_up_params
+
+      expect(response).to redirect_to(new_learner_registration_path)
+      expect(flash[:alert]).to eq(I18n.t("programs.learner_auth.rate_limited"))
+      expect(Learner.count).to eq(0)
+    end
+
+    it "stops sign-in after 10 attempts from one address" do
+      learner = create(:learner, password: "secret123")
+      10.times { post learner_session_path, params: { learner: { email: learner.email, password: "wrong" } } }
+
+      post learner_session_path, params: { learner: { email: learner.email, password: "secret123" } }
+
+      expect(response).to redirect_to(new_learner_session_path)
+      get learner_dashboard_path
+      expect(response).to redirect_to(new_learner_session_path)
     end
   end
 end

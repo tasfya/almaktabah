@@ -62,7 +62,7 @@ module Almaktabah
 
     MissionControl::Jobs.base_controller_class = "JobsController"
 
-    # Launch switch for learner accounts: their routes are only drawn when on.
+    # Launch switch for learner accounts: their routes only match when on.
     config.x.learners_enabled = !Rails.env.production? || ENV["LEARNERS_ENABLED"] == "1"
     # Without mail, learners are confirmed on create.
     config.x.learner_mail_enabled = ENV["LEARNER_MAIL_ENABLED"] == "1"
