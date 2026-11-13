@@ -76,7 +76,8 @@ RSpec.describe TelegramImport::ProgramBuilder do
     first, last = cohort.exam_slots.to_a
     expect(first).to have_attributes(available_on: Date.new(2025, 11, 19),
                                      opens_at: riyadh.local(2025, 11, 19, 12, 3), closes_at: riyadh.local(2025, 11, 25, 22))
-    expect(last).to have_attributes(opens_at: riyadh.local(2026, 1, 5), closes_at: riyadh.local(2026, 1, 8, 22))
+    expect(last).to have_attributes(available_on: Date.new(2026, 1, 5),
+                                    opens_at: riyadh.local(2026, 1, 5), closes_at: riyadh.local(2026, 1, 8, 22))
     expect(cohort.enrollment_deadline).to eq(riyadh.local(2025, 11, 25, 22))
   end
 
@@ -111,7 +112,7 @@ RSpec.describe TelegramImport::ProgramBuilder do
     report = build(dry_run: true)
 
     expect(counts).to eq(before)
-    expect(report.created).to eq("Program" => 1, "Cohort" => 1, "ProgramItem" => 15, "CohortSlot" => 15)
+    expect(report.created).to eq("Program" => 1, "Cohort" => 1, "Exam" => 2, "ProgramItem" => 15, "CohortSlot" => 15)
   end
 
   it "builds the first texts with ONLY, then appends the rest without moving existing positions" do
@@ -122,6 +123,34 @@ RSpec.describe TelegramImport::ProgramBuilder do
 
     expect(program.program_items.first(first.size).map { [ _1.position, _1.id ] }).to eq(first)
     expect(program.program_items.count).to eq(15)
+  end
+
+  it "leaves an exam out until the text of the lesson it follows is built" do
+    build(only: %w[wajibuna qawaid])
+
+    expect(program.program_items.exam).to be_empty
+  end
+
+  it "refuses to run when a built item or exam was deleted" do
+    build
+    item = program.program_items.exam.first
+    exam = item.exam
+    item.destroy!
+    exam.destroy!
+    before = counts
+
+    expect { build }.to raise_error(TelegramImport::PreflightError, /mapped to deleted records: item:exam:1, exam:1/)
+    expect(counts).to eq(before)
+  end
+
+  it "recreates a deleted slot of an existing item" do
+    build
+    cohort.cohort_slots.first.destroy!
+
+    report = build
+
+    expect(report.created).to eq("CohortSlot" => 1)
+    expect(cohort.cohort_slots.count).to eq(15)
   end
 
   it "refuses texts out of program order" do

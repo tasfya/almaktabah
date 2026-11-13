@@ -51,7 +51,7 @@ module TelegramImport
     def entries
       @entries ||= begin
         selected = texts.map { _1["key"] }
-        exams = schedule_exams.select { |exam| (exam["text_keys"] - selected).empty? }
+        exams = schedule_exams.select { |exam| selected.include?(exam["after"]["text_key"]) }
         texts.flat_map do |text|
           [ book_entry(text["matn"], text["key"], hidden: false) ] +
             text["lessons"].flat_map do |lesson|
@@ -72,7 +72,7 @@ module TelegramImport
       placed = list.map(&:key)
       missing = exams.map { "exam:#{_1['index']}" } - placed
       if missing.any?
-        raise PreflightError, "#{missing.join(', ')} come after a lesson outside the selected texts; add the next text to ONLY"
+        raise PreflightError, "#{missing.join(', ')} come after a lesson that is not in the manifest"
       end
 
       transcripts = texts.flat_map { |text| text["transcripts"].map { "message:#{_1['message_id']}" } }
@@ -95,8 +95,11 @@ module TelegramImport
       problems << "cohort maps to a deleted record" if deleted?(cohort_key)
 
       library = entries.reject { _1.kind == :exam }
-      unimported = library.reject { mapping(_1.key)&.record }
+      unimported = library.reject { mapping(_1.key) }
       problems << "not imported yet (run telegram_import:library): #{unimported.map(&:key).join(', ')}" if unimported.any?
+      deleted = (library.map(&:key) + entries.map { "item:#{_1.key}" } + entries.select { _1.kind == :exam }.map(&:key))
+                .select { deleted?(_1) }
+      problems << "mapped to deleted records: #{deleted.join(', ')}" if deleted.any?
 
       built = entries.map { "item:#{_1.key}" }.select { mapping(_1) }
       unless built == entries.first(built.size).map { "item:#{_1.key}" }
@@ -133,12 +136,13 @@ module TelegramImport
     end
 
     def create_item(program, entry, position)
+      exam = exam_for(program, entry) if entry.kind == :exam
       act("create ProgramItem ##{position} #{entry.kind}#{' (hidden)' if entry.hidden}: #{title_of(entry)}")
       @report.created["ProgramItem"] += 1
       return if @dry_run
 
       reference = case entry.kind
-      when :exam then { exam: exam_for(program, entry) }
+      when :exam then { exam: exam }
       when :lesson then { lesson: mapping(entry.key).record }
       else { book: mapping(entry.key).record }
       end
