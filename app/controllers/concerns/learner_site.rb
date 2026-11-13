@@ -10,7 +10,7 @@ module LearnerSite
   included do
     before_action { render_not_found if @domain.nil? }
     rate_limit to: 10, within: 3.minutes, only: :create, name: "email", by: :learner_email_rate_key, with: :refuse_rate_limited
-    rate_limit to: 60, within: 3.minutes, only: :create, name: "address", with: :refuse_rate_limited
+    rate_limit to: 60, within: 3.minutes, only: :create, name: "address", by: :learner_address_rate_key, with: :refuse_rate_limited
   end
 
   private
@@ -19,6 +19,14 @@ module LearnerSite
     learner = params[:learner]
     email = learner[:email] if learner.is_a?(ActionController::Parameters)
     email.to_s.strip.downcase.presence || request.remote_ip
+  end
+
+  # One IPv6 subscriber usually holds a whole /64, so count the /64.
+  def learner_address_rate_key
+    address = IPAddr.new(request.remote_ip)
+    address.ipv6? ? address.mask(64).to_s : address.to_s
+  rescue IPAddr::Error
+    request.remote_ip
   end
 
   def refuse_rate_limited

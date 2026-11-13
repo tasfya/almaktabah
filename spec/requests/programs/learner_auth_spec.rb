@@ -277,6 +277,20 @@ RSpec.describe "Learner accounts", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
+    it "counts an IPv6 visitor by their /64" do
+      learner = create(:learner, password: "secret123")
+      via_edge = ->(visitor) { { "X-Forwarded-For" => "2606:4700:10::1", "CF-Connecting-IP" => visitor } }
+      60.times { |n| post learner_session_path, params: { learner: { email: "guess#{n}@example.com", password: "wrong" } }, headers: via_edge.call("2001:db8:0:1::#{n + 1}") }
+
+      post learner_session_path, params: { learner: { email: learner.email, password: "secret123" } }, headers: via_edge.call("2001:db8:0:1::ffff")
+      get learner_dashboard_path
+      expect(response).to redirect_to(new_learner_session_path)
+
+      post learner_session_path, params: { learner: { email: learner.email, password: "secret123" } }, headers: via_edge.call("2001:db8:0:2::1")
+      get learner_dashboard_path
+      expect(response).to have_http_status(:ok)
+    end
+
     it "stops sign-in after 60 attempts from one address" do
       learner = create(:learner, password: "secret123")
       60.times { |n| post learner_session_path, params: { learner: { email: "guess#{n}@example.com", password: "wrong" } } }

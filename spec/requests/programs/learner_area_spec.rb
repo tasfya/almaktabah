@@ -201,6 +201,18 @@ RSpec.describe "Learner area", type: :request do
         expect(response.body).to include(%(target="#{ActionView::RecordIdentifier.dom_id(exam)}"), "الاختبار متاح الآن")
       end
 
+      it "treats a tick that lost a race with another tab as ticked" do
+        # The other request wrote the completion after this one checked.
+        allow_any_instance_of(Programs::Progress).to receive(:ticked?).and_return(false) # rubocop:disable RSpec/AnyInstance
+        create(:lesson_completion, enrollment: enrollment, program_item: second_lesson)
+
+        tick(second_lesson)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).not_to include("لا يمكن تعليم هذا الدرس الآن")
+        expect(LessonCompletion.count).to eq(1)
+      end
+
       it "rejects ticking a future lesson, telling the learner why" do
         tick(future_lesson)
 
