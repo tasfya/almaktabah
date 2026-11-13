@@ -12,20 +12,23 @@
 
 <%= t("programs.reminders.exams_opening") %>:
 <% @digest.exams_opening.each do |slot| %>
-- <%= slot.program_item.display_title %> — <%= t("programs.reminders.opens_at", time: exam_time(slot.opens_at)) %>
+- <%= slot.program_item.display_title %> — <%= t("programs.reminders.opens_at", time: program_datetime(slot.opens_at, @cohort, @digest.on)) %>
 <% end %>
 <% end %>
 <% if @digest.exams_closing.any? %>
 
 <%= t("programs.reminders.exams_closing") %>:
 <% @digest.exams_closing.each do |slot| %>
-- <%= slot.program_item.display_title %> — <%= t("programs.reminders.closes_at", time: exam_time(slot.closes_at)) %>
+- <%= slot.program_item.display_title %> — <%= t("programs.reminders.closes_at", time: program_deadline(slot.closes_at, @cohort, @digest.on)) %>
 <% end %>
+<% end %>
+<% if @digest.exams_opening.any? || @digest.exams_closing.any? %>
+<%= t("programs.cohort.time_zone", zone: cohort_time_zone_name(@cohort)) %>
 <% end %>
 
 <%= t("programs.reminders.action") %>: <%= learner_cohort_url(@cohort) %>
 <% content_for :footer do %>
-<%= t("programs.reminders.footer") %>
+<%= t(@enrollment.learner.female? ? "programs.reminders.footer_female" : "programs.reminders.footer") %>
 <%= t("programs.reminders.turn_off") %>: <%= @opt_out_url %>
 <%= t("programs.reminders.dashboard") %>: <%= learner_dashboard_url %>
 <% end %>

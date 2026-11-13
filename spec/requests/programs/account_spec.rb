@@ -50,7 +50,7 @@ RSpec.describe "Learner account", type: :request do
 
       patch learner_cohort_reminders_path(cohort), params: { reminders_enabled: "0" }
 
-      expect(response).to redirect_to(learner_account_path)
+      expect(response).to redirect_to(learner_account_path(anchor: "reminders_cohort_#{cohort.id}"))
       expect(enrollment.reload.reminders_enabled).to be(false)
       expect(other.reload.reminders_enabled).to be(true)
 
@@ -125,6 +125,41 @@ RSpec.describe "Learner account", type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
       expect(Learner.exists?(learner.id)).to be(true)
+    end
+
+    it "attaches the wrong-password error to the password field and focuses it" do
+      delete learner_account_path, params: { current_password: "wrong" }
+
+      html = Nokogiri::HTML(response.body)
+      field = html.at_css("input[name=current_password]")
+      expect(field["aria-invalid"]).to eq("true")
+      expect(field["autofocus"]).to be_present
+      expect(html.at_css("##{field["aria-describedby"]}").text).to include(I18n.t("programs.account.wrong_password"))
+      expect(html.css("#program_flash .alert")).to be_empty
+    end
+
+    it "replaces only the delete card for Turbo, so the page keeps its scroll position" do
+      delete learner_account_path, params: { current_password: "wrong" }, headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+      expect(response.body).to include('target="delete_account"', I18n.t("programs.account.wrong_password"))
+    end
+
+    it "shows the reminder result next to the cohort it changed, not at the top" do
+      patch learner_cohort_reminders_path(cohort), params: { reminders_enabled: "0" }
+      follow_redirect!
+
+      html = Nokogiri::HTML(response.body)
+      expect(html.at_css("#reminders_cohort_#{cohort.id}").text).to include(I18n.t("programs.account.reminders_saved"))
+      expect(html.css("#program_flash .alert")).to be_empty
+    end
+
+    it "names the program and cohort in each reminder button" do
+      get learner_account_path
+
+      button = Nokogiri::HTML(response.body).at_css("#reminders_cohort_#{cohort.id} button")
+      expect(button["aria-label"]).to eq("#{I18n.t("programs.account.turn_off")}: #{program.title} — #{cohort.name}")
     end
 
     context "with learner mail on" do

@@ -7,7 +7,7 @@ class CertificatesController < ApplicationController
   before_action :no_store
 
   def show
-    @certificate = Certificate.includes(enrollment: { cohort: :program }).find_by(number: params[:id], domain_id: @domain.id)
+    @certificate = Certificate.includes(enrollment: { cohort: :program }).find_by(number: params[:id].to_s.upcase, domain_id: @domain.id)
     return render_record_not_found(t("programs.certificate.not_found"), root_path) unless @certificate
 
     reset_breadcrumbs

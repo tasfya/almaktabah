@@ -1,7 +1,7 @@
 class ReminderMailer < ApplicationMailer
   include LearnerMailTenancy
 
-  helper_method :exam_time
+  helper LearnerAreaHelper
 
   def daily(enrollment, digest)
     @enrollment = enrollment
@@ -21,9 +21,5 @@ class ReminderMailer < ApplicationMailer
   def subject_line
     key = @digest.lessons.empty? ? "programs.reminders.exam_subject" : "programs.reminders.subject"
     I18n.t(key, program: @program.title, locale: :ar)
-  end
-
-  def exam_time(time)
-    I18n.l(time.in_time_zone(@cohort.time_zone), format: I18n.t("programs.reminders.time_format", locale: :ar), locale: :ar)
   end
 end

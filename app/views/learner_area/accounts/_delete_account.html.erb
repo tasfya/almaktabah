@@ -1,0 +1,20 @@
+<section id="delete_account" class="card bg-base-100 border border-error/40 shadow-sm">
+  <div class="card-body gap-3">
+    <h2 class="card-title text-lg text-error"><%= t("programs.account.delete") %></h2>
+    <p class="text-sm"><%= t("programs.account.delete_warning") %></p>
+    <%= form_with url: learner_account_path, method: :delete, class: "flex flex-col gap-3",
+                  data: { turbo_confirm: t("programs.account.delete_confirm") } do |f| %>
+      <div>
+        <%= f.label :current_password, t("programs.account.current_password"), class: "block text-sm font-semibold mb-1" %>
+        <%= f.password_field :current_password, required: true, autocomplete: "current-password", dir: "ltr",
+                             autofocus: @password_error.present?,
+                             aria: ({ invalid: true, describedby: "current_password_error" } if @password_error),
+                             class: "input w-full #{"input-error" if @password_error}" %>
+        <% if @password_error %>
+          <p id="current_password_error" class="text-error text-sm mt-1"><%= @password_error %></p>
+        <% end %>
+      </div>
+      <div><%= f.submit t("programs.account.delete"), class: "btn btn-error" %></div>
+    <% end %>
+  </div>
+</section>

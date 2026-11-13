@@ -172,8 +172,14 @@ module Programs
       end
     end
 
+    # A cohort whose schedule is not published yet (or was cleared to be
+    # regenerated) has nothing to do, which must not read as finished.
+    def scheduled?
+      items.any?
+    end
+
     def finished?
-      started? && due_lessons.empty? && next_release_on.nil? && pending_exams.empty? &&
+      scheduled? && started? && due_lessons.empty? && next_release_on.nil? && pending_exams.empty? &&
         upcoming_exams.empty? && unavailable_exams.empty?
     end
 

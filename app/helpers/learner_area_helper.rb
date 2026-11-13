@@ -111,6 +111,8 @@ module LearnerAreaHelper
                                                     days: arabic_count("programs.counts.days", (cohort.starts_on - today).to_i)) }
     end
 
+    return { text: t("programs.cohort.schedule_pending") } unless progress.scheduled?
+
     # An open exam closes for good; late lessons can still be caught up.
     if (exam = progress.open_exams.first)
       closes = program_deadline(progress.slot_for(exam).closes_at, cohort, today)

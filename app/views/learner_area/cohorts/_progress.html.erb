@@ -1,4 +1,5 @@
 <%# locals: (progress:, id:) %>
+<% return unless progress.scheduled? %>
 <% lessons = progress.lesson_items.size %>
 <% exams = progress.exam_items.size %>
 <div class="flex flex-col gap-1">

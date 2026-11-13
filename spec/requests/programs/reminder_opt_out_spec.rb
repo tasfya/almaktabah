@@ -42,6 +42,23 @@ RSpec.describe "Reminder opt-out", type: :request do
     expect(enrollment.reload.reminders_enabled).to be(false)
   end
 
+  it "GET says reminders are already off, with no button, when they are" do
+    enrollment.update!(reminders_enabled: false)
+
+    get reminder_opt_out_path(token: token)
+
+    html = Nokogiri::HTML(response.body)
+    expect(response.body).to include(I18n.t("programs.reminders.opt_out.already_off", program: enrollment.cohort.program.title))
+    expect(html.at_css("form[action='#{reminder_opt_out_path(token: token)}']")).to be_nil
+    expect(html.at_css("a[href='#{learner_account_path}']")).to be_present
+  end
+
+  it "POST links to the account page where reminders can be turned back on" do
+    post reminder_opt_out_path(token: token)
+
+    expect(Nokogiri::HTML(response.body).at_css("a[href='#{learner_account_path}']")).to be_present
+  end
+
   it "returns not found for a tampered token" do
     get reminder_opt_out_path(token: "#{token}x")
     expect(response).to have_http_status(:not_found)

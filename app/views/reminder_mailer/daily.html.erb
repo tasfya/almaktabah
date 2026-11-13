@@ -12,7 +12,7 @@
   <p style="margin:16px 0 4px;font-weight:bold;"><%= t("programs.reminders.exams_opening") %></p>
   <ul style="margin:0;padding-right:20px;">
     <% @digest.exams_opening.each do |slot| %>
-      <li><%= slot.program_item.display_title %> — <%= t("programs.reminders.opens_at", time: exam_time(slot.opens_at)) %></li>
+      <li><%= slot.program_item.display_title %> — <%= t("programs.reminders.opens_at", time: program_datetime(slot.opens_at, @cohort, @digest.on)) %></li>
     <% end %>
   </ul>
 <% end %>
@@ -20,12 +20,15 @@
   <p style="margin:16px 0 4px;font-weight:bold;"><%= t("programs.reminders.exams_closing") %></p>
   <ul style="margin:0;padding-right:20px;">
     <% @digest.exams_closing.each do |slot| %>
-      <li><%= slot.program_item.display_title %> — <%= t("programs.reminders.closes_at", time: exam_time(slot.closes_at)) %></li>
+      <li><%= slot.program_item.display_title %> — <%= t("programs.reminders.closes_at", time: program_deadline(slot.closes_at, @cohort, @digest.on)) %></li>
     <% end %>
   </ul>
 <% end %>
+<% if @digest.exams_opening.any? || @digest.exams_closing.any? %>
+  <p style="margin:12px 0 0;font-size:13px;color:#57534e;"><%= t("programs.cohort.time_zone", zone: cohort_time_zone_name(@cohort)) %></p>
+<% end %>
 <%= render "learners/mailer/button", url: learner_cohort_url(@cohort), label: t("programs.reminders.action") %>
 <% content_for :footer do %>
-  <p style="margin:0;"><%= t("programs.reminders.footer") %></p>
+  <p style="margin:0;"><%= t(@enrollment.learner.female? ? "programs.reminders.footer_female" : "programs.reminders.footer") %></p>
   <p style="margin:4px 0 0;"><a href="<%= @opt_out_url %>" style="color:#57534e;"><%= t("programs.reminders.turn_off") %></a> · <a href="<%= learner_dashboard_url %>" style="color:#57534e;"><%= t("programs.reminders.dashboard") %></a></p>
 <% end %>

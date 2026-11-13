@@ -37,7 +37,7 @@
         <ul class="divide-y divide-base-300">
           <% @enrollments.each do |enrollment| %>
             <% cohort = enrollment.cohort %>
-            <li class="py-3 flex flex-wrap items-center justify-between gap-2">
+            <li id="reminders_cohort_<%= cohort.id %>" class="py-3 flex flex-wrap items-center justify-between gap-2 scroll-mt-24">
               <div class="min-w-0">
                 <p class="font-semibold"><%= cohort.program.title %></p>
                 <p class="text-sm opacity-70">
@@ -45,10 +45,15 @@
                   <%= enrollment.reminders_enabled ? t("programs.account.reminders_on") : t("programs.account.reminders_off") %>
                 </p>
               </div>
-              <%= button_to (enrollment.reminders_enabled ? t("programs.account.turn_off") : t("programs.account.turn_on")),
-                            learner_cohort_reminders_path(cohort), method: :patch,
+              <% label = enrollment.reminders_enabled ? t("programs.account.turn_off") : t("programs.account.turn_on") %>
+              <%= button_to label, learner_cohort_reminders_path(cohort), method: :patch,
                             params: { reminders_enabled: enrollment.reminders_enabled ? "0" : "1" },
+                            aria: { label: "#{label}: #{cohort.program.title} — #{cohort.name}" },
+                            form: { data: { turbo: false } },
                             class: "btn btn-sm #{enrollment.reminders_enabled ? "btn-ghost border-base-300" : "btn-primary"}" %>
+              <% if flash[:reminders_saved_for] == cohort.id %>
+                <p role="status" class="w-full alert alert-success alert-soft text-sm"><%= t("programs.account.reminders_saved") %></p>
+              <% end %>
             </li>
           <% end %>
         </ul>
@@ -58,18 +63,5 @@
     </div>
   </section>
 
-  <section class="card bg-base-100 border border-error/40 shadow-sm">
-    <div class="card-body gap-3">
-      <h2 class="card-title text-lg text-error"><%= t("programs.account.delete") %></h2>
-      <p class="text-sm"><%= t("programs.account.delete_warning") %></p>
-      <%= form_with url: learner_account_path, method: :delete, class: "flex flex-col gap-3",
-                    data: { turbo_confirm: t("programs.account.delete_confirm") } do |f| %>
-        <div>
-          <%= f.label :current_password, t("programs.account.current_password"), class: "block text-sm font-semibold mb-1" %>
-          <%= f.password_field :current_password, required: true, autocomplete: "current-password", dir: "ltr", class: "input w-full" %>
-        </div>
-        <div><%= f.submit t("programs.account.delete"), class: "btn btn-error" %></div>
-      <% end %>
-    </div>
-  </section>
+  <%= render "learner_area/accounts/delete_account" %>
 </div>

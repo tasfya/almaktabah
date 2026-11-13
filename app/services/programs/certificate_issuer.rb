@@ -4,6 +4,9 @@ module Programs
   # decides on stored ticks and scores only, so a missed exam or one with no
   # questions yet blocks it simply by having no attempt.
   class CertificateIssuer
+    # Printed and typed back by hand: no 0/O or 1/I look-alikes.
+    NUMBER_ALPHABET = (("A".."Z").to_a + ("2".."9").to_a - %w[O I]).freeze
+
     def initialize(enrollment, at: Time.current)
       @enrollment = enrollment
       @at = at
@@ -40,7 +43,7 @@ module Programs
       Certificate.transaction do
         certificate = Certificate.create!(
           enrollment: @enrollment, domain_id: @enrollment.domain_id, issued_at: @at,
-          number: "#{@enrollment.cohort_id}-#{SecureRandom.alphanumeric(8).upcase}",
+          number: "#{@enrollment.cohort_id}-#{SecureRandom.alphanumeric(8, chars: NUMBER_ALPHABET)}",
           full_name_snapshot: learner.full_name, gender_snapshot: learner.gender
         )
         @enrollment.update!(completed_at: @at)

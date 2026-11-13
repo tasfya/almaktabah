@@ -3,10 +3,15 @@
   <p class="text-sm text-base-content/70"><%= cohort.name %></p>
   <h1 class="text-xl md:text-2xl font-bold leading-tight mb-3"><%= cohort.program.title %></h1>
   <%= render "learner_area/cohorts/progress", progress: progress, id: "cohort_progress" %>
-  <% if certificate && !certificate.revoked? %>
+  <% if certificate&.revoked? %>
+    <div role="status" class="alert alert-warning alert-soft mt-4">
+      <%= icon "x-circle", class: "size-5" %>
+      <span><%= t("programs.cohort.certificate_revoked_html", number: certificate_number_tag(certificate.number)) %></span>
+    </div>
+  <% elsif certificate %>
     <div role="status" class="alert alert-success mt-4">
       <%= icon "check-badge", class: "size-5" %>
-      <span><%= t("programs.cohort.certificate_issued", number: certificate.number) %></span>
+      <span><%= t("programs.cohort.certificate_issued_html", number: certificate_number_tag(certificate.number)) %></span>
       <%= link_to t("programs.cohort.open_certificate"), learner_certificate_link_target(certificate), class: "btn btn-sm", data: { turbo: false } %>
     </div>
   <% else %>

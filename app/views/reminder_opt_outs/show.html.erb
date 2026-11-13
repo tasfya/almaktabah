@@ -1,6 +1,12 @@
 <% set_meta_tags(title: t("programs.reminders.opt_out.title"), noindex: true) %>
+<% program = @enrollment.cohort.program.title %>
 <div class="container mx-auto max-w-xl px-4 py-12 text-center">
   <h1 class="text-2xl font-bold mb-4"><%= t("programs.reminders.opt_out.title") %></h1>
-  <p class="mb-6"><%= t("programs.reminders.opt_out.confirm", program: @enrollment.cohort.program.title) %></p>
-  <%= button_to t("programs.reminders.opt_out.action"), reminder_opt_out_path(token: params[:token]), class: "btn btn-primary", form: { data: { turbo: false } } %>
+  <% if @enrollment.reminders_enabled %>
+    <p class="mb-6"><%= t("programs.reminders.opt_out.confirm", program: program) %></p>
+    <%= button_to t("programs.reminders.opt_out.action"), reminder_opt_out_path(token: params[:token]), class: "btn btn-primary", form: { data: { turbo: false } } %>
+  <% else %>
+    <p><%= t("programs.reminders.opt_out.already_off", program: program) %></p>
+    <%= render "reminder_opt_outs/turn_back_on" %>
+  <% end %>
 </div>
