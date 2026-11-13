@@ -58,7 +58,7 @@
             <dl class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm md:text-base">
               <div><dt class="text-base-content/60"><%= t("programs.certificate.cohort") %></dt><dd class="font-semibold"><%= @cohort.name %></dd></div>
               <div><dt class="text-base-content/60"><%= t("programs.certificate.issued_on") %></dt><dd class="font-semibold"><%= l(@certificate.issued_on, format: :long) %></dd></div>
-              <div><dt class="text-base-content/60"><%= t("programs.certificate.number") %></dt><dd class="font-semibold" dir="ltr"><%= @certificate.number %></dd></div>
+              <div><dt class="text-base-content/60"><%= t("programs.certificate.number") %></dt><dd class="font-semibold"><%= certificate_number_tag(@certificate.number) %></dd></div>
             </dl>
             <p class="text-xs md:text-sm text-base-content/60 break-all">
               <%= t("programs.certificate.verify") %>
