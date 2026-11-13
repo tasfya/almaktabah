@@ -119,6 +119,30 @@ RSpec.describe TelegramImport::LibraryImporter do
     expect(ActiveStorage::Blob.count).to eq(blobs)
   end
 
+  it "does not re-upload the original when only final_audio's object is missing" do
+    import
+    lesson = TelegramImportRecord.lookup("t.me/fixture_channel", "message:107")
+    lesson.final_audio.attach(io: Rails.root.join("spec/files/audio.mp3").open, filename: "1.mp3")
+    lesson.final_audio.blob.service.delete(lesson.final_audio.blob.key)
+    original = lesson.audio.blob
+
+    report = import
+
+    expect(report.completed).to eq({})
+    expect(lesson.reload.audio.blob).to eq(original)
+  end
+
+  it "has the audio stored before the optimization job can be enqueued" do
+    stored_when_enqueued = []
+    allow(AudioOptimizationJob).to receive(:perform_later) do |lesson|
+      stored_when_enqueued << lesson.audio.blob.service.exist?(lesson.audio.blob.key)
+    end
+
+    import
+
+    expect(stored_when_enqueued).to eq([ true ] * 7)
+  end
+
   it "re-uploads a file whose attachment exists but whose object is missing" do
     import
     book = TelegramImportRecord.lookup("t.me/fixture_channel", "message:106")

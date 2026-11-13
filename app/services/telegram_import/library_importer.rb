@@ -124,15 +124,16 @@ module TelegramImport
       end
     end
 
-    # Series and Scholar have no media. A Lesson counts its best audio, since
-    # PurgeOriginalAudioBatchJob removes the original once final_audio exists.
+    # Series and Scholar have no media. A Lesson is complete with either audio
+    # stored: PurgeOriginalAudioBatchJob removes the original once final_audio
+    # exists, and a final_audio this import did not make is not its to repair.
     def media_stored?(record)
-      attachment = case record
-      when Lesson then record.best_audio
-      when Book then record.file
+      attachments = case record
+      when Lesson then [ record.final_audio, record.audio ]
+      when Book then [ record.file ]
       else return true
       end
-      attachment&.attached? && attachment.blob.service.exist?(attachment.blob.key)
+      attachments.any? { _1.attached? && _1.blob.service.exist?(_1.blob.key) }
     end
 
     # -- import ----------------------------------------------------------------
