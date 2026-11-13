@@ -155,6 +155,25 @@ RSpec.describe "Programs", type: :request do
         expect(Enrollment.count).to eq(0)
       end
 
+      it "doesn't enroll when the program was unpublished in the meantime" do
+        post program_enrollments_path(program), params: { cohort_id: cohort.id }
+        program.update!(published: false)
+
+        post learner_session_path, params: { learner: { email: learner.email, password: "password123" } }
+
+        expect(response).not_to redirect_to(learner_cohort_path(cohort))
+        expect(Enrollment.count).to eq(0)
+      end
+
+      it "doesn't carry the request to another site" do
+        post program_enrollments_path(program), params: { cohort_id: cohort.id }
+        program.update!(domains: [ other_domain ])
+
+        post learner_session_path, params: { learner: { email: learner.email, password: "password123" } }
+
+        expect(Enrollment.count).to eq(0)
+      end
+
       it "doesn't enroll when the cohort closed in the meantime" do
         post program_enrollments_path(program), params: { cohort_id: cohort.id }
         cohort.update!(enrollment_closes_at: 1.minute.ago)

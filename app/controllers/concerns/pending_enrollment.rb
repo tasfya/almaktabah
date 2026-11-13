@@ -30,11 +30,8 @@ module PendingEnrollment
   # Joins the remembered cohort and returns where to land, or nil when there
   # is nothing pending.
   def complete_pending_enrollment(learner)
-    cohort = pending_enrollment_cohort
-    session.delete(:pending_enrollment)
-    return unless cohort
-
-    case enroll_learner(learner, cohort)
+    result, cohort = enroll_pending(learner)
+    case result
     when :enrolled
       flash[:notice] = t("programs.enrollments.enrolled")
       learner_cohort_path(cohort)
@@ -44,6 +41,17 @@ module PendingEnrollment
       flash[:alert] = t("programs.enrollments.closed")
       program_path(cohort.program)
     end
+  end
+
+  # Enrolls without deciding where to land, e.g. for an account that must
+  # confirm its email first: the enrollment is waiting once it signs in, even
+  # from another browser.
+  def enroll_pending(learner)
+    cohort = pending_enrollment_cohort
+    session.delete(:pending_enrollment)
+    return unless cohort
+
+    [ enroll_learner(learner, cohort), cohort ]
   end
 
   def enroll_learner(learner, cohort)
