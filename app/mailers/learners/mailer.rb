@@ -2,8 +2,6 @@ module Learners
   class Mailer < Devise::Mailer
     include LearnerMailTenancy
 
-    default template_path: "learners/mailer"
-
     protected
 
     def devise_mail(record, action, opts = {}, &block)

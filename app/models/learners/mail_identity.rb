@@ -15,7 +15,7 @@ module Learners
     end
 
     def from
-      %("#{domain.title.presence || domain.host}" <no-reply@#{sending_zone}>)
+      ActionMailer::Base.email_address_with_name("no-reply@#{sending_zone}", domain.title.presence || domain.host)
     end
 
     def url_options

@@ -1,7 +1,6 @@
 module Learners
   class RegistrationsController < Devise::RegistrationsController
-    rate_limit to: 10, within: 3.minutes, only: :create,
-      with: -> { redirect_to new_learner_registration_path, alert: t("programs.learner_auth.rate_limited") }
+    include LearnerSite
     before_action :permit_learner_fields, only: :create
 
     protected

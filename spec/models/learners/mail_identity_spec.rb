@@ -16,6 +16,13 @@ RSpec.describe Learners::MailIdentity do
     expect(mail.host).to eq("fawzan.3ilm.org")
   end
 
+  it "keeps a site title with quotes whole" do
+    mail = Mail::Address.new(identity("binramzan.net", title: 'موقع "الشيخ" العلمي').from)
+
+    expect(mail.display_name).to eq('موقع "الشيخ" العلمي')
+    expect(mail.address).to eq("no-reply@binramzan.net")
+  end
+
   it "uses the site's own zone" do
     expect(identity("binramzan.net").from).to end_with("<no-reply@binramzan.net>")
   end

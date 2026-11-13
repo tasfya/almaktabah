@@ -19,7 +19,6 @@ RSpec.describe LearnerMail do
 
     expect(mailer.delivery_method).to eq(:smtp)
     expect(mailer.smtp_settings).to include(address: "smtp.example.test", port: 587, enable_starttls: true)
-    expect(mailer.raise_delivery_errors).to be(true)
   end
 
   it "does not touch Devise::Mailer or ActionMailer::Base" do
@@ -28,6 +27,7 @@ RSpec.describe LearnerMail do
     expect(Devise::Mailer.delivery_method).to eq(:test)
     expect(ActionMailer::Base.delivery_method).to eq(:test)
     expect(ActionMailer::Base.smtp_settings).not_to include(address: "smtp.example.test")
+    expect { described_class.configure!(Class.new(ActionMailer::Base)) }.not_to change(ActionMailer::Base, :raise_delivery_errors)
   end
 
   it "leaves the learner mailers on the test delivery method in tests" do

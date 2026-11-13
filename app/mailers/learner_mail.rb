@@ -14,7 +14,6 @@ module LearnerMail
     mailers.each do |mailer|
       mailer.delivery_method = :smtp
       mailer.smtp_settings = settings
-      mailer.raise_delivery_errors = true
     end
   end
 end

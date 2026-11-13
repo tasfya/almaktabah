@@ -69,6 +69,30 @@ RSpec.describe "Learner account mail", type: :request do
       expect(mail_link(ActionMailer::Base.deliveries.last)).to start_with("https://fawzan.3ilm.org/learners/password/edit?")
     end
 
+    it "refuses learner account pages on a host without a site" do
+      host! "unknown.example.org"
+
+      post learner_registration_path, params: sign_up_params
+      expect(response).to have_http_status(:not_found)
+
+      post learner_password_path, params: { learner: { email: "a@example.com" } }
+      expect(response).to have_http_status(:not_found)
+      expect(Learner.count).to eq(0)
+    end
+
+    it "stops password reset requests after 10 from one address" do
+      counter = ActiveSupport::Cache::MemoryStore.new
+      allow(ApplicationController.cache_store).to receive(:increment) { |*args, **opts| counter.increment(*args, **opts) }
+      learner = create(:learner)
+
+      perform_enqueued_jobs do
+        11.times { post learner_password_path, params: { learner: { email: learner.email } } }
+      end
+
+      expect(response).to redirect_to(new_learner_password_path)
+      expect(ActionMailer::Base.deliveries.size).to eq(10)
+    end
+
     it "leaves staff password reset on Devise::Mailer" do
       user = create(:user)
 
