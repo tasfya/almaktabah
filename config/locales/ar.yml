@@ -122,6 +122,7 @@ ar:
       series_label: "سلسلة"
       lessons_in_series: "دروس في هذه السلسلة"
       no_lessons_in_series: "لا توجد دروس في هذه السلسلة حالياً"
+      explainable_pdf: "الكتاب المشروح (PDF)"
   contacts:
     correspondence_tips:
       search_content: "ابحث في المحتوى الموجود قبل السؤال"

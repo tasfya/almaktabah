@@ -24,5 +24,11 @@ FactoryBot.define do
     trait :without_domain do
       assign_domain { false }
     end
+
+    trait :with_explainable do
+      after(:build) do |serie|
+        serie.explainable.attach(io: File.open(Rails.root.join("spec/files/sample.pdf")), filename: "matn.pdf", content_type: "application/pdf")
+      end
+    end
   end
 end
