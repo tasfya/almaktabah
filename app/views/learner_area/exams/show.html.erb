@@ -6,14 +6,15 @@
 
   <header class="mb-4">
     <p class="text-sm text-base-content/60"><%= @cohort.program.title %></p>
-    <h1 class="text-xl md:text-2xl font-bold leading-tight mb-2"><%= t("programs.exam.label") %>: <%= @item.display_title %></h1>
-    <p class="text-sm text-base-content/70"><%= t("programs.exam.window", opens: cohort_time(slot.opens_at, @cohort), closes: cohort_time(slot.closes_at, @cohort)) %></p>
+    <h1 class="text-xl md:text-2xl font-bold leading-tight mb-2"><%= exam_title(@item) %></h1>
+    <p class="text-sm text-base-content/80"><%= exam_window(slot, @cohort, @progress.today) %></p>
+    <p class="text-xs text-base-content/80"><%= t("programs.cohort.time_zone", zone: cohort_time_zone_name(@cohort)) %></p>
   </header>
 
   <% case @state %>
   <% when :open %>
     <div role="note" class="alert alert-warning alert-soft text-sm mb-4 flex flex-col items-start gap-1">
-      <span class="font-semibold"><%= t("programs.exam.deadline", time: cohort_time(slot.closes_at, @cohort)) %></span>
+      <span class="font-semibold"><%= t("programs.exam.deadline", time: program_datetime(slot.closes_at, @cohort, @progress.today)) %></span>
       <span><%= t("programs.exam.one_attempt") %></span>
     </div>
     <%= form_with url: submit_learner_cohort_exam_path(@cohort, @exam), method: :post, class: "flex flex-col gap-4" do %>
@@ -31,7 +32,7 @@
         </fieldset>
       <% end %>
       <%= button_tag t("programs.exam.submit"), type: "submit", class: "btn btn-primary w-full sm:w-auto sm:self-start",
-            data: { turbo_submits_with: t("programs.exam.submitting"), turbo_confirm: t("programs.exam.confirm") } %>
+            data: { turbo_submits_with: t("programs.exam.submitting"), turbo_confirm: learner_t("programs.exam.confirm") } %>
     <% end %>
   <% when :submitted %>
     <% passed = @attempt.passed?(@cohort.program.pass_mark) %>
@@ -39,7 +40,7 @@
       <div class="card-body items-center text-center gap-1">
         <p class="text-3xl font-bold"><%= t("programs.exam.result", score: @attempt.score_percent) %></p>
         <p class="<%= passed ? "text-success" : "text-error" %> font-semibold">
-          <%= passed ? t("programs.exam.passed") : t("programs.exam.failed", pass_mark: @cohort.program.pass_mark) %>
+          <%= passed ? t("programs.exam.passed") : learner_t("programs.exam.failed", pass_mark: @cohort.program.pass_mark) %>
         </p>
       </div>
     </div>
@@ -60,7 +61,7 @@
             <% end %>
           </ul>
           <% unless chosen.key?(question.id) %>
-            <p class="text-xs text-error mt-1"><%= t("programs.exam.unanswered") %></p>
+            <p class="text-xs text-error mt-1"><%= learner_t("programs.exam.unanswered") %></p>
           <% end %>
         </li>
       <% end %>

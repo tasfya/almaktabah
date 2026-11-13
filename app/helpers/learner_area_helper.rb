@@ -95,6 +95,12 @@ module LearnerAreaHelper
                                                     days: arabic_count("programs.counts.days", (cohort.starts_on - today).to_i)) }
     end
 
+    # An open exam closes for good; late lessons can still be caught up.
+    if (exam = progress.open_exams.first)
+      closes = program_datetime(progress.slot_for(exam).closes_at, cohort, today)
+      return { text: t("programs.next_step.exam_open", title: exam_title(exam), closes: closes), item: exam }
+    end
+
     if (lesson = progress.due_lessons.first)
       lesson_label = t("programs.next_step.lesson", number: progress.lesson_number(lesson), title: lesson.display_title)
       overdue = progress.overdue_lessons.size
@@ -114,6 +120,10 @@ module LearnerAreaHelper
     if (exam = progress.upcoming_exams.first)
       opens = program_datetime(progress.slot_for(exam).opens_at, cohort, today)
       return { text: t("programs.next_step.exam_upcoming", title: exam_title(exam), opens: opens), item: exam }
+    end
+
+    if (exam = progress.blocking_exams.first)
+      return { text: t("programs.next_step.certificate_blocked", title: exam_title(exam)), item: exam }
     end
 
     { text: t("programs.next_step.finished") }

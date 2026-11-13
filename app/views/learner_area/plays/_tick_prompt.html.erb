@@ -1,0 +1,9 @@
+<%# locals: (item:, progress:, cohort:) %>
+<div id="player_tick_<%= dom_id(item) %>" class="bg-base-100 border-t border-base-300 px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-sm">
+  <% if progress.ticked?(item) %>
+    <span><%= t("programs.cohort.ticked") %> ✓ — <%= t("programs.cohort.ticked_thanks") %></span>
+  <% else %>
+    <span><%= t("programs.cohort.tick_prompt", lesson: t("programs.next_step.lesson", number: progress.lesson_number(item), title: item.display_title)) %></span>
+    <%= render "learner_area/cohorts/tick_button", item: item, cohort: cohort %>
+  <% end %>
+</div>

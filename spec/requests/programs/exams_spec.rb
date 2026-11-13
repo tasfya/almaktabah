@@ -56,7 +56,7 @@ RSpec.describe "Taking an exam", type: :request do
     page = Nokogiri::HTML(response.body)
     expect(page.css("input[type=radio][name^='answers[']").size).to eq(9)
     expect(page.at_css("button[data-turbo-submits-with], input[type=submit][data-turbo-submits-with]")).to be_present
-    expect(response.body).to include("21 نوفمبر 2025 22:00", questions.first.body)
+    expect(response.body).to include("الجمعة 21 نوفمبر، الساعة 10:00 م", questions.first.body)
   end
 
   it "keeps the form out of Turbo's page cache" do
@@ -87,7 +87,7 @@ RSpec.describe "Taking an exam", type: :request do
   it "says when a locked exam opens" do
     travel_to riyadh.local(2025, 11, 18, 12)
     get learner_cohort_exam_path(cohort, exam)
-    expect(response.body).to include("يُفتح في 19 نوفمبر 2025 00:00")
+    expect(response.body).to include("يُفتح الأربعاء 19 نوفمبر")
   end
 
   it "says the window was missed" do
