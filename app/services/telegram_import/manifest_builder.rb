@@ -97,7 +97,7 @@ module TelegramImport
           "audio_message_id" => audio["id"],
           "audio_file" => audio["file"],
           "video_id" => video_id,
-          "title" => caption,
+          "title" => TextCleaner.title(caption),
           "posted_on" => local_time(message["date"]).to_date.iso8601
         }
       end
@@ -125,7 +125,7 @@ module TelegramImport
 
     def title_for(message_id, caption, name, kind)
       title = @config.fetch("title_overrides", {})[message_id] || caption.presence || name
-      title = TextCleaner.clean(title)
+      title = TextCleaner.title(title)
       kind == "transcript" && !title.start_with?("تفريغ") ? "تفريغ #{title}" : title
     end
 
