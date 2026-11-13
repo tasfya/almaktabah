@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_13_130000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_13_122438) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.integer "actionable_id", null: false
@@ -73,6 +73,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_130000) do
     t.index ["published"], name: "index_articles_on_published"
     t.index ["slug"], name: "index_articles_on_slug", unique: true
     t.index ["source_url"], name: "index_articles_on_source_url"
+  end
+
+  create_table "attempt_answers", force: :cascade do |t|
+    t.integer "exam_attempt_id", null: false
+    t.integer "question_id", null: false
+    t.integer "choice_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["choice_id"], name: "index_attempt_answers_on_choice_id"
+    t.index ["exam_attempt_id", "question_id"], name: "index_attempt_answers_on_exam_attempt_id_and_question_id", unique: true
+    t.index ["question_id"], name: "index_attempt_answers_on_question_id"
   end
 
   create_table "books", force: :cascade do |t|
@@ -175,6 +186,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_130000) do
     t.index ["cohort_id"], name: "index_enrollments_on_cohort_id"
     t.index ["domain_id"], name: "index_enrollments_on_domain_id"
     t.index ["learner_id", "cohort_id"], name: "index_enrollments_on_learner_id_and_cohort_id", unique: true
+  end
+
+  create_table "exam_attempts", force: :cascade do |t|
+    t.integer "enrollment_id", null: false
+    t.integer "exam_id", null: false
+    t.datetime "started_at", null: false
+    t.datetime "submitted_at"
+    t.integer "score_percent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enrollment_id", "exam_id"], name: "index_exam_attempts_on_enrollment_id_and_exam_id", unique: true
+    t.index ["exam_id"], name: "index_exam_attempts_on_exam_id"
   end
 
   create_table "exams", force: :cascade do |t|
@@ -555,6 +578,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_130000) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "scholars", column: "author_id"
+  add_foreign_key "attempt_answers", "choices"
+  add_foreign_key "attempt_answers", "exam_attempts"
+  add_foreign_key "attempt_answers", "questions"
   add_foreign_key "books", "scholars", column: "author_id"
   add_foreign_key "choices", "questions"
   add_foreign_key "cohort_slots", "cohorts"
@@ -564,6 +590,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_130000) do
   add_foreign_key "enrollments", "cohorts"
   add_foreign_key "enrollments", "domains"
   add_foreign_key "enrollments", "learners"
+  add_foreign_key "exam_attempts", "enrollments"
+  add_foreign_key "exam_attempts", "exams"
   add_foreign_key "exams", "programs"
   add_foreign_key "fatwas", "scholars"
   add_foreign_key "lectures", "scholars"

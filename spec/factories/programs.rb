@@ -88,4 +88,12 @@ FactoryBot.define do
     program_item { association(:program_item, :lesson, program: enrollment.cohort.program) }
     completed_at { Time.current }
   end
+
+  factory :exam_attempt do
+    enrollment
+    exam { association(:exam, program: enrollment.cohort.program) }
+    started_at { Time.current }
+    submitted_at { started_at }
+    score_percent { 100 }
+  end
 end

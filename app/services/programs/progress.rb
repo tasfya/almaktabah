@@ -40,6 +40,8 @@ module Programs
     # :locked also covers an exam that cannot be taken at all here: no slot
     # in this cohort, hidden, or no questions written yet.
     def exam_state(exam_item)
+      return :submitted if submitted_exam_ids.include?(exam_item.exam_id)
+
       slot = slot_for(exam_item)
       return :locked if slot.nil? || exam_item.hidden? || !exam_item.exam.questions.exists?
       return :missed if slot.closed?(at)
@@ -84,6 +86,10 @@ module Programs
 
     def scheduled_items
       @scheduled_items ||= slots_by_item_id.values.map(&:program_item).reject(&:hidden?).sort_by(&:position)
+    end
+
+    def submitted_exam_ids
+      @submitted_exam_ids ||= enrollment.exam_attempts.where.not(submitted_at: nil).pluck(:exam_id).to_set
     end
 
     def ticked_item_ids
