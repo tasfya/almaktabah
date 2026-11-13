@@ -1,0 +1,27 @@
+source: t.me/fixture_channel
+scholar_id: 4
+matn_author_name: محمد بن عبد الوهاب
+cycle_start_message_id: 100
+previous_cycle_start_message_id: 50
+schedule_start_year: 2025
+title_overrides:
+  66: تفريغ شرح الأصول الستة الدرس 3
+texts:
+  - key: wajibuna
+    title: واجبنا نحو ما أمرنا الله به
+    caption: واجبنا
+    schedule: واجبنا
+    expected_lessons: 1
+    series_title: شرح رسالة واجبنا — برنامج
+  - key: qawaid
+    title: القواعد الأربع
+    caption: القواعد الأربع
+    schedule: القواعد الأربع
+    expected_lessons: 3
+    series_title: شرح القواعد الأربع — برنامج
+  - key: usul_sitta
+    title: الأصول الستة
+    caption: الأصول الستة
+    schedule: الأصول الستة
+    expected_lessons: 3
+    series_title: شرح الأصول الستة — برنامج
