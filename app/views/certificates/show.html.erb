@@ -35,23 +35,23 @@
     </section>
 
     <% wording = "programs.certificate.body.#{@certificate.gender_snapshot}" %>
-    <article class="certificate-sheet bg-base-100 text-base-content rounded-box shadow-sm p-3 md:p-5 md:aspect-[297/210]">
+    <article class="certificate-sheet bg-base-100 text-base-content rounded-box shadow-sm p-3 md:p-5 md:aspect-[297/210] print:p-[10mm]">
       <div class="h-full border-4 border-double border-primary/70 p-1">
         <div class="h-full border border-primary/40 px-4 py-6 md:px-12 md:py-8 flex flex-col items-center justify-between gap-5 text-center">
           <header class="flex flex-col items-center gap-2">
-            <%= image_tag @logo_url, alt: site, class: "h-12 md:h-16 w-auto" %>
+            <%= image_tag @logo_url, alt: site, class: "h-12 md:h-16 print:h-20 w-auto" %>
             <p class="text-sm md:text-base text-base-content/70"><%= site %></p>
-            <h1 class="text-3xl md:text-5xl font-bold text-primary leading-normal"><%= t("programs.certificate.heading") %></h1>
+            <h1 class="text-3xl md:text-5xl print:text-6xl font-bold text-primary leading-normal"><%= t("programs.certificate.heading") %></h1>
           </header>
 
           <div class="flex flex-col items-center gap-3 md:gap-4 leading-loose">
-            <p class="text-base md:text-xl"><%= t("programs.certificate.intro", site: site) %> <%= t("#{wording}.student") %></p>
-            <p class="text-2xl md:text-4xl font-bold font-title border-b-2 border-primary/30 px-6 pb-2"><%= @certificate.full_name_snapshot %></p>
-            <p class="text-base md:text-xl">
+            <p class="text-base md:text-xl print:text-2xl"><%= t("programs.certificate.intro", site: site) %> <%= t("#{wording}.student") %></p>
+            <p class="text-2xl md:text-4xl print:text-5xl font-bold font-title border-b-2 border-primary/30 px-6 pb-2"><%= @certificate.full_name_snapshot %></p>
+            <p class="text-base md:text-xl print:text-2xl">
               <%= t("#{wording}.completed") %>
               <strong class="font-bold">«<%= @cohort.program.title %>»</strong>
             </p>
-            <p class="text-sm md:text-lg text-base-content/80"><%= t("#{wording}.prayer") %></p>
+            <p class="text-sm md:text-lg print:text-xl text-base-content/80"><%= t("#{wording}.prayer") %></p>
           </div>
 
           <footer class="w-full flex flex-col gap-3">
@@ -62,7 +62,7 @@
             </dl>
             <p class="text-xs md:text-sm text-base-content/60 break-all">
               <%= t("programs.certificate.verify") %>
-              <span dir="ltr"><%= certificate_url(@certificate) %></span>
+              <span dir="ltr"><%= CGI.unescape(certificate_url(@certificate)).gsub("/", "\u200E/\u200E") %></span>
             </p>
           </footer>
         </div>
@@ -73,7 +73,7 @@
       <%= icon "x-circle", class: "size-8 shrink-0" %>
       <div>
         <h1 class="text-xl font-bold"><%= t("programs.certificate.revoked_title") %></h1>
-        <p><%= t("programs.certificate.revoked_detail", number: @certificate.number) %></p>
+        <p><%= t("programs.certificate.revoked_detail_html", number: tag.bdi(@certificate.number, dir: "ltr")) %></p>
       </div>
     </section>
   <% end %>

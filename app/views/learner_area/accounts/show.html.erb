@@ -23,7 +23,7 @@
             <% end %>
           </div>
         </fieldset>
-        <p class="text-sm opacity-70" dir="ltr"><%= current_learner.email %></p>
+        <p class="text-sm opacity-70"><%= t("auth.email") %>: <span dir="ltr"><%= current_learner.email %></span></p>
         <div><%= f.submit t("programs.account.save"), class: "btn btn-primary" %></div>
       <% end %>
     </div>
