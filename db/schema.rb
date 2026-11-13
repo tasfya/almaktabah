@@ -245,6 +245,37 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
     t.index ["slug"], name: "index_news_on_slug", unique: true
   end
 
+  create_table "program_items", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "position", null: false
+    t.integer "kind", null: false
+    t.integer "lesson_id"
+    t.integer "book_id"
+    t.integer "exam_id"
+    t.string "title_override"
+    t.boolean "hidden", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_program_items_on_book_id"
+    t.index ["exam_id"], name: "index_program_items_on_exam_id"
+    t.index ["lesson_id"], name: "index_program_items_on_lesson_id"
+    t.index ["program_id", "position"], name: "index_program_items_on_program_id_and_position", unique: true
+    t.index ["program_id"], name: "index_program_items_on_program_id"
+    t.check_constraint "(CASE WHEN lesson_id IS NULL THEN 0 ELSE 1 END + CASE WHEN book_id IS NULL THEN 0 ELSE 1 END + CASE WHEN exam_id IS NULL THEN 0 ELSE 1 END) = 1", name: "program_items_exactly_one_reference"
+  end
+
+  create_table "programs", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug"
+    t.text "description"
+    t.boolean "published", default: false, null: false
+    t.datetime "published_at"
+    t.integer "pass_mark", default: 60, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_programs_on_slug", unique: true
+  end
+
   create_table "scholars", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "default_domain_id"
@@ -451,6 +482,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
   add_foreign_key "lectures", "scholars"
   add_foreign_key "lessons", "series"
   add_foreign_key "news", "scholars"
+  add_foreign_key "program_items", "books"
+  add_foreign_key "program_items", "lessons"
+  add_foreign_key "program_items", "programs"
   add_foreign_key "scholars", "domains", column: "default_domain_id"
   add_foreign_key "series", "scholars"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
