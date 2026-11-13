@@ -92,7 +92,7 @@ Rails.application.routes.draw do
   constraints(->(_request) { Rails.configuration.x.learners_enabled }) do
     # Password reset and confirmation mail need a mail provider; until then
     # those routes stay undrawn.
-    devise_for :learners, controllers: { sessions: "learners/sessions" },
+    devise_for :learners, controllers: { sessions: "learners/sessions", passwords: "learners/passwords", confirmations: "learners/confirmations" },
       skip: [ :registrations, *([ :passwords, :confirmations ] unless Rails.configuration.x.learner_mail_enabled) ]
     devise_scope :learner do
       resource :registration, only: [ :new, :create ], path: "learners",
