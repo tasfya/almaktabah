@@ -87,6 +87,7 @@ RSpec.describe "Learner account", type: :request do
       question = exam.questions.first
       AttemptAnswer.create!(exam_attempt: attempt, question: question, choice: question.choices.first)
       certificate = create(:certificate, enrollment: enrollment)
+      ReminderDelivery.create!(enrollment: enrollment, local_date: Date.current, sent_at: Time.current)
 
       delete learner_account_path, params: { current_password: "secret123" }
 
@@ -96,11 +97,27 @@ RSpec.describe "Learner account", type: :request do
       expect(LessonCompletion.count).to eq(0)
       expect(ExamAttempt.count).to eq(0)
       expect(AttemptAnswer.count).to eq(0)
+      expect(ReminderDelivery.count).to eq(0)
       expect(certificate.reload).to have_attributes(enrollment_id: nil, number: certificate.number)
       expect(certificate.revoked_at).to be_present
 
       get learner_dashboard_path
       expect(response).to redirect_to(new_learner_session_path)
+    end
+
+    it "erases the learner's name from every certificate, including already revoked ones" do
+      certificate = create(:certificate, enrollment: enrollment, number: "7-ERASE001")
+      revoked = create(:certificate, enrollment: create(:enrollment, learner: learner, cohort: create(:cohort, program: program), domain: domain),
+                                     revoked_at: 1.day.ago)
+
+      delete learner_account_path, params: { current_password: "secret123" }
+
+      expect([ certificate.reload, revoked.reload ].map(&:full_name_snapshot)).to all(eq(Learner::ERASED_NAME))
+
+      get certificate_path(certificate)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("programs.certificate.revoked_title"))
+      expect(response.body).not_to include("محمد بن عبد الله")
     end
 
     it "refuses to delete the account with a wrong password" do
