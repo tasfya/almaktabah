@@ -96,4 +96,13 @@ FactoryBot.define do
     submitted_at { started_at }
     score_percent { 100 }
   end
+
+  factory :certificate do
+    enrollment
+    domain { enrollment.domain }
+    sequence(:number) { |n| "1-CERT#{n.to_s.rjust(4, "0")}" }
+    issued_at { Time.current }
+    full_name_snapshot { enrollment.learner.full_name }
+    gender_snapshot { enrollment.learner.gender }
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_13_122438) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_13_131209) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.integer "actionable_id", null: false
@@ -103,6 +103,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_122438) do
     t.index ["published"], name: "index_books_on_published"
     t.index ["slug"], name: "index_books_on_slug", unique: true
     t.index ["title"], name: "index_books_on_title"
+  end
+
+  create_table "certificates", force: :cascade do |t|
+    t.integer "enrollment_id"
+    t.integer "domain_id", null: false
+    t.string "number", null: false
+    t.datetime "issued_at", null: false
+    t.string "full_name_snapshot", null: false
+    t.string "gender_snapshot", null: false
+    t.datetime "revoked_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain_id"], name: "index_certificates_on_domain_id"
+    t.index ["enrollment_id"], name: "index_certificates_on_enrollment_id", unique: true
+    t.index ["number"], name: "index_certificates_on_number", unique: true
   end
 
   create_table "choices", force: :cascade do |t|
@@ -582,6 +597,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_122438) do
   add_foreign_key "attempt_answers", "exam_attempts"
   add_foreign_key "attempt_answers", "questions"
   add_foreign_key "books", "scholars", column: "author_id"
+  add_foreign_key "certificates", "domains"
+  add_foreign_key "certificates", "enrollments", on_delete: :nullify
   add_foreign_key "choices", "questions"
   add_foreign_key "cohort_slots", "cohorts"
   add_foreign_key "cohort_slots", "program_items"

@@ -16,12 +16,18 @@ module Programs
       return existing if existing
       raise NotOpen unless Progress.new(@enrollment, at: @at).exam_state(@exam_item) == :open
 
+      attempt = record_attempt(answers)
+      CertificateIssuer.new(@enrollment, at: @at).call if attempt.previously_new_record?
+      attempt
+    end
+
+    private
+
+    def record_attempt(answers)
       create_attempt(answers)
     rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
       ExamAttempt.where(enrollment: @enrollment, exam_id: @exam_item.exam_id).take || raise
     end
-
-    private
 
     def create_attempt(answers)
       questions = @exam_item.exam.questions.includes(:choices).to_a

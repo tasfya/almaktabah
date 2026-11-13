@@ -29,12 +29,9 @@ module Programs
     def tick!(item)
       raise NotAllowed unless tickable?(item)
 
-      completion = enrollment.lesson_completions.create!(program_item: item, completed_at: at)
-      @ticked_item_ids = nil
+      completion = record_tick(item)
+      CertificateIssuer.new(enrollment, at: at).call
       completion
-    rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
-      @ticked_item_ids = nil
-      raise NotAllowed
     end
 
     # :locked also covers an exam that cannot be taken at all here: no slot
@@ -75,6 +72,14 @@ module Programs
     end
 
     private
+
+    def record_tick(item)
+      enrollment.lesson_completions.create!(program_item: item, completed_at: at)
+    rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+      raise NotAllowed
+    ensure
+      @ticked_item_ids = nil
+    end
 
     def today
       @today ||= enrollment.cohort.today(at)
