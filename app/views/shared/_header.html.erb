@@ -9,7 +9,9 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 h-(--header-height)">
       <%# Logo %>
       <%= link_to root_path, class: "flex items-center gap-3 flex-row-reverse h-auto shrink-0" do %>
-        <img src="<%= @logo_url %>" alt="<%= @domain&.title.presence || 'Logo' %>" width="200" height="200" class="max-h-12 w-auto" data-controller="image-fallback" data-image-fallback-src-value="<%= image_path("logo.png") %>" />
+        <%= render "shared/site_brand",
+                   image_class: "max-h-12 w-auto", image_size: { width: 200, height: 200 },
+                   name_class: "text-lg sm:text-xl lg:text-2xl line-clamp-2 max-w-[13rem] sm:max-w-xs" %>
       <% end %>
       <%# Desktop search bar - hidden on mobile %>
       <div class="hidden md:flex flex-1 max-w-2xl">

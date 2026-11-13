@@ -20,6 +20,11 @@ class Domain < ApplicationRecord
   has_many :certificates, dependent: :restrict_with_error
 
   validate :template_name_must_be_valid
+  validates :youtube_url, :x_url, format: { with: %r{\Ahttps?://\S+\z}, allow_blank: true }
+
+  def site_name
+    title.presence || name.presence || host
+  end
 
   def self.find_by_host(host)
     find_by(host: host)

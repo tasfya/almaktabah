@@ -67,8 +67,8 @@ module ApplicationHelper
     {
       name: @domain&.title,
       support_email: "",
-      twitter_url: "https://x.com/Moh1Rz2H3?ref",
-      youtube_url: "https://www.youtube.com/@bin-ramzan"
+      twitter_url: @domain&.x_url.presence,
+      youtube_url: @domain&.youtube_url.presence
     }
   end
 

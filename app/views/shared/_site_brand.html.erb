@@ -1,0 +1,11 @@
+<%# The domain's logo, or its name as text when it has none or the logo fails to load. %>
+<% site_name = @domain&.site_name %>
+<% name_class = "font-title font-bold leading-snug text-primary-content #{name_class}" %>
+<% if @logo_url %>
+  <span class="contents" data-controller="site-logo">
+    <%= image_tag @logo_url, alt: site_name.presence || "Logo", class: image_class, data: { site_logo_target: "image" }, **image_size %>
+    <span class="<%= name_class %>" data-site-logo-target="name" data-site-name hidden><%= site_name %></span>
+  </span>
+<% else %>
+  <span class="<%= name_class %>" data-site-name><%= site_name %></span>
+<% end %>

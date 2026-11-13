@@ -36,11 +36,7 @@ class ApplicationController < ActionController::Base
     Current.request_url_options = { host: request.host, port: request.optional_port, protocol: request.protocol }
     return render_not_found if @domain.nil? && !devise_controller?
 
-    if @domain&.logo.present?
-      @logo_url = url_for(@domain.logo)
-    else
-      @logo_url = ActionController::Base.helpers.asset_path("logo.png")
-    end
+    @logo_url = url_for(@domain.logo) if @domain&.logo.present?
   end
 
   def render_not_found

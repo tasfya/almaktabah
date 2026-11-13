@@ -9,8 +9,7 @@ class VideoGenerationJob < ApplicationJob
 
     begin
       domain    = record.respond_to?(:domains) && record.domains.any? ? record.domains.first : nil
-      logo      = domain&.logo&.attached? ? domain.logo : nil
-      logo_file = logo || Rails.root.join("app/assets/images/logo.png")
+      logo_file = domain&.logo&.attached? ? domain.logo : nil
 
       service = VideoGeneratorService.new(
         title:       record.title,

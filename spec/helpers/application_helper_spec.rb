@@ -100,28 +100,20 @@ RSpec.describe ApplicationHelper, type: :helper do
   end
 
   describe "#site_info" do
-    it "returns hash with site information" do
-      result = helper.site_info
+    it "returns the current domain's own social links" do
+      @domain = build(:domain, youtube_url: "https://www.youtube.com/@bin-ramzan", x_url: "https://x.com/Moh1Rz2H3?ref")
 
-      expect(result).to be_a(Hash)
-      expect(result).to have_key(:support_email)
-      expect(result).to have_key(:twitter_url)
-      expect(result).to have_key(:youtube_url)
+      expect(helper.site_info).to include(
+        support_email: "",
+        twitter_url: "https://x.com/Moh1Rz2H3?ref",
+        youtube_url: "https://www.youtube.com/@bin-ramzan"
+      )
     end
 
-    it "returns correct site information values" do
-      result = helper.site_info
+    it "returns no social links for a domain that has none" do
+      @domain = build(:domain, youtube_url: "", x_url: nil)
 
-      expect(result[:support_email]).to eq("")
-      expect(result[:twitter_url]).to eq("https://x.com/Moh1Rz2H3?ref")
-      expect(result[:youtube_url]).to eq("https://www.youtube.com/@bin-ramzan")
-    end
-
-    it "returns consistent data on multiple calls" do
-      result1 = helper.site_info
-      result2 = helper.site_info
-
-      expect(result1).to eq(result2)
+      expect(helper.site_info).to include(twitter_url: nil, youtube_url: nil)
     end
   end
 
