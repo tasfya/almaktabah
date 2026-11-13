@@ -32,7 +32,8 @@ module LearnerArea
     end
 
     def answer_params
-      params.fetch(:answers, {}).permit(*@exam.questions.ids.map(&:to_s)).to_h
+      answers = params[:answers]
+      answers.is_a?(ActionController::Parameters) ? answers.permit(*@exam.questions.ids.map(&:to_s)).to_h : {}
     end
   end
 end

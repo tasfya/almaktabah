@@ -29,6 +29,10 @@ module Seeds
       return puts("⚠️ Skipping the dev program: it needs 4 lessons and a book") if lessons.size < 4 || book.nil?
 
       program = current_program || build_program(lessons, book)
+      if program.program_items.count != LAYOUT.size
+        return puts("⚠️ Keeping the dev program as it is: learners are enrolled in an older layout")
+      end
+
       program.update!(published: true, domains: [ domain ])
       schedule(program)
       puts "✅ Dev program: #{program.title}"

@@ -1,4 +1,6 @@
 <% slot = @progress.slot_for(@item) %>
+<%# Back after submitting must fetch the result, not restore the form from Turbo's cache. %>
+<% content_for :head, tag.meta(name: "turbo-cache-control", content: "no-cache") %>
 <div class="container mx-auto px-4 py-6 max-w-3xl">
   <%= render "programs/flash" %>
 

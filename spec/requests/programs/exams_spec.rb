@@ -59,6 +59,18 @@ RSpec.describe "Taking an exam", type: :request do
     expect(response.body).to include("21 نوفمبر 2025 22:00", questions.first.body)
   end
 
+  it "keeps the form out of Turbo's page cache" do
+    tick_lesson
+    get learner_cohort_exam_path(cohort, exam)
+    expect(response).to have_meta_tag("turbo-cache-control", "no-cache")
+  end
+
+  it "treats a malformed answers value as no answers" do
+    tick_lesson
+    post submit_learner_cohort_exam_path(cohort, exam), params: { answers: "foo" }
+    expect(ExamAttempt.last.score_percent).to eq(0)
+  end
+
   it "creates nothing when the learner opens the exam" do
     tick_lesson
     get learner_cohort_exam_path(cohort, exam)
