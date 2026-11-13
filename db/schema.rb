@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_13_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_13_160000) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.integer "actionable_id", null: false
@@ -268,7 +268,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_150000) do
     t.integer "gender", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "domain_id"
     t.index ["confirmation_token"], name: "index_learners_on_confirmation_token", unique: true
+    t.index ["domain_id"], name: "index_learners_on_domain_id"
     t.index ["email"], name: "index_learners_on_email", unique: true
     t.index ["reset_password_token"], name: "index_learners_on_reset_password_token", unique: true
   end
@@ -623,6 +625,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_150000) do
   add_foreign_key "exam_attempts", "exams"
   add_foreign_key "exams", "programs"
   add_foreign_key "fatwas", "scholars"
+  add_foreign_key "learners", "domains", on_delete: :nullify
   add_foreign_key "lectures", "scholars"
   add_foreign_key "lesson_completions", "enrollments"
   add_foreign_key "lesson_completions", "program_items"
