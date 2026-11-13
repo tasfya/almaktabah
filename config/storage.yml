@@ -1,6 +1,7 @@
+<% scratch_root = ENV.fetch("ACTIVE_STORAGE_TEST_ROOT") { Rails.root.join("tmp/storage") } %>
 test:
   service: Disk
-  root: <%= Rails.root.join("tmp/storage") %>
+  root: <%= scratch_root %>
 
 local:
   service: Disk
@@ -30,7 +31,7 @@ public_media_aws:
 <% else %>
 public_media_aws:
   service: Disk
-  root: <%= Rails.root.join("tmp/storage") %>
+  root: <%= scratch_root %>
 <% end %>
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
