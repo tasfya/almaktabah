@@ -45,6 +45,8 @@ POST /learners(.:format) learners/registrations#create
 POST /%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%85%D8%AC/:program_id/enrollments(.:format) enrollments#create
 GET /%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%85%D8%AC(.:format) programs#index
 GET /%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%85%D8%AC/:id(.:format) programs#show
+GET /reminders/off/:token(.:format) reminder_opt_outs#show
+POST /reminders/off/:token(.:format) reminder_opt_outs#create
 GET /my(.:format) learner_area/dashboard#show
 POST /my/cohorts/:learner_cohort_id/completions(.:format) learner_area/completions#create
 GET /my/cohorts/:learner_cohort_id/play/:program_item_id(.:format) learner_area/plays#show

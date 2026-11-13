@@ -6,6 +6,8 @@ class Enrollment < ApplicationRecord
   has_many :exam_attempts, dependent: :destroy
   has_one :certificate # rubocop:disable Rails/HasManyOrHasOneDependent -- the database nullifies it
 
+  generates_token_for :reminders_off
+
   validates :cohort_id, uniqueness: { scope: :learner_id }
 
   before_validation { self.enrolled_at ||= Time.current }
