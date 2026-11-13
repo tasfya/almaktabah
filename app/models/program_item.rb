@@ -2,6 +2,7 @@ class ProgramItem < ApplicationRecord
   REFERENCES = %i[lesson book exam].freeze
 
   belongs_to :program, inverse_of: :program_items
+  attr_readonly :program_id
   belongs_to :lesson, optional: true
   belongs_to :book, optional: true
   belongs_to :exam, optional: true

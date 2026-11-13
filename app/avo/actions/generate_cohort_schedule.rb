@@ -22,7 +22,9 @@ class Avo::Actions::GenerateCohortSchedule < Avo::BaseAction
       exam_close_hour: fields[:exam_close_hour],
       skip_ranges: skip_ranges(fields[:skip_ranges])
     }
-    records.each { |cohort| Programs::ScheduleGenerator.new(cohort, **options).call }
+    CohortSlot.transaction do
+      records.each { |cohort| Programs::ScheduleGenerator.new(cohort, **options).call }
+    end
     succeed "Schedule generated"
   rescue ArgumentError, TypeError, ActiveRecord::RecordInvalid => e
     error e.message
@@ -36,7 +38,10 @@ class Avo::Actions::GenerateCohortSchedule < Avo::BaseAction
       first, last = line.split("..", 2).map(&:strip)
       raise ArgumentError, "Invalid break “#{line}”: use YYYY-MM-DD..YYYY-MM-DD" if first.blank? || last.blank?
 
-      Date.iso8601(first)..Date.iso8601(last)
+      range = Date.iso8601(first)..Date.iso8601(last)
+      raise ArgumentError, "Break “#{line}” ends before it starts" if range.end < range.begin
+
+      range
     rescue Date::Error
       raise ArgumentError, "Invalid date in break “#{line}”"
     end

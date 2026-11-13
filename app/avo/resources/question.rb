@@ -11,7 +11,7 @@ class Avo::Resources::Question < Avo::BaseResource
 
   def fields
     field :id, as: :id, hide_on: :index
-    field :exam, as: :belongs_to
+    field :exam, as: :belongs_to, disabled: -> { record&.persisted? }
     field :position, as: :number, sortable: true, default: -> {
       exam = ::Exam.find_by(id: params[:via_record_id]) if params[:via_record_id].present?
       (exam&.questions&.maximum(:position) || 0) + 1

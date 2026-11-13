@@ -5,7 +5,7 @@ class Avo::Resources::Cohort < Avo::BaseResource
 
   def fields
     field :id, as: :id
-    field :program, as: :belongs_to
+    field :program, as: :belongs_to, disabled: -> { record&.persisted? }
     field :name, as: :text, sortable: true
     field :starts_on, as: :date, sortable: true
     field :time_zone, as: :select, options: -> { ActiveSupport::TimeZone.all.map { |zone| [ zone.to_s, zone.tzinfo.name ] }.uniq(&:last) },

@@ -9,6 +9,8 @@ class Avo::Actions::ResetLearnerPassword < Avo::BaseAction
 
   def handle(records:, fields:, **)
     learner = records.first
+    return error("Select a learner") if learner.nil?
+
     if learner.update(password: fields[:password].to_s, password_confirmation: fields[:password].to_s)
       succeed "Password reset"
     else

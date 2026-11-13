@@ -24,6 +24,24 @@ RSpec.describe "Avo admin for programs", type: :request do
     expect(response).to have_http_status(:ok)
   end
 
+  # The params a browser would submit for the record form in the page: enabled
+  # fields only, checked boxes only, the selected option of each select.
+  def submitted_form_params(html, scope)
+    form = Nokogiri::HTML(html).css("form").find { |f| f.at_css("[name^='#{scope}[']") }
+    form.css("input, select, textarea").each_with_object([]) do |input, pairs|
+      name = input["name"]
+      next if name.blank? || !name.start_with?("#{scope}[") || input.has_attribute?("disabled")
+      next if input["type"] == "checkbox" && !input.has_attribute?("checked")
+
+      value = case input.name
+      when "select" then input.at_css("option[selected]")&.[]("value").to_s
+      when "textarea" then input.text
+      else input["value"].to_s
+      end
+      pairs << [ name, value ]
+    end
+  end
+
   def generate(**fields)
     run_action("cohorts", Avo::Actions::GenerateCohortSchedule, cohort,
                weekdays: [ "", "0", "1", "2", "3", "4", "6" ], lessons_per_day: "1",
@@ -168,6 +186,30 @@ RSpec.describe "Avo admin for programs", type: :request do
   end
 
   describe "program items" do
+    it "saves back exactly what the edit form shows, references included" do
+      item = lesson_items.last
+      book_item = create(:program_item, :book, program: program)
+
+      [ item, book_item ].each do |record|
+        get "/avo/resources/program_items/#{record.id}/edit"
+        pairs = submitted_form_params(response.body, "program_item").map { |name, value| name == "program_item[hidden]" ? [ name, "1" ] : [ name, value ] }
+
+        patch "/avo/resources/program_items/#{record.id}", params: URI.encode_www_form(pairs),
+              headers: { "Content-Type" => "application/x-www-form-urlencoded" }
+
+        expect(response).to have_http_status(:redirect)
+        expect(record.reload).to have_attributes(hidden: true, lesson_id: record.lesson_id, book_id: record.book_id, program_id: program.id)
+      end
+    end
+
+    it "takes the lesson by id" do
+      lesson = create(:lesson)
+
+      post "/avo/resources/program_items", params: { program_item: { program_id: program.id, position: "9999", kind: "lesson", lesson_id: lesson.id.to_s } }
+
+      expect(program.program_items.find_by!(position: 9999).lesson).to eq(lesson)
+    end
+
     it "keeps the hidden flag editable" do
       item = lesson_items.first
 
@@ -262,16 +304,47 @@ RSpec.describe "Avo admin for programs", type: :request do
   end
 
   describe "panels of related records" do
-    it "offers no existing enrollment to attach to a learner or a cohort" do
+    let(:other_program) { create(:program) }
+
+    it "offers no existing record to attach" do
+      get "/avo/resources/programs/#{program.to_param}/cohorts/new"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to match(/<option value="\d+"/)
+    end
+
+    it "refuses to attach or detach enrollments of a learner" do
       learner = create(:learner)
-      create(:enrollment, cohort: cohort, domain: domain)
+      enrollment = create(:enrollment, cohort: cohort, domain: domain)
+      own = create(:enrollment, learner: learner, cohort: create(:cohort, program: program), domain: domain)
 
-      [ "/avo/resources/learners/#{learner.id}/enrollments/new", "/avo/resources/cohorts/#{cohort.id}/enrollments/new" ].each do |path|
-        get path
+      post "/avo/resources/learners/#{learner.id}/enrollments", params: { fields: { related_id: enrollment.id } }
+      delete "/avo/resources/learners/#{learner.id}/enrollments/#{own.id}"
+      delete "/avo/resources/cohorts/#{cohort.id}/enrollments/#{enrollment.id}"
 
-        expect(response).to have_http_status(:ok)
-        expect(response.body).not_to match(/<option value="\d+"/)
-      end
+      expect(enrollment.reload.learner).not_to eq(learner)
+      expect(Enrollment.exists?(own.id)).to be(true)
+      expect(Enrollment.exists?(enrollment.id)).to be(true)
+    end
+
+    it "never moves a cohort, an item or a question to another parent" do
+      other_exam = create(:exam, program: other_program)
+      question = exam_item.exam.questions.first
+
+      post "/avo/resources/programs/#{other_program.to_param}/cohorts", params: { fields: { related_id: cohort.id } }
+      patch "/avo/resources/cohorts/#{cohort.id}", params: { cohort: { program_id: other_program.id, name: cohort.name } }
+      patch "/avo/resources/program_items/#{lesson_items.first.id}", params: { program_item: { program_id: other_program.id } }
+      patch "/avo/resources/questions/#{question.id}", params: { question: { exam_id: other_exam.id } }
+
+      expect(cohort.reload.program).to eq(program)
+      expect(lesson_items.first.reload.program).to eq(program)
+      expect(question.reload.exam).to eq(exam_item.exam)
+    end
+
+    it "shows the parent of a saved record as read-only on its form" do
+      get "/avo/resources/cohorts/#{cohort.id}/edit"
+
+      expect(response.body).to match(/<select[^>]*disabled[^>]*name="cohort\[program_id\]"|<select[^>]*name="cohort\[program_id\]"[^>]*disabled/)
     end
   end
 
@@ -294,6 +367,7 @@ RSpec.describe "Avo admin for programs", type: :request do
       "no weekday" => { weekdays: [ "" ] },
       "a bad break" => { skip_ranges: "2025-11-08..soon" },
       "a break without an end" => { skip_ranges: "2025-11-08" },
+      "a reversed break" => { skip_ranges: "2025-11-20..2025-11-10" },
       "an hour out of range" => { exam_close_hour: "25" },
       "a blank number" => { lessons_per_day: "" }
     }.each do |label, fields|
@@ -362,6 +436,10 @@ RSpec.describe "Avo admin for programs", type: :request do
       run_action("learners", Avo::Actions::ResetLearnerPassword, learner, password: "new-secret-1")
 
       expect(learner.reload.valid_password?("new-secret-1")).to be(true)
+    end
+
+    it "does not fail when no learner is selected" do
+      expect { run_action("learners", Avo::Actions::ResetLearnerPassword, [], password: "new-secret-1") }.not_to raise_error
     end
 
     it "refuses a too short password" do
