@@ -5,7 +5,8 @@ module TelegramImport
   #
   # Per text the order is: matn, then each lesson followed by the transcripts
   # ending at it (hidden: learners may not see transcripts yet), and each exam
-  # right after the lesson the schedule places it after. Like the library
+  # right after the last lesson it covers (the exam gate requires every earlier
+  # lesson ticked; release dates come from the slots). Like the library
   # import, it is create-only and keyed by TelegramImportRecord, so a re-run
   # creates nothing; with ONLY, texts must be built in program order.
   class ProgramBuilder
@@ -51,13 +52,13 @@ module TelegramImport
     def entries
       @entries ||= begin
         selected = texts.map { _1["key"] }
-        exams = schedule_exams.select { |exam| selected.include?(exam["after"]["text_key"]) }
+        exams = schedule_exams.select { |exam| selected.include?(last_covered(exam)["text_key"]) }
         texts.flat_map do |text|
           [ book_entry(text["matn"], text["key"], hidden: false) ] +
             text["lessons"].flat_map do |lesson|
               [ Entry.new(key: "message:#{lesson['message_id']}", kind: :lesson, text_key: text["key"], source: lesson) ] +
                 text["transcripts"].select { _1["to"] == lesson["n"] }.map { book_entry(_1, text["key"], hidden: true) } +
-                exams.select { _1["after"] == { "text_key" => text["key"], "n" => lesson["n"] } }
+                exams.select { last_covered(_1) == { "text_key" => text["key"], "n" => lesson["n"] } }
                      .map { Entry.new(key: "exam:#{_1['index']}", kind: :exam, source: _1) }
             end
         end.tap { |list| check_placed!(exams, list) }
@@ -81,6 +82,11 @@ module TelegramImport
     end
 
     def schedule_exams = @manifest["schedule"].select { _1["kind"] == "exam" }
+
+    def last_covered(exam)
+      text = @manifest["texts"].find { _1["key"] == exam["text_keys"].last }
+      { "text_key" => text["key"], "n" => exam["range"]&.last || text["lessons"].map { _1["n"] }.max }
+    end
 
     def lesson_dates
       @lesson_dates ||= @manifest["schedule"].select { _1["kind"] == "lesson" }
@@ -183,7 +189,7 @@ module TelegramImport
 
     # -- helpers --------------------------------------------------------------
 
-    def cohort_key = "cohort:#{config['cohort_name']}"
+    def cohort_key = "cohort:#{config.fetch('cohort_key')}"
 
     def find_or_create(external_id, type, label)
       return mapping(external_id).record if mapping(external_id)

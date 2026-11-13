@@ -16,7 +16,7 @@ RSpec.describe TelegramImport::ProgramBuilder do
 
   def lookup(external_id) = TelegramImportRecord.lookup(source, external_id)
   def program = lookup("program")
-  def cohort = lookup("cohort:١٤٤٧–١٤٤٨")
+  def cohort = lookup("cohort:1447-1448")
 
   def counts
     [ Program, ProgramItem, Exam, Cohort, CohortSlot, TelegramImportRecord ].to_h { [ _1.name, _1.count ] }
