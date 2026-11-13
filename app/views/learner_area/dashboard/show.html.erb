@@ -3,10 +3,51 @@
     <h1 class="text-2xl font-bold"><%= t("programs.dashboard.title") %></h1>
     <%= button_to t("programs.dashboard.sign_out"), destroy_learner_session_path, method: :delete, class: "btn btn-ghost btn-sm" %>
   </div>
-  <div class="card bg-base-100 border border-base-300 shadow-sm">
-    <div class="card-body">
-      <p class="font-semibold"><%= t("programs.dashboard.greeting", name: current_learner.full_name) %></p>
-      <p class="opacity-70"><%= t("programs.dashboard.empty") %></p>
+  <%= render "programs/flash" %>
+  <p class="font-semibold mb-4"><%= t("programs.dashboard.greeting", name: current_learner.full_name) %></p>
+
+  <% if @enrollments.any? %>
+    <div class="flex flex-col gap-4">
+      <% @enrollments.each do |enrollment| %>
+        <% progress = Programs::Progress.new(enrollment) %>
+        <% cohort = enrollment.cohort %>
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body gap-3">
+            <div>
+              <p class="text-sm text-base-content/60"><%= cohort.name %></p>
+              <h2 class="card-title text-lg"><%= cohort.program.title %></h2>
+            </div>
+            <div class="flex items-center gap-3">
+              <% percent = progress.percent_complete %>
+              <progress class="progress progress-primary flex-1" value="<%= percent %>" max="100"></progress>
+              <span class="text-sm font-semibold whitespace-nowrap"><%= t("programs.cohort.progress", percent: percent) %></span>
+            </div>
+            <div>
+              <p class="font-semibold text-sm mb-1"><%= t("programs.dashboard.today") %></p>
+              <% today = progress.todays_items %>
+              <% if today.any? %>
+                <ul class="list-disc list-inside text-sm text-base-content/80">
+                  <% today.each do |item| %>
+                    <li><%= item.display_title %></li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="text-sm text-base-content/60"><%= t("programs.dashboard.nothing_today") %></p>
+              <% end %>
+            </div>
+            <div class="card-actions justify-end">
+              <%= link_to t("programs.dashboard.open_cohort"), learner_cohort_path(cohort), class: "btn btn-primary btn-sm" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
-  </div>
+  <% else %>
+    <div class="card bg-base-100 border border-base-300 shadow-sm">
+      <div class="card-body">
+        <p class="opacity-70"><%= t("programs.dashboard.empty") %></p>
+        <div class="card-actions"><%= link_to t("programs.dashboard.browse"), programs_path, class: "btn btn-primary btn-sm" %></div>
+      </div>
+    </div>
+  <% end %>
 </div>

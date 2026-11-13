@@ -1,10 +1,8 @@
 module LearnerArea
-  class DashboardController < ApplicationController
-    before_action :authenticate_learner!
-    before_action :no_store
-
+  class DashboardController < BaseController
     def show
       set_meta_tags(title: t("programs.dashboard.title"), noindex: true)
+      @enrollments = domain_enrollments.includes(cohort: :program).order(enrolled_at: :desc)
     end
   end
 end

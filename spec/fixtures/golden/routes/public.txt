@@ -42,6 +42,12 @@ POST /learners/sign_in(.:format) learners/sessions#create
 DELETE /learners/sign_out(.:format) learners/sessions#destroy
 GET /learners/sign_up(.:format) learners/registrations#new
 POST /learners(.:format) learners/registrations#create
+POST /%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%85%D8%AC/:program_id/enrollments(.:format) enrollments#create
+GET /%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%85%D8%AC(.:format) programs#index
+GET /%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%85%D8%AC/:id(.:format) programs#show
 GET /my(.:format) learner_area/dashboard#show
+POST /my/cohorts/:learner_cohort_id/completions(.:format) learner_area/completions#create
+GET /my/cohorts/:learner_cohort_id/play/:program_item_id(.:format) learner_area/plays#show
+GET /my/cohorts/:id(.:format) learner_area/cohorts#show
 GET / home#index
 GET /podcasts/feed(.:format) podcasts#feed format=xml

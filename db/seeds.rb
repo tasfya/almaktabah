@@ -49,6 +49,8 @@ puts "\n=== Seeding Alfawzan content (localhost only) ==="
   seeder&.seed(from: starting_from, domain_ids: [ domain2.id ], scholar: alfawzan_scholar)
 end
 
+Seeds::ProgramsSeeder.seed(domain: domain1) if Rails.env.development?
+
 puts "✅ Seeding complete."
 
 puts "🔍 Triggering Typesense reindex..."
