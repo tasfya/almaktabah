@@ -368,6 +368,12 @@ RSpec.describe "Avo admin for programs", type: :request do
       expect(cohort.cohort_slots.minimum(:available_on)).to eq(Date.new(2025, 11, 11))
     end
 
+    it "reads breaks typed with Arabic-Indic or Persian digits" do
+      generate(skip_ranges: "٢٠٢٥-١١-٠٨..۲۰۲۵-۱۱-۱۰\n")
+
+      expect(cohort.cohort_slots.minimum(:available_on)).to eq(Date.new(2025, 11, 11))
+    end
+
     {
       "no weekday" => { weekdays: [ "" ] },
       "a bad break" => { skip_ranges: "2025-11-08..soon" },
@@ -524,6 +530,27 @@ RSpec.describe "Avo admin for programs", type: :request do
         expect(response.body).not_to include("bg-red-400")
         expect(slot.reload.available_on).to eq(after + 2)
       end
+    end
+
+    it "takes the date in Arabic-Indic digits, as the picker posts in an Arabic browser locale" do
+      slot = cohort.cohort_slots.order(:available_on).last
+      after = slot.available_on
+
+      run_action("cohorts", Avo::Actions::ShiftCohortSchedule, cohort, after: after.strftime("%Y/%m/%d").tr("0-9", "٠-٩"), days: "2")
+
+      expect(response.body).not_to include("bg-red-400")
+      expect(slot.reload.available_on).to eq(after + 2)
+    end
+
+    it "refuses a shift that would close an open or upcoming exam window, and moves nothing" do
+      dates = cohort.cohort_slots.order(:id).pluck(:available_on, :closes_at)
+      expect(cohort.exam_slots.where(closes_at: ..Time.current)).to be_empty
+
+      run_action("cohorts", Avo::Actions::ShiftCohortSchedule, cohort, after: cohort.starts_on.iso8601, days: "-20")
+
+      expect(response.body).to include("bg-red-400")
+      expect(response.body).to include("الإزاحة تُغلق نافذة اختبار")
+      expect(cohort.cohort_slots.order(:id).pluck(:available_on, :closes_at)).to eq(dates)
     end
 
     [ "15/11/2025", "2025/02/30", "2025/11/15x", "2025-W46-6", "20251115", "25/11/15", "2025-11/15" ].each do |value|

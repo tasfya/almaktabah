@@ -48,7 +48,7 @@ class Avo::Actions::GenerateCohortSchedule < Avo::BaseAction
   private
 
   def skip_ranges(text)
-    text.to_s.lines.map(&:strip).compact_blank.map do |line|
+    text.to_s.tr("٠-٩۰-۹", "0-90-9").lines.map(&:strip).compact_blank.map do |line|
       first, last = line.split("..", 2).map(&:strip)
       raise ArgumentError, "إجازة غير صحيحة «#{line}»: اكتبها YYYY-MM-DD..YYYY-MM-DD" if first.blank? || last.blank?
 
