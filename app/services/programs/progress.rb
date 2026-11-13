@@ -40,7 +40,7 @@ module Programs
       return :submitted if submitted_exam_ids.include?(exam_item.exam_id)
 
       slot = slot_for(exam_item)
-      return :locked if slot.nil? || exam_item.hidden? || !exam_item.exam.questions.exists?
+      return :locked if slot.nil? || exam_item.hidden? || exam_item.exam.questions.none?
       return :missed if slot.closed?(at)
       return :locked unless slot.open?(at)
       return :not_ready if lesson_items.any? { |lesson| lesson.position < exam_item.position && !ticked?(lesson) }
@@ -86,7 +86,7 @@ module Programs
     end
 
     def slots_by_item_id
-      @slots_by_item_id ||= enrollment.cohort.cohort_slots.includes(:program_item).index_by(&:program_item_id)
+      @slots_by_item_id ||= enrollment.cohort.cohort_slots.includes(program_item: { exam: :questions }).index_by(&:program_item_id)
     end
 
     def scheduled_items
