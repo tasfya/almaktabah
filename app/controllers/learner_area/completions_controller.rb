@@ -5,7 +5,9 @@ module LearnerArea
       @item = enrollment.cohort.program.program_items.find_by(id: params[:program_item_id])
       raise Programs::Progress::NotAllowed unless @item
 
-      Programs::Progress.new(enrollment).tick!(@item)
+      progress = Programs::Progress.new(enrollment)
+      # A second tab or a stale page may tick a lesson again: show it ticked.
+      progress.tick!(@item) unless progress.ticked?(@item)
       respond_to do |format|
         format.turbo_stream { load_timeline(enrollment) }
         format.html { redirect_to learner_cohort_path(enrollment.cohort) }

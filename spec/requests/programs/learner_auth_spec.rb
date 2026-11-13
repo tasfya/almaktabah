@@ -208,7 +208,20 @@ RSpec.describe "Learner accounts", type: :request do
       allow(ApplicationController.cache_store).to receive(:increment) { |*args, **opts| counter.increment(*args, **opts) }
     end
 
-    it "stops sign-up after 10 attempts from one address" do
+    def sign_up_as(email)
+      post learner_registration_path, params: { learner: sign_up_params[:learner].merge(email: email) }
+    end
+
+    it "lets more than 10 learners sign up from one shared address" do
+      11.times do |n|
+        sign_up_as("learner#{n}@example.com")
+        delete destroy_learner_session_path
+      end
+
+      expect(Learner.count).to eq(11)
+    end
+
+    it "stops repeated sign-up attempts with one email" do
       10.times { post learner_registration_path, params: { learner: sign_up_params[:learner].merge(full_name: "") } }
 
       post learner_registration_path, params: sign_up_params
@@ -218,13 +231,53 @@ RSpec.describe "Learner accounts", type: :request do
       expect(Learner.count).to eq(0)
     end
 
-    it "stops sign-in after 10 attempts from one address" do
+    it "stops sign-up after 60 attempts from one address" do
+      60.times { |n| post learner_registration_path, params: { learner: sign_up_params[:learner].merge(email: "x#{n}@example.com", full_name: "") } }
+
+      sign_up_as("late@example.com")
+
+      expect(flash[:alert]).to eq(I18n.t("programs.learner_auth.rate_limited"))
+      expect(Learner.count).to eq(0)
+    end
+
+    it "stops sign-in after 10 attempts on one email, whatever the case" do
       learner = create(:learner, password: "secret123")
-      10.times { post learner_session_path, params: { learner: { email: learner.email, password: "wrong" } } }
+      10.times { post learner_session_path, params: { learner: { email: learner.email.upcase, password: "wrong" } } }
 
       post learner_session_path, params: { learner: { email: learner.email, password: "secret123" } }
 
       expect(response).to redirect_to(new_learner_session_path)
+      get learner_dashboard_path
+      expect(response).to redirect_to(new_learner_session_path)
+    end
+
+    it "still lets another learner on the same address sign in" do
+      neighbour = create(:learner, password: "secret123")
+      10.times { post learner_session_path, params: { learner: { email: "someone@example.com", password: "wrong" } } }
+
+      post learner_session_path, params: { learner: { email: neighbour.email, password: "secret123" } }
+
+      get learner_dashboard_path
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "counts two visitors behind one Cloudflare edge separately" do
+      learner = create(:learner, password: "secret123")
+      via_edge = ->(visitor) { { "X-Forwarded-For" => "172.71.178.144", "CF-Connecting-IP" => visitor } }
+      60.times { |n| post learner_session_path, params: { learner: { email: "guess#{n}@example.com", password: "wrong" } }, headers: via_edge.call("203.0.113.1") }
+
+      post learner_session_path, params: { learner: { email: learner.email, password: "secret123" } }, headers: via_edge.call("203.0.113.2")
+
+      get learner_dashboard_path
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "stops sign-in after 60 attempts from one address" do
+      learner = create(:learner, password: "secret123")
+      60.times { |n| post learner_session_path, params: { learner: { email: "guess#{n}@example.com", password: "wrong" } } }
+
+      post learner_session_path, params: { learner: { email: learner.email, password: "secret123" } }
+
       get learner_dashboard_path
       expect(response).to redirect_to(new_learner_session_path)
     end

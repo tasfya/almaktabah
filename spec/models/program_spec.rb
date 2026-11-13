@@ -40,6 +40,14 @@ RSpec.describe Program, type: :model do
     expect(program.scholars).to contain_exactly(first.scholar, second.scholar)
   end
 
+  it "leaves out the scholars of hidden lesson items" do
+    program = create(:program)
+    visible = create(:program_item, :lesson, program: program)
+    create(:program_item, :lesson, program: program, hidden: true)
+
+    expect(program.scholars).to contain_exactly(visible.lesson.series.scholar)
+  end
+
   it "orders its items by position" do
     program = create(:program)
     later = create(:program_item, program: program, position: 2)

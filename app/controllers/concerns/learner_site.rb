@@ -1,11 +1,25 @@
 # Learner account pages need a known site: learner mail is sent on its behalf,
 # so a host without a Domain row (which Devise pages otherwise allow) is refused.
+#
+# Account forms are throttled per email, against guessing one account's
+# password, and more loosely per address, since many learners share one public
+# address (a masjid's Wi-Fi, a mobile carrier's NAT).
 module LearnerSite
   extend ActiveSupport::Concern
 
   included do
     before_action { render_not_found if @domain.nil? }
-    rate_limit to: 10, within: 3.minutes, only: :create,
-      with: -> { redirect_to url_for(action: :new), alert: t("programs.learner_auth.rate_limited") }
+    rate_limit to: 10, within: 3.minutes, only: :create, name: "email", by: :learner_email_rate_key, with: :refuse_rate_limited
+    rate_limit to: 60, within: 3.minutes, only: :create, name: "address", with: :refuse_rate_limited
+  end
+
+  private
+
+  def learner_email_rate_key
+    params.dig(:learner, :email).to_s.strip.downcase.presence || request.remote_ip
+  end
+
+  def refuse_rate_limited
+    redirect_to url_for(action: :new), alert: t("programs.learner_auth.rate_limited")
   end
 end
