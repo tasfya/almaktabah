@@ -103,6 +103,9 @@ Rails.application.routes.draw do
       resources :enrollments, only: :create
     end
 
+    get "reminders/off/:token", to: "reminder_opt_outs#show", as: :reminder_opt_out
+    post "reminders/off/:token", to: "reminder_opt_outs#create"
+
     scope "my", module: "learner_area" do
       get "/", to: "dashboard#show", as: :learner_dashboard
       resources :cohorts, only: :show, as: :learner_cohorts do
