@@ -1,7 +1,13 @@
 module LearnerArea
   class CompletionsController < BaseController
+    # A second tab, a stale page or a racing double tap may tick a lesson that
+    # is already ticked: that counts as done, not as a refusal.
     def create
-      change { |progress, item| progress.tick!(item) }
+      change do |progress, item|
+        progress.tick!(item) unless progress.ticked?(item)
+      rescue Programs::Progress::NotAllowed
+        raise unless current_enrollment.lesson_completions.exists?(program_item: item)
+      end
     end
 
     # params[:id] is the program item, so the timeline can undo without

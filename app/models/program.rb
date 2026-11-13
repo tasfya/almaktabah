@@ -12,7 +12,7 @@ class Program < ApplicationRecord
   validates :pass_mark, numericality: { only_integer: true, in: 0..100 }
 
   def scholars
-    Scholar.where(id: Series.where(id: Lesson.where(id: program_items.lesson.select(:lesson_id)).select(:series_id)).select(:scholar_id))
+    Scholar.where(id: Series.where(id: Lesson.where(id: program_items.lesson.where(hidden: false).select(:lesson_id)).select(:series_id)).select(:scholar_id))
   end
 
   private

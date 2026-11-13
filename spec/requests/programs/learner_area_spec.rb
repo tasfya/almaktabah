@@ -39,12 +39,15 @@ RSpec.describe "Learner area", type: :request do
   around { |example| travel_to(riyadh.local(2025, 11, 9, 10)) { example.run } }
 
   describe "authentication" do
-    it "requires a signed-in learner, without a publicly cacheable redirect" do
-      [ learner_dashboard_path, learner_cohort_path(cohort) ].each do |path|
+    it "requires a signed-in learner, with a no-store redirect" do
+      [ learner_dashboard_path, learner_cohort_path(cohort), learner_cohort_play_path(cohort, first_lesson) ].each do |path|
         get path
         expect(response).to redirect_to(new_learner_session_path)
-        expect(response.headers["Cache-Control"].to_s).not_to include("public")
+        expect(response.headers["Cache-Control"]).to eq("no-store")
       end
+
+      post learner_cohort_completions_path(cohort), params: { program_item_id: first_lesson.id }
+      expect(response.headers["Cache-Control"]).to eq("no-store")
     end
   end
 
@@ -58,6 +61,13 @@ RSpec.describe "Learner area", type: :request do
       get learner_cohort_path(cohort)
       expect(response).to have_http_status(:ok)
       expect(response.headers["Cache-Control"]).to include("no-store")
+    end
+
+    it "keeps /my and the cohort page out of Turbo's page cache" do
+      [ learner_dashboard_path, learner_cohort_path(cohort) ].each do |path|
+        get path
+        expect(response).to have_meta_tag("turbo-cache-control", "no-cache")
+      end
     end
 
     it "keeps the learner's links out of the session breadcrumbs" do
@@ -159,6 +169,21 @@ RSpec.describe "Learner area", type: :request do
     end
 
     describe "ticking" do
+      it "answers a tick of an already ticked lesson with the ticked row, without an error" do
+        tick(second_lesson)
+
+        tick(second_lesson)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(%(target="#{ActionView::RecordIdentifier.dom_id(second_lesson)}"), "الدروس المسموعة: 1 من 3")
+        expect(response.body).not_to include("لا يمكن تعليم هذا الدرس الآن")
+        expect(LessonCompletion.count).to eq(1)
+
+        tick(second_lesson, headers: {})
+        expect(response).to redirect_to(learner_cohort_path(cohort))
+        expect(flash[:alert]).to be_nil
+      end
+
       it "ticks an available lesson via Turbo Stream" do
         tick(second_lesson)
 
@@ -176,6 +201,18 @@ RSpec.describe "Learner area", type: :request do
         tick(second_lesson)
 
         expect(response.body).to include(%(target="#{ActionView::RecordIdentifier.dom_id(exam)}"), "الاختبار متاح الآن")
+      end
+
+      it "treats a tick that lost a race with another tab as ticked" do
+        # The other request wrote the completion after this one checked.
+        allow_any_instance_of(Programs::Progress).to receive(:ticked?).and_return(false) # rubocop:disable RSpec/AnyInstance
+        create(:lesson_completion, enrollment: enrollment, program_item: second_lesson)
+
+        tick(second_lesson)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).not_to include("لا يمكن تعليم هذا الدرس الآن")
+        expect(LessonCompletion.count).to eq(1)
       end
 
       it "rejects ticking a future lesson, telling the learner why" do
