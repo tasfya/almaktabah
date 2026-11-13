@@ -24,7 +24,7 @@ RSpec.describe "Learner accounts", type: :request do
       get new_learner_registration_path
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("إنشاء حساب طالب", 'name="learner[gender]"', 'value="female"')
+      expect(response.body).to include("إنشاء حساب", 'name="learner[gender]"', 'value="female"')
     end
 
     it "signs up with name and gender and lands on /my" do
@@ -41,8 +41,32 @@ RSpec.describe "Learner accounts", type: :request do
       post learner_registration_path, params: { learner: sign_up_params[:learner].merge(full_name: "") }
 
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(response.body).to include("الاسم الكامل لا يمكن أن يكون فارغًا")
+      expect(response.body).to include("الاسم الكامل مطلوب")
       expect(Learner.count).to eq(0)
+    end
+
+    it "lists errors in form order, once per field, and marks each field" do
+      post learner_registration_path, params: { learner: { full_name: "", email: "", password: "", password_confirmation: "" } }
+
+      page = Nokogiri::HTML(response.body)
+      expect(page.css("#error_explanation li").map(&:text)).to eq([ "الاسم الكامل مطلوب", "اختيار «طالب» أو «طالبة» مطلوب",
+                                                                     "البريد الإلكتروني مطلوب", "كلمة المرور مطلوبة" ])
+      name = page.at_css("#learner_full_name")
+      expect(name["aria-invalid"]).to eq("true")
+      expect(name["aria-describedby"].split).to eq(%w[learner_full_name_hint learner_full_name_error])
+      expect(page.at_css("#learner_full_name_error").text).to eq("الاسم الكامل مطلوب")
+      expect(page.at_css("#learner_gender_error").text).to eq("اختيار «طالب» أو «طالبة» مطلوب")
+    end
+
+    it "shows the auth page in the breadcrumb after home, including after a failed submit" do
+      get new_learner_registration_path
+      expect(Nokogiri::HTML(response.body).css(".breadcrumbs li").map { |li| li.text.strip }).to eq([ "الصفحة الرئيسية", "إنشاء حساب" ])
+
+      post learner_registration_path, params: { learner: sign_up_params[:learner].merge(full_name: "") }
+      expect(Nokogiri::HTML(response.body).css(".breadcrumbs li").map { |li| li.text.strip }).to eq([ "الصفحة الرئيسية", "إنشاء حساب" ])
+
+      get new_learner_session_path
+      expect(Nokogiri::HTML(response.body).css(".breadcrumbs li").map { |li| li.text.strip }).to eq([ "الصفحة الرئيسية", "تسجيل الدخول" ])
     end
 
     it "signs in and lands on /my" do
