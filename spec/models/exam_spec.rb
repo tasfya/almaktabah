@@ -27,4 +27,9 @@ RSpec.describe Exam, type: :model do
     expect(exam.questions.map { |q| [ q.kind, q.choices.size, q.correct_choice ] })
       .to all(match([ "single_choice", 3, have_attributes(position: 1) ]))
   end
+
+  it "cannot move to another program while a program item uses it" do
+    item = create(:program_item, :exam)
+    expect(item.exam.update(program: create(:program))).to be(false)
+  end
 end

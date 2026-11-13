@@ -36,4 +36,15 @@ RSpec.describe Question, type: :model do
     right = create(:choice, question: question, position: 2, correct: true)
     expect(question.reload.correct_choice).to eq(right)
   end
+
+  it "deletes the choices it was validated without" do
+    question = create(:question, kind: :single_choice)
+    create(:choice, question: question, position: 1, correct: true)
+    create(:choice, question: question, position: 2, correct: false)
+    create(:choice, question: question, position: 3, correct: false)
+    question.reload.kind = :true_false
+    question.choices.to_a.last.mark_for_destruction
+    question.save!
+    expect(question.reload.choices.size).to eq(2)
+  end
 end

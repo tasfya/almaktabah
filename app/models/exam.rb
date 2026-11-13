@@ -4,4 +4,11 @@ class Exam < ApplicationRecord
   has_many :program_items, dependent: :destroy
 
   validates :title, presence: true
+  validate :program_kept_while_used, on: :update
+
+  private
+
+  def program_kept_while_used
+    errors.add(:program, :invalid) if program_id_changed? && program_items.exists?
+  end
 end

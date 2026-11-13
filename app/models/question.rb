@@ -1,6 +1,6 @@
 class Question < ApplicationRecord
   belongs_to :exam, inverse_of: :questions
-  has_many :choices, -> { order(:position) }, dependent: :destroy, inverse_of: :question
+  has_many :choices, -> { order(:position) }, dependent: :destroy, inverse_of: :question, autosave: true
 
   enum :kind, { single_choice: 0, true_false: 1 }
 
