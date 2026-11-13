@@ -11,7 +11,7 @@
     <div role="status" class="alert alert-success mt-4">
       <%= icon "check-badge", class: "size-5" %>
       <span><%= t("programs.cohort.certificate_issued", number: certificate.number) %></span>
-      <%= link_to t("programs.cohort.open_certificate"), certificate_path(certificate), class: "btn btn-sm", data: { turbo: false } %>
+      <%= link_to t("programs.cohort.open_certificate"), learner_certificate_link_target(certificate), class: "btn btn-sm", data: { turbo: false } %>
     </div>
   <% end %>
 </header>

@@ -81,6 +81,30 @@ RSpec.describe "Certificate page", type: :request do
     expect(response.body).not_to include("فاطمة بنت محمد")
   end
 
+  describe "link from the cohort page" do
+    include Devise::Test::IntegrationHelpers
+
+    before { sign_in learner }
+
+    it "links to the certificate on this site" do
+      certificate
+
+      get learner_cohort_path(cohort)
+
+      expect(response.body).to include(%(href="#{path}"))
+    end
+
+    it "links to the issuing site when the learner enrolled on another site sharing the program" do
+      program.update!(domains: [ domain, other_domain ])
+      enrollment.update!(domain: other_domain)
+      create(:certificate, enrollment: enrollment, domain: other_domain, number: "7-ABCD1234")
+
+      get learner_cohort_path(cohort)
+
+      expect(response.body).to include(%(href="http://other.example.com#{path}"))
+    end
+  end
+
   it "is not routed while learners are disabled" do
     certificate
     allow(Rails.configuration.x).to receive(:learners_enabled).and_return(false)

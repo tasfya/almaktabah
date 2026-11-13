@@ -18,6 +18,14 @@ module LearnerAreaHelper
     end
   end
 
+  # A certificate is served only on the site it was issued on, which may not be
+  # the site the learner is browsing when the program is shared.
+  def learner_certificate_link_target(certificate)
+    return certificate_path(certificate) if certificate.domain_id == @domain&.id
+
+    certificate_url(certificate, host: certificate.domain.host, port: nil)
+  end
+
   private
 
   # :locked means either "the window has not opened yet" or "this exam cannot

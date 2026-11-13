@@ -67,6 +67,18 @@ RSpec.describe "Learner account", type: :request do
       expect(foreign.reload.reminders_enabled).to be(true)
     end
 
+    it "lists and toggles only this site's enrollments" do
+      elsewhere = create(:program, title: "برنامج موقع آخر", published: true).tap { |p| p.update!(domains: [ other_domain ]) }
+      other_site = create(:enrollment, learner: learner, cohort: create(:cohort, program: elsewhere), domain: other_domain)
+
+      get learner_account_path
+      expect(response.body).not_to include("برنامج موقع آخر")
+
+      patch learner_cohort_reminders_path(other_site.cohort), params: { reminders_enabled: "0" }
+      expect(response).to have_http_status(:not_found)
+      expect(other_site.reload.reminders_enabled).to be(true)
+    end
+
     it "deletes the account, its enrollments and progress, and keeps certificate numbers as revoked" do
       lesson_item = create(:program_item, :lesson, program: program, position: 1)
       create(:lesson_completion, enrollment: enrollment, program_item: lesson_item)
