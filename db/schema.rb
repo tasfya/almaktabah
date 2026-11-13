@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_13_130000) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.integer "actionable_id", null: false
@@ -163,6 +163,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
     t.index ["is_default"], name: "index_domains_on_is_default", unique: true, where: "is_default = true"
   end
 
+  create_table "enrollments", force: :cascade do |t|
+    t.integer "learner_id", null: false
+    t.integer "cohort_id", null: false
+    t.integer "domain_id", null: false
+    t.datetime "enrolled_at", null: false
+    t.datetime "completed_at"
+    t.boolean "reminders_enabled", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id"], name: "index_enrollments_on_cohort_id"
+    t.index ["domain_id"], name: "index_enrollments_on_domain_id"
+    t.index ["learner_id", "cohort_id"], name: "index_enrollments_on_learner_id_and_cohort_id", unique: true
+  end
+
   create_table "exams", force: :cascade do |t|
     t.integer "program_id", null: false
     t.string "title", null: false
@@ -247,6 +261,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
     t.index ["scholar_id"], name: "index_lectures_on_scholar_id"
     t.index ["slug"], name: "index_lectures_on_slug", unique: true
     t.index ["title"], name: "index_lectures_on_title"
+  end
+
+  create_table "lesson_completions", force: :cascade do |t|
+    t.integer "enrollment_id", null: false
+    t.integer "program_item_id", null: false
+    t.datetime "completed_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enrollment_id", "program_item_id"], name: "index_lesson_completions_on_enrollment_id_and_program_item_id", unique: true
+    t.index ["program_item_id"], name: "index_lesson_completions_on_program_item_id"
   end
 
   create_table "lessons", force: :cascade do |t|
@@ -537,9 +561,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
   add_foreign_key "cohort_slots", "program_items"
   add_foreign_key "cohorts", "programs"
   add_foreign_key "domain_assignments", "domains"
+  add_foreign_key "enrollments", "cohorts"
+  add_foreign_key "enrollments", "domains"
+  add_foreign_key "enrollments", "learners"
   add_foreign_key "exams", "programs"
   add_foreign_key "fatwas", "scholars"
   add_foreign_key "lectures", "scholars"
+  add_foreign_key "lesson_completions", "enrollments"
+  add_foreign_key "lesson_completions", "program_items"
   add_foreign_key "lessons", "series"
   add_foreign_key "news", "scholars"
   add_foreign_key "program_items", "books"

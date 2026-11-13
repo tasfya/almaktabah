@@ -75,4 +75,17 @@ FactoryBot.define do
       closes_at { opens_at + 2.days + 22.hours }
     end
   end
+
+  factory :enrollment do
+    learner
+    cohort
+    domain
+    enrolled_at { Time.current }
+  end
+
+  factory :lesson_completion do
+    enrollment
+    program_item { association(:program_item, :lesson, program: enrollment.cohort.program) }
+    completed_at { Time.current }
+  end
 end

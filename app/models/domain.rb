@@ -16,6 +16,7 @@ class Domain < ApplicationRecord
   has_one_attached :apple_touch_icon, service: Rails.application.config.public_storage
   has_many :domain_assignments, dependent: :destroy
   has_many :scholars, foreign_key: :default_domain_id, dependent: :nullify
+  has_many :enrollments, dependent: :restrict_with_error
 
   validate :template_name_must_be_valid
 
