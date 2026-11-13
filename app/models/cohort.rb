@@ -1,5 +1,6 @@
 class Cohort < ApplicationRecord
   belongs_to :program
+  attr_readonly :program_id
   has_many :cohort_slots, dependent: :delete_all, inverse_of: :cohort
   has_many :enrollments, dependent: :restrict_with_error
 

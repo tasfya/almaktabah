@@ -1,0 +1,33 @@
+class Avo::Resources::Certificate < Avo::BaseResource
+  self.title = :number
+  self.includes = [ :domain ]
+  self.search = {
+    query: -> {
+      term = "%#{ActiveRecord::Base.sanitize_sql_like(params[:q].to_s)}%"
+      query.where("certificates.number LIKE :term OR certificates.full_name_snapshot LIKE :term", term: term)
+    }
+  }
+  self.default_view_type = :table
+  self.find_record_method = -> {
+    id.is_a?(Array) ? query.where(number: id) : query.find_by!(number: id)
+  }
+
+  def authorization(user: nil)
+    Avo::ReadOnlyAuthorization.new(user || Avo::Current.user, record || model_class)
+  end
+
+  def fields
+    field :id, as: :id
+    field :number, as: :text, sortable: true
+    field :full_name_snapshot, as: :text, name: "Name"
+    field :gender_snapshot, as: :text, name: "Gender", hide_on: :index
+    field :issued_at, as: :date_time, sortable: true
+    field :revoked_at, as: :date_time, sortable: true
+    field :enrollment, as: :belongs_to
+    field :domain, as: :belongs_to, name: "Site"
+  end
+
+  def actions
+    action Avo::Actions::RevokeCertificate
+  end
+end

@@ -1,5 +1,6 @@
 class Question < ApplicationRecord
   belongs_to :exam, inverse_of: :questions
+  attr_readonly :exam_id
   has_many :choices, -> { order(:position) }, dependent: :destroy, inverse_of: :question, autosave: true
   has_many :attempt_answers, dependent: :restrict_with_error
 
