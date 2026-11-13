@@ -1,6 +1,6 @@
 # Additional translations at https://github.com/plataformatec/devise/wiki/I18n
 
-en:
+ar:
   devise:
     confirmations:
       confirmed: "تم تأكيد حسابك الشخصي بنجاح."
@@ -9,10 +9,10 @@ en:
     failure:
       already_authenticated: "تم تسجيل دخولك مُسبقاً."
       inactive: "لم يتم تنشيط حسابك بعد!!"
-      invalid: ".غير صحيح او خطأ في كلمة المرور %{authentication_keys}"
+      invalid: "%{authentication_keys} أو كلمة المرور غير صحيحة."
       locked: "حسابك مُغلق."
       last_attempt: "لديك فقط محاولة أخيرة قبل أن يتم تعليق حسابك."
-      not_found_in_database: ".غير صحيح او خطأ في كلمة المرور %{authentication_keys}"
+      not_found_in_database: "%{authentication_keys} أو كلمة المرور غير صحيحة."
       timeout: "انتهت صلاحية الجلسة الخاصة بك, سجل دخولك مجدداً للمتابعة.شكراً"
       unauthenticated: "تحتاج الى تسجيل الدخول أولاً"
       unconfirmed: "يجب أن تؤكد بريدك الإلكتروني حتى تتمكن من المتابعة. شكراً"

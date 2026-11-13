@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def after_sign_in_path_for(resource)
+    resource.is_a?(Learner) ? stored_location_for(resource) || learner_dashboard_path : super
+  end
+
   # Cache for Cloudflare edge and browser
   # Show pages: 1 week (content rarely changes)
   # Index pages: 1 day (may have new items)

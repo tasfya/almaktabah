@@ -1,0 +1,12 @@
+<div class="container mx-auto px-4 py-6 max-w-3xl">
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+    <h1 class="text-2xl font-bold"><%= t("programs.dashboard.title") %></h1>
+    <%= button_to t("programs.dashboard.sign_out"), destroy_learner_session_path, method: :delete, class: "btn btn-ghost btn-sm" %>
+  </div>
+  <div class="card bg-base-100 border border-base-300 shadow-sm">
+    <div class="card-body">
+      <p class="font-semibold"><%= t("programs.dashboard.greeting", name: current_learner.full_name) %></p>
+      <p class="opacity-70"><%= t("programs.dashboard.empty") %></p>
+    </div>
+  </div>
+</div>

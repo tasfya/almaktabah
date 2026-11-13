@@ -1,0 +1,45 @@
+<% set_meta_tags(title: t("programs.learner_auth.sign_up"), noindex: true) %>
+<%= render layout: "learners/shared/card", locals: { title: t("programs.learner_auth.sign_up"), subtitle: t("programs.learner_auth.sign_up_subtitle") } do %>
+  <%= form_for(resource, as: resource_name, url: learner_registration_path, html: { class: "flex flex-col gap-4" }) do |f| %>
+    <%= render "learners/shared/error_messages", resource: resource %>
+
+    <div>
+      <%= f.label :full_name, t("programs.learner_auth.full_name"), class: "block text-sm font-semibold mb-1" %>
+      <%= f.text_field :full_name, required: true, autofocus: true, autocomplete: "name", class: "input w-full" %>
+      <p class="text-xs opacity-70 mt-1"><%= t("programs.learner_auth.full_name_hint") %></p>
+    </div>
+
+    <fieldset>
+      <legend class="block text-sm font-semibold mb-1"><%= t("programs.learner_auth.gender") %></legend>
+      <div class="flex gap-6">
+        <% Learner.genders.each_key do |gender| %>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <%= f.radio_button :gender, gender, required: true, class: "radio radio-sm" %>
+            <span><%= t("programs.learner_auth.#{gender}") %></span>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <div>
+      <%= f.label :email, t("auth.email"), class: "block text-sm font-semibold mb-1" %>
+      <%= f.email_field :email, required: true, autocomplete: "email", dir: "ltr", class: "input w-full" %>
+    </div>
+
+    <div>
+      <%= f.label :password, t("auth.password"), class: "block text-sm font-semibold mb-1" %>
+      <%= f.password_field :password, required: true, autocomplete: "new-password", dir: "ltr", class: "input w-full" %>
+      <% if @minimum_password_length %>
+        <p class="text-xs opacity-70 mt-1"><%= t("auth.minimum_password_length", count: @minimum_password_length) %></p>
+      <% end %>
+    </div>
+
+    <div>
+      <%= f.label :password_confirmation, t("auth.password_confirmation"), class: "block text-sm font-semibold mb-1" %>
+      <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password", dir: "ltr", class: "input w-full" %>
+    </div>
+
+    <%= f.submit t("programs.learner_auth.sign_up"), class: "btn btn-primary w-full" %>
+  <% end %>
+  <%= render "learners/shared/links" %>
+<% end %>

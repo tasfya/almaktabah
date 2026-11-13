@@ -414,6 +414,12 @@ ar:
   errors:
     messages:
       taken: "قيمة هذا الحقل مستخدمة بالفعل"
+      blank: "لا يمكن أن يكون فارغًا"
+      invalid: "غير صحيح"
+      inclusion: "غير مقبول"
+      confirmation: "لا يطابق %{attribute}"
+      too_short: "قصير جدًا (الحد الأدنى %{count} أحرف)"
+      too_long: "طويل جدًا (الحد الأقصى %{count} حرفًا)"
   activerecord:
     errors:
       messages:
@@ -427,6 +433,7 @@ ar:
       scholar: "عالم"
       book: "كتاب"
       lecture: "محاضرة"
+      learner: "حساب الطالب"
     model_names:
       lessons: "دروس"
       fatwas: "فتاوى"
@@ -440,6 +447,31 @@ ar:
           sermon: "خطبة"
           conference: "محاضرة"
           benefit: "فائدة"
+      learner:
+        full_name: "الاسم الكامل"
+        gender: "الجنس"
+        email: "البريد الإلكتروني"
+        password: "كلمة المرور"
+        password_confirmation: "تأكيد كلمة المرور"
+  programs:
+    learner_auth:
+      sign_up: "إنشاء حساب طالب"
+      sign_up_subtitle: "سجّل لتلتحق بالبرامج العلمية وتتابع تقدّمك"
+      sign_in: "دخول الطلاب"
+      sign_in_subtitle: "ادخل لمتابعة برامجك"
+      full_name: "الاسم الكامل"
+      full_name_hint: "يُكتب في الشهادة كما تُدخله هنا"
+      gender: "الجنس"
+      male: "طالب"
+      female: "طالبة"
+      have_account: "لديك حساب؟ سجّل الدخول"
+      no_account: "ليس لديك حساب؟ أنشئ حسابًا"
+      rate_limited: "محاولات كثيرة، يُرجى المحاولة بعد دقائق."
+    dashboard:
+      title: "برامجي"
+      greeting: "مرحبًا %{name}"
+      empty: "لم تلتحق بأي برنامج بعد."
+      sign_out: "تسجيل الخروج"
   sheikh:
     name: "الشيخ"
     description: " يحتوي على مجموعة متنوعة من الدروس والمحاضرات والكتب والفتاوى."

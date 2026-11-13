@@ -85,6 +85,25 @@ Rails.application.routes.draw do
     mount Avo::Engine => "/avo"
   end
 
+  # Learner accounts and programs, behind the config.x.learners_enabled launch
+  # switch. Always drawn (so the Devise learner helpers exist everywhere) but
+  # matched only while the switch is on; otherwise these paths 404.
+  # Drawn after `devise_for :users` so staff stay Devise's default scope.
+  constraints(->(_request) { Rails.configuration.x.learners_enabled }) do
+    # Password reset and confirmation mail need a mail provider; until then
+    # those routes stay undrawn.
+    devise_for :learners, controllers: { sessions: "learners/sessions" },
+      skip: [ :registrations, *([ :passwords, :confirmations ] unless Rails.configuration.x.learner_mail_enabled) ]
+    devise_scope :learner do
+      resource :registration, only: [ :new, :create ], path: "learners",
+        path_names: { new: "sign_up" }, controller: "learners/registrations", as: :learner_registration
+    end
+
+    scope "my", module: "learner_area" do
+      get "/", to: "dashboard#show", as: :learner_dashboard
+    end
+  end
+
   root "home#index"
 
   get "/podcasts/feed", to: "podcasts#feed", as: "podcast_feed", defaults: { format: "xml" }

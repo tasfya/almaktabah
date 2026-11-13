@@ -1,0 +1,12 @@
+<% set_meta_tags(title: t("auth.reset_password"), noindex: true) %>
+<%= render layout: "learners/shared/card", locals: { title: t("auth.reset_password"), subtitle: t("auth.reset_password_subtitle") } do %>
+  <%= form_for(resource, as: resource_name, url: learner_password_path, html: { method: :post, class: "flex flex-col gap-4" }) do |f| %>
+    <%= render "learners/shared/error_messages", resource: resource %>
+    <div>
+      <%= f.label :email, t("auth.email"), class: "block text-sm font-semibold mb-1" %>
+      <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email", dir: "ltr", class: "input w-full" %>
+    </div>
+    <%= f.submit t("auth.send_reset_instructions"), class: "btn btn-primary w-full" %>
+  <% end %>
+  <%= render "learners/shared/links" %>
+<% end %>

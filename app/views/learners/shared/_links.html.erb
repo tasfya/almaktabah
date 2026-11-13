@@ -1,0 +1,11 @@
+<div class="flex flex-col items-center gap-1 text-sm">
+  <% unless controller_name == "sessions" %>
+    <%= link_to t("programs.learner_auth.have_account"), new_learner_session_path, class: "link link-hover" %>
+  <% end %>
+  <% unless controller_name == "registrations" %>
+    <%= link_to t("programs.learner_auth.no_account"), new_learner_registration_path, class: "link link-hover" %>
+  <% end %>
+  <% if Rails.configuration.x.learner_mail_enabled && !%w[passwords registrations].include?(controller_name) %>
+    <%= link_to t("auth.forgot_password"), new_learner_password_path, class: "link link-hover" %>
+  <% end %>
+</div>
