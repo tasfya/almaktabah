@@ -1,0 +1,29 @@
+module LearnerAreaHelper
+  def cohort_time(time, cohort)
+    local = time.in_time_zone(cohort.time_zone)
+    "#{l(local.to_date, format: :long)} #{l(local, format: :short)}"
+  end
+
+  def exam_status(progress, item, scores)
+    case progress.exam_state(item)
+    when :open then t("programs.exam.open")
+    when :not_ready then t("programs.exam.not_ready")
+    when :submitted then t("programs.exam.submitted", score: scores[item.exam_id])
+    when :missed then t("programs.exam.missed")
+    else exam_lock_message(progress, item)
+    end
+  end
+
+  private
+
+  # :locked means either "the window has not opened yet" or "this exam cannot
+  # be taken" (no questions written yet); only the first has a date to show.
+  def exam_lock_message(progress, item)
+    slot = progress.slot_for(item)
+    if item.exam.questions.any? && slot.opens_at > progress.at
+      t("programs.exam.opens_on", date: cohort_time(slot.opens_at, progress.enrollment.cohort))
+    else
+      t("programs.exam.unavailable")
+    end
+  end
+end

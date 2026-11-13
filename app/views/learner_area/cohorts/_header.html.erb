@@ -1,0 +1,16 @@
+<%# locals: (cohort:, progress:, certificate:) %>
+<header id="cohort_header" class="mb-4">
+  <p class="text-sm text-base-content/60"><%= cohort.name %></p>
+  <h1 class="text-xl md:text-2xl font-bold leading-tight mb-3"><%= cohort.program.title %></h1>
+  <% percent = progress.percent_complete %>
+  <div class="flex items-center gap-3">
+    <progress class="progress progress-primary flex-1" value="<%= percent %>" max="100"></progress>
+    <span class="text-sm font-semibold whitespace-nowrap"><%= t("programs.cohort.progress", percent: percent) %></span>
+  </div>
+  <% if certificate && !certificate.revoked? %>
+    <div role="status" class="alert alert-success mt-4">
+      <%= icon "check-badge", class: "size-5" %>
+      <span><%= t("programs.cohort.certificate_issued", number: certificate.number) %></span>
+    </div>
+  <% end %>
+</header>

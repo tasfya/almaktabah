@@ -1,0 +1,4 @@
+<%= turbo_stream.replace "cohort_header", partial: "learner_area/cohorts/header", locals: { cohort: @cohort, progress: @progress, certificate: @certificate } %>
+<% ([ @item ] + @progress.exam_items).uniq.each do |item| %>
+  <%= turbo_stream.replace dom_id(item), partial: "learner_area/cohorts/item", locals: { item: item, progress: @progress, cohort: @cohort, scores: @scores } %>
+<% end %>
