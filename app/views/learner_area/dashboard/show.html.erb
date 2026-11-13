@@ -2,44 +2,40 @@
   <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
     <h1 class="text-2xl font-bold"><%= t("programs.dashboard.title") %></h1>
     <div class="flex items-center gap-2">
-      <%= link_to t("programs.account.link"), learner_account_path, class: "btn btn-ghost btn-sm" %>
-      <%= button_to t("programs.dashboard.sign_out"), destroy_learner_session_path, method: :delete, class: "btn btn-ghost btn-sm" %>
+      <%= link_to t("programs.account.link"), learner_account_path, class: "btn btn-ghost btn-sm min-h-11" %>
+      <%= button_to t("programs.dashboard.sign_out"), destroy_learner_session_path, method: :delete, class: "btn btn-ghost btn-sm min-h-11" %>
     </div>
   </div>
   <%= render "programs/flash" %>
   <p class="font-semibold mb-4"><%= t("programs.dashboard.greeting", name: current_learner.full_name) %></p>
 
-  <% if @enrollments.any? %>
+  <% if @progresses.any? %>
     <div class="flex flex-col gap-4">
-      <% @enrollments.each do |enrollment| %>
-        <% progress = Programs::Progress.new(enrollment) %>
-        <% cohort = enrollment.cohort %>
+      <% @progresses.each do |progress| %>
+        <% cohort = progress.enrollment.cohort %>
+        <% certificate = progress.enrollment.certificate %>
         <div class="card bg-base-100 border border-base-300 shadow-sm">
           <div class="card-body gap-3">
             <div>
-              <p class="text-sm text-base-content/60"><%= cohort.name %></p>
+              <p class="text-sm text-base-content/70"><%= cohort.name %></p>
               <h2 class="card-title text-lg"><%= cohort.program.title %></h2>
             </div>
-            <div class="flex items-center gap-3">
-              <% percent = progress.percent_complete %>
-              <progress class="progress progress-primary flex-1" value="<%= percent %>" max="100"></progress>
-              <span class="text-sm font-semibold whitespace-nowrap"><%= t("programs.cohort.progress", percent: percent) %></span>
-            </div>
-            <div>
-              <p class="font-semibold text-sm mb-1"><%= t("programs.dashboard.today") %></p>
-              <% today = progress.todays_items %>
-              <% if today.any? %>
-                <ul class="list-disc list-inside text-sm text-base-content/80">
-                  <% today.each do |item| %>
-                    <li><%= item.display_title %></li>
-                  <% end %>
-                </ul>
-              <% else %>
-                <p class="text-sm text-base-content/60"><%= t("programs.dashboard.nothing_today") %></p>
-              <% end %>
-            </div>
+            <%= render "learner_area/cohorts/progress", progress: progress, id: "enrollment_#{progress.enrollment.id}_progress" %>
+            <% if certificate && !certificate.revoked? %>
+              <p class="font-semibold"><%= t("programs.cohort.certificate_issued", number: certificate.number) %></p>
+              <% step = {} %>
+            <% else %>
+              <% step = learner_next_step(progress) %>
+              <p class="font-semibold"><%= step[:text] %></p>
+            <% end %>
             <div class="card-actions justify-end">
-              <%= link_to t("programs.dashboard.open_cohort"), learner_cohort_path(cohort), class: "btn btn-primary btn-sm" %>
+              <% if step[:item] %>
+                <%= link_to t(step[:item].exam? ? "programs.dashboard.go_to_exam" : "programs.dashboard.go_to_item"),
+                      learner_cohort_path(cohort, anchor: dom_id(step[:item])), class: "btn btn-primary btn-sm min-h-11" %>
+                <%= link_to t("programs.dashboard.open_cohort"), learner_cohort_path(cohort), class: "btn btn-ghost btn-sm min-h-11" %>
+              <% else %>
+                <%= link_to t("programs.dashboard.open_cohort"), learner_cohort_path(cohort), class: "btn btn-primary btn-sm min-h-11" %>
+              <% end %>
             </div>
           </div>
         </div>
@@ -48,8 +44,8 @@
   <% else %>
     <div class="card bg-base-100 border border-base-300 shadow-sm">
       <div class="card-body">
-        <p class="opacity-70"><%= t("programs.dashboard.empty") %></p>
-        <div class="card-actions"><%= link_to t("programs.dashboard.browse"), programs_path, class: "btn btn-primary btn-sm" %></div>
+        <p class="text-base-content/80"><%= learner_t("programs.dashboard.empty") %></p>
+        <div class="card-actions"><%= link_to t("programs.dashboard.browse"), programs_path, class: "btn btn-primary btn-sm min-h-11" %></div>
       </div>
     </div>
   <% end %>

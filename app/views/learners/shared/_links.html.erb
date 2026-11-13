@@ -7,5 +7,7 @@
   <% end %>
   <% if Rails.configuration.x.learner_mail_enabled && !%w[passwords registrations].include?(controller_name) %>
     <%= link_to t("auth.forgot_password"), new_learner_password_path, class: "link link-hover" %>
+  <% elsif controller_name == "sessions" %>
+    <p class="text-center opacity-80"><%= t("programs.learner_auth.forgot_password_contact") %></p>
   <% end %>
 </div>

@@ -1,7 +1,8 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
-
+require_relative 'support/test_storage'
+ENV['ACTIVE_STORAGE_TEST_ROOT'] = TestStorage.root
 
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production

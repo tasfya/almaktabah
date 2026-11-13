@@ -24,6 +24,7 @@
       </div>
 
       <button data-action="click->collapsible#toggle"
+              aria-label="<%= t('buttons.toggle_player') %>"
               data-collapsible-target="toggleButton"
               class="flex items-center justify-center w-8 h-8 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors">
         <%= icon "minus", class: "w-4 h-4", data: { collapsible_target: "minimizeIcon" } %>

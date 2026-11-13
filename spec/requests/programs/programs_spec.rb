@@ -25,6 +25,17 @@ RSpec.describe "Programs", type: :request do
       expect(response.body).not_to include("برنامج مخفي", "برنامج موقع آخر")
     end
 
+    it "shows each program's scholars, counts and next cohort on its card" do
+      program = program_on(domain, title: "متون التوحيد")
+      create(:program_item, :lesson, program: program, position: 1)
+      create(:cohort, program: program, starts_on: Date.current + 10)
+
+      get programs_path
+
+      card = Nokogiri::HTML(response.body).at_css("a[href='#{program_path(program)}']").text.squish
+      expect(card).to include("درس واحد", "الدفعة القادمة تبدأ")
+    end
+
     it "is cacheable for guests but not for a signed-in learner" do
       allow_any_instance_of(ProgramsController).to receive(:perform_caching).and_return(true) # rubocop:disable RSpec/AnyInstance
       get programs_path
@@ -48,7 +59,7 @@ RSpec.describe "Programs", type: :request do
       get program_path(program)
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("متون التوحيد", "شرح المتون", "متن القواعد الأربع", lesson.series.scholar.name)
+      expect(response.body).to include("متون التوحيد", "شرح المتون", "متن القواعد الأربع", ERB::Util.h(lesson.series.scholar.name))
       expect(response.body).not_to include("تفريغ سري")
     end
 
@@ -62,7 +73,7 @@ RSpec.describe "Programs", type: :request do
       foreign = program_on(other_domain)
       get program_path(foreign)
       expect(response).to have_http_status(:not_found)
-      expect(response.body).not_to include(foreign.title)
+      expect(response.body).not_to include(ERB::Util.h(foreign.title))
     end
 
     it "shows the not-found page for an unpublished program to the public" do
@@ -103,6 +114,42 @@ RSpec.describe "Programs", type: :request do
       get program_path(program)
 
       expect(response.body).to include(learner_cohort_path(cohort))
+    end
+
+    it "explains how the program works, with its counts, pass mark and each cohort's dates" do
+      program.update!(pass_mark: 70)
+      2.times { |n| create(:program_item, :lesson, program: program, position: n + 1) }
+      create(:program_item, :exam, program: program, position: 3, exam: create(:exam, program: program))
+      create(:cohort, program: program, name: "دفعة بدأت", starts_on: Date.current - 3, enrollment_closes_at: 2.weeks.from_now)
+
+      get program_path(program)
+
+      text = Nokogiri::HTML(response.body).text.squish
+      expect(text).to include("درسان · اختبار واحد", "كيف يعمل البرنامج", "بنسبة 70٪ فأكثر", "بدأت ", "التسجيل مفتوح حتى")
+    end
+
+    it "links a text only when its book is published on this site" do
+      here = create(:book, title: "متن منشور هنا", published: true).tap { |b| b.update!(domains: [ domain ]) }
+      elsewhere = create(:book, title: "متن موقع آخر", published: true).tap { |b| b.update!(domains: [ other_domain ]) }
+      create(:program_item, :book, program: program, position: 1, book: here)
+      create(:program_item, :book, program: program, position: 2, book: elsewhere)
+
+      get program_path(program)
+
+      links = Nokogiri::HTML(response.body).css("a").map(&:text)
+      expect(links).to include("متن منشور هنا")
+      expect(links).not_to include("متن موقع آخر")
+    end
+
+    it "addresses guests neutrally and a signed-in learner by gender" do
+      create(:cohort, program: program)
+
+      get program_path(program)
+      expect(response.body).to include("الالتحاق بالدفعة")
+
+      sign_in create(:learner, gender: :female)
+      get program_path(program)
+      expect(response.body).to include("التحقي بالدفعة")
     end
   end
 

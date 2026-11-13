@@ -48,9 +48,12 @@ GET /%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%85%D8%AC/:id(.:format) programs#show
 GET /%D8%A7%D9%84%D8%B4%D9%87%D8%A7%D8%AF%D8%A7%D8%AA/:id(.:format) certificates#show
 GET /my(.:format) learner_area/dashboard#show
 POST /my/cohorts/:learner_cohort_id/completions(.:format) learner_area/completions#create
+DELETE /my/cohorts/:learner_cohort_id/completions/:id(.:format) learner_area/completions#destroy
 GET /my/cohorts/:learner_cohort_id/play/:program_item_id(.:format) learner_area/plays#show
 PATCH /my/cohorts/:learner_cohort_id/reminders(.:format) learner_area/reminders#update
 PUT /my/cohorts/:learner_cohort_id/reminders(.:format) learner_area/reminders#update
+POST /my/cohorts/:learner_cohort_id/exams/:id/submit(.:format) learner_area/exams#submit
+GET /my/cohorts/:learner_cohort_id/exams/:id(.:format) learner_area/exams#show
 GET /my/cohorts/:id(.:format) learner_area/cohorts#show
 GET /my/account(.:format) learner_area/accounts#show
 PATCH /my/account(.:format) learner_area/accounts#update

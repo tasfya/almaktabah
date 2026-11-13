@@ -75,9 +75,10 @@ RSpec.describe "Learner area", type: :request do
 
         get learner_dashboard_path
 
-        expect(response.body).to include(program.title, cohort.name, second_lesson.display_title, learner_cohort_path(cohort))
+        expect(response.body).to include(program.title, cohort.name, learner_cohort_path(cohort))
         expect(response.body).not_to include("برنامج موقع آخر")
-        expect(response.body).to include("أتممت 0٪")
+        expect(response.body).to include("الدروس المسموعة: 0 من 3", "عليك درس متأخر — الدرس 1: شرح القواعد الأربع ١",
+                                         learner_cohort_path(cohort, anchor: ActionView::RecordIdentifier.dom_id(first_lesson)))
       end
     end
 
@@ -102,14 +103,15 @@ RSpec.describe "Learner area", type: :request do
         get learner_cohort_path(cohort)
 
         body = response.body
-        expect(body).to include("شرح القواعد الأربع ١", "متن القواعد الأربع", "يُتاح في 25 نوفمبر 2025")
+        expect(body).to include("شرح القواعد الأربع ١", "متن القواعد الأربع", "يُتاح الثلاثاء 25 نوفمبر")
         expect(body.index("شرح القواعد الأربع ١")).to be < body.index("متن القواعد الأربع")
         expect(Nokogiri::HTML(body).css("form[action^='#{learner_cohort_completions_path(cohort)}?']").size).to eq(2)
       end
 
       it "shows the exam window in the cohort time zone" do
         get learner_cohort_path(cohort)
-        expect(response.body).to include("19 نوفمبر 2025 00:00", "21 نوفمبر 2025 22:00", "يُفتح في 19 نوفمبر 2025 00:00")
+        expect(response.body).to include("من الأربعاء 19 نوفمبر إلى الجمعة 21 نوفمبر، الساعة 10:00 م", "يُفتح الأربعاء 19 نوفمبر",
+                                         "المواعيد بتوقيت مكة المكرمة")
       end
 
       it "says an exam without questions is not available yet, even inside its window" do
@@ -164,7 +166,7 @@ RSpec.describe "Learner area", type: :request do
         expect(response.media_type).to eq("text/vnd.turbo-stream.html")
         expect(response.headers["Cache-Control"]).to include("no-store")
         expect(LessonCompletion.where(enrollment: enrollment, program_item: second_lesson)).to exist
-        expect(response.body).to include(%(target="#{ActionView::RecordIdentifier.dom_id(second_lesson)}"), "أتممت 33٪")
+        expect(response.body).to include(%(target="#{ActionView::RecordIdentifier.dom_id(second_lesson)}"), "الدروس المسموعة: 1 من 3")
       end
 
       it "opens the exam row when the last earlier lesson is ticked" do
@@ -210,6 +212,191 @@ RSpec.describe "Learner area", type: :request do
       end
     end
 
+    describe "next steps" do
+      def row(item)
+        Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(item)}")
+      end
+
+      it "numbers lessons, marks today's lesson, dates the overdue one and points to it" do
+        get learner_cohort_path(cohort)
+
+        expect(row(first_lesson).text.squish).to include("1", "موعده أمس · متأخر")
+        expect(row(second_lesson).text.squish).to include("2", "درس اليوم")
+        expect(row(future_lesson).text.squish).to include("3", "يُتاح الثلاثاء 25 نوفمبر")
+        header = Nokogiri::HTML(response.body).at_css("#cohort_header")
+        expect(header.text.squish).to include("عليك درس متأخر — الدرس 1: شرح القواعد الأربع ١")
+        expect(header.at_css("a[href='##{ActionView::RecordIdentifier.dom_id(first_lesson)}']")).to be_present
+      end
+
+      it "names each tick button after its lesson" do
+        get learner_cohort_path(cohort)
+        expect(row(first_lesson).at_css("button[aria-label='سمعت: شرح القواعد الأربع ١']")).to be_present
+      end
+
+      it "after the day's last tick, confirms and says when the next lesson comes, with an undo" do
+        tick(first_lesson)
+        tick(second_lesson)
+
+        expect(response.body).to include("أحسن الله إليك.", "أتممت دروس اليوم ✓ — الدرس التالي الثلاثاء 25 نوفمبر",
+                                         learner_cohort_completion_path(cohort, second_lesson.id))
+      end
+
+      it "undoes a tick" do
+        tick(first_lesson)
+
+        delete learner_cohort_completion_path(cohort, first_lesson.id), headers: turbo_stream
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("تم التراجع عن تعليم الدرس.")
+        expect(LessonCompletion.count).to eq(0)
+      end
+
+      it "refuses an undo once a later exam has an attempt" do
+        tick(first_lesson)
+        create(:exam_attempt, enrollment: enrollment, exam: exam.exam, score_percent: 80)
+
+        delete learner_cohort_completion_path(cohort, first_lesson.id), headers: turbo_stream
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.body).to include("لا يمكن التراجع عن تعليم هذا الدرس الآن.")
+        expect(LessonCompletion.count).to eq(1)
+      end
+
+      it "puts an open exam ahead of lessons that are still due after it" do
+        travel_to riyadh.local(2025, 11, 20, 12)
+        tick(first_lesson)
+        tick(second_lesson)
+        scheduled(:lesson, position: 6, on: Date.new(2025, 11, 20))
+
+        get learner_cohort_path(cohort)
+
+        header = Nokogiri::HTML(response.body).at_css("#cohort_header").text.squish
+        expect(header).to include("متاح الآن، ويُغلق الجمعة 21 نوفمبر، الساعة 10:00 م")
+      end
+
+      it "doesn't call a learner who missed an exam finished" do
+        future_lesson.cohort_slots.destroy_all
+        tick(first_lesson)
+        tick(second_lesson)
+        travel_to riyadh.local(2025, 11, 22, 12)
+
+        get learner_cohort_path(cohort)
+
+        header = Nokogiri::HTML(response.body).at_css("#cohort_header").text.squish
+        expect(header).to include("دون استيفاء شرط الشهادة")
+        expect(header).not_to include("أتممت دروس البرنامج واختباراته")
+      end
+
+      it "shows a midnight close as the end of the previous day, with no time left out" do
+        exam.cohort_slots.sole.update!(closes_at: riyadh.local(2025, 11, 22))
+
+        get learner_cohort_path(cohort)
+
+        expect(row(exam).text.squish).to include("إلى الجمعة 21 نوفمبر، آخر اليوم")
+      end
+
+      it "says an exam without questions is not available yet, never that it opened yesterday" do
+        future_lesson.cohort_slots.destroy_all
+        exam.exam.questions.destroy_all
+        tick(first_lesson)
+        tick(second_lesson)
+        travel_to riyadh.local(2025, 11, 20, 12)
+
+        get learner_cohort_path(cohort)
+
+        header = Nokogiri::HTML(response.body).at_css("#cohort_header").text.squish
+        expect(header).to include("غير متاح بعد")
+        expect(header).not_to include("أمس")
+      end
+
+      it "never calls a learner finished when an exam without questions has closed" do
+        future_lesson.cohort_slots.destroy_all
+        exam.exam.questions.destroy_all
+        tick(first_lesson)
+        tick(second_lesson)
+        travel_to riyadh.local(2025, 11, 22, 12)
+
+        get learner_cohort_path(cohort)
+
+        header = Nokogiri::HTML(response.body).at_css("#cohort_header").text.squish
+        expect(header).to include("دون استيفاء شرط الشهادة")
+        expect(header).not_to include("أتممت دروس البرنامج واختباراته")
+      end
+
+      describe "undo refusals" do
+        it "refuses once a certificate exists" do
+          tick(first_lesson)
+          Certificate.create!(enrollment: enrollment, domain: domain, issued_at: Time.current, number: "X-1",
+                              full_name_snapshot: learner.full_name, gender_snapshot: learner.gender)
+
+          delete learner_cohort_completion_path(cohort, first_lesson.id), headers: turbo_stream
+
+          expect(response).to have_http_status(:unprocessable_content)
+          expect(LessonCompletion.count).to eq(1)
+        end
+
+        it "refuses a lesson that was never ticked" do
+          delete learner_cohort_completion_path(cohort, first_lesson.id), headers: turbo_stream
+          expect(response).to have_http_status(:unprocessable_content)
+        end
+
+        it "allows it when only an earlier exam has an attempt" do
+          earlier = scheduled_exam(position: 0)
+          create(:exam_attempt, enrollment: enrollment, exam: earlier.exam, score_percent: 80)
+          tick(first_lesson)
+
+          delete learner_cohort_completion_path(cohort, first_lesson.id), headers: turbo_stream
+
+          expect(response).to have_http_status(:ok)
+          expect(LessonCompletion.count).to eq(0)
+        end
+
+        it "returns not found for another learner's cohort" do
+          other_cohort = create(:cohort, program: program)
+          other = create(:enrollment, cohort: other_cohort, domain: domain)
+          item = create(:program_item, :lesson, program: program, position: 40)
+          create(:lesson_completion, enrollment: other, program_item: item)
+
+          delete learner_cohort_completion_path(other_cohort, item.id), headers: turbo_stream
+
+          expect(response).to have_http_status(:not_found)
+          expect(LessonCompletion.count).to eq(1)
+        end
+
+        it "refuses an item of another program" do
+          delete learner_cohort_completion_path(cohort, create(:program_item, :lesson).id), headers: turbo_stream
+          expect(response).to have_http_status(:unprocessable_content)
+        end
+
+        it "redirects back to the timeline with a message without Turbo" do
+          delete learner_cohort_completion_path(cohort, first_lesson.id)
+
+          expect(response).to redirect_to(learner_cohort_path(cohort))
+          expect(flash[:alert]).to eq(I18n.t("programs.cohort.untick_refused"))
+        end
+      end
+
+      it "speaks to a female learner in the feminine" do
+        learner.update!(gender: :female)
+        travel_to riyadh.local(2025, 11, 20, 12)
+
+        get learner_cohort_path(cohort)
+
+        expect(row(exam).text).to include("أكملي سماع الدروس السابقة أولًا")
+      end
+
+      it "lists followed cohorts before one that hasn't started, which says when it starts" do
+        later = create(:cohort, program: program, name: "دفعة قادمة", starts_on: Date.new(2025, 11, 19))
+        create(:enrollment, learner: learner, cohort: later, domain: domain, enrolled_at: 1.minute.from_now)
+
+        get learner_dashboard_path
+
+        body = response.body
+        expect(body.index(cohort.name)).to be < body.index("دفعة قادمة")
+        expect(body).to include("تبدأ الدفعة يوم الأربعاء 19 نوفمبر (بعد 10 أيام)")
+      end
+    end
+
     describe "playing" do
       let(:lesson) { first_lesson.lesson }
 
@@ -222,7 +409,9 @@ RSpec.describe "Learner area", type: :request do
         get learner_cohort_play_path(cohort, first_lesson), headers: turbo_stream
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('target="audio-player"', lesson.title)
+        expect(response.body).to include('target="audio-player"', ERB::Util.h(lesson.title))
+        expect(response.body).to include(ERB::Util.h("هل أتممت سماع الدرس 1: #{first_lesson.display_title}؟"),
+                                         learner_cohort_completions_path(cohort, program_item_id: first_lesson.id))
       end
 
       it "sends no-store" do

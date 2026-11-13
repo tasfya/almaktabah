@@ -7,10 +7,23 @@
 
     <header class="mb-6">
       <h1 class="text-2xl md:text-3xl font-bold leading-tight mb-3"><%= @program.title %></h1>
+      <%= render "programs/counts", program: @program %>
       <% if @program.description.present? %>
-        <p class="text-base-content/80 whitespace-pre-line"><%= @program.description %></p>
+        <p class="text-base-content/80 whitespace-pre-line mt-2"><%= @program.description %></p>
       <% end %>
     </header>
+
+    <section class="mb-6 rounded-box bg-base-200 p-4">
+      <h2 class="font-semibold mb-2"><%= t("programs.show.how_it_works") %></h2>
+      <ol class="list-decimal ps-5 space-y-1 text-base-content/90">
+        <li><%= t("programs.show.steps.enroll") %></li>
+        <li><%= t("programs.show.steps.listen") %></li>
+        <% if @program.program_items.exam.where(hidden: false).exists? %>
+          <li><%= t("programs.show.steps.exam") %></li>
+        <% end %>
+        <li><%= t("programs.show.steps.certificate", pass_mark: @program.pass_mark) %></li>
+      </ol>
+    </section>
 
     <% scholars = @program.scholars.to_a %>
     <% if scholars.any? %>
@@ -29,7 +42,14 @@
         <h2 class="font-semibold mb-2"><%= t("programs.show.texts") %></h2>
         <ol class="list-decimal list-inside space-y-1 text-base-content/80">
           <% @texts.each do |item| %>
-            <li><%= item.display_title %></li>
+            <% book = item.book %>
+            <li>
+              <% if @linkable_book_ids.include?(book.id) && book.scholar %>
+                <%= link_to item.display_title, book_path(book.scholar, book), class: "link" %>
+              <% else %>
+                <%= item.display_title %>
+              <% end %>
+            </li>
           <% end %>
         </ol>
       </section>
@@ -40,22 +60,31 @@
       <% if @cohorts.any? %>
         <ul class="space-y-3">
           <% @cohorts.each do |cohort| %>
+            <% zone_today = cohort.today %>
             <li class="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-base-200 p-4">
               <div>
                 <p class="font-semibold"><%= cohort.name %></p>
-                <p class="text-sm text-base-content/70"><%= t("programs.show.starts_on", date: l(cohort.starts_on, format: :long)) %></p>
+                <p class="text-sm text-base-content/80">
+                  <%= t(cohort.starts_on > zone_today ? "programs.show.starts_on" : "programs.show.started_on", date: program_date(cohort.starts_on, zone_today)) %>
+                </p>
+                <% if (deadline = cohort.enrollment_deadline) && !@enrolled_cohort_ids.include?(cohort.id) %>
+                  <p class="text-sm text-base-content/80">
+                    <%= t("programs.show.enrollment_until", date: program_deadline(deadline, cohort, zone_today)) %>
+                  </p>
+                <% end %>
               </div>
               <% if @enrolled_cohort_ids.include?(cohort.id) %>
-                <%= link_to t("programs.show.continue"), learner_cohort_path(cohort), class: "btn btn-primary btn-sm" %>
+                <%= link_to learner_t("programs.show.continue"), learner_cohort_path(cohort), class: "btn btn-primary min-h-11" %>
               <% elsif @program.published? %>
-                <%= button_to t("programs.show.enroll"), program_enrollments_path(@program, cohort_id: cohort.id),
-                      class: "btn btn-primary btn-sm", data: { turbo_submits_with: t("programs.show.enroll") } %>
+                <% label = learner_signed_in? ? learner_t("programs.show.enroll") : t("programs.show.enroll_guest") %>
+                <%= button_to label, program_enrollments_path(@program, cohort_id: cohort.id),
+                      class: "btn btn-primary min-h-11", data: { turbo_submits_with: label } %>
               <% end %>
             </li>
           <% end %>
         </ul>
       <% else %>
-        <p class="text-base-content/70"><%= t("programs.show.no_open_cohort") %></p>
+        <p class="text-base-content/80"><%= t("programs.show.no_open_cohort") %></p>
       <% end %>
     </section>
   </article>
