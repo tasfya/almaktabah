@@ -5,6 +5,9 @@ module Api
     def pending_downloads
       lessons = Lesson.with_youtube_url_missing_video
                       .select(:id, :title, :youtube_url)
+      unless Rails.configuration.x.telegram_import_video_downloads
+        lessons = lessons.where.not(id: TelegramImportRecord.imported_lesson_ids)
+      end
       lessons = lessons.limit(params[:limit]) if params[:limit].present?
 
       render json: {

@@ -20,3 +20,17 @@ namespace :telegram_import do
     puts "wrote #{out}"
   end
 end
+
+namespace :telegram_import do
+  desc "Import the manifest's lessons and books (unpublished). Dry run unless DRY_RUN=0. " \
+       "ENV: MANIFEST, FILES_DIR (required for a real run), ONLY=key,key, DRY_RUN"
+  task library: :environment do
+    manifest = JSON.parse(File.read(ENV.fetch("MANIFEST", "data/imports/mtoon_altawheed/manifest.json")))
+    TelegramImport::LibraryImporter.new(
+      manifest: manifest,
+      files_dir: ENV["FILES_DIR"].presence,
+      only: ENV.fetch("ONLY", "").split(","),
+      dry_run: ENV.fetch("DRY_RUN", "1") != "0"
+    ).call
+  end
+end

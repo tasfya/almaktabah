@@ -11,6 +11,10 @@ class TelegramImportRecord < ApplicationRecord
 
   scope :created_records, -> { where(outcome: "created") }
 
+  def self.imported_lesson_ids
+    created_records.where(record_type: "Lesson").select(:record_id)
+  end
+
   def self.lookup(source, external_id)
     find_by(source: source, external_id: external_id)&.record
   end
