@@ -8,12 +8,20 @@ module LearnerSite
   extend ActiveSupport::Concern
 
   included do
+    include TransientBreadcrumbs
+
     before_action { render_not_found if @domain.nil? }
+    before_action :setup_learner_account_breadcrumbs
     rate_limit to: 10, within: 3.minutes, only: :create, name: "email", by: :learner_email_rate_key, with: :refuse_rate_limited
     rate_limit to: 60, within: 3.minutes, only: :create, name: "address", by: :learner_address_rate_key, with: :refuse_rate_limited
   end
 
   private
+
+  def setup_learner_account_breadcrumbs
+    reset_breadcrumbs
+    breadcrumb_for(t("programs.learner_auth.breadcrumbs.#{controller_name}"))
+  end
 
   def learner_email_rate_key
     learner = params[:learner]

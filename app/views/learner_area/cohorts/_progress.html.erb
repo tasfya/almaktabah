@@ -1,0 +1,12 @@
+<%# locals: (progress:, id:) %>
+<% lessons = progress.lesson_items.size %>
+<% exams = progress.exam_items.size %>
+<div class="flex flex-col gap-1">
+  <div class="flex items-center gap-3">
+    <progress class="progress progress-primary flex-1" value="<%= progress.ticked_lessons_count %>" max="<%= [ lessons, 1 ].max %>" aria-labelledby="<%= id %>_label"></progress>
+  </div>
+  <p id="<%= id %>_label" class="text-sm font-semibold"><%= t("programs.cohort.lessons_progress", done: progress.ticked_lessons_count, total: lessons) %></p>
+  <% if exams.positive? %>
+    <p class="text-sm text-base-content/80"><%= t("programs.cohort.exams_progress", done: progress.submitted_exams_count, total: exams) %></p>
+  <% end %>
+</div>

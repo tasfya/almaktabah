@@ -34,6 +34,24 @@ module Programs
       completion
     end
 
+    # A mis-tap can be undone until it could have mattered: not once a
+    # certificate exists, nor once an exam that comes after the lesson has an
+    # attempt (the tick may have opened it).
+    def untickable?(item)
+      return false unless item.lesson? && ticked?(item) && slot_for(item)
+      return false if enrollment.certificate.present?
+
+      later_exam_ids = exam_items.select { |exam| exam.position > item.position }.map(&:exam_id)
+      !enrollment.exam_attempts.exists?(exam_id: later_exam_ids)
+    end
+
+    def untick!(item)
+      raise NotAllowed unless untickable?(item)
+
+      enrollment.lesson_completions.where(program_item: item).delete_all
+      @ticked_item_ids = nil
+    end
+
     # :locked also covers an exam that cannot be taken at all here: no slot
     # in this cohort, hidden, or no questions written yet.
     def exam_state(exam_item)
@@ -76,6 +94,84 @@ module Programs
       slots_by_item_id[item.id]
     end
 
+    def today
+      @today ||= enrollment.cohort.today(at)
+    end
+
+    def started?
+      today >= enrollment.cohort.starts_on
+    end
+
+    # 1-based, counting lessons only, as learners count them ("lesson 14").
+    def lesson_number(item)
+      @lesson_numbers ||= lesson_items.each.with_index(1).to_h { |lesson, number| [ lesson.id, number ] }
+      @lesson_numbers[item.id]
+    end
+
+    def submitted_exams_count
+      exam_items.count { |exam| submitted_exam_ids.include?(exam.exam_id) }
+    end
+
+    def ticked_lessons_count
+      lesson_items.count { |lesson| ticked?(lesson) }
+    end
+
+    # Released lessons not ticked yet, oldest first.
+    def due_lessons
+      lesson_items.select { |lesson| tickable?(lesson) }
+    end
+
+    def overdue_lessons
+      due_lessons.select { |lesson| slot_for(lesson).available_on < today }
+    end
+
+    def next_release_on
+      lesson_items.map { |lesson| slot_for(lesson).available_on }.select { |date| date > today }.min
+    end
+
+    # Exams the learner can or should act on now.
+    def pending_exams
+      exam_items.select { |exam| %i[open not_ready].include?(exam_state(exam)) }
+    end
+
+    def open_exams
+      exam_items.select { |exam| exam_state(exam) == :open }
+    end
+
+    # Exams whose window has not opened yet.
+    def upcoming_exams
+      exam_items.select do |exam|
+        exam_state(exam) == :locked && exam.exam.questions.any? && slot_for(exam).opens_at > at
+      end
+    end
+
+    # Exams with no questions yet whose window has not closed: they can't be
+    # taken now but may be later.
+    def unavailable_exams
+      exam_items.select do |exam|
+        exam_state(exam) == :locked && exam.exam.questions.none? && !slot_for(exam).closed?(at)
+      end
+    end
+
+    # Exams that, by the CertificateIssuer rule (every exam needs an attempt at
+    # or above the pass mark), keep the certificate out of reach for good:
+    # the window closed, or the one attempt scored below the pass mark.
+    def blocking_exams
+      pass_mark = enrollment.cohort.program.pass_mark
+      scores = enrollment.exam_attempts.pluck(:exam_id, :score_percent).to_h
+      exam_items.select do |exam|
+        score = scores[exam.exam_id]
+        next false if score.present? && score >= pass_mark
+
+        exam_state(exam) == :submitted || slot_for(exam).closed?(at)
+      end
+    end
+
+    def finished?
+      started? && due_lessons.empty? && next_release_on.nil? && pending_exams.empty? &&
+        upcoming_exams.empty? && unavailable_exams.empty?
+    end
+
     private
 
     def record_tick(item)
@@ -84,10 +180,6 @@ module Programs
       raise NotAllowed
     ensure
       @ticked_item_ids = nil
-    end
-
-    def today
-      @today ||= enrollment.cohort.today(at)
     end
 
     def slots_by_item_id

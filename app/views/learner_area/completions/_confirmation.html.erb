@@ -1,0 +1,14 @@
+<%# locals: (item:, progress:, cohort:, ticked:) %>
+<div id="program_flash">
+  <div role="status" class="alert alert-success alert-soft text-sm mb-4 flex flex-wrap items-center justify-between gap-2">
+    <% if ticked %>
+      <span><%= t("programs.cohort.ticked_thanks") %> <%= learner_next_step(progress)[:text] unless progress.enrollment.certificate %></span>
+      <% if progress.untickable?(item) %>
+        <%= button_to t("programs.cohort.untick"), learner_cohort_completion_path(cohort, item.id), method: :delete,
+              class: "btn btn-ghost btn-sm min-h-11", aria: { label: t("programs.cohort.untick_label", title: item.display_title) } %>
+      <% end %>
+    <% else %>
+      <span><%= t("programs.cohort.unticked") %></span>
+    <% end %>
+  </div>
+</div>
