@@ -50,9 +50,8 @@ module TelegramImport
       scholar or problems << "scholar #{@manifest['scholar_id']} not found"
 
       texts.each do |text|
-        if lessons_to_create(text).any? && !mapping("series:#{text['key']}") &&
-           Series.exists?(scholar_id: @manifest["scholar_id"], title: text["series_title"])
-          problems << "series title already used by this scholar: #{text['series_title']}"
+        if lessons_to_create(text).any? && !mapping("series:#{text['key']}")
+          problems.concat(series_title_problems(text["series_title"]))
         end
         books(text).each do |book|
           next if mapping("message:#{book['message_id']}")
@@ -67,14 +66,30 @@ module TelegramImport
       raise PreflightError, "preflight failed:\n  #{problems.join("\n  ")}" if problems.any?
     end
 
+    # The final_audio key is "all-audios/<scholar>/series/<series title>/<position>.mp3", so a
+    # title used before (even by a renamed or deleted series) would make AudioOptimizationJob
+    # find the key taken and skip.
+    def series_title_problems(title)
+      problems = []
+      if Series.exists?(scholar_id: @manifest["scholar_id"], title: title)
+        problems << "series title already used by this scholar: #{title}"
+      end
+      key_prefix = "all-audios/#{scholar&.full_name}/series/#{ActiveStorage::Blob.sanitize_sql_like(title)}/%"
+      if ActiveStorage::Blob.where("key LIKE ?", key_prefix).exists?
+        problems << "audio keys already exist for series title: #{title}"
+      end
+      problems
+    end
+
     def missing_files
       return [] if @dry_run && @files_dir.nil?
       return [ "FILES_DIR is required for a real run" ] if @files_dir.nil?
 
       texts.flat_map do |text|
-        lesson_ids = text["lessons"].select { needs_audio?(_1) }.map { _1["audio_message_id"] }
-        book_ids = books(text).select { needs_file?(_1) }.map { _1["message_id"] }
-        (lesson_ids + book_ids).reject { file_for(_1) }.map { "file missing for message #{_1} in #{@files_dir}" }
+        lessons = text["lessons"].select { needs_audio?(_1) }.map { [ _1["audio_message_id"], _1["audio_file"] ] }
+        files = books(text).select { needs_file?(_1) }.map { [ _1["message_id"], _1["file"] ] }
+        (lessons + files).reject { |id, name| file_for(id, name) }
+                         .map { |id, name| "file missing: #{id}_#{name} in #{@files_dir}" }
       end
     end
 
@@ -226,12 +241,13 @@ module TelegramImport
       TelegramImportRecord.create!(source: @source, external_id: external_id, record: record, outcome: outcome)
     end
 
-    def file_for(message_id)
-      @files_dir&.glob("#{message_id}_*")&.find(&:file?)
+    def file_for(message_id, filename)
+      path = @files_dir&.join("#{message_id}_#{filename}")
+      path if path&.file? && !path.empty?
     end
 
     def attach(attachment, message_id, filename, content_type)
-      path = file_for(message_id) or raise PreflightError, "file missing for message #{message_id}"
+      path = file_for(message_id, filename) or raise PreflightError, "file missing: #{message_id}_#{filename}"
       attachment.attach(io: path.open("rb"), filename: filename, content_type: content_type)
     end
 

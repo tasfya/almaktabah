@@ -86,6 +86,7 @@ module TelegramImport
 
         key = text_key_for(caption) or next
         following = @messages[index + 1, 3].select { _1["id"] - message["id"] <= 4 }
+                                            .take_while { !TextCleaner.clean(_1["text"]).start_with?("شرح") }
         audio = following.find { _1["file"].to_s.downcase.end_with?(".mp3") && _1["id"] - message["id"] <= 3 }
         video_id = following.lazy.map { VideoId.extract(_1["text"]) }.find(&:itself)
         next unless audio && video_id
@@ -182,9 +183,10 @@ module TelegramImport
 
     def exam_entry(row, index, last_lesson, announcement)
       raise Error, "exam #{index} comes before any lesson" unless last_lesson
-      if announcement && announcement["text_keys"] != row["text_keys"]
-        raise Error, "exam #{index}: PDF texts #{row['text_keys']} but post #{announcement['message_id']} " \
-                     "announces #{announcement['text_keys']}"
+      if announcement && (announcement["text_keys"] != row["text_keys"] ||
+                          announcement["opens_at"].to_date != row["opens_on"])
+        raise Error, "exam #{index}: PDF #{row['text_keys']} from #{row['opens_on']} but post " \
+                     "#{announcement['message_id']} announces #{announcement['text_keys']} on #{announcement['opens_at'].to_date}"
       end
 
       expected = @texts.find { _1["key"] == row["text_keys"].last }.fetch("expected_lessons")

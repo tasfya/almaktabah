@@ -63,6 +63,31 @@ RSpec.describe TelegramImport::ManifestBuilder do
     expect(manifest["warnings"]).to eq([ "schedule row qawaid 4 (2026-01-03) has no recording; dropped" ])
   end
 
+  context "with an edited export" do
+    let(:export) { JSON.parse(file_fixture("telegram_import/export_sample.json").read) }
+    let(:export_path) { Rails.root.join("tmp/telegram_import_export_#{Process.pid}.json").to_s }
+    let(:manifest) do
+      File.write(export_path, JSON.dump(export))
+      described_class.new(export_path: export_path, schedule_path: file_fixture("telegram_import/schedule_sample.txt").to_s,
+                          config_path: config_path).call
+    end
+
+    after { FileUtils.rm_f(export_path) }
+
+    it "never gives a caption without files the next lesson's audio and link" do
+      export["messages"].reject! { [ 111, 112 ].include?(_1["id"]) }
+      export["messages"].each { _1["id"] -= 2 if (113..115).cover?(_1["id"]) }
+
+      expect { manifest }.to raise_error(described_class::Error, "no complete recording for: qawaid 2")
+    end
+
+    it "raises when an exam post does not open on the PDF's date" do
+      export["messages"].find { _1["id"] == 124 }["date"] = Time.new(2025, 11, 26, 12, 0, 0, "+03:00").to_i
+
+      expect { manifest }.to raise_error(described_class::Error, /exam 1: .* from 2025-11-19 but post 124 .* on 2025-11-26/)
+    end
+  end
+
   context "when a text has fewer recordings than expected" do
     let(:config_path) do
       config = YAML.load_file(file_fixture("telegram_import/config.yml"))

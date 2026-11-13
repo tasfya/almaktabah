@@ -112,7 +112,7 @@ RSpec.describe TelegramImport::LibraryImporter do
     dir = telegram_fixture_files(manifest, skip: [ 111 ])
     before = counts
 
-    expect { import(dir: dir) }.to raise_error(TelegramImport::PreflightError, /file missing for message 111/)
+    expect { import(dir: dir) }.to raise_error(TelegramImport::PreflightError, /file missing: 111_002\.mp3/)
     expect(counts).to eq(before)
   ensure
     FileUtils.rm_rf(dir)
@@ -128,6 +128,49 @@ RSpec.describe TelegramImport::LibraryImporter do
     expect(report.completed).to eq("Lesson" => 1)
     expect(lesson.reload.audio).to be_attached
     expect(report.created.values.sum).to eq(0)
+  end
+
+  it "aborts before any write when audio keys already exist under a new series title" do
+    ActiveStorage::Blob.create_and_upload!(io: StringIO.new("x"), filename: "1.mp3",
+                                           key: "all-audios/#{scholar.full_name}/series/شرح الأصول الستة — برنامج/1.mp3")
+    before = counts
+
+    expect { import }.to raise_error(TelegramImport::PreflightError, /audio keys already exist for series title: شرح الأصول الستة — برنامج/)
+    expect(counts).to eq(before)
+  end
+
+  it "ignores a partial download whose name differs from the manifest's" do
+    dir = telegram_fixture_files(manifest, skip: [ 111 ])
+    FileUtils.cp(Rails.root.join("spec/files/audio.mp3"), dir.join("111_002.mp3.tmp"))
+
+    expect { import(dir: dir) }.to raise_error(TelegramImport::PreflightError, /file missing: 111_002\.mp3/)
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  it "requires FILES_DIR for a real run" do
+    expect { import(dir: nil) }.to raise_error(TelegramImport::PreflightError, /FILES_DIR is required/)
+  end
+
+  it "reports missing files in a dry run that has FILES_DIR, and writes nothing" do
+    dir = telegram_fixture_files(manifest, skip: [ 106 ])
+    before = counts
+
+    expect { import(dry_run: true, dir: dir) }.to raise_error(TelegramImport::PreflightError, /file missing: 106_/)
+    expect(counts).to eq(before)
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  it "attaches the missing file of a book it created in an interrupted run" do
+    import
+    book = TelegramImportRecord.lookup("t.me/fixture_channel", "message:106")
+    book.file.purge
+
+    report = import
+
+    expect(report.completed).to eq("Book" => 1)
+    expect(book.reload.file).to be_attached
   end
 
   it "writes, uploads and enqueues nothing in a dry run, and reports the same plan" do
