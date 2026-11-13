@@ -20,6 +20,10 @@ compose project and volume, never your dev index) and sets
 - The 10 slowest examples are listed after each run.
 - `fit` / `fdescribe` run only the focused examples locally; RuboCop's
   `RSpec/Focus` keeps them out of `main`.
+- **Uploads are per run.** Active Storage writes to `tmp/storage/run-<pid>`,
+  deleted when the suite ends (`spec/support/test_storage.rb`), so overlapping
+  runs in one worktree never touch each other's files. A killed run's
+  directory is swept by the next run.
 - **The network is off.** WebMock blocks every HTTP request except localhost
   (Typesense, the Capybara server). Stub external calls with
   `stub_request(:get, "https://...")`.
