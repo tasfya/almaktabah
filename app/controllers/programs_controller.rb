@@ -16,8 +16,8 @@ class ProgramsController < ApplicationController
 
     breadcrumb_for(@program.title, program_path(@program))
     @texts = @program.program_items.book.where(hidden: false).includes(:book)
-    @open_cohorts = @program.cohorts.order(:starts_on).select(&:enrollment_open?)
     @enrolled_cohort_ids = current_learner ? current_learner.enrollments.where(cohort: @program.cohorts).pluck(:cohort_id) : []
+    @cohorts = @program.cohorts.order(:starts_on).select { |cohort| @enrolled_cohort_ids.include?(cohort.id) || cohort.enrollment_open? }
     set_meta_tags(title: @program.title, description: @program.description.to_s.truncate(MetaTags.config.description_limit),
                   noindex: !@program.published?)
   end

@@ -78,6 +78,9 @@ RSpec.describe "Programs", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(response).to have_meta_tag("robots", a_string_including("noindex"))
+      create(:cohort, program: hidden)
+      get program_path(hidden)
+      expect(response.body).not_to include(program_enrollments_path(hidden))
     end
 
     it "lists open cohorts with an enroll button and hides closed ones" do
@@ -90,8 +93,8 @@ RSpec.describe "Programs", type: :request do
       expect(response.body).not_to include("دفعة مغلقة")
     end
 
-    it "links an enrolled learner to their cohort instead of the enroll button" do
-      cohort = create(:cohort, program: program)
+    it "links an enrolled learner to their cohort, even after enrollment closed" do
+      cohort = create(:cohort, program: program, enrollment_closes_at: 1.day.ago)
       create(:enrollment, learner: learner, cohort: cohort, domain: domain)
       sign_in learner
 
@@ -132,6 +135,16 @@ RSpec.describe "Programs", type: :request do
 
       expect(response).to redirect_to(learner_cohort_path(cohort))
       expect(Enrollment.count).to eq(1)
+    end
+
+    it "sends a learner already in a closed cohort to it, not to an alert" do
+      create(:enrollment, learner: learner, cohort: cohort, domain: domain)
+      cohort.update!(enrollment_closes_at: 1.minute.ago)
+      sign_in learner
+
+      post program_enrollments_path(program), params: { cohort_id: cohort.id }
+
+      expect(response).to redirect_to(learner_cohort_path(cohort))
     end
 
     it "refuses enrolling in a closed cohort" do

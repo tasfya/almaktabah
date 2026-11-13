@@ -5,12 +5,14 @@ class EnrollmentsController < ApplicationController
   def create
     program = Program.for_domain_id(@domain.id).published.friendly.find(params[:program_id])
     cohort = program.cohorts.find(params[:cohort_id])
+    return redirect_to learner_cohort_path(cohort) if current_learner.enrollments.exists?(cohort: cohort)
     return redirect_to program_path(program), alert: t("programs.enrollments.closed") unless cohort.enrollment_open?
 
-    enrollment = current_learner.enrollments.find_by(cohort: cohort)
-    enrollment ||= current_learner.enrollments.create!(cohort: cohort, domain: @domain)
-    redirect_to learner_cohort_path(cohort), notice: (t("programs.enrollments.enrolled") if enrollment.previously_new_record?)
-  rescue ActiveRecord::RecordNotUnique
+    current_learner.enrollments.create!(cohort: cohort, domain: @domain)
+    redirect_to learner_cohort_path(cohort), notice: t("programs.enrollments.enrolled")
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+    raise unless current_learner.enrollments.exists?(cohort: cohort)
+
     redirect_to learner_cohort_path(cohort)
   rescue ActiveRecord::RecordNotFound
     render_record_not_found(t("programs.not_found"), programs_path)

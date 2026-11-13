@@ -37,9 +37,9 @@
 
     <section>
       <h2 class="font-semibold mb-2"><%= t("programs.show.cohorts") %></h2>
-      <% if @open_cohorts.any? %>
+      <% if @cohorts.any? %>
         <ul class="space-y-3">
-          <% @open_cohorts.each do |cohort| %>
+          <% @cohorts.each do |cohort| %>
             <li class="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-base-200 p-4">
               <div>
                 <p class="font-semibold"><%= cohort.name %></p>
@@ -47,7 +47,7 @@
               </div>
               <% if @enrolled_cohort_ids.include?(cohort.id) %>
                 <%= link_to t("programs.show.continue"), learner_cohort_path(cohort), class: "btn btn-primary btn-sm" %>
-              <% else %>
+              <% elsif @program.published? %>
                 <%= button_to t("programs.show.enroll"), program_enrollments_path(@program, cohort_id: cohort.id),
                       class: "btn btn-primary btn-sm", data: { turbo_submits_with: t("programs.show.enroll") } %>
               <% end %>
