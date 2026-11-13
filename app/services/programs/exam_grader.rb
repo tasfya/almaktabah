@@ -33,12 +33,14 @@ module Programs
       questions = @exam_item.exam.questions.includes(:choices).to_a
       raise NotOpen if questions.empty?
 
+      # Floored, so a stored score at the pass mark means the exact ratio
+      # reached it (pass marks are whole percents).
       chosen = valid_choices(questions, answers)
       correct = chosen.count(&:correct?)
 
       ExamAttempt.transaction do
         attempt = ExamAttempt.create!(enrollment: @enrollment, exam: @exam_item.exam, started_at: @at, submitted_at: @at,
-                                      score_percent: (correct * 100.0 / questions.size).round)
+                                      score_percent: correct * 100 / questions.size)
         chosen.each { |choice| attempt.attempt_answers.create!(question_id: choice.question_id, choice: choice) }
         attempt
       end

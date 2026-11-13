@@ -59,6 +59,22 @@ RSpec.describe "Taking an exam", type: :request do
     expect(response.body).to include("الجمعة 21 نوفمبر، الساعة 10:00 م", questions.first.body)
   end
 
+  it "says how long the exam is, shows its description and wires the draft, counter and countdown" do
+    exam.update!(description: "يشمل رسالة القواعد الأربع")
+    tick_lesson
+
+    get learner_cohort_exam_path(cohort, exam)
+
+    page = Nokogiri::HTML(response.body)
+    expect(page.text).to include("3 أسئلة · محاولة واحدة", "يشمل رسالة القواعد الأربع")
+    form = page.at_css("form[data-controller=exam]")
+    expect(form["data-exam-key-value"]).to eq("exam-draft:#{enrollment.id}:#{exam.id}")
+    expect(form["data-exam-confirm-unanswered-value"]).to include("%{count}", "%{numbers}")
+    expect(page.css("fieldset[data-exam-target=question]").map { |f| f["data-number"] }).to eq(%w[1 2 3])
+    expect(page.at_css("[data-turbo-confirm]")).to be_nil
+    expect(page.at_css("[data-controller=countdown]")["data-countdown-closes-at-value"]).to eq((riyadh.local(2025, 11, 21, 22).to_f * 1000).to_i.to_s)
+  end
+
   it "keeps the form out of Turbo's page cache" do
     tick_lesson
     get learner_cohort_exam_path(cohort, exam)
@@ -80,7 +96,8 @@ RSpec.describe "Taking an exam", type: :request do
   it "explains why the exam is not ready (unticked earlier lessons)" do
     get learner_cohort_exam_path(cohort, exam)
 
-    expect(response.body).to include("أكمل سماع الدروس السابقة أولًا")
+    expect(response.body).to include("أكمل سماع الدروس السابقة أولًا، بقي درس واحد.")
+    expect(Nokogiri::HTML(response.body).at_css("a[href$='##{ActionView::RecordIdentifier.dom_id(lesson)}']").text).to eq("انتقل إلى الدرس 1")
     expect(response.body).not_to include('name="answers[')
   end
 
@@ -103,9 +120,11 @@ RSpec.describe "Taking an exam", type: :request do
 
     expect(response).to redirect_to(learner_cohort_exam_path(cohort, exam))
     follow_redirect!
-    expect(response.body).to include("67٪", questions.last.correct_choice.body)
+    expect(response.body).to include("66٪", questions.last.correct_choice.body)
     expect(response.body).to include("ناجح")
-    expect(ExamAttempt.last.score_percent).to eq(67)
+    expect(response.body).to include('data-exam-clear-value="true"')
+    expect(flash[:notice]).to be_nil
+    expect(ExamAttempt.last.score_percent).to eq(66)
   end
 
   it "tells a female learner she passed in the feminine" do
@@ -120,7 +139,7 @@ RSpec.describe "Taking an exam", type: :request do
     tick_lesson
     submit(answers(1))
     follow_redirect!
-    expect(response.body).to include("33٪", "لم تبلغ درجة النجاح")
+    expect(response.body).to include("33٪", "لم تبلغ درجة النجاح", "لن تُمنح الشهادة في هذه الدفعة")
   end
 
   it "a second submit shows the stored result, attempt count stays 1" do
@@ -130,6 +149,7 @@ RSpec.describe "Taking an exam", type: :request do
     submit(answers(0))
 
     expect(response).to redirect_to(learner_cohort_exam_path(cohort, exam))
+    expect(flash[:notice]).to eq("سبق أن سلّمت هذا الاختبار، وهذه نتيجتك وإجاباتك المسجّلة.")
     expect(ExamAttempt.count).to eq(1)
     expect(ExamAttempt.last.score_percent).to eq(100)
     follow_redirect!
@@ -159,11 +179,17 @@ RSpec.describe "Taking an exam", type: :request do
     tick_lesson
     travel_to riyadh.local(2025, 11, 21, 22)
 
-    submit(answers(3))
+    submit(answers(2))
 
-    expect(response).to redirect_to(learner_cohort_exam_path(cohort, exam))
-    expect(flash[:alert]).to eq("فات موعد الاختبار")
+    expect(response).to have_http_status(:unprocessable_content)
     expect(ExamAttempt.count).to eq(0)
+    page = Nokogiri::HTML(response.body)
+    expect(page.text.scan("انتهى وقت الاختبار").size).to eq(1)
+    expect(page.text).to include("الجمعة 21 نوفمبر، الساعة 10:00 م", questions.first.body)
+    expect(page.text).not_to include("فات موعد الاختبار")
+    expect(page.css("span.badge").count { |badge| badge.text == "إجابتك" }).to eq(3)
+    expect(page.text).not_to include("الإجابة الصحيحة")
+    expect(page.at_css("input[type=radio]")).to be_nil
   end
 
   it "ignores answers to questions of another exam" do
@@ -182,7 +208,8 @@ RSpec.describe "Taking an exam", type: :request do
       tick_lesson
 
       get learner_cohort_exam_path(cohort, exam)
-      expect(response.body).to include("غير متاح بعد")
+      expect(response.body).to include("لم تُنشر أسئلة هذا الاختبار بعد")
+      expect(response.body).not_to include("من الأربعاء 19 نوفمبر")
       expect(response.body).not_to include(submit_learner_cohort_exam_path(cohort, exam), "answers[")
 
       submit({})

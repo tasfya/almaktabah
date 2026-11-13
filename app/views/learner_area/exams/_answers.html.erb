@@ -1,0 +1,24 @@
+<%# locals: (questions:, chosen:, reveal:) %>
+<%# reveal: mark the correct choices (a graded attempt); otherwise only the learner's own. %>
+<ol class="flex flex-col gap-3">
+  <% questions.each_with_index do |question, index| %>
+    <li class="bg-base-100 border border-base-300 rounded-xl p-4">
+      <p class="font-semibold mb-2"><%= index + 1 %>. <%= question.body %></p>
+      <ul class="flex flex-col gap-1 text-sm">
+        <% question.choices.each do |choice| %>
+          <% mine = chosen[question.id] == choice.id %>
+          <% correct = reveal && choice.correct? %>
+          <li class="flex items-start gap-2 rounded-lg p-2 <%= "bg-success/10" if correct %> <%= "bg-error/10" if reveal && mine && !choice.correct? %> <%= "bg-primary/10" if mine && !reveal %>">
+            <span aria-hidden="true"><%= correct ? "✓" : (mine && reveal ? "✗" : "·") %></span>
+            <span class="flex-1"><%= choice.body %></span>
+            <% if mine %><span class="badge badge-sm badge-outline"><%= t("programs.exam.your_answer") %></span><% end %>
+            <% if correct %><span class="badge badge-sm badge-outline border-green-800 text-green-800"><%= t("programs.exam.correct_answer") %></span><% end %>
+          </li>
+        <% end %>
+      </ul>
+      <% unless chosen.key?(question.id) %>
+        <p class="text-xs text-red-700 mt-1"><%= learner_t("programs.exam.unanswered") %></p>
+      <% end %>
+    </li>
+  <% end %>
+</ol>

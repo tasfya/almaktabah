@@ -31,6 +31,28 @@ class Cohort < ApplicationRecord
     deadline.nil? || at < deadline
   end
 
+  # Removing the slots would hide ticked lessons and taken exams from their
+  # learners, so it is refused once anyone has made progress.
+  def clear_schedule!
+    if learner_progress?
+      errors.add(:base, :schedule_has_progress)
+      return false
+    end
+
+    cohort_slots.delete_all
+    true
+  end
+
+  def learner_progress?
+    LessonCompletion.joins(:enrollment).where(enrollments: { cohort_id: id }).exists? ||
+      ExamAttempt.joins(:enrollment).where(enrollments: { cohort_id: id }).exists?
+  end
+
+  # Exams scheduled here that cannot open because no question is written yet.
+  def exams_without_questions
+    Exam.where(id: cohort_slots.joins(:program_item).select("program_items.exam_id")).where.missing(:questions)
+  end
+
   private
 
   def slots_of_kind(kind)

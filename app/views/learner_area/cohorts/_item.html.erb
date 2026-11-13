@@ -4,15 +4,14 @@
 <% today_row = item.lesson? && slot.available_on == progress.today %>
 <li id="<%= dom_id(item) %>" class="flex flex-col gap-2 p-3 sm:p-4 scroll-mt-48 <%= "bg-primary/5 border-s-4 border-primary" if today_row %>">
   <% if item.exam? %>
-    <% state = progress.exam_state(item) %>
     <div class="flex items-start gap-3">
       <span class="text-xl leading-none" aria-hidden="true">📝</span>
       <div class="flex-1 min-w-0">
         <p class="font-semibold"><%= link_to exam_title(item), learner_cohort_exam_path(cohort, item.exam_id), class: "link link-hover" %></p>
-        <p class="text-sm text-base-content/80"><%= exam_window(slot, cohort, progress.today) %></p>
-        <p class="text-sm mt-1">
-          <span class="<%= state == :open ? "badge badge-success font-semibold" : "text-base-content/80" %>"><%= exam_status(progress, item, scores) %></span>
-        </p>
+        <% if item.exam.questions.any? %>
+          <p class="text-sm text-base-content/80"><%= exam_window(slot, cohort, progress.today) %></p>
+        <% end %>
+        <p class="text-sm mt-1"><%= exam_status(progress, item, scores) %></p>
       </div>
     </div>
   <% elsif item.book? %>

@@ -13,7 +13,7 @@ class Avo::Resources::Program < Avo::BaseResource
     field :description, as: :textarea
     field :published, as: :boolean, sortable: true
     field :published_at, as: :date_time, hide_on: :index
-    field :pass_mark, as: :number, min: 0, max: 100, help: "Minimum exam score (%) for a certificate"
+    field :pass_mark, as: :number, min: 0, max: 100, help: "Minimum exam score (%) for a certificate. A score passes when correct answers × 100 ≥ pass mark × questions. A change applies at once to every result shown to learners; certificates already issued stay."
     field :sites, as: :boolean_group, only_on: :forms,
       options: -> { ::Domain.order(:name).pluck(:id, :name).to_h { |id, name| [ id.to_s, name ] } },
       format_using: -> { record.domain_ids.to_h { |id| [ id.to_s, true ] } },

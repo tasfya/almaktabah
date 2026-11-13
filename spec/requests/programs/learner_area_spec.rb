@@ -131,14 +131,39 @@ RSpec.describe "Learner area", type: :request do
         get learner_cohort_path(cohort)
 
         row = Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(placeholder)}")
-        expect(row.text).to include("غير متاح بعد")
-        expect(row.text).not_to include("يُفتح في")
+        expect(row.text).to include("لم تُنشر أسئلة هذا الاختبار بعد")
+        expect(row.text).not_to include("يُفتح", "من الأربعاء")
       end
 
       it "shows the score of a submitted exam" do
         create(:exam_attempt, enrollment: enrollment, exam: exam.exam, score_percent: 67)
         get learner_cohort_path(cohort)
         expect(response.body).to include("نتيجتك 67٪")
+      end
+
+      it "says a failed exam failed and that the certificate is out of reach" do
+        create(:exam_attempt, enrollment: enrollment, exam: exam.exam, score_percent: 40)
+        get learner_cohort_path(cohort)
+
+        row = Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(exam)}")
+        expect(row.at_css(".text-red-700").text).to eq("نتيجتك 40٪ — لم تبلغ درجة النجاح (60٪)")
+        expect(response.body).to include("لن تُمنح الشهادة في هذه الدفعة بسبب نتيجة")
+      end
+
+      it "marks a passed exam as passed, with no certificate warning" do
+        create(:exam_attempt, enrollment: enrollment, exam: exam.exam, score_percent: 60)
+        get learner_cohort_path(cohort)
+
+        expect(response.body).to include("نتيجتك 60٪ — ناجح ✓")
+        expect(response.body).not_to include("لن تُمنح الشهادة")
+      end
+
+      it "counts a missed exam as 0%" do
+        travel_to riyadh.local(2025, 11, 22, 12)
+        get learner_cohort_path(cohort)
+
+        row = Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(exam)}")
+        expect(row.text).to include("فات موعد الاختبار — نتيجتك 0٪")
       end
 
       it "issues a certificate that became due when the page loads" do

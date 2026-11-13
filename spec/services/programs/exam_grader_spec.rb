@@ -23,17 +23,25 @@ RSpec.describe Programs::ExamGrader do
     described_class.new(enrollment, exam_item, at: at).submit!(answers)
   end
 
-  it "scores 2 of 3 correct as 67 and records the answers" do
+  it "scores 2 of 3 correct as 66 (floored) and records the answers" do
     first, second, third = questions
     attempt = submit({ first.id => correct(first), second.id => correct(second), third.id => wrong(third) })
 
-    expect(attempt.score_percent).to eq(67)
+    expect(attempt.score_percent).to eq(66)
     expect(attempt.submitted_at).to eq(during_window)
     expect(attempt.started_at).to eq(during_window)
     expect(attempt.attempt_answers.pluck(:question_id, :choice_id)).to contain_exactly(
       [ first.id, correct(first) ], [ second.id, correct(second) ], [ third.id, wrong(third) ]
     )
     expect(attempt.passed?(60)).to be(true)
+  end
+
+  it "does not pass a score just below the pass mark (2 of 3 is 66.7, short of 67)" do
+    first, second, third = questions
+    attempt = submit({ first.id => correct(first), second.id => correct(second), third.id => wrong(third) })
+
+    expect(attempt.passed?(67)).to be(false)
+    expect(attempt.passed?(66)).to be(true)
   end
 
   it "accepts the string ids a form posts" do

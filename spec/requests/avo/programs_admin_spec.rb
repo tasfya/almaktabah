@@ -383,6 +383,37 @@ RSpec.describe "Avo admin for programs", type: :request do
     end
   end
 
+  describe "Clear schedule" do
+    before { generate }
+
+    it "deletes the slots of a cohort without learner progress" do
+      run_action("cohorts", Avo::Actions::ClearCohortSchedule, cohort)
+
+      expect(cohort.cohort_slots.count).to eq(0)
+    end
+
+    it "refuses once a learner has progress and keeps the slots" do
+      enrollment = create(:enrollment, cohort: cohort, domain: domain)
+      create(:lesson_completion, enrollment: enrollment, program_item: lesson_items.first)
+
+      run_action("cohorts", Avo::Actions::ClearCohortSchedule, cohort)
+
+      expect(response.body).to include("bg-red-400")
+      expect(cohort.cohort_slots.count).to eq(program.program_items.count)
+    end
+  end
+
+  it "warns on a cohort that schedules an exam with no questions" do
+    generate
+    empty = create(:exam, program: program, title: "Unwritten exam")
+    create(:cohort_slot, :exam, cohort: cohort, program_item: create(:program_item, :exam, program: program, exam: empty))
+
+    get "/avo/resources/cohorts/#{cohort.id}"
+    expect(response.body).to include("No questions yet: Unwritten exam")
+    get "/avo/resources/cohorts"
+    expect(response.body).to include("No questions yet: Unwritten exam")
+  end
+
   describe "Shift schedule" do
     before { generate }
 

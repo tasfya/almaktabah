@@ -87,6 +87,53 @@ RSpec.describe Cohort, type: :model do
     expect(cohort.exam_slots).to eq([ exam ])
   end
 
+  describe "#clear_schedule!" do
+    let(:cohort) { create(:cohort) }
+
+    before do
+      create(:cohort_slot, cohort: cohort)
+      create(:cohort_slot, :exam, cohort: cohort)
+    end
+
+    it "deletes the slots while no learner has progress, enrollments or not" do
+      create(:enrollment, cohort: cohort)
+
+      expect(cohort.clear_schedule!).to be(true)
+      expect(cohort.cohort_slots.count).to eq(0)
+    end
+
+    it "is refused once a learner ticked a lesson" do
+      create(:lesson_completion, enrollment: create(:enrollment, cohort: cohort))
+
+      expect(cohort.clear_schedule!).to be(false)
+      expect(cohort.errors[:base]).to be_present
+      expect(cohort.cohort_slots.count).to eq(2)
+    end
+
+    it "is refused once a learner took an exam" do
+      create(:exam_attempt, enrollment: create(:enrollment, cohort: cohort))
+
+      expect(cohort.clear_schedule!).to be(false)
+      expect(cohort.cohort_slots.count).to eq(2)
+    end
+
+    it "ignores progress in another cohort" do
+      create(:lesson_completion)
+
+      expect(cohort.clear_schedule!).to be(true)
+    end
+  end
+
+  it "lists the scheduled exams that have no questions" do
+    cohort = create(:cohort)
+    empty = create(:cohort_slot, :exam, cohort: cohort).program_item.exam
+    ready = create(:exam, :with_questions, program: cohort.program)
+    create(:cohort_slot, :exam, cohort: cohort, program_item: create(:program_item, :exam, program: cohort.program, exam: ready))
+    create(:exam, program: cohort.program)
+
+    expect(cohort.exams_without_questions).to eq([ empty ])
+  end
+
   it "is destroyed with its program, slots included" do
     cohort = create(:cohort)
     create(:cohort_slot, cohort: cohort)
