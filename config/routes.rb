@@ -102,13 +102,16 @@ Rails.application.routes.draw do
     resources :programs, only: [ :index, :show ], path: I18n.t("routes.programs", default: "programs") do
       resources :enrollments, only: :create
     end
+    resources :certificates, only: :show, path: I18n.t("routes.certificates", default: "certificates")
 
     scope "my", module: "learner_area" do
       get "/", to: "dashboard#show", as: :learner_dashboard
       resources :cohorts, only: :show, as: :learner_cohorts do
         resources :completions, only: :create
         get "play/:program_item_id", to: "plays#show", as: :play
+        resource :reminders, only: :update
       end
+      resource :account, only: [ :show, :update, :destroy ], as: :learner_account
     end
   end
 

@@ -1,0 +1,80 @@
+<% site = @domain.title.presence || request.host %>
+<% valid = !@certificate.revoked? && @cohort %>
+<% content_for :head do %>
+  <style nonce="<%= content_security_policy_nonce %>">
+    @page { size: A4 landscape; margin: 0; }
+    .certificate-sheet { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    @media print {
+      html, body { background: #fff !important; }
+      body > *:not(main), main > *:not(.certificate-page), .certificate-screen { display: none !important; }
+      main { min-height: 0 !important; padding: 0 !important; }
+      .certificate-page { max-width: none !important; margin: 0 !important; padding: 0 !important; }
+      .certificate-sheet {
+        width: 297mm; height: 210mm; margin: 0; border-radius: 0; box-shadow: none;
+        background: #fff !important; color: #1f2937 !important;
+        break-inside: avoid; overflow: hidden;
+      }
+    }
+  </style>
+<% end %>
+
+<div class="certificate-page container mx-auto px-4 pb-10 max-w-5xl">
+  <% if valid %>
+    <section class="certificate-screen mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div role="status" class="alert alert-success flex-1">
+        <%= icon "check-badge", class: "size-6 shrink-0" %>
+        <div>
+          <p class="font-bold"><%= t("programs.certificate.valid") %> — <%= @certificate.full_name_snapshot %></p>
+          <p class="text-sm"><%= t("programs.certificate.valid_detail", site: site, date: l(@certificate.issued_at.to_date, format: :long)) %></p>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary" data-controller="print" data-action="print#print">
+        <%= icon "printer", class: "size-5" %>
+        <%= t("programs.certificate.print") %>
+      </button>
+    </section>
+
+    <% wording = "programs.certificate.body.#{@certificate.gender_snapshot}" %>
+    <article class="certificate-sheet bg-base-100 text-base-content rounded-box shadow-sm p-3 md:p-5 md:aspect-[297/210]">
+      <div class="h-full border-4 border-double border-primary/70 p-1">
+        <div class="h-full border border-primary/40 px-4 py-6 md:px-12 md:py-8 flex flex-col items-center justify-between gap-5 text-center">
+          <header class="flex flex-col items-center gap-2">
+            <%= image_tag @logo_url, alt: site, class: "h-12 md:h-16 w-auto" %>
+            <p class="text-sm md:text-base text-base-content/70"><%= site %></p>
+            <h1 class="text-3xl md:text-5xl font-bold text-primary leading-normal"><%= t("programs.certificate.heading") %></h1>
+          </header>
+
+          <div class="flex flex-col items-center gap-3 md:gap-4 leading-loose">
+            <p class="text-base md:text-xl"><%= t("programs.certificate.intro", site: site) %> <%= t("#{wording}.student") %></p>
+            <p class="text-2xl md:text-4xl font-bold font-title border-b-2 border-primary/30 px-6 pb-2"><%= @certificate.full_name_snapshot %></p>
+            <p class="text-base md:text-xl">
+              <%= t("#{wording}.completed") %>
+              <strong class="font-bold">«<%= @cohort.program.title %>»</strong>
+            </p>
+            <p class="text-sm md:text-lg text-base-content/80"><%= t("#{wording}.prayer") %></p>
+          </div>
+
+          <footer class="w-full flex flex-col gap-3">
+            <dl class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm md:text-base">
+              <div><dt class="text-base-content/60"><%= t("programs.certificate.cohort") %></dt><dd class="font-semibold"><%= @cohort.name %></dd></div>
+              <div><dt class="text-base-content/60"><%= t("programs.certificate.issued_on") %></dt><dd class="font-semibold"><%= l(@certificate.issued_at.to_date, format: :long) %></dd></div>
+              <div><dt class="text-base-content/60"><%= t("programs.certificate.number") %></dt><dd class="font-semibold" dir="ltr"><%= @certificate.number %></dd></div>
+            </dl>
+            <p class="text-xs md:text-sm text-base-content/60 break-all">
+              <%= t("programs.certificate.verify") %>
+              <span dir="ltr"><%= certificate_url(@certificate) %></span>
+            </p>
+          </footer>
+        </div>
+      </div>
+    </article>
+  <% else %>
+    <section role="alert" class="alert alert-error my-8 flex flex-col items-start gap-2 sm:flex-row sm:items-center">
+      <%= icon "x-circle", class: "size-8 shrink-0" %>
+      <div>
+        <h1 class="text-xl font-bold"><%= t("programs.certificate.revoked_title") %></h1>
+        <p><%= t("programs.certificate.revoked_detail", number: @certificate.number) %></p>
+      </div>
+    </section>
+  <% end %>
+</div>

@@ -9,4 +9,7 @@ class Enrollment < ApplicationRecord
   validates :cohort_id, uniqueness: { scope: :learner_id }
 
   before_validation { self.enrolled_at ||= Time.current }
+  # The number stays verifiable after the enrollment (or the learner's whole
+  # account) is deleted, and must then read as revoked.
+  before_destroy { Certificate.where(enrollment_id: id, revoked_at: nil).update_all(revoked_at: Time.current) }
 end

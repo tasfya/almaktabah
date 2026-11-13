@@ -1,0 +1,75 @@
+<div class="container mx-auto px-4 py-6 max-w-3xl flex flex-col gap-4">
+  <h1 class="text-2xl font-bold"><%= t("programs.account.title") %></h1>
+  <%= render "programs/flash" %>
+
+  <section class="card bg-base-100 border border-base-300 shadow-sm">
+    <div class="card-body gap-4">
+      <h2 class="card-title text-lg"><%= t("programs.account.profile") %></h2>
+      <%= form_with model: @learner, scope: :learner, url: learner_account_path, method: :patch, class: "flex flex-col gap-4" do |f| %>
+        <%= render "learners/shared/error_messages", resource: @learner %>
+        <div>
+          <%= f.label :full_name, t("programs.learner_auth.full_name"), class: "block text-sm font-semibold mb-1" %>
+          <%= f.text_field :full_name, required: true, autocomplete: "name", class: "input w-full" %>
+          <p class="text-xs opacity-70 mt-1"><%= t("programs.account.snapshot_note") %></p>
+        </div>
+        <fieldset>
+          <legend class="block text-sm font-semibold mb-1"><%= t("programs.learner_auth.gender") %></legend>
+          <div class="flex gap-6">
+            <% Learner.genders.each_key do |gender| %>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <%= f.radio_button :gender, gender, required: true, class: "radio radio-sm" %>
+                <span><%= t("programs.learner_auth.#{gender}") %></span>
+              </label>
+            <% end %>
+          </div>
+        </fieldset>
+        <p class="text-sm opacity-70" dir="ltr"><%= current_learner.email %></p>
+        <div><%= f.submit t("programs.account.save"), class: "btn btn-primary" %></div>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="card bg-base-100 border border-base-300 shadow-sm">
+    <div class="card-body gap-3">
+      <h2 class="card-title text-lg"><%= t("programs.account.reminders") %></h2>
+      <p class="text-sm opacity-70"><%= t("programs.account.reminders_hint") %></p>
+      <% if @enrollments.any? %>
+        <ul class="divide-y divide-base-300">
+          <% @enrollments.each do |enrollment| %>
+            <% cohort = enrollment.cohort %>
+            <li class="py-3 flex flex-wrap items-center justify-between gap-2">
+              <div class="min-w-0">
+                <p class="font-semibold"><%= cohort.program.title %></p>
+                <p class="text-sm opacity-70">
+                  <%= cohort.name %> ·
+                  <%= enrollment.reminders_enabled ? t("programs.account.reminders_on") : t("programs.account.reminders_off") %>
+                </p>
+              </div>
+              <%= button_to (enrollment.reminders_enabled ? t("programs.account.turn_off") : t("programs.account.turn_on")),
+                            learner_cohort_reminders_path(cohort), method: :patch,
+                            params: { reminders_enabled: enrollment.reminders_enabled ? "0" : "1" },
+                            class: "btn btn-sm #{enrollment.reminders_enabled ? "btn-ghost border-base-300" : "btn-primary"}" %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-sm opacity-70"><%= t("programs.account.no_enrollments") %></p>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="card bg-base-100 border border-error/40 shadow-sm">
+    <div class="card-body gap-3">
+      <h2 class="card-title text-lg text-error"><%= t("programs.account.delete") %></h2>
+      <p class="text-sm"><%= t("programs.account.delete_warning") %></p>
+      <%= form_with url: learner_account_path, method: :delete, class: "flex flex-col gap-3",
+                    data: { turbo_confirm: t("programs.account.delete_confirm") } do |f| %>
+        <div>
+          <%= f.label :current_password, t("programs.account.current_password"), class: "block text-sm font-semibold mb-1" %>
+          <%= f.password_field :current_password, required: true, autocomplete: "current-password", dir: "ltr", class: "input w-full" %>
+        </div>
+        <div><%= f.submit t("programs.account.delete"), class: "btn btn-error" %></div>
+      <% end %>
+    </div>
+  </section>
+</div>

@@ -1,7 +1,8 @@
 module Seeds
   # A small program for trying the learner pages in development: a matn, two
   # lessons released today, an exam whose window is open, and one lesson
-  # released tomorrow. Re-running moves the cohort to start today.
+  # released tomorrow. A second cohort has no exam and everything released
+  # today, to reach a certificate. Re-running moves both cohorts to today.
   class ProgramsSeeder
     TITLE = "برنامج تجريبي: القواعد الأربع"
 
@@ -13,6 +14,7 @@ module Seeds
       program = Program.find_by(title: TITLE) || build_program(lessons, book)
       program.update!(published: true, domains: [ domain ])
       schedule(program)
+      schedule_certificate_cohort(program)
       puts "✅ Dev program: #{program.title}"
     end
 
@@ -58,6 +60,21 @@ module Seeds
                               closes_at: zone.local(today.year, today.month, today.day, 22) + 6.days)
           end
           cohort.cohort_slots.create!(attributes)
+        end
+      end
+    end
+
+    # Every lesson released today and no exam slot (so no exam in this
+    # cohort): ticking the three lessons issues a certificate straight away.
+    def self.schedule_certificate_cohort(program)
+      cohort = program.cohorts.find_or_initialize_by(name: "دفعة تجربة الشهادة")
+      today = ActiveSupport::TimeZone[cohort.time_zone].today
+      cohort.update!(starts_on: today)
+
+      CohortSlot.transaction do
+        cohort.cohort_slots.delete_all
+        program.program_items.reject(&:exam?).each do |item|
+          cohort.cohort_slots.create!(program_item: item, available_on: today)
         end
       end
     end
