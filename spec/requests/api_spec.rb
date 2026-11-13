@@ -160,6 +160,29 @@ RSpec.describe "API", type: :request do
       )
     end
 
+    context "with lessons from a Telegram import" do
+      let!(:imported) { create(:lesson, youtube_url: "https://www.youtube.com/watch?v=ddddddddddd") }
+
+      before do
+        TelegramImportRecord.create!(source: "t.me/x", external_id: "message:1", record: imported, outcome: "created")
+        TelegramImportRecord.create!(source: "t.me/x", external_id: "message:2", record: pending, outcome: "linked")
+      end
+
+      it "leaves out lessons the import created, and keeps lessons it only linked" do
+        get "/api/lessons/pending_downloads", headers: auth_headers
+
+        expect(json["lessons"].map { _1["id"] }).to eq([ pending.id ])
+      end
+
+      it "lists them when TELEGRAM_IMPORT_VIDEO_DOWNLOADS is on" do
+        allow(Rails.configuration.x).to receive(:telegram_import_video_downloads).and_return(true)
+
+        get "/api/lessons/pending_downloads", headers: auth_headers
+
+        expect(json["lessons"].map { _1["id"] }).to contain_exactly(pending.id, imported.id)
+      end
+    end
+
     it "honours limit" do
       create(:lesson, youtube_url: "https://www.youtube.com/watch?v=ccccccccccc")
 

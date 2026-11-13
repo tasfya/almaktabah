@@ -1,5 +1,9 @@
 class AudioOptimizationJob < ApplicationJob
   queue_as :ffmpeg_queue
+  # Enqueued from Lesson's after_save while the audio attachment is still uncommitted;
+  # the queue lives in another database, so an immediate enqueue lets a worker run
+  # before the attachment exists and return without optimizing.
+  self.enqueue_after_transaction_commit = true
 
   def perform(item)
     return unless item.audio?

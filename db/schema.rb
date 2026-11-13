@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_13_131209) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_13_150000) do
   create_table "action_logs", force: :cascade do |t|
     t.string "action"
     t.integer "actionable_id", null: false
@@ -543,6 +543,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_131209) do
     t.index ["expires_at"], name: "index_solid_queue_semaphores_on_expires_at"
     t.index ["key", "value"], name: "index_solid_queue_semaphores_on_key_and_value"
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
+  end
+
+  create_table "telegram_import_records", force: :cascade do |t|
+    t.string "source", null: false
+    t.string "external_id", null: false
+    t.string "record_type", null: false
+    t.integer "record_id", null: false
+    t.string "outcome", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id"], name: "index_telegram_import_records_on_record"
+    t.index ["source", "external_id"], name: "index_telegram_import_records_on_source_and_external_id", unique: true
   end
 
   create_table "track_series", force: :cascade do |t|

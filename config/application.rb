@@ -66,5 +66,9 @@ module Almaktabah
     config.x.learners_enabled = !Rails.env.production? || ENV["LEARNERS_ENABLED"] == "1"
     # Without mail, learners are confirmed on create.
     config.x.learner_mail_enabled = ENV["LEARNER_MAIL_ENABLED"] == "1"
+
+    # Lessons created by a Telegram import are left out of the YouTube video
+    # download queue (GET /api/lessons/pending_downloads) unless this is set.
+    config.x.telegram_import_video_downloads = ENV["TELEGRAM_IMPORT_VIDEO_DOWNLOADS"] == "1"
   end
 end
