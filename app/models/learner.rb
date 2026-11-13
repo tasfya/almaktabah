@@ -5,6 +5,9 @@ class Learner < ApplicationRecord
   enum :gender, { male: 0, female: 1 }, validate: true
 
   belongs_to :domain, optional: true
+  # Prepended so it runs before the enrollments, and with them the link to
+  # the certificates, are destroyed.
+  before_destroy :erase_names_from_certificates, prepend: true
   has_many :enrollments, dependent: :destroy
 
   normalizes :full_name, with: ->(name) { name.squish }
@@ -18,7 +21,13 @@ class Learner < ApplicationRecord
     Learners::Mailer
   end
 
+  ERASED_NAME = "—".freeze
+
   protected
+
+  def erase_names_from_certificates
+    Certificate.where(enrollment_id: enrollments.select(:id)).update_all(full_name_snapshot: ERASED_NAME)
+  end
 
   # Mail goes out on behalf of the site the request came from, or the site the
   # learner signed up on when there is no request (console, jobs).

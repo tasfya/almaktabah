@@ -163,6 +163,14 @@ module LearnerAreaHelper
     tag.span(text, class: EXAM_STATUS_CLASSES.fetch(tone))
   end
 
+  # A certificate is served only on the site it was issued on, which may not be
+  # the site the learner is browsing when the program is shared.
+  def learner_certificate_link_target(certificate)
+    return certificate_path(certificate) if certificate.domain_id == @domain&.id
+
+    certificate_url(certificate, host: certificate.domain.host, port: nil)
+  end
+
   private
 
   def exam_result_status(score, pass_mark)
