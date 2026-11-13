@@ -11,15 +11,18 @@ module LearnerArea
     end
 
     def submit
-      attempt = Programs::ExamGrader.new(@enrollment, @item).submit!(answer_params)
+      # Graded at the request's own time, the one @progress and the rescue read,
+      # so a submit cannot be accepted or refused on two different clocks.
+      attempt = Programs::ExamGrader.new(@enrollment, @item, at: @progress.at).submit!(answer_params)
       # A stale tab submitting again lands on the answers the first one sent.
       notice = helpers.learner_t("programs.exam.already_submitted") unless attempt.previously_new_record?
       redirect_to learner_cohort_exam_path(@cohort, @exam), notice: notice
     rescue Programs::ExamGrader::NotOpen
       @state = @progress.exam_state(@item)
-      return redirect_to(learner_cohort_exam_path(@cohort, @exam), alert: t("programs.exam.closed")) unless @state == :missed
+      return refuse_late if @state == :missed
 
-      refuse_late
+      alert = @state == :not_ready ? helpers.learner_t("programs.exam.submit_not_ready") : t("programs.exam.closed")
+      redirect_to learner_cohort_exam_path(@cohort, @exam), alert: alert
     end
 
     private

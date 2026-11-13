@@ -130,6 +130,8 @@ RSpec.describe Cohort, type: :model do
     ready = create(:exam, :with_questions, program: cohort.program)
     create(:cohort_slot, :exam, cohort: cohort, program_item: create(:program_item, :exam, program: cohort.program, exam: ready))
     create(:exam, program: cohort.program)
+    hidden = create(:program_item, :exam, program: cohort.program, hidden: true)
+    create(:cohort_slot, :exam, cohort: cohort, program_item: hidden)
 
     expect(cohort.exams_without_questions).to eq([ empty ])
   end

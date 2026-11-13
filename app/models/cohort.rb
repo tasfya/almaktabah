@@ -50,7 +50,8 @@ class Cohort < ApplicationRecord
 
   # Exams scheduled here that cannot open because no question is written yet.
   def exams_without_questions
-    Exam.where(id: cohort_slots.joins(:program_item).select("program_items.exam_id")).where.missing(:questions)
+    scheduled = cohort_slots.joins(:program_item).where(program_items: { hidden: false }).select("program_items.exam_id")
+    Exam.where(id: scheduled).where.missing(:questions)
   end
 
   private

@@ -192,6 +192,31 @@ RSpec.describe "Taking an exam", type: :request do
     expect(page.at_css("input[type=radio]")).to be_nil
   end
 
+  it "grades a submit that arrived before the close at that time, even if grading runs after it" do
+    tick_lesson
+    close = riyadh.local(2025, 11, 21, 22)
+    travel_to close - 1
+    allow(Programs::ExamGrader).to receive(:new).and_wrap_original do |original, *args, **options|
+      travel_to close + 1
+      original.call(*args, **options)
+    end
+
+    submit(answers(3))
+
+    expect(response).to redirect_to(learner_cohort_exam_path(cohort, exam))
+    expect(ExamAttempt.last).to have_attributes(score_percent: 100, submitted_at: close - 1)
+  end
+
+  it "says why a submit is refused when an earlier lesson is no longer ticked" do
+    submit(answers(3))
+
+    expect(response).to redirect_to(learner_cohort_exam_path(cohort, exam))
+    expect(flash[:alert]).to start_with("لم تُسجَّل إجاباتك: أكمل سماع الدروس السابقة أولًا")
+    expect(ExamAttempt.count).to eq(0)
+    follow_redirect!
+    expect(response.body).not_to include('data-exam-clear-value="true"')
+  end
+
   it "ignores answers to questions of another exam" do
     tick_lesson
     other = create(:exam, :with_questions, program: program).questions.first
