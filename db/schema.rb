@@ -94,6 +94,41 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
     t.index ["title"], name: "index_books_on_title"
   end
 
+  create_table "choices", force: :cascade do |t|
+    t.integer "question_id", null: false
+    t.integer "position", null: false
+    t.text "body", null: false
+    t.boolean "correct", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_id", "position"], name: "index_choices_on_question_id_and_position", unique: true
+    t.index ["question_id"], name: "index_choices_on_question_id"
+  end
+
+  create_table "cohort_slots", force: :cascade do |t|
+    t.integer "cohort_id", null: false
+    t.integer "program_item_id", null: false
+    t.date "available_on", null: false
+    t.datetime "opens_at"
+    t.datetime "closes_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id", "available_on"], name: "index_cohort_slots_on_cohort_id_and_available_on"
+    t.index ["cohort_id", "program_item_id"], name: "index_cohort_slots_on_cohort_id_and_program_item_id", unique: true
+    t.index ["program_item_id"], name: "index_cohort_slots_on_program_item_id"
+  end
+
+  create_table "cohorts", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.string "name", null: false
+    t.date "starts_on", null: false
+    t.string "time_zone", default: "Asia/Riyadh", null: false
+    t.datetime "enrollment_closes_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["program_id"], name: "index_cohorts_on_program_id"
+  end
+
   create_table "domain_assignments", force: :cascade do |t|
     t.integer "assignable_id", null: false
     t.string "assignable_type", null: false
@@ -126,6 +161,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.index ["is_default"], name: "index_domains_on_is_default", unique: true, where: "is_default = true"
+  end
+
+  create_table "exams", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.string "title", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["program_id"], name: "index_exams_on_program_id"
   end
 
   create_table "fatwas", force: :cascade do |t|
@@ -243,6 +287,48 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
     t.index ["published"], name: "index_news_on_published"
     t.index ["scholar_id"], name: "index_news_on_scholar_id"
     t.index ["slug"], name: "index_news_on_slug", unique: true
+  end
+
+  create_table "program_items", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "position", null: false
+    t.integer "kind", null: false
+    t.integer "lesson_id"
+    t.integer "book_id"
+    t.integer "exam_id"
+    t.string "title_override"
+    t.boolean "hidden", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_program_items_on_book_id"
+    t.index ["exam_id"], name: "index_program_items_on_exam_id"
+    t.index ["lesson_id"], name: "index_program_items_on_lesson_id"
+    t.index ["program_id", "position"], name: "index_program_items_on_program_id_and_position", unique: true
+    t.index ["program_id"], name: "index_program_items_on_program_id"
+    t.check_constraint "(CASE WHEN lesson_id IS NULL THEN 0 ELSE 1 END + CASE WHEN book_id IS NULL THEN 0 ELSE 1 END + CASE WHEN exam_id IS NULL THEN 0 ELSE 1 END) = 1", name: "program_items_exactly_one_reference"
+  end
+
+  create_table "programs", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug"
+    t.text "description"
+    t.boolean "published", default: false, null: false
+    t.datetime "published_at"
+    t.integer "pass_mark", default: 60, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_programs_on_slug", unique: true
+  end
+
+  create_table "questions", force: :cascade do |t|
+    t.integer "exam_id", null: false
+    t.integer "position", null: false
+    t.text "body", null: false
+    t.integer "kind", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exam_id", "position"], name: "index_questions_on_exam_id_and_position", unique: true
+    t.index ["exam_id"], name: "index_questions_on_exam_id"
   end
 
   create_table "scholars", force: :cascade do |t|
@@ -446,11 +532,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "scholars", column: "author_id"
   add_foreign_key "books", "scholars", column: "author_id"
+  add_foreign_key "choices", "questions"
+  add_foreign_key "cohort_slots", "cohorts"
+  add_foreign_key "cohort_slots", "program_items"
+  add_foreign_key "cohorts", "programs"
   add_foreign_key "domain_assignments", "domains"
+  add_foreign_key "exams", "programs"
   add_foreign_key "fatwas", "scholars"
   add_foreign_key "lectures", "scholars"
   add_foreign_key "lessons", "series"
   add_foreign_key "news", "scholars"
+  add_foreign_key "program_items", "books"
+  add_foreign_key "program_items", "exams"
+  add_foreign_key "program_items", "lessons"
+  add_foreign_key "program_items", "programs"
+  add_foreign_key "questions", "exams"
   add_foreign_key "scholars", "domains", column: "default_domain_id"
   add_foreign_key "series", "scholars"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

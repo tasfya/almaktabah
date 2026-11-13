@@ -425,6 +425,8 @@ ar:
       messages:
         required: "يجب اختيار الشيخ"
         record_invalid: "حدث خطأ أثناء معالجة النموذج. يرجى التحقق من المدخلات وإعادة المحاولة."
+        exactly_one_correct: "يجب أن يكون للسؤال جواب صحيح واحد فقط"
+        two_for_true_false: "سؤال الصواب والخطأ له خياران فقط"
     models:
       lesson: "درس"
       fatwa: "فتوى"

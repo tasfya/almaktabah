@@ -11,9 +11,10 @@ module DomainAssignable
   end
 
   def ensure_default_domain_assignment
-    # Assign to scholar's default domain
-    if scholar&.default_domain.present? && !assigned_to?(scholar.default_domain)
-      assign_to(scholar.default_domain)
+    # Assign to scholar's default domain (programs have no scholar)
+    owner = respond_to?(:scholar) ? scholar : nil
+    if owner&.default_domain.present? && !assigned_to?(owner.default_domain)
+      assign_to(owner.default_domain)
     end
 
     # Also assign to global default domain
