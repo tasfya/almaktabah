@@ -108,6 +108,9 @@ Rails.application.routes.draw do
       resources :cohorts, only: :show, as: :learner_cohorts do
         resources :completions, only: :create
         get "play/:program_item_id", to: "plays#show", as: :play
+        resources :exams, only: :show do
+          post :submit, on: :member
+        end
       end
     end
   end

@@ -1,0 +1,73 @@
+<% slot = @progress.slot_for(@item) %>
+<div class="container mx-auto px-4 py-6 max-w-3xl">
+  <%= render "programs/flash" %>
+
+  <header class="mb-4">
+    <p class="text-sm text-base-content/60"><%= @cohort.program.title %></p>
+    <h1 class="text-xl md:text-2xl font-bold leading-tight mb-2"><%= t("programs.exam.label") %>: <%= @item.display_title %></h1>
+    <p class="text-sm text-base-content/70"><%= t("programs.exam.window", opens: cohort_time(slot.opens_at, @cohort), closes: cohort_time(slot.closes_at, @cohort)) %></p>
+  </header>
+
+  <% case @state %>
+  <% when :open %>
+    <div role="note" class="alert alert-warning alert-soft text-sm mb-4 flex flex-col items-start gap-1">
+      <span class="font-semibold"><%= t("programs.exam.deadline", time: cohort_time(slot.closes_at, @cohort)) %></span>
+      <span><%= t("programs.exam.one_attempt") %></span>
+    </div>
+    <%= form_with url: submit_learner_cohort_exam_path(@cohort, @exam), method: :post, class: "flex flex-col gap-4" do %>
+      <% @questions.each_with_index do |question, index| %>
+        <fieldset class="bg-base-100 border border-base-300 rounded-xl p-4">
+          <legend class="font-semibold px-1"><%= index + 1 %>. <%= question.body %></legend>
+          <div class="flex flex-col gap-2 mt-2">
+            <% question.choices.each do |choice| %>
+              <label class="flex items-start gap-3 cursor-pointer rounded-lg p-2 hover:bg-base-200 has-[:checked]:bg-primary/10">
+                <%= radio_button_tag "answers[#{question.id}]", choice.id, false, class: "radio radio-primary radio-sm mt-1" %>
+                <span><%= choice.body %></span>
+              </label>
+            <% end %>
+          </div>
+        </fieldset>
+      <% end %>
+      <%= button_tag t("programs.exam.submit"), type: "submit", class: "btn btn-primary w-full sm:w-auto sm:self-start",
+            data: { turbo_submits_with: t("programs.exam.submitting"), turbo_confirm: t("programs.exam.confirm") } %>
+    <% end %>
+  <% when :submitted %>
+    <% passed = @attempt.passed?(@cohort.program.pass_mark) %>
+    <div class="card bg-base-100 border border-base-300 shadow-sm mb-4">
+      <div class="card-body items-center text-center gap-1">
+        <p class="text-3xl font-bold"><%= t("programs.exam.result", score: @attempt.score_percent) %></p>
+        <p class="<%= passed ? "text-success" : "text-error" %> font-semibold">
+          <%= passed ? t("programs.exam.passed") : t("programs.exam.failed", pass_mark: @cohort.program.pass_mark) %>
+        </p>
+      </div>
+    </div>
+    <% chosen = @attempt.attempt_answers.to_h { |answer| [ answer.question_id, answer.choice_id ] } %>
+    <ol class="flex flex-col gap-3">
+      <% @questions.each_with_index do |question, index| %>
+        <li class="bg-base-100 border border-base-300 rounded-xl p-4">
+          <p class="font-semibold mb-2"><%= index + 1 %>. <%= question.body %></p>
+          <ul class="flex flex-col gap-1 text-sm">
+            <% question.choices.each do |choice| %>
+              <% mine = chosen[question.id] == choice.id %>
+              <li class="flex items-start gap-2 rounded-lg p-2 <%= "bg-success/10" if choice.correct? %> <%= "bg-error/10" if mine && !choice.correct? %>">
+                <span aria-hidden="true"><%= choice.correct? ? "✓" : (mine ? "✗" : "·") %></span>
+                <span class="flex-1"><%= choice.body %></span>
+                <% if mine %><span class="badge badge-sm badge-outline"><%= t("programs.exam.your_answer") %></span><% end %>
+                <% if choice.correct? %><span class="badge badge-sm badge-success badge-outline"><%= t("programs.exam.correct_answer") %></span><% end %>
+              </li>
+            <% end %>
+          </ul>
+          <% unless chosen.key?(question.id) %>
+            <p class="text-xs text-error mt-1"><%= t("programs.exam.unanswered") %></p>
+          <% end %>
+        </li>
+      <% end %>
+    </ol>
+  <% else %>
+    <div role="status" class="alert alert-soft"><%= exam_status(@progress, @item, {}) %></div>
+  <% end %>
+
+  <div class="mt-6">
+    <%= link_to t("programs.exam.back"), learner_cohort_path(@cohort), class: "btn btn-ghost btn-sm" %>
+  </div>
+</div>
