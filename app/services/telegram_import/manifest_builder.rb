@@ -30,6 +30,7 @@ module TelegramImport
         "source" => @config.fetch("source"),
         "scholar_id" => @config.fetch("scholar_id"),
         "matn_author_name" => @config.fetch("matn_author_name"),
+        "program" => @config["program"],
         "export_last_message_id" => @messages.last&.fetch("id"),
         "texts" => @texts.map { |text| text_entry(text, lessons.fetch(text["key"])) },
         "schedule" => schedule,

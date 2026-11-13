@@ -34,3 +34,16 @@ namespace :telegram_import do
     ).call
   end
 end
+
+namespace :telegram_import do
+  desc "Build the manifest's Program, items and cohort from imported records. Dry run unless DRY_RUN=0. " \
+       "ENV: MANIFEST, ONLY=key,key (texts in program order), DRY_RUN"
+  task program: :environment do
+    manifest = JSON.parse(File.read(ENV.fetch("MANIFEST", "data/imports/mtoon_altawheed/manifest.json")))
+    TelegramImport::ProgramBuilder.new(
+      manifest: manifest,
+      only: ENV.fetch("ONLY", "").split(","),
+      dry_run: ENV.fetch("DRY_RUN", "1") != "0"
+    ).call
+  end
+end

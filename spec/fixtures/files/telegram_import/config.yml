@@ -4,6 +4,11 @@ matn_author_name: محمد بن عبد الوهاب
 cycle_start_message_id: 100
 previous_cycle_start_message_id: 50
 schedule_start_year: 2025
+program:
+  title: برنامج تجريبي
+  description: وصف البرنامج
+  cohort_name: ١٤٤٧–١٤٤٨
+  time_zone: Asia/Riyadh
 title_overrides:
   66: تفريغ شرح الأصول الستة الدرس 3
 texts:
