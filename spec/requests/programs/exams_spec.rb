@@ -124,6 +124,27 @@ RSpec.describe "Taking an exam", type: :request do
     expect(response).to redirect_to(learner_cohort_exam_path(cohort, exam))
     expect(ExamAttempt.count).to eq(1)
     expect(ExamAttempt.last.score_percent).to eq(100)
+    follow_redirect!
+    expect(response.body).to include("نتيجتك 100٪")
+  end
+
+  it "accepts a submit at 21:59 Riyadh on the closing day" do
+    tick_lesson
+    travel_to riyadh.local(2025, 11, 21, 21, 59)
+
+    submit(answers(3))
+
+    expect(ExamAttempt.last.score_percent).to eq(100)
+  end
+
+  it "ignores a choice taken from another question of the same exam" do
+    tick_lesson
+    first, second, = questions
+
+    submit({ first.id.to_s => second.correct_choice.id.to_s })
+
+    expect(ExamAttempt.last).to have_attributes(score_percent: 0)
+    expect(ExamAttempt.last.attempt_answers).to be_empty
   end
 
   it "refuses a submit after closing time" do
@@ -133,7 +154,7 @@ RSpec.describe "Taking an exam", type: :request do
     submit(answers(3))
 
     expect(response).to redirect_to(learner_cohort_exam_path(cohort, exam))
-    expect(flash[:alert]).to be_present
+    expect(flash[:alert]).to eq("فات موعد الاختبار")
     expect(ExamAttempt.count).to eq(0)
   end
 
@@ -177,6 +198,23 @@ RSpec.describe "Taking an exam", type: :request do
     get learner_cohort_exam_path(cohort, unscheduled)
 
     expect(response).to have_http_status(:not_found)
+  end
+
+  it "returns not found for a hidden exam" do
+    exam_item.update!(hidden: true)
+    get learner_cohort_exam_path(cohort, exam)
+    expect(response).to have_http_status(:not_found)
+  end
+
+  it "returns not found for an exam of a program on another site" do
+    program.update!(domains: [ other_domain ])
+
+    get learner_cohort_exam_path(cohort, exam)
+    expect(response).to have_http_status(:not_found)
+
+    submit(answers(3))
+    expect(response).to have_http_status(:not_found)
+    expect(ExamAttempt.count).to eq(0)
   end
 
   it "returns not found for another learner's cohort" do

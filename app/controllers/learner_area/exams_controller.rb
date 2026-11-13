@@ -16,7 +16,8 @@ module LearnerArea
       Programs::ExamGrader.new(@enrollment, @item).submit!(answer_params)
       redirect_to learner_cohort_exam_path(@cohort, @exam)
     rescue Programs::ExamGrader::NotOpen
-      redirect_to learner_cohort_exam_path(@cohort, @exam), alert: t("programs.exam.closed")
+      reason = @progress.exam_state(@item) == :missed ? t("programs.exam.missed") : t("programs.exam.closed")
+      redirect_to learner_cohort_exam_path(@cohort, @exam), alert: reason
     end
 
     private
