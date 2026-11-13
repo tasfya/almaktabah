@@ -16,6 +16,11 @@ RSpec.describe Program, type: :model do
     expect(create(:program).domains).to eq([ default ])
   end
 
+  it "saves with no domain when there is no global default" do
+    create(:domain)
+    expect(create(:program).domains).to be_empty
+  end
+
   it "does not cascade a domain assignment to its lessons" do
     site = create(:domain)
     item = create(:program_item, :lesson)
