@@ -104,6 +104,9 @@ Rails.application.routes.draw do
     end
     resources :certificates, only: :show, path: I18n.t("routes.certificates", default: "certificates")
 
+    get "reminders/off/:token", to: "reminder_opt_outs#show", as: :reminder_opt_out
+    post "reminders/off/:token", to: "reminder_opt_outs#create"
+
     scope "my", module: "learner_area" do
       get "/", to: "dashboard#show", as: :learner_dashboard
       resources :cohorts, only: :show, as: :learner_cohorts do

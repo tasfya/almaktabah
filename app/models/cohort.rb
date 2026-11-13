@@ -6,6 +6,7 @@ class Cohort < ApplicationRecord
 
   validates :name, :starts_on, presence: true
   validate :known_time_zone
+  validate :time_zone_kept_while_scheduled, on: :update
 
   def today(at = Time.current)
     at.in_time_zone(time_zone).to_date
@@ -34,6 +35,13 @@ class Cohort < ApplicationRecord
 
   def slots_of_kind(kind)
     cohort_slots.joins(:program_item).merge(ProgramItem.where(kind: kind).order(:position))
+  end
+
+  # Lesson dates are read in the cohort's zone while exam windows are stored
+  # instants, so a new zone would move one and not the other. Regenerate the
+  # schedule instead.
+  def time_zone_kept_while_scheduled
+    errors.add(:time_zone, :kept_while_scheduled) if will_save_change_to_time_zone? && cohort_slots.exists?
   end
 
   def known_time_zone

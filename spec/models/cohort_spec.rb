@@ -12,6 +12,19 @@ RSpec.describe Cohort, type: :model do
     expect(Cohort.new.time_zone).to eq("Asia/Riyadh")
   end
 
+  it "refuses a time zone change once it has slots, which were placed in the old zone" do
+    cohort = create(:cohort_slot).cohort
+
+    expect(cohort.update(time_zone: "Europe/London")).to be(false)
+    expect(cohort.errors).to be_of_kind(:time_zone, :kept_while_scheduled)
+    expect(cohort.reload.time_zone).to eq("Asia/Riyadh")
+  end
+
+  it "accepts a time zone change before any slot exists" do
+    cohort = create(:cohort)
+    expect(cohort.update(time_zone: "Europe/London")).to be(true)
+  end
+
   it "rejects an unknown time zone" do
     expect(build(:cohort, time_zone: "Mars/Olympus")).not_to be_valid
   end

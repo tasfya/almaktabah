@@ -67,6 +67,7 @@ RSpec.describe "Programs", type: :request do
       allow_any_instance_of(ProgramsController).to receive(:perform_caching).and_return(true) # rubocop:disable RSpec/AnyInstance
       get program_path(program)
       expect(response.headers["Cache-Control"]).not_to include("public")
+      expect(response).to have_meta_tag("turbo-cache-control", "no-cache")
     end
 
     it "shows the not-found page for a program on another domain" do
