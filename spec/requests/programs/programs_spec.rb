@@ -48,7 +48,7 @@ RSpec.describe "Programs", type: :request do
       get program_path(program)
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("متون التوحيد", "شرح المتون", "متن القواعد الأربع", lesson.series.scholar.name)
+      expect(response.body).to include("متون التوحيد", "شرح المتون", "متن القواعد الأربع", ERB::Util.h(lesson.series.scholar.name))
       expect(response.body).not_to include("تفريغ سري")
     end
 
@@ -62,7 +62,7 @@ RSpec.describe "Programs", type: :request do
       foreign = program_on(other_domain)
       get program_path(foreign)
       expect(response).to have_http_status(:not_found)
-      expect(response.body).not_to include(foreign.title)
+      expect(response.body).not_to include(ERB::Util.h(foreign.title))
     end
 
     it "shows the not-found page for an unpublished program to the public" do

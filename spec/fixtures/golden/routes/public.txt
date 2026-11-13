@@ -48,6 +48,8 @@ GET /%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%85%D8%AC/:id(.:format) programs#show
 GET /my(.:format) learner_area/dashboard#show
 POST /my/cohorts/:learner_cohort_id/completions(.:format) learner_area/completions#create
 GET /my/cohorts/:learner_cohort_id/play/:program_item_id(.:format) learner_area/plays#show
+POST /my/cohorts/:learner_cohort_id/exams/:id/submit(.:format) learner_area/exams#submit
+GET /my/cohorts/:learner_cohort_id/exams/:id(.:format) learner_area/exams#show
 GET /my/cohorts/:id(.:format) learner_area/cohorts#show
 GET / home#index
 GET /podcasts/feed(.:format) podcasts#feed format=xml

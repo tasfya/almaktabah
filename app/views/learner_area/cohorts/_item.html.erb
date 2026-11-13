@@ -7,7 +7,7 @@
     <div class="flex items-start gap-3">
       <span class="text-xl leading-none" aria-hidden="true">📝</span>
       <div class="flex-1 min-w-0">
-        <p class="font-semibold"><%= t("programs.exam.label") %>: <%= item.display_title %></p>
+        <p class="font-semibold"><%= link_to "#{t("programs.exam.label")}: #{item.display_title}", learner_cohort_exam_path(cohort, item.exam_id), class: "link link-hover" %></p>
         <p class="text-sm text-base-content/70"><%= t("programs.exam.window", opens: cohort_time(slot.opens_at, cohort), closes: cohort_time(slot.closes_at, cohort)) %></p>
         <p class="text-sm mt-1 <%= state == :open ? "text-success font-semibold" : "text-base-content/80" %>"><%= exam_status(progress, item, scores) %></p>
       </div>
