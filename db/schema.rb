@@ -545,6 +545,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_131209) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "telegram_import_records", force: :cascade do |t|
+    t.string "source", null: false
+    t.string "external_id", null: false
+    t.string "record_type", null: false
+    t.integer "record_id", null: false
+    t.string "outcome", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id"], name: "index_telegram_import_records_on_record"
+    t.index ["source", "external_id"], name: "index_telegram_import_records_on_source_and_external_id", unique: true
+  end
+
   create_table "track_series", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "position"
