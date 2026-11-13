@@ -8,22 +8,23 @@ class Avo::Resources::Program < Avo::BaseResource
 
   def fields
     field :id, as: :id
-    field :title, as: :text, sortable: true
-    field :slug, as: :text, only_on: :show
-    field :description, as: :textarea
-    field :published, as: :boolean, sortable: true
-    field :published_at, as: :date_time, hide_on: :index
-    field :pass_mark, as: :number, min: 0, max: 100, help: "Minimum exam score (%) for a certificate. A score passes when correct answers × 100 ≥ pass mark × questions. A change applies at once to every result shown to learners; certificates already issued stay."
+    field :title, as: :text, name: "العنوان", sortable: true
+    field :slug, as: :text, name: "المعرّف في الرابط", only_on: :show
+    field :description, as: :textarea, name: "الوصف"
+    field :published, as: :boolean, name: "منشور", sortable: true
+    field :published_at, as: :date_time, name: "تاريخ النشر", hide_on: :index
+    field :pass_mark, as: :number, min: 0, max: 100, name: "درجة النجاح (%)",
+      help: "أدنى نسبة إجابات صحيحة في كل اختبار للحصول على الشهادة؛ مثال: 60 = 60٪ من الإجابات صحيحة على الأقل. يسري التغيير فورًا على كل النتائج المعروضة للطلاب، وتبقى الشهادات الصادرة كما هي."
     field :sites, as: :boolean_group, only_on: :forms,
       options: -> { ::Domain.order(:name).pluck(:id, :name).to_h { |id, name| [ id.to_s, name ] } },
       format_using: -> { record.domain_ids.to_h { |id| [ id.to_s, true ] } },
-      help: "The sites that list and serve this program"
-    field :site_names, as: :text, name: "Sites", only_on: :show do
+      name: "المواقع", help: "المواقع التي تعرض هذا البرنامج"
+    field :site_names, as: :text, name: "المواقع", only_on: :show do
       record.domains.map(&:name).to_sentence
     end
-    field :program_items, as: :has_many, name: "Items", attach_scope: -> { query.none }
-    field :exams, as: :has_many, attach_scope: -> { query.none }
-    field :cohorts, as: :has_many, attach_scope: -> { query.none }
+    field :program_items, as: :has_many, translation_key: "avo.resource_translations.program_item", attach_scope: -> { query.none }
+    field :exams, as: :has_many, translation_key: "avo.resource_translations.exam", attach_scope: -> { query.none }
+    field :cohorts, as: :has_many, translation_key: "avo.resource_translations.cohort", attach_scope: -> { query.none }
   end
 
   # Site ids submitted by the form, or nil when it sent none. The checkboxes

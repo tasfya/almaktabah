@@ -7,11 +7,11 @@ class Avo::Resources::CohortSlot < Avo::BaseResource
 
   def fields
     field :id, as: :id, hide_on: :index
-    field :cohort, as: :belongs_to
-    field :program_item, as: :belongs_to, name: "Item",
+    field :cohort, as: :belongs_to, name: "الدفعة"
+    field :program_item, as: :belongs_to, name: "العنصر",
       attach_scope: -> { parent.cohort ? query.where(program_id: parent.cohort.program_id) : query.none }
-    field :available_on, as: :date, sortable: true
-    field :opens_at, as: :date_time, timezone: -> { record.cohort&.time_zone }, help: "Exams only"
-    field :closes_at, as: :date_time, timezone: -> { record.cohort&.time_zone }, help: "Exams only"
+    field :available_on, as: :date, name: "متاح من", sortable: true
+    field :opens_at, as: :date_time, name: "يُفتح في", timezone: -> { record.cohort&.time_zone }, help: "للاختبارات فقط"
+    field :closes_at, as: :date_time, name: "يُغلق في", timezone: -> { record.cohort&.time_zone }, help: "للاختبارات فقط"
   end
 end

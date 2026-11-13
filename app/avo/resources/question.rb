@@ -11,24 +11,24 @@ class Avo::Resources::Question < Avo::BaseResource
 
   def fields
     field :id, as: :id, hide_on: :index
-    field :exam, as: :belongs_to, disabled: -> { record&.persisted? }
-    field :position, as: :number, sortable: true, default: -> {
+    field :exam, as: :belongs_to, name: "الاختبار", disabled: -> { record&.persisted? }
+    field :position, as: :number, name: "الترتيب", sortable: true, default: -> {
       exam = ::Exam.find_by(id: params[:via_record_id]) if params[:via_record_id].present?
       (exam&.questions&.maximum(:position) || 0) + 1
     }
-    field :kind, as: :select, enum: ::Question.kinds
-    field :body, as: :textarea, show_on: :index
-    field :choices, as: :text, only_on: %i[index show], as_html: true do
+    field :kind, as: :select, name: "النوع", enum: ::Question.kinds
+    field :body, as: :textarea, name: "نص السؤال", show_on: :index
+    field :choices, as: :text, name: "الخيارات", only_on: %i[index show], as_html: true do
       record.choices.map { |choice| ERB::Util.h("#{choice.correct? ? "✓" : "·"} #{choice.body}") }.join("<br>").html_safe
     end
 
     CHOICE_SLOTS.times do |index|
-      field :"choice_#{index + 1}", as: :text, only_on: :forms, name: "Choice #{index + 1}",
+      field :"choice_#{index + 1}", as: :text, only_on: :forms, name: "الخيار #{index + 1}",
         format_using: -> { record.choices[index]&.body },
-        help: index.zero? ? "Leave blank to remove a choice. True/false questions default to #{TRUE_FALSE_BODIES.join(" / ")}." : nil
+        help: index.zero? ? "اترك الخيار فارغًا لحذفه. أسئلة الصواب والخطأ تأخذ تلقائيًا #{TRUE_FALSE_BODIES.join(" / ")}." : nil
     end
-    field :correct_slot, as: :select, only_on: :forms, name: "Correct choice",
-      options: (1..CHOICE_SLOTS).to_h { |n| [ "Choice #{n}", n.to_s ] },
+    field :correct_slot, as: :select, only_on: :forms, name: "الخيار الصحيح",
+      options: (1..CHOICE_SLOTS).to_h { |n| [ "الخيار #{n}", n.to_s ] },
       include_blank: true,
       format_using: -> { (record.choices.index(&:correct?)&.+(1))&.to_s }
   end

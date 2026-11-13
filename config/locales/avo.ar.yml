@@ -1,0 +1,30 @@
+ar:
+  avo:
+    resource_translations:
+      program:
+        one: "برنامج"
+        other: "برامج"
+      program_item:
+        one: "عنصر"
+        other: "عناصر"
+      exam:
+        one: "اختبار"
+        other: "اختبارات"
+      question:
+        one: "سؤال"
+        other: "أسئلة"
+      cohort:
+        one: "دفعة"
+        other: "دفعات"
+      cohort_slot:
+        one: "موعد"
+        other: "مواعيد"
+      learner:
+        one: "طالب"
+        other: "طلاب"
+      enrollment:
+        one: "تسجيل"
+        other: "تسجيلات"
+      certificate:
+        one: "شهادة"
+        other: "شهادات"

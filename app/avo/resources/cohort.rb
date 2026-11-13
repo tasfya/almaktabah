@@ -5,21 +5,26 @@ class Avo::Resources::Cohort < Avo::BaseResource
 
   def fields
     field :id, as: :id
-    field :program, as: :belongs_to, disabled: -> { record&.persisted? }
-    field :name, as: :text, sortable: true
-    field :starts_on, as: :date, sortable: true
-    field :time_zone, as: :select, options: -> { ActiveSupport::TimeZone.all.map { |zone| [ zone.to_s, zone.tzinfo.name ] }.uniq(&:last) },
-      default: "Asia/Riyadh"
-    field :enrollment_closes_at, as: :date_time, timezone: -> { record.time_zone },
-      help: "Optional override. By default enrollment closes when the first exam window closes."
-    field :enrollment_deadline, as: :date_time, only_on: :show, timezone: -> { record.time_zone }
-    field :exam_warning, as: :text, only_on: %i[index show], name: "Warning",
-      help: "Exams scheduled in this cohort that have no questions yet: they never open and block every certificate." do
+    field :program, as: :belongs_to, name: "البرنامج", disabled: -> { record&.persisted? }
+    field :name, as: :text, name: "الاسم", sortable: true
+    field :exam_warning, as: :text, only_on: :index, name: "تنبيه", as_html: true do
       titles = record.exams_without_questions.pluck(:title)
-      "No questions yet: #{titles.join(", ")}" if titles.any?
+      Avo::WarningMarkup.badge("اختبار بلا أسئلة", title: titles.join("، ")) if titles.any?
     end
-    field :cohort_slots, as: :has_many, name: "Schedule", attach_scope: -> { query.none }
-    field :enrollments, as: :has_many, attach_scope: -> { query.none }
+    field :exam_warning_detail, as: :text, only_on: :show, name: "تنبيه", as_html: true,
+      visible: -> { resource.record.exams_without_questions.exists? } do
+      titles = record.exams_without_questions.pluck(:title).map { |title| "«#{title}»" }.join("، ")
+      Avo::WarningMarkup.alert("اختبارات بلا أسئلة: #{titles}. لا تُفتح أبدًا، ولا يحصل أي طالب في هذه الدفعة على شهادة حتى تُكتب أسئلتها.")
+    end
+    field :starts_on, as: :date, name: "تاريخ البداية", sortable: true
+    field :time_zone, as: :select, name: "المنطقة الزمنية",
+      options: -> { ActiveSupport::TimeZone.all.map { |zone| [ zone.to_s, zone.tzinfo.name ] }.uniq(&:last) },
+      default: "Asia/Riyadh"
+    field :enrollment_closes_at, as: :date_time, name: "إغلاق التسجيل يدويًا (اختياري)", timezone: -> { record.time_zone },
+      help: "اتركه فارغًا ليُغلق التسجيل عند إغلاق أول نافذة اختبار."
+    field :enrollment_deadline, as: :date_time, only_on: :show, name: "موعد إغلاق التسجيل المطبَّق", timezone: -> { record.time_zone }
+    field :cohort_slots, as: :has_many, translation_key: "avo.resource_translations.cohort_slot", attach_scope: -> { query.none }
+    field :enrollments, as: :has_many, translation_key: "avo.resource_translations.enrollment", attach_scope: -> { query.none }
   end
 
   def actions

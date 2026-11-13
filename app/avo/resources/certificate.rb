@@ -1,6 +1,6 @@
 class Avo::Resources::Certificate < Avo::BaseResource
   self.title = :number
-  self.includes = [ :domain ]
+  self.includes = [ :domain, { enrollment: { cohort: :program } } ]
   self.search = {
     query: -> {
       term = "%#{ActiveRecord::Base.sanitize_sql_like(params[:q].to_s)}%"
@@ -18,13 +18,19 @@ class Avo::Resources::Certificate < Avo::BaseResource
 
   def fields
     field :id, as: :id
-    field :number, as: :text, sortable: true
-    field :full_name_snapshot, as: :text, name: "Name"
-    field :gender_snapshot, as: :text, name: "Gender", hide_on: :index
-    field :issued_at, as: :date_time, sortable: true
-    field :revoked_at, as: :date_time, sortable: true
-    field :enrollment, as: :belongs_to
-    field :domain, as: :belongs_to, name: "Site"
+    field :number, as: :text, name: "رقم الشهادة", sortable: true
+    field :full_name_snapshot, as: :text, name: "الاسم"
+    field :gender_snapshot, as: :text, name: "الجنس", hide_on: :index
+    field :program_title, as: :text, name: "البرنامج" do
+      record.enrollment&.cohort&.program&.title
+    end
+    field :cohort_name, as: :text, name: "الدفعة" do
+      record.enrollment&.cohort&.name
+    end
+    field :issued_at, as: :date_time, name: "تاريخ الإصدار", sortable: true
+    field :revoked_at, as: :date_time, name: "تاريخ الإلغاء", sortable: true
+    field :enrollment, as: :belongs_to, name: "التسجيل", hide_on: :index
+    field :domain, as: :belongs_to, name: "الموقع"
   end
 
   def actions
