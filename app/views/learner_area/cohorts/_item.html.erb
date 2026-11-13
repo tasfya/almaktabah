@@ -1,0 +1,56 @@
+<%# locals: (item:, progress:, cohort:, scores:) %>
+<li id="<%= dom_id(item) %>" class="flex flex-col gap-2 p-3 sm:p-4">
+  <% available = progress.available?(item) %>
+  <% if item.exam? %>
+    <% state = progress.exam_state(item) %>
+    <% slot = progress.slot_for(item) %>
+    <div class="flex items-start gap-3">
+      <span class="text-xl leading-none" aria-hidden="true">📝</span>
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold"><%= t("programs.exam.label") %>: <%= item.display_title %></p>
+        <p class="text-sm text-base-content/70"><%= t("programs.exam.window", opens: cohort_time(slot.opens_at, cohort), closes: cohort_time(slot.closes_at, cohort)) %></p>
+        <p class="text-sm mt-1 <%= state == :open ? "text-success font-semibold" : "text-base-content/80" %>"><%= exam_status(progress, item, scores) %></p>
+      </div>
+    </div>
+  <% elsif item.book? %>
+    <div class="flex items-center gap-3">
+      <span class="text-xl leading-none" aria-hidden="true">📄</span>
+      <p class="flex-1 min-w-0 <%= "text-base-content/50" unless available %>"><%= item.display_title %></p>
+      <% if available && item.book.file.attached? %>
+        <%= link_to t("programs.cohort.pdf"), direct_download_url(item.book.file), target: "_blank", rel: "noopener", class: "btn btn-ghost btn-sm" %>
+      <% elsif !available %>
+        <span class="text-xs text-base-content/60 whitespace-nowrap"><%= t("programs.cohort.available_on", date: l(progress.slot_for(item).available_on, format: :long)) %></span>
+      <% end %>
+    </div>
+  <% else %>
+    <% ticked = progress.ticked?(item) %>
+    <div class="flex items-center gap-3">
+      <span class="text-xl leading-none w-6 text-center" aria-hidden="true"><%= ticked ? "✅" : (available ? "●" : "🔒") %></span>
+      <p class="flex-1 min-w-0 <%= "text-base-content/50" unless available %>"><%= item.display_title %></p>
+      <% if ticked %>
+        <span class="badge badge-success badge-outline whitespace-nowrap"><%= t("programs.cohort.ticked") %></span>
+      <% elsif available %>
+        <%= button_to t("programs.cohort.tick"), learner_cohort_completions_path(cohort, program_item_id: item.id),
+              class: "btn btn-primary btn-sm whitespace-nowrap", data: { turbo_submits_with: t("programs.cohort.tick") } %>
+      <% else %>
+        <span class="text-xs text-base-content/60 whitespace-nowrap"><%= t("programs.cohort.available_on", date: l(progress.slot_for(item).available_on, format: :long)) %></span>
+      <% end %>
+    </div>
+    <% if available %>
+      <% lesson = item.lesson %>
+      <div class="flex flex-wrap gap-2 ps-9">
+        <% if lesson.has_any_audio? %>
+          <%= button_to learner_cohort_play_path(cohort, item.id), method: :get, form: { data: { turbo_stream: true } },
+                class: "btn btn-secondary btn-xs" do %>
+            <%= icon "play", class: "size-3" %> <%= t("programs.cohort.listen") %>
+          <% end %>
+        <% end %>
+        <% if lesson.youtube_url.present? %>
+          <%= link_to lesson.youtube_url, target: "_blank", rel: "noopener", class: "btn btn-ghost btn-xs" do %>
+            <%= icon "youtube", library: "lucide", class: "size-3" %> <%= t("programs.cohort.youtube") %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</li>

@@ -10,8 +10,8 @@ module Learners
       resource.domain = @domain
     end
 
-    def after_sign_up_path_for(_resource)
-      learner_dashboard_path
+    def after_sign_up_path_for(resource)
+      stored_location_for(resource) || learner_dashboard_path
     end
 
     def after_inactive_sign_up_path_for(_resource)

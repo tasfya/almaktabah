@@ -1,0 +1,23 @@
+<div class="container mx-auto px-4 py-6 max-w-4xl">
+  <header class="mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold mb-2"><%= t("programs.index.title") %></h1>
+    <p class="text-base-content/70"><%= t("programs.index.subtitle") %></p>
+  </header>
+
+  <% if @programs.any? %>
+    <div class="grid gap-4 md:grid-cols-2">
+      <% @programs.each do |program| %>
+        <%= link_to program_path(program), class: "card bg-base-100 border border-base-300 shadow-sm hover:shadow-md transition" do %>
+          <div class="card-body">
+            <h2 class="card-title text-lg"><%= program.title %></h2>
+            <% if program.description.present? %>
+              <p class="text-base-content/70 text-sm"><%= truncate(program.description, length: 160) %></p>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-base-content/70"><%= t("programs.index.empty") %></p>
+  <% end %>
+</div>

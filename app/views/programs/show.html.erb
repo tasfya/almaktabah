@@ -1,0 +1,62 @@
+<div class="container mx-auto px-4 py-6 max-w-3xl">
+  <%= render "programs/flash" %>
+  <article class="bg-base-100 rounded-2xl shadow-sm border border-base-300 p-5 md:p-8">
+    <% unless @program.published? %>
+      <div role="alert" class="alert alert-warning mb-4"><%= t("programs.show.unpublished") %></div>
+    <% end %>
+
+    <header class="mb-6">
+      <h1 class="text-2xl md:text-3xl font-bold leading-tight mb-3"><%= @program.title %></h1>
+      <% if @program.description.present? %>
+        <p class="text-base-content/80 whitespace-pre-line"><%= @program.description %></p>
+      <% end %>
+    </header>
+
+    <% scholars = @program.scholars.to_a %>
+    <% if scholars.any? %>
+      <section class="mb-6">
+        <h2 class="font-semibold mb-2"><%= t("programs.show.scholars") %></h2>
+        <div class="flex flex-wrap gap-2">
+          <% scholars.each do |scholar| %>
+            <span class="badge badge-outline gap-1"><%= icon "user", class: "size-3" %><%= scholar.name %></span>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <% if @texts.any? %>
+      <section class="mb-6">
+        <h2 class="font-semibold mb-2"><%= t("programs.show.texts") %></h2>
+        <ol class="list-decimal list-inside space-y-1 text-base-content/80">
+          <% @texts.each do |item| %>
+            <li><%= item.display_title %></li>
+          <% end %>
+        </ol>
+      </section>
+    <% end %>
+
+    <section>
+      <h2 class="font-semibold mb-2"><%= t("programs.show.cohorts") %></h2>
+      <% if @cohorts.any? %>
+        <ul class="space-y-3">
+          <% @cohorts.each do |cohort| %>
+            <li class="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-base-200 p-4">
+              <div>
+                <p class="font-semibold"><%= cohort.name %></p>
+                <p class="text-sm text-base-content/70"><%= t("programs.show.starts_on", date: l(cohort.starts_on, format: :long)) %></p>
+              </div>
+              <% if @enrolled_cohort_ids.include?(cohort.id) %>
+                <%= link_to t("programs.show.continue"), learner_cohort_path(cohort), class: "btn btn-primary btn-sm" %>
+              <% elsif @program.published? %>
+                <%= button_to t("programs.show.enroll"), program_enrollments_path(@program, cohort_id: cohort.id),
+                      class: "btn btn-primary btn-sm", data: { turbo_submits_with: t("programs.show.enroll") } %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-base-content/70"><%= t("programs.show.no_open_cohort") %></p>
+      <% end %>
+    </section>
+  </article>
+</div>

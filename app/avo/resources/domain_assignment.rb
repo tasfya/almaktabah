@@ -10,7 +10,7 @@ class Avo::Resources::DomainAssignment < Avo::BaseResource
     field :assignable,
         as: :belongs_to,
         polymorphic_as: :assignable,
-        types: [ ::Lecture, ::Book, ::Series, ::News ]
+        types: [ ::Lecture, ::Book, ::Series, ::News, ::Program ]
     field :domain, as: :belongs_to
   end
 end

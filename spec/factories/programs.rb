@@ -75,4 +75,34 @@ FactoryBot.define do
       closes_at { opens_at + 2.days + 22.hours }
     end
   end
+
+  factory :enrollment do
+    learner
+    cohort
+    domain
+    enrolled_at { Time.current }
+  end
+
+  factory :lesson_completion do
+    enrollment
+    program_item { association(:program_item, :lesson, program: enrollment.cohort.program) }
+    completed_at { Time.current }
+  end
+
+  factory :exam_attempt do
+    enrollment
+    exam { association(:exam, program: enrollment.cohort.program) }
+    started_at { Time.current }
+    submitted_at { started_at }
+    score_percent { 100 }
+  end
+
+  factory :certificate do
+    enrollment
+    domain { enrollment.domain }
+    sequence(:number) { |n| "1-CERT#{n.to_s.rjust(4, "0")}" }
+    issued_at { Time.current }
+    full_name_snapshot { enrollment.learner.full_name }
+    gender_snapshot { enrollment.learner.gender }
+  end
 end

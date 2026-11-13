@@ -1,0 +1,9 @@
+<div class="container mx-auto px-4 py-6 max-w-3xl">
+  <%= render "programs/flash" %>
+  <%= render "learner_area/cohorts/header", cohort: @cohort, progress: @progress, certificate: @certificate %>
+  <ol class="bg-base-100 border border-base-300 rounded-xl divide-y divide-base-300">
+    <% @items.each do |item| %>
+      <%= render "learner_area/cohorts/item", item: item, progress: @progress, cohort: @cohort, scores: @scores %>
+    <% end %>
+  </ol>
+</div>

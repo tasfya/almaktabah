@@ -1,0 +1,87 @@
+# Text definitions for the متون التوحيد program in t.me/mtoon_altawheed.
+# `caption` is a regex matched against channel captions and PDF names;
+# `schedule` is matched against schedule PDF rows after TelegramImport::ArabicFold.
+source: t.me/mtoon_altawheed
+scholar_id: 4
+matn_author_name: محمد بن عبد الوهاب
+cycle_start_message_id: 3706
+previous_cycle_start_message_id: 2992
+schedule_start_year: 2025
+program:
+  title: متون التوحيد وأصول الإيمان (المستوى الأول في العقيدة)
+  description: |-
+    دراسة المتون العلمية في التوحيد وأصول الإيمان، لشيخ الإسلام محمد بن عبد الوهاب رحمه الله، من خلال شروح الشيخ عبد الرزاق بن عبد المحسن البدر.
+    المطلوب في البرنامج هو الاستماع للشروح وفهمها وضبطها، وأما حفظ المتون فيرجع لهمة الطالب.
+  cohort_key: 1447-1448
+  cohort_name: ١٤٤٧–١٤٤٨
+  time_zone: Asia/Riyadh
+title_overrides:
+  3647: تفريغ شرح كتاب الكبائر من الدرس 24 إلى 27
+  3698: تفريغ شرح كتاب الكبائر من الدرس 40 إلى 41
+texts:
+  - key: wajibuna
+    title: واجبنا نحو ما أمرنا الله به
+    caption: واجبنا
+    schedule: واجبنا
+    expected_lessons: 1
+    series_title: شرح رسالة واجبنا نحو ما أمرنا الله به — برنامج متون التوحيد
+  - key: qawaid
+    title: القواعد الأربع
+    caption: القواعد الأربع
+    schedule: القواعد الأربع
+    expected_lessons: 3
+    series_title: شرح القواعد الأربع — برنامج متون التوحيد
+  - key: usul_sitta
+    title: الأصول الستة
+    caption: الأصول الستة
+    schedule: الأصول الستة
+    expected_lessons: 3
+    series_title: شرح الأصول الستة — برنامج متون التوحيد
+  - key: thalatha_usul
+    title: ثلاثة الأصول وأدلتها
+    caption: ثلاثة الأصول|الأصول الثلاثة
+    schedule: الثلاثة الأصول
+    expected_lessons: 17
+    series_title: شرح ثلاثة الأصول وأدلتها — برنامج متون التوحيد
+  - key: tawhid
+    title: كتاب التوحيد
+    caption: كتاب التوحيد
+    schedule: كتاب التوحيد
+    expected_lessons: 54
+    series_title: شرح كتاب التوحيد — برنامج متون التوحيد
+  - key: kashf
+    title: كشف الشبهات
+    caption: كشف الشبهات
+    schedule: كشف الشبهات
+    expected_lessons: 11
+    series_title: شرح كشف الشبهات — برنامج متون التوحيد
+  - key: nawaqid
+    title: نواقض الإسلام
+    caption: نواقض الإسلام
+    schedule: نواقض الإسلام
+    expected_lessons: 11
+    series_title: شرح نواقض الإسلام — برنامج متون التوحيد
+  - key: masail
+    title: مسائل الجاهلية
+    caption: مسائل الجاهلية|massail_aljahilyah
+    schedule: مسائل الجاهلية
+    expected_lessons: 11
+    series_title: شرح مسائل الجاهلية — برنامج متون التوحيد
+  - key: fadl_islam
+    title: فضل الإسلام
+    caption: فضل الإسلام
+    schedule: فضل الإسلام
+    expected_lessons: 19
+    series_title: شرح كتاب فضل الإسلام — برنامج متون التوحيد
+  - key: usul_iman
+    title: أصول الإيمان
+    caption: أصول الإيمان
+    schedule: أصول الإيمان
+    expected_lessons: 30
+    series_title: شرح أصول الإيمان — برنامج متون التوحيد
+  - key: kabair
+    title: كتاب الكبائر
+    caption: الكبائر
+    schedule: الكبائر
+    expected_lessons: 41
+    series_title: شرح كتاب الكبائر — برنامج متون التوحيد

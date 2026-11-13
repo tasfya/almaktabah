@@ -99,8 +99,16 @@ Rails.application.routes.draw do
         path_names: { new: "sign_up" }, controller: "learners/registrations", as: :learner_registration
     end
 
+    resources :programs, only: [ :index, :show ], path: I18n.t("routes.programs", default: "programs") do
+      resources :enrollments, only: :create
+    end
+
     scope "my", module: "learner_area" do
       get "/", to: "dashboard#show", as: :learner_dashboard
+      resources :cohorts, only: :show, as: :learner_cohorts do
+        resources :completions, only: :create
+        get "play/:program_item_id", to: "plays#show", as: :play
+      end
     end
   end
 
