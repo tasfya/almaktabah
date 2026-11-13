@@ -14,7 +14,7 @@
   <% case @state %>
   <% when :open %>
     <div role="note" class="alert alert-warning alert-soft text-sm mb-4 flex flex-col items-start gap-1">
-      <span class="font-semibold"><%= t("programs.exam.deadline", time: program_datetime(slot.closes_at, @cohort, @progress.today)) %></span>
+      <span class="font-semibold"><%= t("programs.exam.deadline", time: program_deadline(slot.closes_at, @cohort, @progress.today)) %></span>
       <span><%= t("programs.exam.one_attempt") %></span>
     </div>
     <%= form_with url: submit_learner_cohort_exam_path(@cohort, @exam), method: :post, class: "flex flex-col gap-4" do %>
@@ -40,7 +40,7 @@
       <div class="card-body items-center text-center gap-1">
         <p class="text-3xl font-bold"><%= t("programs.exam.result", score: @attempt.score_percent) %></p>
         <p class="<%= passed ? "text-success" : "text-error" %> font-semibold">
-          <%= passed ? t("programs.exam.passed") : learner_t("programs.exam.failed", pass_mark: @cohort.program.pass_mark) %>
+          <%= passed ? learner_t("programs.exam.passed") : learner_t("programs.exam.failed", pass_mark: @cohort.program.pass_mark) %>
         </p>
       </div>
     </div>

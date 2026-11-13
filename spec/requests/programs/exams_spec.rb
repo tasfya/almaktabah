@@ -108,6 +108,14 @@ RSpec.describe "Taking an exam", type: :request do
     expect(ExamAttempt.last.score_percent).to eq(67)
   end
 
+  it "tells a female learner she passed in the feminine" do
+    learner.update!(gender: :female)
+    tick_lesson
+    submit(answers(3))
+    follow_redirect!
+    expect(response.body).to include("ناجحة")
+  end
+
   it "marks a failing score" do
     tick_lesson
     submit(answers(1))

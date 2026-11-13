@@ -69,7 +69,7 @@
                 </p>
                 <% if (deadline = cohort.enrollment_deadline) && !@enrolled_cohort_ids.include?(cohort.id) %>
                   <p class="text-sm text-base-content/80">
-                    <%= t("programs.show.enrollment_until", date: program_datetime(deadline, cohort, zone_today)) %>
+                    <%= t("programs.show.enrollment_until", date: program_deadline(deadline, cohort, zone_today)) %>
                   </p>
                 <% end %>
               </div>

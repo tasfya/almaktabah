@@ -69,9 +69,18 @@ module LearnerAreaHelper
     local.seconds_since_midnight.zero? ? date : t("programs.dates.at", date: date, time: l(local, format: :long))
   end
 
+  # A closing time: always with the time, and a midnight close is shown as
+  # the end of the previous day, which is the last day it is still open.
+  def program_deadline(time, cohort, today)
+    local = time.in_time_zone(cohort.time_zone)
+    return t("programs.dates.end_of_day", date: program_date(local.to_date - 1, today)) if local.seconds_since_midnight.zero?
+
+    t("programs.dates.at", date: program_date(local.to_date, today), time: l(local, format: :long))
+  end
+
   def exam_window(slot, cohort, today)
     t("programs.exam.window", opens: program_datetime(slot.opens_at, cohort, today),
-                              closes: program_datetime(slot.closes_at, cohort, today))
+                              closes: program_deadline(slot.closes_at, cohort, today))
   end
 
   def cohort_time_zone_name(cohort)
@@ -97,7 +106,7 @@ module LearnerAreaHelper
 
     # An open exam closes for good; late lessons can still be caught up.
     if (exam = progress.open_exams.first)
-      closes = program_datetime(progress.slot_for(exam).closes_at, cohort, today)
+      closes = program_deadline(progress.slot_for(exam).closes_at, cohort, today)
       return { text: t("programs.next_step.exam_open", title: exam_title(exam), closes: closes), item: exam }
     end
 
@@ -109,7 +118,7 @@ module LearnerAreaHelper
     end
 
     if (exam = progress.pending_exams.first)
-      closes = program_datetime(progress.slot_for(exam).closes_at, cohort, today)
+      closes = program_deadline(progress.slot_for(exam).closes_at, cohort, today)
       return { text: t("programs.next_step.exam_open", title: exam_title(exam), closes: closes), item: exam }
     end
 
@@ -120,6 +129,10 @@ module LearnerAreaHelper
     if (exam = progress.upcoming_exams.first)
       opens = program_datetime(progress.slot_for(exam).opens_at, cohort, today)
       return { text: t("programs.next_step.exam_upcoming", title: exam_title(exam), opens: opens), item: exam }
+    end
+
+    if (exam = progress.unavailable_exams.first)
+      return { text: t("programs.next_step.exam_unavailable", title: exam_title(exam)), item: exam }
     end
 
     if (exam = progress.blocking_exams.first)

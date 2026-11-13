@@ -611,12 +611,14 @@ ar:
       exam_upcoming: "أتممت الدروس ✓ — %{title} يُفتح %{opens}"
       done_today: "أتممت دروس اليوم ✓ — الدرس التالي %{date}"
       finished: "أتممت دروس البرنامج واختباراته ✓"
+      exam_unavailable: "%{title} غير متاح بعد"
       certificate_blocked: "انتهت الدروس والاختبارات دون استيفاء شرط الشهادة في %{title}"
     dates:
       today: "اليوم"
       yesterday: "أمس"
       tomorrow: "غدًا"
       at: "%{date}، الساعة %{time}"
+      end_of_day: "%{date}، آخر اليوم"
     time_zones:
       Asia_Riyadh: "مكة المكرمة"
       offset: "غرينتش %{offset}"
@@ -664,6 +666,7 @@ ar:
       closed: "لا يمكن تسليم هذا الاختبار الآن."
       result: "نتيجتك %{score}٪"
       passed: "ناجح"
+      passed_female: "ناجحة"
       failed: "لم تبلغ درجة النجاح (%{pass_mark}٪)"
       failed_female: "لم تبلغي درجة النجاح (%{pass_mark}٪)"
       your_answer: "إجابتك"

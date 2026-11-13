@@ -287,6 +287,95 @@ RSpec.describe "Learner area", type: :request do
         expect(header).not_to include("أتممت دروس البرنامج واختباراته")
       end
 
+      it "shows a midnight close as the end of the previous day, with no time left out" do
+        exam.cohort_slots.sole.update!(closes_at: riyadh.local(2025, 11, 22))
+
+        get learner_cohort_path(cohort)
+
+        expect(row(exam).text.squish).to include("إلى الجمعة 21 نوفمبر، آخر اليوم")
+      end
+
+      it "says an exam without questions is not available yet, never that it opened yesterday" do
+        future_lesson.cohort_slots.destroy_all
+        exam.exam.questions.destroy_all
+        tick(first_lesson)
+        tick(second_lesson)
+        travel_to riyadh.local(2025, 11, 20, 12)
+
+        get learner_cohort_path(cohort)
+
+        header = Nokogiri::HTML(response.body).at_css("#cohort_header").text.squish
+        expect(header).to include("غير متاح بعد")
+        expect(header).not_to include("أمس")
+      end
+
+      it "never calls a learner finished when an exam without questions has closed" do
+        future_lesson.cohort_slots.destroy_all
+        exam.exam.questions.destroy_all
+        tick(first_lesson)
+        tick(second_lesson)
+        travel_to riyadh.local(2025, 11, 22, 12)
+
+        get learner_cohort_path(cohort)
+
+        header = Nokogiri::HTML(response.body).at_css("#cohort_header").text.squish
+        expect(header).to include("دون استيفاء شرط الشهادة")
+        expect(header).not_to include("أتممت دروس البرنامج واختباراته")
+      end
+
+      describe "undo refusals" do
+        it "refuses once a certificate exists" do
+          tick(first_lesson)
+          Certificate.create!(enrollment: enrollment, domain: domain, issued_at: Time.current, number: "X-1",
+                              full_name_snapshot: learner.full_name, gender_snapshot: learner.gender)
+
+          delete learner_cohort_completion_path(cohort, first_lesson.id), headers: turbo_stream
+
+          expect(response).to have_http_status(:unprocessable_content)
+          expect(LessonCompletion.count).to eq(1)
+        end
+
+        it "refuses a lesson that was never ticked" do
+          delete learner_cohort_completion_path(cohort, first_lesson.id), headers: turbo_stream
+          expect(response).to have_http_status(:unprocessable_content)
+        end
+
+        it "allows it when only an earlier exam has an attempt" do
+          earlier = scheduled_exam(position: 0)
+          create(:exam_attempt, enrollment: enrollment, exam: earlier.exam, score_percent: 80)
+          tick(first_lesson)
+
+          delete learner_cohort_completion_path(cohort, first_lesson.id), headers: turbo_stream
+
+          expect(response).to have_http_status(:ok)
+          expect(LessonCompletion.count).to eq(0)
+        end
+
+        it "returns not found for another learner's cohort" do
+          other_cohort = create(:cohort, program: program)
+          other = create(:enrollment, cohort: other_cohort, domain: domain)
+          item = create(:program_item, :lesson, program: program, position: 40)
+          create(:lesson_completion, enrollment: other, program_item: item)
+
+          delete learner_cohort_completion_path(other_cohort, item.id), headers: turbo_stream
+
+          expect(response).to have_http_status(:not_found)
+          expect(LessonCompletion.count).to eq(1)
+        end
+
+        it "refuses an item of another program" do
+          delete learner_cohort_completion_path(cohort, create(:program_item, :lesson).id), headers: turbo_stream
+          expect(response).to have_http_status(:unprocessable_content)
+        end
+
+        it "redirects back to the timeline with a message without Turbo" do
+          delete learner_cohort_completion_path(cohort, first_lesson.id)
+
+          expect(response).to redirect_to(learner_cohort_path(cohort))
+          expect(flash[:alert]).to eq(I18n.t("programs.cohort.untick_refused"))
+        end
+      end
+
       it "speaks to a female learner in the feminine" do
         learner.update!(gender: :female)
         travel_to riyadh.local(2025, 11, 20, 12)

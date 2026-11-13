@@ -138,25 +138,38 @@ module Programs
       exam_items.select { |exam| exam_state(exam) == :open }
     end
 
-    # Exams still to come: the window has not opened yet, or it is open but
-    # the exam has no questions yet.
+    # Exams whose window has not opened yet.
     def upcoming_exams
-      exam_items.select { |exam| exam_state(exam) == :locked && !slot_for(exam).closed?(at) }
+      exam_items.select do |exam|
+        exam_state(exam) == :locked && exam.exam.questions.any? && slot_for(exam).opens_at > at
+      end
     end
 
-    # Exams that keep the certificate out of reach: missed, or submitted below
-    # the pass mark.
+    # Exams with no questions yet whose window has not closed: they can't be
+    # taken now but may be later.
+    def unavailable_exams
+      exam_items.select do |exam|
+        exam_state(exam) == :locked && exam.exam.questions.none? && !slot_for(exam).closed?(at)
+      end
+    end
+
+    # Exams that, by the CertificateIssuer rule (every exam needs an attempt at
+    # or above the pass mark), keep the certificate out of reach for good:
+    # the window closed, or the one attempt scored below the pass mark.
     def blocking_exams
       pass_mark = enrollment.cohort.program.pass_mark
-      scores = enrollment.exam_attempts.where.not(submitted_at: nil).pluck(:exam_id, :score_percent).to_h
+      scores = enrollment.exam_attempts.pluck(:exam_id, :score_percent).to_h
       exam_items.select do |exam|
-        state = exam_state(exam)
-        state == :missed || (state == :submitted && scores[exam.exam_id].to_i < pass_mark)
+        score = scores[exam.exam_id]
+        next false if score.present? && score >= pass_mark
+
+        exam_state(exam) == :submitted || slot_for(exam).closed?(at)
       end
     end
 
     def finished?
-      started? && due_lessons.empty? && next_release_on.nil? && pending_exams.empty? && upcoming_exams.empty?
+      started? && due_lessons.empty? && next_release_on.nil? && pending_exams.empty? &&
+        upcoming_exams.empty? && unavailable_exams.empty?
     end
 
     private
