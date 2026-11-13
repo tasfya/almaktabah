@@ -86,6 +86,24 @@ RSpec.describe Programs::ReminderJob do
       expect(deliveries).to be_empty
     end
 
+    it "pauses the rest of the tick after the mail server refuses us, then retries next tick" do
+      allow(Rails).to receive(:cache).and_return(ActiveSupport::Cache::MemoryStore.new)
+      other = create(:enrollment, cohort: cohort, learner: create(:learner, confirmed_at: Time.current))
+      failing = instance_double(ActionMailer::MessageDelivery)
+      allow(failing).to receive(:deliver_now).and_raise(Net::SMTPAuthenticationError.new("535 bad credentials"))
+      allow(ReminderMailer).to receive(:daily).and_return(failing)
+
+      expect { run }.to raise_error(Net::SMTPAuthenticationError)
+      travel_to(morning) { described_class.perform_now(other.id, "2025-11-19") }
+
+      expect(ReminderMailer).to have_received(:daily).once
+      expect(ReminderDelivery.count).to eq(0)
+
+      allow(ReminderMailer).to receive(:daily).and_call_original
+      travel_to(morning + 1.hour) { perform_enqueued_jobs { Programs::ReminderDispatchJob.perform_now } }
+      expect(deliveries.map(&:to).flatten).to contain_exactly(enrollment.learner.email, other.learner.email)
+    end
+
     it "drops a stale job from a previous day" do
       run(at: riyadh.local(2025, 11, 20, 6, 5), date: "2025-11-19")
 

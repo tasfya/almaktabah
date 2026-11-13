@@ -12,6 +12,15 @@ RSpec.describe Programs::ReminderDispatchJob do
     create(:enrollment, cohort: create(:cohort, time_zone: "America/New_York"), learner: create(:learner, **confirmed))
   end
 
+  def lesson_on(cohort, date)
+    create(:cohort_slot, cohort: cohort, program_item: create(:program_item, :lesson, program: cohort.program), available_on: date)
+  end
+
+  before do
+    [ Date.new(2025, 11, 19), Date.new(2025, 11, 20) ].each { |date| lesson_on(riyadh_enrollment.cohort, date) }
+    [ Date.new(2025, 11, 1), Date.new(2025, 11, 3) ].each { |date| lesson_on(ny_enrollment.cohort, date) }
+  end
+
   def dispatched_at(time)
     clear_enqueued_jobs
     travel_to(time) { described_class.perform_now }
@@ -35,6 +44,18 @@ RSpec.describe Programs::ReminderDispatchJob do
       expect(dispatched_at(new_york.local(2025, 11, 3, 6, 5))).to eq([ [ ny_enrollment.id, "2025-11-03" ] ])
       expect(dispatched_at(new_york.local(2025, 11, 1, 6, 5))).to eq([ [ ny_enrollment.id, "2025-11-01" ] ])
       expect(dispatched_at(new_york.local(2025, 11, 3, 5, 5))).to be_empty
+    end
+
+    it "enqueues nothing for a cohort with nothing to say today" do
+      expect(dispatched_at(riyadh.local(2025, 11, 21, 6, 5))).to be_empty
+    end
+
+    it "enqueues for an exam closing before the next reminder on a day without lessons" do
+      item = create(:program_item, :exam, program: riyadh_enrollment.cohort.program)
+      create(:cohort_slot, cohort: riyadh_enrollment.cohort, program_item: item, available_on: Date.new(2025, 11, 18),
+        opens_at: riyadh.local(2025, 11, 18), closes_at: riyadh.local(2025, 11, 21, 22))
+
+      expect(dispatched_at(riyadh.local(2025, 11, 21, 6, 5))).to eq([ [ riyadh_enrollment.id, "2025-11-21" ] ])
     end
 
     it "does nothing while learner accounts are switched off" do

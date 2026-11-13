@@ -19,8 +19,9 @@ module Programs
       @lessons ||= progress.todays_items.select(&:lesson?)
     end
 
+    # An exam that also closes before the next reminder is listed only as closing.
     def exams_opening
-      @exams_opening ||= exam_slots.select { |slot| slot.opens_at >= start_of_day && slot.opens_at < next_reminder && slot.closes_at > at }
+      @exams_opening ||= exam_slots.select { |slot| slot.opens_at >= start_of_day && slot.opens_at < next_reminder && slot.closes_at > next_reminder }
     end
 
     def exams_closing

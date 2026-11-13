@@ -13,13 +13,26 @@ module Programs
         next unless WINDOW.cover?(now.in_time_zone(cohort.time_zone).hour)
 
         local_date = cohort.today(now)
-        due_enrollments(cohort, local_date).find_each do |enrollment|
-          ReminderJob.perform_later(enrollment.id, local_date.iso8601)
-        end
+        next unless anything_to_say?(cohort, local_date, now)
+
+        jobs = due_enrollments(cohort, local_date).pluck(:id).map { |id| ReminderJob.new(id, local_date.iso8601) }
+        ActiveJob.perform_all_later(jobs)
       end
     end
 
     private
+
+    # A cheap superset of ReminderDigest#empty? for the whole cohort, so days
+    # with nothing to say (and cohorts not started or finished) enqueue nothing.
+    def anything_to_say?(cohort, local_date, now)
+      start_of_day = local_date.in_time_zone(cohort.time_zone)
+      next_reminder = now + 24.hours
+      slots = cohort.cohort_slots
+      slots.where(available_on: local_date)
+        .or(slots.where(opens_at: start_of_day...next_reminder))
+        .or(slots.where(closes_at: now..next_reminder).where.not(closes_at: now))
+        .exists?
+    end
 
     def due_enrollments(cohort, local_date)
       cohort.enrollments

@@ -2,7 +2,15 @@ module Programs
   # Sends one enrollment's reminder for one cohort-local day, at most once.
   # There is no retry_on: the next hourly dispatch inside the morning window
   # is the retry.
+  #
+  # When the mail server refuses us (bad credentials, unreachable), every job
+  # of that tick would fail the same way and pile up as failed jobs. The first
+  # failure pauses sending until the next tick instead, so a broken setup
+  # costs one failed job per hour.
   class ReminderJob < ApplicationJob
+    SMTP_DOWN_KEY = "programs/reminders/smtp_down".freeze
+    SMTP_DOWN_FOR = 50.minutes
+
     # Failures where the server cannot have accepted the mail, so the day's
     # claim is released and a later tick may send it.
     NOT_SENT = [
@@ -20,6 +28,7 @@ module Programs
 
       digest = ReminderDigest.new(enrollment)
       return if digest.empty?
+      return if Rails.cache.read(SMTP_DOWN_KEY)
 
       deliver(enrollment, digest, local_date)
     end
@@ -32,6 +41,7 @@ module Programs
         ReminderMailer.daily(enrollment, digest).deliver_now
       rescue *NOT_SENT
         delivery.destroy!
+        Rails.cache.write(SMTP_DOWN_KEY, true, expires_in: SMTP_DOWN_FOR)
         raise
       end
       # Any other error keeps the claim: the mail may have been accepted, and

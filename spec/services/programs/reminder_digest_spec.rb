@@ -48,6 +48,13 @@ RSpec.describe Programs::ReminderDigest do
     expect(digest.exams_opening).to eq([ soon ])
   end
 
+  it "lists an exam opening today and closing before the next reminder only as closing" do
+    slot = exam_slot(opens_at: riyadh.local(2025, 11, 19), closes_at: riyadh.local(2025, 11, 19, 22))
+
+    expect(digest.exams_opening).to be_empty
+    expect(digest.exams_closing).to eq([ slot ])
+  end
+
   it "includes an exam closing within 24 hours unless already submitted" do
     slot = exam_slot(opens_at: riyadh.local(2025, 11, 17), closes_at: riyadh.local(2025, 11, 19, 22))
     exam_slot(opens_at: riyadh.local(2025, 11, 17), closes_at: riyadh.local(2025, 11, 21))
