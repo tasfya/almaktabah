@@ -105,6 +105,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
     t.index ["question_id"], name: "index_choices_on_question_id"
   end
 
+  create_table "cohort_slots", force: :cascade do |t|
+    t.integer "cohort_id", null: false
+    t.integer "program_item_id", null: false
+    t.date "available_on", null: false
+    t.datetime "opens_at"
+    t.datetime "closes_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id", "available_on"], name: "index_cohort_slots_on_cohort_id_and_available_on"
+    t.index ["cohort_id", "program_item_id"], name: "index_cohort_slots_on_cohort_id_and_program_item_id", unique: true
+    t.index ["program_item_id"], name: "index_cohort_slots_on_program_item_id"
+  end
+
+  create_table "cohorts", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.string "name", null: false
+    t.date "starts_on", null: false
+    t.string "time_zone", default: "Asia/Riyadh", null: false
+    t.datetime "enrollment_closes_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["program_id"], name: "index_cohorts_on_program_id"
+  end
+
   create_table "domain_assignments", force: :cascade do |t|
     t.integer "assignable_id", null: false
     t.string "assignable_type", null: false
@@ -509,6 +533,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_120000) do
   add_foreign_key "articles", "scholars", column: "author_id"
   add_foreign_key "books", "scholars", column: "author_id"
   add_foreign_key "choices", "questions"
+  add_foreign_key "cohort_slots", "cohorts"
+  add_foreign_key "cohort_slots", "program_items"
+  add_foreign_key "cohorts", "programs"
   add_foreign_key "domain_assignments", "domains"
   add_foreign_key "exams", "programs"
   add_foreign_key "fatwas", "scholars"

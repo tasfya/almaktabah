@@ -5,6 +5,7 @@ class ProgramItem < ApplicationRecord
   belongs_to :lesson, optional: true
   belongs_to :book, optional: true
   belongs_to :exam, optional: true
+  has_many :cohort_slots, dependent: :destroy
 
   enum :kind, { lesson: 0, book: 1, exam: 2 }
 

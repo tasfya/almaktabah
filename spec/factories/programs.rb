@@ -56,4 +56,23 @@ FactoryBot.define do
     body { Faker::Lorem.word }
     correct { false }
   end
+
+  factory :cohort do
+    program
+    sequence(:name) { |n| "Cohort #{n}" }
+    starts_on { Date.new(2025, 11, 8) }
+  end
+
+  factory :cohort_slot do
+    cohort
+    program_item { association(:program_item, :lesson, program: cohort.program) }
+    available_on { cohort.starts_on }
+
+    trait :exam do
+      program_item { association(:program_item, :exam, program: cohort.program) }
+      available_on { cohort.starts_on + 11 }
+      opens_at { Time.find_zone(cohort.time_zone).local(available_on.year, available_on.month, available_on.day) }
+      closes_at { opens_at + 2.days + 22.hours }
+    end
+  end
 end
